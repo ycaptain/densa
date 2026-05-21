@@ -1,0 +1,22 @@
+# Pre-commit framework manifest for the `wikilint` hook.
+#
+# Users adopt this in their own vault's `.pre-commit-config.yaml`:
+#
+#   repos:
+#     - repo: https://github.com/ycaptain/llm-wiki-starter
+#       rev: v0.1.0
+#       hooks:
+#         - id: wikilint
+#
+# The local hook in `_system/hooks/pre-commit` covers users who prefer
+# not to install the pre-commit framework. Both call into the same
+# `python -m wikilint --staged` entry point.
+
+- id: wikilint
+  name: wikilint (schema + wikilink check)
+  description: Validate llm-wiki vault against AGENTS.md §3 / §6.
+  entry: python -m wikilint --staged
+  language: python
+  pass_filenames: false
+  always_run: true
+  types: [text]

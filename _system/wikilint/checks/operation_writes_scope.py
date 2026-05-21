@@ -1,0 +1,151 @@
+"""AGENTS007 — operation writes must stay within declared scope.
+
+Each commit is classified by its leading commit-message prefix
+(``ingest(<domain>):``, ``query:``, ``lint:``, ``process-inbox:``,
+``promote:``). The prefix selects an allow-list of glob patterns from
+:data:`wikilint.config.OPERATION_WRITES`; every staged path must match
+at least one pattern, otherwise we report an error.
+
+Commits without a recognised prefix fall back to the ``""`` (no-prefix)
+allow-list — schema/docs/integrations maintenance — which forbids
+touching ``domains/**``.
+
+Bypass: ``WIKI_ALLOW_CROSS_SCOPE=1`` skips the rule entirely. Use for
+sanctioned multi-scope maintenance and pair with a maintenance entry
+in ``log.md`` (mirrors the ``WIKI_ALLOW_LOG_REORDER`` discipline).
+"""
+
+from __future__ import annotations
+
+import os
+import re
+import subprocess
+from pathlib import Path
+
+from wikilint.config import CROSS_SCOPE_BYPASS_ENV, OPERATION_WRITES
+from wikilint.git_io import StagedEntry
+from wikilint.report import Diagnostic, Report, Severity
+
+_RULE_ID = "AGENTS007"
+
+_PREFIX_RE = re.compile(
+    r"^(?P<op>ingest|query|lint|process-inbox|promote)(?:\([^)]+\))?:\s",
+)
+
+
+class OperationWritesScope:
+    id: str = _RULE_ID
+
+    def apply(
+        self,
+        repo: Path,
+        entries: list[StagedEntry],
+        report: Report,
+    ) -> None:
+        if os.environ.get(CROSS_SCOPE_BYPASS_ENV) == "1":
+            return
+        if not entries:
+            return
+        subject = _commit_subject(repo)
+        op = _classify(subject)
+        allowed = OPERATION_WRITES.get(op, frozenset())
+        for entry in entries:
+            if entry.letter == "D":
+                continue
+            if _matches_any(entry.path, allowed):
+                continue
+            report.add(Diagnostic(
+                rule_id=self.id,
+                severity=Severity.ERROR,
+                path=entry.path,
+                line=0,
+                message=(
+                    f"staged path is outside the write scope for "
+                    f"`{op or '(no prefix)'}` (set "
+                    f"{CROSS_SCOPE_BYPASS_ENV}=1 to bypass for one commit)"
+                ),
+            ))
+
+
+def _commit_subject(repo: Path) -> str:
+    """Best-effort read of the in-flight commit subject.
+
+    Order:
+      1. ``.git/COMMIT_EDITMSG`` if the file exists and is non-empty
+         (this is the file the pre-commit hook sees mid-commit).
+      2. Most recent ``git log -1 --format=%s HEAD`` (covers post-commit
+         re-runs and ``wikilint --staged`` invoked manually).
+      3. Empty string (falls back to the ``(no prefix)`` scope).
+    """
+    editmsg = repo / ".git" / "COMMIT_EDITMSG"
+    if editmsg.is_file():
+        try:
+            text = editmsg.read_text(encoding="utf-8", errors="replace")
+        except OSError:
+            text = ""
+        first = _first_non_comment_line(text)
+        if first:
+            return first
+    try:
+        out = subprocess.check_output(
+            ["git", "log", "-1", "--format=%s", "HEAD"],
+            cwd=repo,
+            text=True,
+            stderr=subprocess.DEVNULL,
+        )
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return ""
+    return out.strip()
+
+
+def _first_non_comment_line(text: str) -> str:
+    for raw_line in text.splitlines():
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+        return line
+    return ""
+
+
+def _classify(subject: str) -> str:
+    match = _PREFIX_RE.match(subject)
+    return match.group("op") if match else ""
+
+
+def _matches_any(path: str, patterns: frozenset[str]) -> bool:
+    normalised = path.replace("\\", "/")
+    return any(_glob_match(normalised, pattern) for pattern in patterns)
+
+
+def _glob_match(path: str, pattern: str) -> bool:
+    """``**``-aware glob matcher.
+
+    Semantics:
+      - ``**`` matches any character, including ``/`` (so any number
+        of path segments).
+      - ``*`` matches anything except ``/`` (one path segment).
+      - ``?`` matches any single character except ``/``.
+      - All other characters are literal.
+    """
+    return re.match(_compile_glob(pattern), path) is not None
+
+
+def _compile_glob(pattern: str) -> str:
+    out: list[str] = []
+    i = 0
+    while i < len(pattern):
+        c = pattern[i]
+        if c == "*":
+            if i + 1 < len(pattern) and pattern[i + 1] == "*":
+                out.append(".*")
+                i += 2
+            else:
+                out.append("[^/]*")
+                i += 1
+        elif c == "?":
+            out.append("[^/]")
+            i += 1
+        else:
+            out.append(re.escape(c))
+            i += 1
+    return "".join(out) + r"\Z"

@@ -1,0 +1,50 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "_system/wikilint/**"
+      - "_system/tests/**"
+      - "pyproject.toml"
+      - ".github/workflows/ci.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "_system/wikilint/**"
+      - "_system/tests/**"
+      - "pyproject.toml"
+      - ".github/workflows/ci.yml"
+
+jobs:
+  test:
+    name: tests (py${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dev deps
+        run: pip install -e ".[dev]"
+      - name: Run pytest
+        run: pytest
+
+  lint:
+    name: ruff + mypy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dev deps
+        run: pip install -e ".[dev]"
+      - name: Run ruff
+        run: ruff check _system/wikilint _system/tests
+      - name: Run mypy
+        run: mypy _system/wikilint

@@ -1,0 +1,6 @@
+{
+  "name": "llm-wiki-starter",
+  "version": "0.5.0",
+  "description": "Slash commands (/ingest, /query, /lint, /process-inbox, /promote) for the llm-wiki-starter vault. The canonical contract lives in the vault's AGENTS.md; this plugin only wires up the prompts.",
+  "commands": ".claude/commands"
+}

@@ -1,0 +1,69 @@
+# Prompt: process-inbox
+
+Use this prompt body when the human says `process-inbox` or `inbox`.
+This is the **fourth operation** alongside `ingest / query / lint`,
+introduced for routing un-classified material that has been parked in
+`/inbox/`. See [`/AGENTS.md`](../../AGENTS.md) §2.4.
+
+## Input
+
+- **Scope**: every file in `/inbox/` whose name does not start with `.`.
+  README files (`*.md` containing `type: meta`) are skipped.
+
+## Procedure
+
+1. **Enumerate** the inbox: list each file with size, first 200 bytes
+   preview, and inferred domain hint (raw filename clues +
+   first-paragraph content signal).
+2. **Per-file plan**. Output a table:
+   ```
+   | inbox/<name> | proposed domain | proposed bucket    | proposed slug              | confidence |
+   | ------------ | --------------- | ------------------ | -------------------------- | ---------- |
+   | a.md         | psychology      | raw/sessions       | 2026-04-27-session-<therapist> | high   |
+   | b.pdf        | self-optim      | raw/articles       | 2026-04-27-creatine-rct    | medium     |
+   | c.md         | (park)          | attic/inbox-parked | …                          | low        |
+   ```
+   Wait for human confirmation before any move.
+3. **Apply**, per row:
+   - For high/medium confidence: `git mv inbox/<name>
+     domains/<X>/raw/<bucket>/<YYYY-MM-DD>-<slug>.<ext>`. Add minimal
+     frontmatter only if the file is markdown and currently has none
+     (use the `source` template's frontmatter as a starting point;
+     leave `tags` and `sources` empty for the human to fill).
+   - For low confidence (`(park)`): `git mv` to
+     `attic/inbox-parked/<YYYY-MM-DD>-<original-name>` and append a
+     one-line note to `attic/inbox-parked/README.md` (create if missing)
+     describing why it was parked.
+4. **Do NOT auto-ingest.** Routing inbox → `raw/` is a separate step
+   from ingest. After process-inbox completes, the human invokes
+   `ingest` on each newly-routed source individually (or in batch, via
+   pre-approved batch ingest mode).
+5. **Prepend to the global `log.md`** (top-of-file under frontmatter, per L1 §6):
+   ```
+   ## [YYYY-MM-DD] process-inbox | <count> files routed
+   - Routed to psychology: <n>
+   - Routed to projects:   <n>
+   - Routed to self-optim: <n>
+   - Parked:               <n>
+   ```
+
+## Hard rules
+
+- Do NOT modify file contents while routing. Renames and moves only.
+- Do NOT route directly into `wiki/` — that is `ingest`'s job. Inbox
+  always lands in `raw/`.
+- Do NOT ingest as a side-effect. Each routed file must go through the
+  human-gated `ingest` step before any wiki edits happen.
+- If a file is purely junk (corrupted, accidental clipping), propose
+  deletion (`git rm`) and ask the human; default is park, not delete.
+
+## Quality bar
+
+A good `process-inbox` pass:
+
+- Reduces the inbox to size ≤ N (where N is the count of legitimately
+  ambiguous items the human has not yet decided about).
+- Leaves every routed file in a canonical bucket with an ISO-prefixed
+  slug — no manual rename later required.
+- Surfaces *why* low-confidence files were parked, so the human can
+  decide whether to discard, re-clip, or hold for context.
