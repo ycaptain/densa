@@ -1,0 +1,11 @@
+# Example .gitattributes for git-crypt-encrypted raw/ trees.
+#
+# Copy this file to `.gitattributes` and uncomment the lines for each
+# L2 whose `raw/` tree should be encrypted at rest. Then run
+# `bash _system/scripts/setup_encryption.sh` (which is also idempotent
+# and can append these rules for you).
+#
+# Reference: _system/SETUP.md §"Privacy: encrypt sensitive raw/ with git-crypt"
+
+# domains/psychology/raw/**     filter=git-crypt diff=git-crypt
+# domains/<your-sensitive-domain>/raw/**     filter=git-crypt diff=git-crypt

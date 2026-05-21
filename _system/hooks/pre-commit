@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -euo pipefail
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
+
+# Make the in-repo wikilint package importable without installing it.
+# This keeps the hook zero-setup: as soon as you run
+#   git config core.hooksPath _system/hooks
+# the validator runs on every commit, no `pip install` required.
+export PYTHONPATH="$REPO_ROOT/_system:${PYTHONPATH:-}"
+exec python -m wikilint --staged

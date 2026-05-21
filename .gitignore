@@ -1,0 +1,35 @@
+# macOS
+.DS_Store
+
+# Obsidian local-only state (keep plugin configs, ignore caches)
+.obsidian/workspace.json
+.obsidian/workspaces.json
+.trash/
+
+# OS / editor scratch
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.eggs/
+build/
+dist/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+# Private design archive — kept locally, not published
+docs/dogfood/
+docs/user-research/
+docs/prior-art/
+docs/MASTER-PLAN-2026-05.md

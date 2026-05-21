@@ -1,0 +1,145 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wikilint"
+version = "0.1.0"
+description = "Schema + wikilink validator for the llm-wiki template."
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+keywords = ["agents-md", "obsidian", "lint", "validator", "llm-wiki"]
+authors = [
+    { name = "ycaptain" },
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Text Processing :: Markup :: Markdown",
+]
+# Runtime is stdlib-only by design — the pre-commit hook runs on every
+# `git commit` and a heavy import would punish users. Optional backends
+# live in the `[strict]` extra; install them when you want full YAML
+# parsing in --all / CI runs:
+#   pip install -e ".[strict]"
+dependencies = []
+
+[project.optional-dependencies]
+# Stricter parsing + type checking. Used by `--all` runs in CI and by
+# the test suite; not required for the pre-commit hook.
+strict = [
+    "pyyaml>=6.0",
+]
+# Everything needed to develop wikilint itself.
+dev = [
+    "pyyaml>=6.0",
+    "pytest>=8.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.6",
+    "mypy>=1.10",
+    "types-pyyaml",
+]
+
+[project.scripts]
+wikilint = "wikilint.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/ycaptain/llm-wiki-starter"
+Documentation = "https://github.com/ycaptain/llm-wiki-starter#readme"
+Issues = "https://github.com/ycaptain/llm-wiki-starter/issues"
+
+# ---------------------------------------------------------------------------
+# setuptools — point at the `_system/` source layout. The package is
+# `wikilint` and lives under `_system/wikilint/`.
+# ---------------------------------------------------------------------------
+
+[tool.setuptools.packages.find]
+where = ["_system"]
+include = ["wikilint*"]
+
+# ---------------------------------------------------------------------------
+# pytest
+# ---------------------------------------------------------------------------
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-ra -q"
+testpaths = ["_system/tests"]
+pythonpath = ["_system"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+
+# ---------------------------------------------------------------------------
+# ruff
+# ---------------------------------------------------------------------------
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+src = ["_system/wikilint", "_system/tests"]
+extend-exclude = [
+    "domains",
+    "docs",
+    "attic",
+    "inbox",
+    "_system/templates",
+    "_system/prompts",
+]
+
+[tool.ruff.lint]
+select = [
+    "E", "F", "W",     # pycodestyle + pyflakes
+    "I",               # isort
+    "B",               # bugbear
+    "UP",              # pyupgrade
+    "SIM",             # simplification
+    "C4",              # comprehensions
+    "PLC", "PLE", "PLW",  # pylint subset
+    "RUF",             # ruff-specific
+]
+ignore = [
+    "E501",   # line length handled by formatter
+    "B008",   # default-arg-mutable false-positives for dataclass field
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["wikilint"]
+
+# ---------------------------------------------------------------------------
+# mypy
+# ---------------------------------------------------------------------------
+
+[tool.mypy]
+python_version = "3.10"
+strict = true
+files = ["_system/wikilint"]
+ignore_missing_imports = true
+warn_unused_ignores = true
+
+# Tests are allowed to be looser.
+[[tool.mypy.overrides]]
+module = "tests.*"
+strict = false
+disallow_untyped_defs = false
+disallow_untyped_calls = false
+
+# ---------------------------------------------------------------------------
+# coverage (used by pytest-cov)
+# ---------------------------------------------------------------------------
+
+[tool.coverage.run]
+source = ["wikilint"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = true

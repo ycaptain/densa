@@ -1,0 +1,9 @@
+{
+  "name": "llm-wiki-starter",
+  "displayName": "LLM Wiki Starter",
+  "summary": "Slash commands for the agent-neutral LLM-maintained wiki template.",
+  "homepage": "https://github.com/ycaptain/llm-wiki-starter",
+  "repository": "https://github.com/ycaptain/llm-wiki-starter",
+  "license": "MIT",
+  "tags": ["llm-wiki", "agents-md", "pkm", "obsidian"]
+}
