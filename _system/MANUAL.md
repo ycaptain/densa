@@ -1,7 +1,7 @@
 ---
 type: manual
 scope: vault
-updated: 2026-05-18
+updated: 2026-05-21
 compiled_against: 1
 ---
 
@@ -33,8 +33,8 @@ compiled_against: 1
 | Process a new source     | `ingest <path>`                                   | `wiki/analyses/` + several wiki nodes + log |
 | Ask the wiki a question  | `query <natural-language question>`               | (read-only + optional file-back to `outputs/qa/<date>-<slug>.md`) |
 | Maintain the wiki        | `lint [--domain <X>]`                             | `outputs/lint/<date>.md` + `outputs/snapshots/index-snapshot.md` |
+| Triage unrouted material | `process-inbox`                                   | `git mv inbox/<file> → domains/<X>/raw/<bucket>/`; logs (no wiki edits — `ingest` is a separate step) |
 | Upgrade a Q&A to wiki    | `promote outputs/qa/<file>.md [--as <type>]`      | `git mv` Q&A → `domains/<X>/wiki/<type>/<slug>.md` + logs |
-| Capture a fleeting note  | "add a note to [[<page>]]: …" (dictated)          | wiki node updated directly, no raw         |
 
 | Page type     | 1:n     | Folder                                | `sources` length / target                          |
 | ------------- | ------- | ------------------------------------- | -------------------------------------------------- |
@@ -139,20 +139,33 @@ a fallback. At smaller scales you don't need it.
 │       └── pre-commit          ← runs `python -m wikilint --staged` on every commit
 │
 ├── domains/
-│   ├── research-papers/        ← starter L2 (light, fully worked example)
+│   ├── research-papers/        ← light L2 (6 page types) — 4-paper LLM-tutoring arc
 │   │   ├── AGENTS.md
 │   │   ├── index.md
 │   │   ├── log.md
-│   │   ├── raw/                ← one paper PDF + clipped abstracts
-│   │   └── wiki/               ← analyses, concepts, frameworks (worked)
-│   ├── psychology/             ← advanced L2 (schema reference; folder structure only)
-│   │   ├── AGENTS.md           ← thorough L2 schema; honest-disclosure in line 1
+│   │   ├── raw/                ← 4 papers + clipped abstracts (synthesised stand-ins)
+│   │   └── wiki/               ← analyses, concepts, frameworks, syntheses, questions
+│   ├── workspace/              ← medium L2 — meetings / decisions / stakeholders
+│   │   ├── AGENTS.md
 │   │   ├── index.md
 │   │   ├── log.md
-│   │   ├── raw/                ← (empty — you supply your own session material)
-│   │   └── wiki/               ← (empty buckets — see psychology AGENTS.md)
+│   │   ├── raw/                ← Q2 platform-migration meeting transcripts
+│   │   └── wiki/               ← analyses, decisions, stakeholders, teams, projects
+│   ├── psychology/             ← heavy L2 — 6-week father-grief worked arc
+│   │   ├── AGENTS.md           ← thorough L2 schema; privacy-posture callout
+│   │   ├── index.md
+│   │   ├── log.md
+│   │   ├── raw/                ← 3 therapy + 1 psychiatry session (synthesised)
+│   │   └── wiki/               ← ~25 pages: analyses, themes, patterns, syntheses, …
 │   └── <your-domain>/          ← add as many L2s as you need
 │
+├── outputs/                    ← operation artifacts (in git, outside wikilink graph)
+│   ├── lint/<YYYY-MM-DD>.md    ← lint reports (type: report)
+│   ├── qa/<YYYY-MM-DD>-*.md    ← query Q&A archives (type: report)
+│   └── snapshots/              ← machine-readable index mirror (§1.1)
+│
+├── docs/                       ← project meta documentation (DESIGN, EXAMPLES, …)
+├── integrations/               ← (optional) agent-specific UX add-ons (claude-code)
 ├── inbox/                      ← optional: un-routed material (see L1 §2.4)
 └── attic/                      ← deprecated / quarantined files
 ```
@@ -402,11 +415,18 @@ mv` / `git diff` — no exotic capabilities.
 
 ### Do I have to use the example domains?
 
-No. The five domains under `domains/` are all worked examples (see
-[`../docs/EXAMPLE-DOMAINS.md`](../docs/EXAMPLE-DOMAINS.md));
-`domains/psychology/` is a schema-only L2 (folder structure with no
-seeded wiki content), the other four ship with ~10 pages of
-synthetic content each. You can:
+No. The three domains under `domains/` are all worked examples (see
+[`../docs/EXAMPLE-DOMAINS.md`](../docs/EXAMPLE-DOMAINS.md)) covering
+the **light → medium → heavy** schema-density spectrum:
+
+- `domains/research-papers/` — **light** (6 page types), a 4-paper
+  LLM-tutoring causal-evidence arc.
+- `domains/workspace/` — **medium** (meetings / decisions /
+  stakeholders), a Q2 platform-migration arc.
+- `domains/psychology/` — **heavy** (~25 wiki pages from 4 sources),
+  a 6-week father-grief therapy + psychiatry worked arc.
+
+You can:
 
 - Rename one and adapt its L2 (`git mv domains/<example>
   domains/<your-name>`), or
@@ -414,8 +434,10 @@ synthetic content each. You can:
   scratch using the four design questions in
   [`../docs/DESIGN.md`](../docs/DESIGN.md) §"How to design your own
   L2", or
-- Move an example under `domains/.legacy-example/` to keep it as a
-  reference without treating it as live.
+- Move an example under `domains/.legacy-example-<name>/` to keep it
+  as a browsable reference without treating it as live (the bootstrap
+  prompt's default recommendation; see
+  [`../docs/EXAMPLE-DOMAINS.md`](../docs/EXAMPLE-DOMAINS.md) Option B).
 
 The bootstrap prompt walks you through this decision; see
 [`../docs/bootstrap-prompt.md`](../docs/bootstrap-prompt.md) Step 4.

@@ -2,23 +2,27 @@
 
 Public surface:
 
-    from wikilint import lint_paths, lint_staged, lint_all, Diagnostic, Severity
+    from wikilint import (
+        Diagnostic, Report, Severity,
+        lint_all, lint_diff, lint_paths, lint_staged,
+    )
 
 The CLI lives in :mod:`wikilint.cli` and is invoked as either
 ``python -m wikilint`` or via the ``wikilint`` console script when the
 package is installed.
 
-This package targets stdlib-only at import time: the pre-commit hook runs
-on every ``git commit``, so a fast cold start matters. Optional
-dependencies (``pyyaml``, ``pydantic``) are loaded lazily by
-:mod:`wikilint.frontmatter` and :mod:`wikilint.config` only when their
-respective backends are explicitly selected.
+This package targets stdlib-only at import time: the pre-commit hook
+runs on every ``git commit``, so a fast cold start matters. The single
+optional dependency (``pyyaml``) is loaded lazily by
+:mod:`wikilint.frontmatter` only when the strict backend is selected
+(`pip install -e ".[strict]"` or YAML features the stdlib parser
+cannot handle).
 """
 
 from __future__ import annotations
 
 from wikilint.report import Diagnostic, Report, Severity
-from wikilint.runner import lint_all, lint_paths, lint_staged
+from wikilint.runner import lint_all, lint_diff, lint_paths, lint_staged
 
 __all__ = [
     "Diagnostic",
@@ -26,6 +30,7 @@ __all__ = [
     "Severity",
     "__version__",
     "lint_all",
+    "lint_diff",
     "lint_paths",
     "lint_staged",
 ]

@@ -2,7 +2,7 @@
 type: synthesis
 domain: workspace
 created: 2026-05-20
-updated: 2026-05-20
+updated: 2026-05-21
 sources: ["[[2026-04-08-meeting-q2-planning]]", "[[2026-04-22-decision-microservices-split]]", "[[2026-05-06-meeting-incident-postmortem]]", "[[decision-delay-from-skipped-stakeholder]]"]
 tags: [synthesis, q2-platform-migration, narrative-arc, residual-risk]
 aliases: ["Q2 platform arc — May 2026 view"]
@@ -153,3 +153,11 @@ owned-work, phase-gate authority — operate at a layer below the
 - [[decision-delay-from-skipped-stakeholder]] — the pattern.
 - [[should-we-revisit-cs-veto-power]] — the live process
   question.
+- [[engineering-decision-style]] — the positive pattern; ADR-001
+  is documented there as the partial-instance / near-miss.
+- [[engineering-decisions-retrospective-may-2026]] — the **next
+  layer of synthesis** comparing this arc's failure mode against
+  the May decisions that closed the workflow seam. Intern
+  reading order: this synthesis (single-project arc) → the
+  May retrospective (cross-project) → individual stakeholder
+  pages.

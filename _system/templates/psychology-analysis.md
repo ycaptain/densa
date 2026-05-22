@@ -4,6 +4,7 @@ domain: psychology
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 sources: ["[[<raw-source-wikilink>]]"]
+aliases: []
 session_kind: therapy
 participants: [self, <clinician-slug>]
 analysis_lens: []

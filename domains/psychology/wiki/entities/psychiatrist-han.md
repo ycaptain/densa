@@ -28,14 +28,14 @@ compiled_against: 1
 - **Cross-clinical boundary, strict.** Han explicitly does not do
   process work in his chair (*"I don't do process work in this
   chair, that's her chair"* —
-  [[2026-04-23-psychiatry-han#^[33:18]]]). Process material that
+  [[2026-04-23-psychiatry-han]] [33:18]). Process material that
   surfaces during the psychiatry session is logged for return to
   therapy rather than worked through.
 - **Decision-making style**: collaborative rather than
   prescriptive; explicit deferral to give the client time to
   consult partner + therapist (*"I want to think about what I
   learn today and decide *with* you, not *for* you"* —
-  [[2026-04-23-psychiatry-han#^[00:04]]]).
+  [[2026-04-23-psychiatry-han]] [00:04]).
 - **Scale-grounded** but not scale-led: uses PHQ-9, PCL-5, GAD-7,
   DES-II for baseline + delta tracking, but reads each scale
   *in clinical context* (PHQ-9 = 14 in bereavement is not the
@@ -55,7 +55,7 @@ compiled_against: 1
 | 2026-04-23 | First eval ([[2026-04-23-psychiatry-han]]) | No medication initiated. Trazodone for sleep maintenance discussed; held for two weeks. SSRI deferred to mid-July review. CBT-I on standby. | Working dx: bereavement-related depressive episode with complicated-grief features + sub-threshold PTSD avoidance cluster. Risk: moderate-low. — [[medication-arc#timeline]] |
 
 > Han's next visit (originally 2026-05-07; rescheduled to 2026-05-21
-> per [[2026-05-14-session-reyes#^[16:42]]]) is referenced
+> per [[2026-05-14-session-reyes]] [16:42]) is referenced
 > prospectively but not yet documented in this worked-example ingest.
 
 ## Clinical signature observable in this single session
@@ -65,7 +65,7 @@ markers a reader can recognise across psychiatric styles:
 
 - **No first-session prescription as a deliberate practice.** Han
   separates this from his colleagues' approach explicitly
-  ([[2026-04-23-psychiatry-han#^[00:04]]]).
+  ([[2026-04-23-psychiatry-han]] [00:04]).
 - **Separates the depression question from the sleep question.**
   Treats maintenance insomnia as a stand-alone problem that
   *might* be addressed pharmacologically (trazodone) even while
@@ -82,11 +82,11 @@ markers a reader can recognise across psychiatric styles:
   identifies the IFS parts-emergence (the "foreman") as a
   *positive prognostic indicator* without entering the parts
   conversation himself
-  ([[2026-04-23-psychiatry-han#^[33:18]]]).
+  ([[2026-04-23-psychiatry-han]] [33:18]).
 - **Names the marker for the next decision.** The avoidance-cluster
   loosening at 12-week post-loss is the explicit marker Han
   said he would check at the mid-July SSRI review
-  ([[2026-04-23-psychiatry-han#^[22:30]]]). Decisions become
+  ([[2026-04-23-psychiatry-han]] [22:30]). Decisions become
   audit-able in advance.
 
 ## Cross-references

@@ -269,7 +269,8 @@ directly.
 - `_system/prompts/domains/psychology-session-analysis.md` — long-form session
   reflection template (multi-perspective: psychodynamic, CBT, IFS, EFT,
   attachment, narrative, existential, developmental, transference, somatic).
-  Used by the ingest flow when generating syntheses.
+  Used by the ingest flow when generating per-session **analyses** (one
+  raw → one analysis; cross-source narratives live in `wiki/syntheses/`).
 
 ## Privacy posture
 

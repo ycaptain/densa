@@ -71,21 +71,21 @@ presentations; the patient-side experience and route-into-care differ.
 Mark's presentation is a textbook example:
 
 - **Lead complaint** is cardiac-sounding: chest tightness, "a hand
-  closing around the bottom of my throat" ([[2026-04-02-session-reyes#^[12:08]]]).
+  closing around the bottom of my throat" ([[2026-04-02-session-reyes]] [12:08]).
 - **First professional contact** was his PCP for cardiac work-up
   (normal EKG and stress test); the PHQ-9 was administered only
   because the cardiac work was negative.
 - **Self-frame** explicitly resists the standard depression label:
   *"I'm not depressed in the I-want-to-disappear way. I'm depressed
-  in the I-can't-feel-anything way"* ([[2026-04-02-session-reyes#^[12:08]]]).
+  in the I-can't-feel-anything way"* ([[2026-04-02-session-reyes]] [12:08]).
 - **Functional preservation at work, withdrawal at home** is the
   diurnal pattern: standup runs fine, two-people-on-couch evenings
-  are non-watching ([[2026-04-02-session-reyes#^[03:47]]],
-  [[2026-04-16-session-reyes#^[00:00]]]).
+  are non-watching ([[2026-04-02-session-reyes]] [03:47],
+  [[2026-04-16-session-reyes]] [00:00]).
 - **Predominant affect** is *flatness*, not sadness — the
   "watching myself" two-of-me phenomenology
-  ([[2026-04-02-session-reyes#^[03:47]]],
-  [[2026-04-23-psychiatry-han#^[08:22]]]).
+  ([[2026-04-02-session-reyes]] [03:47],
+  [[2026-04-23-psychiatry-han]] [08:22]).
 - **PHQ-9 = 14** at both PCP and psychiatry consult — moderate
   range. The score does not distinguish "masked" from
   "prototypical" presentation; the *route* and the *self-frame* do.
@@ -101,7 +101,7 @@ Mark's presentation is a textbook example:
   affect** (somatic anchoring, IFS protector-part work) is
   better-matched to this presentation than purely cognitive
   approaches. Dr. Reyes's intervention in session 2
-  ([[2026-04-16-session-reyes#^[04:38]]]) lands precisely because
+  ([[2026-04-16-session-reyes]] [04:38]) lands precisely because
   it uses the chest band as the on-ramp rather than asking the
   client to talk about feelings he does not yet have words for.
 - The **vocabulary expansion** itself is a clinical outcome.
@@ -128,7 +128,7 @@ Mark's presentation is a textbook example:
 - **vs. PTSD somatisation.** PTSD can present somatically. The
   PCL-5 = 28 (sub-threshold) here, with avoidance cluster
   prominent but no criterion-A trauma, points away from primary
-  PTSD ([[2026-04-23-psychiatry-han#^[14:00]]]).
+  PTSD ([[2026-04-23-psychiatry-han]] [14:00]).
 
 ## Cross-references
 
@@ -145,8 +145,8 @@ Mark's presentation is a textbook example:
 
 - 2026-04-02 — Self-frame "depressed in the I-can't-feel-anything
   way" articulated by client; PHQ-9 = 14 with PCP-route entry
-  ([[2026-04-02-session-reyes#^[12:08]]]).
+  ([[2026-04-02-session-reyes]] [12:08]).
 - 2026-04-23 — Han codes the somatic + flatness + sleep cluster as
   the dominant feature set, with anhedonia named as
   *anhedonia partial loss of capacity to feel pleasure* rather
-  than as sadness ([[2026-04-23-psychiatry-han#^[08:22]]]).
+  than as sadness ([[2026-04-23-psychiatry-han]] [08:22]).

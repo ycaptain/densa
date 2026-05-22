@@ -2,7 +2,7 @@
 type: analysis
 domain: workspace
 created: 2026-05-20
-updated: 2026-05-20
+updated: 2026-05-21
 sources: ["[[2026-04-22-decision-microservices-split]]"]
 tags: [q2-platform-migration, adr, webhooks, identity-service]
 aliases: []
@@ -12,6 +12,67 @@ raw_type: decision
 ---
 
 # ADR-001 microservices split — analysis
+
+> [!important]
+> **30-second TL;DR.** ADR-001 formalises a 4-phase rollout for
+> extracting `identity` + `webhooks` from the monolith with hard
+> gates between phases, shadow mode as a P0 line item, and a
+> rollback runbook with state reconciliation. The ADR materially
+> satisfies the 2026-04-08 planning meeting's constraints. The
+> load-bearing trade-off is **routing-layer-local assertion as
+> immediate mitigation vs cross-layer reconciliation as residual
+> risk**. [[stakeholder-alex-cs]] partial-signed on this exact
+> seam, predicting in writing that the cross-layer gap was the
+> one to close before phase 3. **The single most important
+> deferral**: cross-layer reconciliation is filed as "phase-2
+> follow-up monitoring work" with **no owner and no date** — this
+> is the workflow defect that the postmortem will diagnose.
+
+## At-a-glance
+
+| Field                       | Content |
+| --------------------------- | ------- |
+| **Working subject**         | ADR-001: extract `identity` + `webhooks` from the monolith |
+| **Meeting type**            | decision-doc (ADR) |
+| **Attendees**               | Maya Chen ([[team-platform]], author); Devon Park (Product, approver); Tom Becker (SRE, conditional approver); [[stakeholder-alex-cs]] (webhook-section reviewer, partial sign-off) |
+| **Decision produced**       | Accepted: 4-phase rollout, identity + webhook extraction, shadow mode P0, rollback as runbook |
+| **Reversibility**           | partial — phases 0-2 reversible via flag flip; phase 3 (Redis decommission) requires snapshot restore (~90 min) |
+| **Load-bearing constraint** | Enterprise SLA exposure during cutover ([[stakeholder-alex-cs]]'s constraint, inherited from 2026-04-08) |
+| **Residual risks accepted** | (a) **cross-layer reconciliation deferred** to phase-2 follow-up monitoring without owner / date — [[stakeholder-alex-cs]] partial-signed with on-record prediction; (b) phase-3 rollback complexity (90 min minimum); (c) cutover window risk addressed via doubled on-call |
+| **Owners assigned**         | Maya → ADR + phase shepherding; Tom → rollback runbook (approved same-day); Priya → dual-write validation (done 2026-04-17); **cross-layer reconciliation → unassigned, undated** |
+
+## Decision-shape diagram
+
+```mermaid
+flowchart LR
+    subgraph In["Inputs (from 2026-04-08)"]
+        I1["Constraints set:<br/>SLA, shadow, runbook"]
+        I2["Alex's silent-acceptance<br/>failure mode named"]
+    end
+    subgraph Mit["Mitigations folded into decision"]
+        M1["✅ Phased rollout, hard gates"]
+        M2["✅ Shadow mode (P0)"]
+        M3["✅ Routing-layer-local<br/>queue-depth assertion"]
+        M4["✅ Rollback as state-reconciliation runbook"]
+    end
+    subgraph Def["Mitigations deferred"]
+        D1["⚠️ Cross-layer reconciliation<br/>(no owner, no date)"]
+    end
+    In --> Mit
+    In --> Def
+    Mit --> Out["ADR-001 accepted<br/>Phase 0 begins 2026-04-23"]
+    Def -.-> Out
+    Def -.->|"6 weeks later"| Inc["2026-05-04 incident<br/>(see postmortem)"]
+```
+
+## Cast and stakes
+
+| Stakeholder                    | Stake                                                            | Position                                                                                  | Outcome                                                                                                       |
+| ------------------------------ | ---------------------------------------------------------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| Maya Chen ([[team-platform]])  | Q2 delivery; Platform throughput unlock                          | Authors ADR-001 mirroring 2026-04-08 constraints; phased + shadow + runbook all included  | ADR accepted as written                                                                                       |
+| Devon Park (Product)           | Q3 deploy-frequency gain                                         | Approves 2026-04-21                                                                       | Approved                                                                                                      |
+| Tom Becker (SRE)               | Rollback discipline                                              | Conditional approval pending rollback runbook sign-off                                    | Resolved same day; approved                                                                                   |
+| [[stakeholder-alex-cs]]        | Enterprise SLA <0.1% loss (Northbridge + Riverdale)              | Approves local-assertion mitigation; **does NOT** approve the cross-layer reconciliation deferral but does not block | **Partial sign-off**; on-record comment: "Recording this for the postmortem record in case we need it"        |
 
 ## Context
 
@@ -107,6 +168,12 @@ mirror.)
 - [[team-platform]] — the deciding team.
 - [[2026-05-06-meeting-incident-postmortem-analysis]] — where the
   deferred mitigation breaks.
+- [[engineering-decision-style]] — the positive pattern; ADR-001
+  is documented there as the **partial-instance / near-miss**
+  (steps 1-4 exemplary; steps 5-6 the failure point).
+- [[engineering-decisions-retrospective-may-2026]] — cross-arc
+  synthesis comparing ADR-001 against the May decisions that
+  closed the steps-5-6 gap.
 
 ## Notes
 

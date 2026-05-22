@@ -222,6 +222,6 @@ if (!log) {
     dv.paragraph("_log.md not yet populated._");
 } else {
     const entries = log.split("\n").filter(l => l.startsWith("## ["));
-    dv.list(entries.slice(-15).reverse());
+    dv.list(entries.slice(0, 15));
 }
 ```

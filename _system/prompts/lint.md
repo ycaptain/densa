@@ -99,9 +99,17 @@ Canonical procedure for `/AGENTS.md` §2.3.
    section in each `domains/<X>/AGENTS.md` and run those too.
 6.5. **Q&A spot-check ingestion**. Scan every `outputs/qa/*.md` for an
     "Issues to surface at next lint" section (populated by `query`
-    step 3.5). Pull each bullet into this run's appropriate report
-    section — typically `Provenance findings → Quote-integrity
-    failures` or `Provenance findings → Citation depth violations`.
+    step 3.5) and any `promote` runs since the last lint (which append
+    their Q&A "Issues to surface" payloads in the same shape). Route
+    each bullet:
+    - If it matches a specific category — `Provenance findings →
+      Quote-integrity failures`, `Provenance findings → Citation depth
+      violations`, `Provenance findings → last_validated stale`, etc.
+      — file it under that section.
+    - Otherwise file it under `## Human-review queue` (the catch-all
+      section in the report skeleton below). This is the section
+      `promote` step 5 appends to and the one the human should scan
+      first when triaging a fresh lint.
     After ingestion, clear that section of the Q&A file (leave the
     heading; empty body) so the next `query` can populate it again
     without duplicating. This is a non-bypassable lint substep because
@@ -174,6 +182,14 @@ Canonical procedure for `/AGENTS.md` §2.3.
    <!-- One row per outputs/qa/<file> meeting the heuristics in step
    6.6: filename, suggested type, suggested slug, brief reason.
    The human runs `promote` (§2.5) — lint never executes it. -->
+
+   ## Human-review queue
+   <!-- Catch-all for items routed here from step 6.5 (Q&A "Issues to
+   surface" bullets that don't fit a specific Provenance / Narrative
+   sub-section) and from `promote` step 5 (which appends the
+   promoted Q&A's residual "Issues to surface" payload here). Each
+   row: source file, one-line issue, suggested next action. Empty
+   when there's nothing pending. -->
 
    ## Domain-specific findings
    ### …

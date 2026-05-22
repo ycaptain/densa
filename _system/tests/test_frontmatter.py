@@ -85,3 +85,33 @@ def test_does_not_choke_on_commas_inside_quotes() -> None:
         "---\n"
     )
     assert fm == {"aliases": ["foo, bar", "baz"]}
+
+
+def test_handles_utf8_bom() -> None:
+    """Regression: a UTF-8 BOM-prefixed file must not appear to lack
+    frontmatter (which would surface as a false AGENTS003 error).
+
+    Editors on Windows / older clipboards sometimes emit a BOM at the
+    head of a text file; the validator should normalise it away.
+    """
+    fm = parse_stdlib(
+        "\ufeff---\n"
+        "type: concept\n"
+        "status: active\n"
+        "---\n"
+        "body\n"
+    )
+    assert fm == {"type": "concept", "status": "active"}
+
+
+def test_handles_crlf_line_endings() -> None:
+    """Regression: a Windows-style CRLF file must not appear to lack
+    frontmatter."""
+    fm = parse_stdlib(
+        "---\r\n"
+        "type: concept\r\n"
+        "status: active\r\n"
+        "---\r\n"
+        "body\r\n"
+    )
+    assert fm == {"type": "concept", "status": "active"}

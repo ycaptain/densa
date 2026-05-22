@@ -4,7 +4,7 @@ domain: research-papers
 created: 2026-05-20
 updated: 2026-05-21
 sources: ["[[2024-vanzo-gpt4-homework-tutor-eth]]"]
-tags: [llm-tutoring, rct, k12, language-learning, homework, engagement-mediated]
+tags: [llm-tutoring, rct, k12, language-learning, homework, engagement-mediated, secondary-findings]
 aliases: ["vanzo-2024-analysis", "eth-gpt4-homework-rct"]
 status: active
 compiled_against: 1
@@ -74,6 +74,32 @@ Vanzo's contribution is **the cheap-design corner**: a positive
 short-term effect with almost no authoring labour. Whether the
 effect survives retention testing is the question this paper hands
 off to Bastani-style follow-on work.
+
+## Headline numbers (the table to memorise)
+
+Vanzo's headline is positional rather than effect-size-driven (the
+quadrantChart above does the positioning work). The numbers that
+actually load-bear for downstream reading live in the §4.2.3 /
+§4.3 secondary findings — they are the reason a careful reader does
+not over-read the primary grammar gain.
+
+| Outcome / measurement                                          | Direction / magnitude                                | Statistical anchor                                                  | What it actually means                                                                  |
+| -------------------------------------------------------------- | ---------------------------------------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Grammar gain (§3.1, **headline**)                              | treatment > control                                  | statistically significant; magnitude single-study (4 classes)        | the title result — read alongside the **no-retention-test** caveat                       |
+| Continuation intent (§3.3)                                     | ≈ **100%** of stay-next-year treatment students wanted to keep using | descriptive (population: students still at the school next year)    | unusually strong stickiness; pushes back on "LLMs will kill homework"                    |
+| Words typed under treatment (§4.3.2)                           | treatment ≫ control                                  | **d = 1.421, p < 0.001** on `words_typed`                            | identifies the engagement-mediation pathway                                              |
+| **Treatment effect after controlling for `words_typed` (§4.3.2)** | **becomes non-significant**                       | **coef = −0.446, p = 0.666**                                         | the load-bearing mediation result — gain is consistent with "more time on task", not "better pedagogy per minute" (contrast with Kestin) |
+| Weaker-students-benefit-more (§4.3.1)                          | strong negative correlation between pre-score and gain in treatment arm | **R = −0.777, p < 0.001** (vs R = −0.628 in control)                | the most policy-relevant sub-population finding; **opposite sign** from Prather 2024 / Cipriano & Alves 2024 in CS — directly feeds [[llm-tutoring-equity-impact]] |
+| Self-rated confidence (§4.2.3)                                 | **decreased** in treatment arm                       | direction reported; paper itself cannot distinguish calibration improvement from learned helplessness | the "easy to miss" finding; no objective re-assessment was paired with the survey         |
+| Hallucination rate (§4.3.3)                                    | very low                                             | **4 / 1,549 ≈ 0.26%** errors by manual review of all flagged convos | bounds one deployment worry for *this* model + *this* prompting + *this* subject         |
+
+Bold rows are the two findings a Vanzo reader most commonly misses
+— the §4.3.2 engagement-mediation OLS (which moves the
+interpretation from "AI pedagogically helped" to "AI got the kid to
+work longer") and the §4.3.1 weaker-students-benefit-more inversion
+(which sits in tension with the CS-tutoring literature). A
+downstream synthesis that quotes only the headline grammar gain
+without these two rows is misrepresenting the paper.
 
 ## Claim
 

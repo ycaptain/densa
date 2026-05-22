@@ -72,7 +72,7 @@ compiled_against: 1
 A textbook intake session for bereavement-related depressive
 presentation with [[complicated-grief]] risk markers. Reyes
 delivers a three-layer case formulation
-([[2026-04-02-session-reyes#^[26:40]]]) — proximal grief →
+([[2026-04-02-session-reyes]] [26:40]) — proximal grief →
 regret-loop → multi-generational containment substrate — and
 deliberately *withholds* affect-contact work because the
 protector is over-active for direct intervention. Three patterns
@@ -88,7 +88,7 @@ is a *noticing* task, not a behavioural change.
   tub of cottage cheese alone in his father's apartment, then
   drives home. The laugh is the first visible firefighter-shaped
   defense; the moment becomes the **anchor** Reyes returns to in
-  session 2. ([[2026-04-02-session-reyes#^[00:00]]],
+  session 2. ([[2026-04-02-session-reyes]] [00:00],
   [[inner-protector-stoic]])
 - **[03:47]** — *"like there's a version of me running standup,
   and there's a version of me sitting six feet behind that one
@@ -130,7 +130,7 @@ the register Reyes calibrates to — competent, descriptive, with
 occasional self-deprecation, no extended crying. The most
 affectively loaded moment is the description of the unresolved
 fight with his father about his mother in the months before
-death ([[2026-04-02-session-reyes#^[07:14]]]) — he names
+death ([[2026-04-02-session-reyes]] [07:14]) — he names
 "regretting something I was constitutionally incapable of
 doing in the first place" and the chest band tightens visibly.
 
@@ -215,14 +215,14 @@ worry); preference for **co-regulation by parallel competence**
 **co-regulation by affect sharing**. The dismissing pattern is
 inherited rather than self-generated — Mark explicitly traces
 it through three generations
-([[2026-04-02-session-reyes#^[07:14]]]). The clinical
+([[2026-04-02-session-reyes]] [07:14]). The clinical
 implication is that the pattern is **constitutionally
 load-bearing**, not a learned behaviour amenable to
 straightforward behavioural intervention; meaningful change
 requires the attachment substrate to be addressed in the
 room, not lectured into modification. Reyes's choice to refuse
 the "how long will this last" reassurance
-([[2026-04-02-session-reyes#^[34:18]]]) is itself an
+([[2026-04-02-session-reyes]] [34:18]) is itself an
 attachment-style intervention — modelling honest
 co-regulation in a register Mark's lineage did not provide.
 
@@ -232,7 +232,7 @@ The session's load-bearing existential thread is **regret without
 the possibility of repair**. Mark articulates the shape clearly:
 *"regretting something I was constitutionally incapable of doing
 in the first place. Which is a weird shape of regret."*
-([[2026-04-02-session-reyes#^[07:14]]]). This is not garden-
+([[2026-04-02-session-reyes]] [07:14]). This is not garden-
 variety post-loss regret; it is the regret of a person whose
 prior self structurally could not have done the thing now
 mourned. The existential implication: the future-orientation of
@@ -240,7 +240,7 @@ meaning-making — what kind of dad Mark wants to be to Theo, what
 register of speaking Mark might develop forward from here —
 becomes the available work, because the past is sealed. The
 session does not yet open this thread; it surfaces at session 4
-([[2026-05-14-session-reyes#^[30:08]]]) when the protector has
+([[2026-05-14-session-reyes]] [30:08]) when the protector has
 allowed enough room for it.
 
 ## Wiki side-effects

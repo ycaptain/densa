@@ -131,6 +131,51 @@ class TestAnalysisSourcesCardinality:
         )
         assert _ids(report) == [self.rule_id]
 
+    def test_source_must_resolve_to_raw(self, mini_vault: MiniVault) -> None:
+        """Regression: AGENTS005 must reject analysis whose sole source
+        wikilink resolves to a wiki page (not a raw file).
+
+        L1 §3.1 says `analysis.sources` MUST point to a raw file.
+        Before the fix the rule only checked wikilink syntax, so an
+        analysis citing another wiki page passed silently.
+        """
+        # A real wiki page that the analysis (incorrectly) cites.
+        mini_vault.write(
+            "domains/psychology/wiki/concepts/another-page.md",
+            make_wiki_page(type_="concept"),
+        )
+        path = "domains/psychology/wiki/analyses/x-analysis.md"
+        text = make_wiki_page(
+            type_="analysis", sources="[[another-page]]",
+        )
+        mini_vault.write(path, text)
+        report = Report()
+        AnalysisSourcesCardinality().visit(
+            path, text, build_index(mini_vault.root), report,
+        )
+        assert _ids(report) == [self.rule_id]
+
+    def test_source_resolving_to_raw_is_clean(
+        self, mini_vault: MiniVault,
+    ) -> None:
+        """Companion: a source wikilink that resolves to a raw/ file
+        produces no diagnostic."""
+        mini_vault.write(
+            "domains/psychology/raw/sessions/2026-04-23-session.md",
+            "# raw transcript\n",
+        )
+        path = "domains/psychology/wiki/analyses/x-analysis.md"
+        text = make_wiki_page(
+            type_="analysis",
+            sources="[[2026-04-23-session]]",
+        )
+        mini_vault.write(path, text)
+        report = Report()
+        AnalysisSourcesCardinality().visit(
+            path, text, build_index(mini_vault.root), report,
+        )
+        assert _ids(report) == []
+
 
 class TestWikilinkResolvable:
     rule_id = "AGENTS006"

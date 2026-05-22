@@ -4,6 +4,7 @@ domain: <your-domain>
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 sources: []
+aliases: []
 decision_id: <project>-<NNN>
 decided_on: <% tp.date.now("YYYY-MM-DD") %>
 status: proposed
@@ -11,6 +12,7 @@ project: <project-slug>
 supersedes: []
 superseded_by: []
 tags: []
+compiled_against: 1
 ---
 
 # <% tp.file.title %>

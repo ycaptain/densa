@@ -87,10 +87,10 @@ and Dr. Han apply across this arc.
 
 | Marker | Evidence in this arc |
 | --- | --- |
-| Sudden loss | Sudden MI, no warning ([[2026-04-02-session-reyes#^[00:00]]]). |
-| Unresolved thread | The pre-death fight about mother + finances; "never resolved, just overwrote it" ([[2026-04-02-session-reyes#^[07:14]]]). |
-| Early avoidance cluster | PCL-5 = 28 sub-threshold at 11 weeks; avoidance items dominant ([[2026-04-23-psychiatry-han#^[14:00]]]). |
-| Emotional-containment style | Multi-generational "men who don't talk"; foreman/Manager part dominant since age ~12 ([[2026-04-02-session-reyes#^[07:14]]], [[2026-04-16-session-reyes#^[04:38]]]). |
+| Sudden loss | Sudden MI, no warning ([[2026-04-02-session-reyes]] [00:00]). |
+| Unresolved thread | The pre-death fight about mother + finances; "never resolved, just overwrote it" ([[2026-04-02-session-reyes]] [07:14]). |
+| Early avoidance cluster | PCL-5 = 28 sub-threshold at 11 weeks; avoidance items dominant ([[2026-04-23-psychiatry-han]] [14:00]). |
+| Emotional-containment style | Multi-generational "men who don't talk"; foreman/Manager part dominant since age ~12 ([[2026-04-02-session-reyes]] [07:14], [[2026-04-16-session-reyes]] [04:38]). |
 
 All four markers present at 11 weeks. Treatment (Reyes + Han) is
 explicitly positioned as **early intervention** on the PGD
@@ -103,7 +103,7 @@ trajectory rather than as treatment of established PGD.
   relationship to the deceased (yearning, identity disruption),
   while MDD's centre is pervasive low mood / anhedonia
   independent of the loss. Mark's "half-volume" presentation
-  ([[2026-04-23-psychiatry-han#^[08:22]]]) skews toward
+  ([[2026-04-23-psychiatry-han]] [08:22]) skews toward
   bereavement-coloured anhedonia rather than primary MDD; this is
   why Han defers SSRI initiation.
 - **vs. PTSD.** Sub-threshold avoidance-cluster signal does not
@@ -121,7 +121,7 @@ trajectory rather than as treatment of established PGD.
 ## Treatment implications visible in this arc
 
 - **Process work over pharmacology in months 1-3.** Han defers
-  SSRI initiation ([[2026-04-23-psychiatry-han#^[22:30]]]) on the
+  SSRI initiation ([[2026-04-23-psychiatry-han]] [22:30]) on the
   rationale that *grief is informational* and SSRI-driven
   affective flattening in the first six weeks of medication may
   blunt the integrative work happening in therapy.
@@ -134,9 +134,9 @@ trajectory rather than as treatment of established PGD.
   (refusing maternal calls; not telling Sarah how he is) is the
   most actionable per-week target. Loosening of the avoidance
   cluster is the marker Han said he would check at 12-week
-  follow-up ([[2026-04-23-psychiatry-han#^[22:30]]]).
+  follow-up ([[2026-04-23-psychiatry-han]] [22:30]).
 - **Meaning-reconstruction** ([[grief-as-love-transformed]]) and
-  **continuing bonds** practices ([[2026-05-14-session-reyes#^[30:08]]])
+  **continuing bonds** practices ([[2026-05-14-session-reyes]] [30:08])
   are the empirically supported integrative-phase interventions
   appropriate once the avoidance cluster softens.
 
@@ -156,13 +156,13 @@ trajectory rather than as treatment of established PGD.
 - 2026-04-02 — Reyes names the three-layer structure (proximal
   loss → regret-loop → containment style) explicitly, foregrounding
   the regret-loop as the PGD risk marker
-  ([[2026-04-02-session-reyes#^[26:40]]]).
+  ([[2026-04-02-session-reyes]] [26:40]).
 - 2026-04-23 — Han codes the picture as "bereavement-related
   depressive episode with complicated-grief features and
   sub-threshold PTSD avoidance cluster" and explains the
   12-month timeframe rule for formal PGD diagnosis
-  ([[2026-04-23-psychiatry-han#^[22:30]]]).
+  ([[2026-04-23-psychiatry-han]] [22:30]).
 - 2026-05-14 — The "guilt → grief" reframe (mother's disclosure
   that father was working toward repair) materially loosens the
   unresolved-thread marker; the trajectory shifts away from PGD
-  consolidation ([[2026-05-14-session-reyes#^[06:30]]]).
+  consolidation ([[2026-05-14-session-reyes]] [06:30]).

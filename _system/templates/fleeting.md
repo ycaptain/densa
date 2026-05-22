@@ -1,8 +1,10 @@
 ---
 type: fleeting
-domain: psychology
+domain: <your-domain>
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
+sources: []
+aliases: []
 tags: [fleeting]
 status: active
 compiled_against: 1

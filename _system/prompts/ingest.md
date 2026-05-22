@@ -25,7 +25,7 @@ that file changes, this prompt loses authority — re-read the schema.
      - Step A: read the full source, output a "key takeaways + entity
        list" pre-summary (≤ 500 words). Do not draft any wiki edits yet.
        Wait for the human to confirm the takeaways match their reading.
-     - Step B: only after confirmation, run steps 2–10 below using the
+     - Step B: only after confirmation, run steps 2–11 below using the
        pre-summary as your working memory anchor; you may re-read
        targeted portions of the source as needed.
    - **> 60K tokens**: ask the human to chunk the source manually before
@@ -48,7 +48,10 @@ that file changes, this prompt loses authority — re-read the schema.
    - create: [[concept/...]]
    - create: [[synthesis/...]]
    - update: [[index]]
-   - append: log.md (×2 — domain + global if cross-domain)
+   - prepend: log.md (×2 — domain + global if cross-domain;
+     "prepend" because L1 §6 logs are reverse-chronological — newest
+     first at the entry insertion point. "Append" in older prompts
+     is a legacy synonym for the same write.)
    ```
    Wait for the human's go-ahead unless they have already pre-approved
    batch ingest.

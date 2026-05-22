@@ -65,9 +65,9 @@ standard-of-care reach.
   room, in real time.
 - **In this arc**: the somatic-anchoring work in session 2 is
   classic EFT — letting the client *feel* the chest band rather
-  than *describe* it ([[2026-04-16-session-reyes#^[04:38]]]).
+  than *describe* it ([[2026-04-16-session-reyes]] [04:38]).
   The "stay with the cottage cheese for a few breaths"
-  intervention ([[2026-04-16-session-reyes#^[18:01]]]) is the EFT
+  intervention ([[2026-04-16-session-reyes]] [18:01]) is the EFT
   *sequential* move: contact → allow → metabolise.
 
 ### Internal Family Systems (IFS)
@@ -89,7 +89,7 @@ See [[ifs]] for the full framework. In this arc IFS contributes:
   model of relational availability that organises adult emotional
   regulation, relationship behaviour, and grief response.
 - **In this arc**: the three-layer formulation Reyes offers in
-  session 1 ([[2026-04-02-session-reyes#^[26:40]]]) is essentially
+  session 1 ([[2026-04-02-session-reyes]] [26:40]) is essentially
   an attachment-theoretic reading. The "long-running pattern of
   emotional containment" is named as inherited — generations of
   men in the lineage with unspoken affect. Mark's
@@ -107,7 +107,7 @@ See [[grief-as-love-transformed]] for the concept. In this arc:
 - Continuing-bond practices (walk in meaningful places, letter
   unsent, talking out loud) offered at session 4 as optional
   between-session experiments
-  ([[2026-05-14-session-reyes#^[30:08]]]).
+  ([[2026-05-14-session-reyes]] [30:08]).
 
 ## Operating principles visible in this arc
 
@@ -137,8 +137,8 @@ Cross-clinical boundary, explicit in this arc:
 The two clinicians do not duplicate each other's work. Reyes
 does not try to medicate; Han does not do process work in his
 chair. They *coordinate* via brief written notes
-([[2026-04-23-psychiatry-han#^[00:04]]],
-[[2026-05-14-session-reyes#^[16:42]]] — Reyes asks Mark to bring
+([[2026-04-23-psychiatry-han]] [00:04],
+[[2026-05-14-session-reyes]] [16:42] — Reyes asks Mark to bring
 the session content back to Han).
 
 ### 3. The somatic body as the channel of first resort
@@ -148,13 +148,13 @@ depression presentation, [[masked-depression]]). The framework
 uses the body as the primary input/output channel:
 
 - Session 1: notice the chest tightness; do not analyse it
-  cognitively ([[2026-04-02-session-reyes#^[12:08]]]).
+  cognitively ([[2026-04-02-session-reyes]] [12:08]).
 - Session 2: chest tightness becomes the "hand" becomes the
   "foreman" — somatic → parts metaphor → meaning
-  ([[2026-04-16-session-reyes#^[04:38]]]).
+  ([[2026-04-16-session-reyes]] [04:38]).
 - Session 4: the chest is now "the foreman sitting on a bucket"
   — somatic shift readable in real time
-  ([[2026-05-14-session-reyes#^[06:30]]]).
+  ([[2026-05-14-session-reyes]] [06:30]).
 
 This is a deliberate sequencing: somatic *precedes* cognitive
 articulation because the cognitive vocabulary is partly what is
@@ -175,7 +175,7 @@ Echoes the IFS stance. Across the four sessions, the foreman is
 *never* asked to stand down. The clinical move is to give him
 **different information** so he can do his job differently.
 This is the principle underlying the entire arc's directionality
-([[2026-05-14-session-reyes#^[12:14]]]).
+([[2026-05-14-session-reyes]] [12:14]).
 
 ## Connected analyses
 

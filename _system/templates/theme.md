@@ -4,10 +4,12 @@ domain: <your-domain>
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 sources: []
+aliases: []
 arc_start: <% tp.date.now("YYYY-MM-DD") %>
 arc_status: active
 tags: []
 status: active
+compiled_against: 1
 ---
 
 # <% tp.file.title %>

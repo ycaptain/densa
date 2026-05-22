@@ -2,7 +2,7 @@
 type: question
 domain: workspace
 created: 2026-05-20
-updated: 2026-05-20
+updated: 2026-05-21
 sources: ["[[2026-05-06-meeting-incident-postmortem]]", "[[2026-04-22-decision-microservices-split]]"]
 tags: [process, customer-success, sign-off-authority, sla-exposure]
 aliases: ["CS veto power", "partial sign-off authority"]
@@ -105,3 +105,11 @@ a position.
 - [[q2-platform-arc-may]] — narrative context.
 - [[team-platform]] — the team on the other side of the
   question.
+- [[engineering-decision-style]] — the positive pattern; the May
+  decisions (2026-05-13, 2026-05-19) **sidestepped** this
+  question by structurally mitigating the external-stakeholder
+  concerns at decision time, but did not close it.
+- [[engineering-decisions-retrospective-may-2026]] — synthesis
+  noting that this question remains open precisely because the
+  May decisions did not encounter the failure mode that opened
+  it.

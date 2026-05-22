@@ -108,11 +108,11 @@ The decision to introduce IFS framing in session 2 was driven by
 **three signals**:
 
 1. **Two-of-me phenomenology** in session 1
-   ([[2026-04-02-session-reyes#^[03:47]]]) — already implicitly a
+   ([[2026-04-02-session-reyes]] [03:47]) — already implicitly a
    parts-language description.
 2. **Strong somatic anchor** that the client could attend to but
    not yet *name* — the chest band
-   ([[2026-04-02-session-reyes#^[12:08]]]). IFS's body-first entry
+   ([[2026-04-02-session-reyes]] [12:08]). IFS's body-first entry
    point matches this presentation.
 3. **Containment-style baseline** with intact Self-capacity but
    over-deployed Manager — a presentation IFS is built for.
@@ -129,20 +129,20 @@ on conceptual grounds. None applied here.
 
 - Reyes uses the 6F sequence implicitly:
   - **Find**: somatic attention to the chest band
-    ([[2026-04-16-session-reyes#^[04:38]]]).
+    ([[2026-04-16-session-reyes]] [04:38]).
   - **Focus**: "be curious about it. Like you're looking at a
     small animal you've never seen before."
   - **Flesh out**: the band becomes a "hand," then a
     "foreman" — sleeves rolled, age ~12-origin, job description.
   - **Feel toward**: Reyes does not force the 8C check; the
     client's spontaneous "he's not the enemy" articulation
-    ([[2026-04-16-session-reyes#^[14:55]]]) marks adequate
+    ([[2026-04-16-session-reyes]] [14:55]) marks adequate
     Self-energy.
   - **beFriend**: the foreman's job is described in his own
     words; Reyes endorses it without flattening it.
   - **Fears**: the protector's fear is "if the chest came open,
     the foreman couldn't run the job site"
-    ([[2026-04-16-session-reyes#^[04:38]]]) — the Exile material
+    ([[2026-04-16-session-reyes]] [04:38]) — the Exile material
     underneath is the cottage-cheese grief.
 
 The session ends at the Exile contact (cottage-cheese moment,
@@ -155,14 +155,14 @@ early in the trust-building.
   unburdens** the Exile: specifically, the *guilt charge* fused
   with the grief is lifted by the mother's disclosure that the
   father was working toward repair
-  ([[2026-05-14-session-reyes#^[06:30]]]).
+  ([[2026-05-14-session-reyes]] [06:30]).
 - The client articulates *Manager re-deployment* unprompted: the
   foreman *dialled the call*, with new information, rather than
   being bypassed by a different part
-  ([[2026-05-14-session-reyes#^[12:14]]]).
+  ([[2026-05-14-session-reyes]] [12:14]).
 - Cottage-cheese Exile material is now *tender* rather than
   *unbearable* — consistent with successful partial unburdening
-  ([[2026-05-14-session-reyes#^[24:00]]]).
+  ([[2026-05-14-session-reyes]] [24:00]).
 
 ## Connected analyses
 

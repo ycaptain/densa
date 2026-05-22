@@ -1,9 +1,12 @@
 """Orchestration — turn a Config + source spec into a populated Report.
 
-Three entry points mirror the three CLI modes:
+Four entry points mirror the four CLI modes:
 
 - :func:`lint_staged`  — fan out staged rules over the diff, fan out
   file rules over the staged blob contents.
+- :func:`lint_diff`    — same as ``lint_staged`` but driven by a
+  ``base_ref..HEAD`` range instead of the git index. Lets CI catch
+  ``--no-verify`` bypasses of AGENTS001 / AGENTS002 / AGENTS007.
 - :func:`lint_all`     — walk every markdown in the repo (minus
   :data:`~wikilint.config.SKIP_DIRS`), run file rules. Staged rules are
   no-ops here.
@@ -19,7 +22,7 @@ from pathlib import Path
 from wikilint.checks import FILE_RULES, STAGED_RULES
 from wikilint.checks.base import FileRule, StagedRule
 from wikilint.config import SKIP_DIRS, Config
-from wikilint.git_io import staged_blob, staged_entries
+from wikilint.git_io import diff_entries, ref_blob, staged_blob, staged_entries
 from wikilint.report import Diagnostic, Report, Severity
 from wikilint.wikilink import SlugIndex, build_index
 
@@ -57,6 +60,37 @@ def lint_staged(repo: Path, config: Config | None = None) -> Report:
         if entry.letter == "D" or not entry.path.endswith(".md"):
             continue
         text = staged_blob(repo, entry.path)
+        if text is None:
+            continue
+        _visit(entry.path, text, idx, report, config)
+    return report
+
+
+def lint_diff(
+    repo: Path,
+    base_ref: str,
+    config: Config | None = None,
+) -> Report:
+    """Apply staged + file rules over ``base_ref..HEAD``.
+
+    Mirrors :func:`lint_staged` but sources entries from a git range
+    rather than the index, so CI can enforce the staged rules
+    (AGENTS001 / AGENTS002 / AGENTS007) on every PR even when contributors
+    use ``git commit --no-verify`` locally. File contents are read from
+    ``HEAD`` (the post-merge state).
+    """
+    config = config or Config()
+    report = Report()
+    idx = build_index(repo)
+
+    entries = diff_entries(repo, base_ref)
+    for rule in _enabled_staged_rules(config):
+        rule.apply(repo, entries, report)
+
+    for entry in entries:
+        if entry.letter == "D" or not entry.path.endswith(".md"):
+            continue
+        text = ref_blob(repo, "HEAD", entry.path)
         if text is None:
             continue
         _visit(entry.path, text, idx, report, config)

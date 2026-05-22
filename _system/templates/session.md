@@ -1,6 +1,6 @@
 ---
 type: session
-domain: psychology
+domain: <your-domain>
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 date: <% tp.date.now("YYYY-MM-DD") %>
@@ -8,8 +8,10 @@ participants: [self]
 duration_min:
 mode: online
 sources: []
+aliases: []
 tags: []
 status: active
+compiled_against: 1
 ---
 
 # <% tp.file.title %>

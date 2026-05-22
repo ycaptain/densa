@@ -4,12 +4,15 @@ domain: <your-domain>
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 sources: []
+aliases: []
 triggers: []
 first_observed: <% tp.date.now("YYYY-MM-DD") %>
 last_observed: <% tp.date.now("YYYY-MM-DD") %>
-severity: medium
+# `severity:` is optional and L2-defined (e.g. psychology declares an
+# enum); leave it out unless your L2's AGENTS.md prescribes it.
 tags: []
 status: active
+compiled_against: 1
 ---
 
 # <% tp.file.title %>

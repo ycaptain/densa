@@ -5,8 +5,11 @@ created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 url:
 author:
+sources: []
+aliases: []
 tags: []
 status: active
+compiled_against: 1
 ---
 
 # <% tp.file.title %>

@@ -6,6 +6,10 @@ on:
     paths:
       - "_system/wikilint/**"
       - "_system/tests/**"
+      - "_system/templates/**"
+      - "_system/prompts/**"
+      - "AGENTS.md"
+      - "domains/*/AGENTS.md"
       - "pyproject.toml"
       - ".github/workflows/ci.yml"
   pull_request:
@@ -13,6 +17,10 @@ on:
     paths:
       - "_system/wikilint/**"
       - "_system/tests/**"
+      - "_system/templates/**"
+      - "_system/prompts/**"
+      - "AGENTS.md"
+      - "domains/*/AGENTS.md"
       - "pyproject.toml"
       - ".github/workflows/ci.yml"
 

@@ -34,7 +34,7 @@ compiled_against: 1
 - **Location**: upper chest, just below the collarbone, sometimes
   extending up into the lower throat. *"Like a hand closing around
   the bottom of my throat. From the inside."*
-  ([[2026-04-02-session-reyes#^[12:08]]])
+  ([[2026-04-02-session-reyes]] [12:08])
 - **Quality**: pressing / containing rather than crushing or
   stabbing; not cardiac in character (cardiac work-up by PCP was
   negative).
@@ -44,7 +44,7 @@ compiled_against: 1
 - **Modifiers**: worse with caffeine (client cut back); not
   clearly worse with alcohol; brief relief after aerobic exercise
   (one 4-mile run observed,
-  [[2026-04-23-psychiatry-han#^[08:22]]]).
+  [[2026-04-23-psychiatry-han]] [08:22]).
 
 ## Mechanism (per [[ifs]] + [[integrative-grief-therapy]])
 
@@ -68,10 +68,10 @@ necessary.
 
 | Date | Session | State of band | Trigger context | Source |
 | --- | --- | --- | --- | --- |
-| 2026-04-02 | Session 1 (Reyes) | Constant, characterised as "a hand closing around the bottom of my throat from the inside"; present since ~mid-February. | Talking about the unresolved fight with father; the regret of unsaid words. | [[2026-04-02-session-reyes#^[12:08]]] |
-| 2026-04-16 | Session 2 (Reyes) | Same continuous pressing, but now articulated as a *hand* belonging to the foreman; loosens to "looser, like the hand knows we're looking and is allowing it for a minute" during ~60 sec Exile contact at cottage-cheese anchor. | Somatic-anchoring + IFS Manager-part work; first conscious dialogue with the protector. | [[2026-04-16-session-reyes#^[04:38]]], [[2026-04-16-session-reyes#^[18:01]]] |
-| 2026-04-23 | Psychiatry consult (Han) | Reported as same; client notes worse with coffee, hence caffeine cap. GAD-7 = 9 partly indexes this somatic signal. | Han confirms not cardiac in character; treats as a *signal* of the grief load rather than a target for direct pharmacology. | [[2026-04-23-psychiatry-han#^[02:18]]], [[2026-04-23-psychiatry-han#^[14:00]]] |
-| 2026-05-14 | Session 4 (Reyes) | **Materially softer**: *"the chest is the loosest it's been in months. The hand is still there, but it's, like, hands-on-knees, taking a break, not chest-pressing. It's like the foreman went and sat on a bucket."* | After the 2026-05-09 phone call with mother and partial unburdening of guilt-charge fused with grief. | [[2026-05-14-session-reyes#^[06:30]]] |
+| 2026-04-02 | Session 1 (Reyes) | Constant, characterised as "a hand closing around the bottom of my throat from the inside"; present since ~mid-February. | Talking about the unresolved fight with father; the regret of unsaid words. | [[2026-04-02-session-reyes]] [12:08] |
+| 2026-04-16 | Session 2 (Reyes) | Same continuous pressing, but now articulated as a *hand* belonging to the foreman; loosens to "looser, like the hand knows we're looking and is allowing it for a minute" during ~60 sec Exile contact at cottage-cheese anchor. | Somatic-anchoring + IFS Manager-part work; first conscious dialogue with the protector. | [[2026-04-16-session-reyes]] [04:38], [[2026-04-16-session-reyes]] [18:01] |
+| 2026-04-23 | Psychiatry consult (Han) | Reported as same; client notes worse with coffee, hence caffeine cap. GAD-7 = 9 partly indexes this somatic signal. | Han confirms not cardiac in character; treats as a *signal* of the grief load rather than a target for direct pharmacology. | [[2026-04-23-psychiatry-han]] [02:18], [[2026-04-23-psychiatry-han]] [14:00] |
+| 2026-05-14 | Session 4 (Reyes) | **Materially softer**: *"the chest is the loosest it's been in months. The hand is still there, but it's, like, hands-on-knees, taking a break, not chest-pressing. It's like the foreman went and sat on a bucket."* | After the 2026-05-09 phone call with mother and partial unburdening of guilt-charge fused with grief. | [[2026-05-14-session-reyes]] [06:30] |
 
 ## What modulates it
 
@@ -87,7 +87,7 @@ necessary.
 ## Differential
 
 - **vs. cardiac**: ruled out by EKG + stress test
-  ([[2026-04-02-session-reyes#^[12:08]]]).
+  ([[2026-04-02-session-reyes]] [12:08]).
 - **vs. panic attack**: paroxysmal panic episodes absent; pattern
   is *sustained* not *episodic*; no fear-of-dying overlay; no
   hyperventilation.

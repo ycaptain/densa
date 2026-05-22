@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 
-from wikilint.config import SKIP_DIRS
+from wikilint.config import SKIP_DIRS, WIKILINK_SKIP_TOP_LEVEL
 
 WIKILINK_RE = re.compile(r"\[\[([^\[\]\n]+?)\]\]")
 """Match ``[[anything-but-brackets-or-newline]]``. Greedy non-empty body."""
@@ -42,18 +42,59 @@ class Resolution:
 SlugIndex = dict[str, list[str]]
 """Map ``"slug"`` / ``"sub/path/slug"`` → list of full repo-relative
 paths-without-extension that end with that suffix.
+
+The graph-relevant index (built by :func:`build_index`) excludes the
+top-level directories listed in
+:data:`~wikilint.config.WIKILINK_SKIP_TOP_LEVEL` so that a bare slug
+like ``[[concept]]`` cannot silently resolve to a template / prompt /
+artifact under those trees. A second, full-repo path-existence index
+(:data:`SlugIndex` returned by :func:`build_index` carries it under
+the ``__explicit_paths__`` key) lets explicit-path wikilinks like
+``[[_system/MANUAL]]`` continue to resolve.
 """
 
+_EXPLICIT_PATHS_KEY = "__explicit_paths__"
 
-def _walk_markdown(repo: Path) -> Iterator[Path]:
+
+def _walk_markdown(
+    repo: Path,
+    include_skipped_top_level: bool = False,
+) -> Iterator[Path]:
+    """Yield markdown paths relative to *repo*.
+
+    By default mirrors the exclusions in
+    :func:`wikilint.paths.wikilinks_scoped`: ``_system/`` / ``attic/`` /
+    ``inbox/`` / ``outputs/`` hold templates / prompts / artifacts that
+    contain ``[[placeholder]]`` examples by design. Set
+    ``include_skipped_top_level=True`` to walk the full repo, used to
+    keep explicit-path wikilinks like ``[[_system/MANUAL]]`` resolving.
+    """
     for p in repo.rglob("*.md"):
         rel = p.relative_to(repo)
-        if not any(part in SKIP_DIRS for part in rel.parts):
-            yield rel
+        if any(part in SKIP_DIRS for part in rel.parts):
+            continue
+        if (
+            not include_skipped_top_level
+            and rel.parts
+            and rel.parts[0] in WIKILINK_SKIP_TOP_LEVEL
+        ):
+            continue
+        yield rel
 
 
 def build_index(repo: Path) -> SlugIndex:
-    """Build the slug → paths map for every markdown file under *repo*."""
+    """Build the slug → paths map for every markdown file under *repo*.
+
+    Two layers:
+
+    1. Suffix slots, populated only from wiki-graph-relevant files
+       (see :func:`_walk_markdown`). A bare ``[[concept]]`` cannot
+       resolve to ``_system/templates/concept.md`` this way.
+    2. Full repo-relative path set under the internal
+       ``__explicit_paths__`` key. Lets :func:`resolve` accept explicit
+       paths like ``[[_system/MANUAL]]`` without re-introducing the
+       false-resolution bug.
+    """
     idx: SlugIndex = {}
     for rel in _walk_markdown(repo):
         no_ext = str(rel.with_suffix("")).replace("\\", "/")
@@ -61,6 +102,11 @@ def build_index(repo: Path) -> SlugIndex:
         for i in range(len(parts)):
             suffix = "/".join(parts[i:])
             idx.setdefault(suffix, []).append(no_ext)
+    explicit: list[str] = []
+    for rel in _walk_markdown(repo, include_skipped_top_level=True):
+        no_ext = str(rel.with_suffix("")).replace("\\", "/")
+        explicit.append(no_ext)
+    idx[_EXPLICIT_PATHS_KEY] = explicit
     return idx
 
 
@@ -71,6 +117,9 @@ def resolve(target: str, idx: SlugIndex) -> Resolution:
 
     Strips display labels (``slug|Display``), section anchors
     (``slug#section`` or ``slug#^block-id``), and trailing ``.md``.
+    Explicit paths (``[[_system/MANUAL]]``, ``[[domains/x/wiki/y]]``)
+    are matched against the full repo-relative path set; bare slugs
+    are matched against the wiki-graph-relevant suffix index only.
     """
     target = target.replace("\\|", "|")
     main = target.split("|", 1)[0].split("#", 1)[0].strip()
@@ -78,11 +127,17 @@ def resolve(target: str, idx: SlugIndex) -> Resolution:
     if not main:
         return Resolution(ResolutionStatus.ANCHOR_ONLY)
     hits = sorted(set(idx.get(main, [])))
-    if not hits:
-        return Resolution(ResolutionStatus.MISSING)
-    if len(hits) > 1:
-        return Resolution(ResolutionStatus.AMBIGUOUS, tuple(hits))
-    return Resolution(ResolutionStatus.OK, tuple(hits))
+    if hits:
+        if len(hits) > 1:
+            return Resolution(ResolutionStatus.AMBIGUOUS, tuple(hits))
+        return Resolution(ResolutionStatus.OK, tuple(hits))
+    # Fallback: explicit-path wikilinks (containing "/" and matching a
+    # real file in the repo, including templates / prompts / artifacts).
+    if "/" in main:
+        explicit = idx.get(_EXPLICIT_PATHS_KEY, [])
+        if main in explicit:
+            return Resolution(ResolutionStatus.OK, (main,))
+    return Resolution(ResolutionStatus.MISSING)
 
 
 # --- Scanning -------------------------------------------------------------

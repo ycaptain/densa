@@ -31,10 +31,10 @@ compiled_against: 1
 
 | Scale | Value | Threshold / interpretation | Source |
 | --- | --- | --- | --- |
-| PHQ-9 | **14** | Moderate; same as PCP screen | [[2026-04-23-psychiatry-han#^[14:00]]] |
-| PCL-5 | **28** | Sub-threshold (<31); avoidance cluster prominent | [[2026-04-23-psychiatry-han#^[14:00]]] |
-| GAD-7 | **9** | Mild-to-moderate | [[2026-04-23-psychiatry-han#^[14:00]]] |
-| DES-II (brief) | WNL | Within normal limits | [[2026-04-23-psychiatry-han#^[14:00]]] |
+| PHQ-9 | **14** | Moderate; same as PCP screen | [[2026-04-23-psychiatry-han]] [14:00] |
+| PCL-5 | **28** | Sub-threshold (<31); avoidance cluster prominent | [[2026-04-23-psychiatry-han]] [14:00] |
+| GAD-7 | **9** | Mild-to-moderate | [[2026-04-23-psychiatry-han]] [14:00] |
+| DES-II (brief) | WNL | Within normal limits | [[2026-04-23-psychiatry-han]] [14:00] |
 
 ### Working diagnosis (provisional, chart)
 
@@ -42,13 +42,13 @@ compiled_against: 1
 > features and sub-threshold PTSD avoidance cluster.* Not PGD by
 > timeframe (DSM-5-TR requires ≥12 months in adults). Not primary
 > MDD pending more time. Deferring formal coding
-> (Z63.4 vs. F-codes) to follow-up. — [[2026-04-23-psychiatry-han#^[22:30]]]
+> (Z63.4 vs. F-codes) to follow-up. — [[2026-04-23-psychiatry-han]] [22:30]
 
 ### Biopsychosocial 4P (psychiatry framing)
 
 | Layer | Content |
 | --- | --- |
-| **Predisposing** | Multi-generational pattern of emotional containment (paternal lineage); maternal-aunt history of depression in 50s; paternal probable PTSD un-diagnosed; baseline borderline high BP. — [[2026-04-23-psychiatry-han#^[02:18]]] |
+| **Predisposing** | Multi-generational pattern of emotional containment (paternal lineage); maternal-aunt history of depression in 50s; paternal probable PTSD un-diagnosed; baseline borderline high BP. — [[2026-04-23-psychiatry-han]] [02:18] |
 | **Precipitating** | Sudden cardiac death of father, 2026-02-04 (11 weeks prior to consult); unresolved pre-death conflict. |
 | **Perpetuating** | Avoidance-cluster behaviours (maternal calls, partner disclosure); maintenance insomnia (5h / night, 6 / 7 nights); caffeine load; baseline alcohol creep (weekend → daily 2 beers). |
 | **Protective** | Intact partner relationship (Sarah); intact parental role with 7yo son (Theo); active concurrent psychotherapy (Reyes); coordinated-care relationship with PCP; baseline cognitive intactness; informed med-reluctance (paternal medication history). |
@@ -57,7 +57,7 @@ compiled_against: 1
 
 | Date | Session | Decision | Rationale | Scales | Active medications | Notes |
 | --- | --- | --- | --- | --- | --- | --- |
-| 2026-04-23 | First eval (Han) | **No medication initiated.** Trazodone 50mg PRN held; SSRI held. Decision deferred to 2026-05-07. | (1) 11wk post-loss in active process work — SSRI may blunt grief-information processing; (2) client expresses informed med reluctance with reasonable basis (paternal regimen); (3) sleep treatment also deferred two weeks to allow client to consult partner + therapist. | PHQ-9=14; PCL-5=28; GAD-7=9; DES-II WNL | None (multivitamin, fish oil OTC) | CBT-I referral on standby if trazodone is initiated. Caffeine cap at current level. Exercise endorsed 2-3x/wk. Safety: denies SI/HI; risk moderate-low. — [[2026-04-23-psychiatry-han#^[33:18]]] |
+| 2026-04-23 | First eval (Han) | **No medication initiated.** Trazodone 50mg PRN held; SSRI held. Decision deferred to 2026-05-07. | (1) 11wk post-loss in active process work — SSRI may blunt grief-information processing; (2) client expresses informed med reluctance with reasonable basis (paternal regimen); (3) sleep treatment also deferred two weeks to allow client to consult partner + therapist. | PHQ-9=14; PCL-5=28; GAD-7=9; DES-II WNL | None (multivitamin, fish oil OTC) | CBT-I referral on standby if trazodone is initiated. Caffeine cap at current level. Exercise endorsed 2-3x/wk. Safety: denies SI/HI; risk moderate-low. — [[2026-04-23-psychiatry-han]] [33:18] |
 
 ## Decision points to revisit
 
@@ -92,7 +92,7 @@ compiled_against: 1
   decision is "no change". The session of 2026-05-14 was therapy
   (Reyes), not psychiatry — therefore no row is added for that
   date. The next row will be added when 2026-05-07 (or its
-  rescheduled equivalent — see [[2026-05-14-session-reyes#^[16:42]]]
+  rescheduled equivalent — see [[2026-05-14-session-reyes]] [16:42]
   for an in-arc reschedule of psychiatry to 2026-05-21) takes
   place.
 - A protocol row is **not** a clinical recommendation outside this

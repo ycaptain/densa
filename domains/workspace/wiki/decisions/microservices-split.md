@@ -2,13 +2,13 @@
 type: decision
 domain: workspace
 created: 2026-05-20
-updated: 2026-05-20
+updated: 2026-05-21
 sources: ["[[2026-04-22-decision-microservices-split]]", "[[2026-04-08-meeting-q2-planning]]", "[[2026-05-06-meeting-incident-postmortem]]"]
 tags: [adr, platform, microservices, webhooks, identity-service]
 aliases: ["ADR-001", "identity-webhook split"]
 status: active
 compiled_against: 1
-last_validated: 2026-05-20
+last_validated: 2026-05-21
 adr_id: "ADR-001"
 decision_date: 2026-04-22
 reversibility: partial
@@ -99,3 +99,9 @@ page's `status` to `deprecated` and prepend a
 - [[q2-platform-arc-may]] — narrative synthesis across the arc.
 - [[decision-delay-from-skipped-stakeholder]] — the pattern this
   decision exemplifies on the under-empowered-stakeholder axis.
+- [[engineering-decision-style]] — the positive pattern this
+  decision is the **partial-instance / near-miss** of (steps 1-4
+  exemplary; steps 5-6 failed).
+- [[engineering-decisions-retrospective-may-2026]] — cross-decision
+  synthesis comparing this decision against the May decisions that
+  closed the steps-5-6 gap.

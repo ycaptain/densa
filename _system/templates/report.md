@@ -4,8 +4,10 @@ domain: <your-domain-or-vault>
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 sources: []
+aliases: []
 tags: [lint]
 status: active
+compiled_against: 1
 ---
 
 # <% tp.file.title %>

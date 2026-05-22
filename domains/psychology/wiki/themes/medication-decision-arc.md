@@ -37,7 +37,7 @@ The arc has **two parallel questions**:
 2. **The trazodone question** — should low-dose trazodone be
    started for maintenance insomnia? *Originally scheduled
    2026-05-07; rescheduled to 2026-05-21 per
-   [[2026-05-14-session-reyes#^[16:42]]].*
+   [[2026-05-14-session-reyes]] [16:42].*
 
 The two questions are tracked **separately** by Han because they
 treat different things: SSRI for the overall depressive load,
@@ -73,7 +73,7 @@ timeline
 ### The SSRI question
 
 Han's rationale for the conservative hold is laid out in
-[[2026-04-23-psychiatry-han#^[22:30]]]:
+[[2026-04-23-psychiatry-han]] [22:30]:
 
 - **At 11 weeks post-loss, active process work is underway.**
   SSRI-driven affective flattening in the first ~6 weeks of
@@ -95,7 +95,7 @@ the long-arc question this arc generates.
 
 ### The trazodone question
 
-Han's reasoning at 04-23 ([[2026-04-23-psychiatry-han#^[22:30]]]):
+Han's reasoning at 04-23 ([[2026-04-23-psychiatry-han]] [22:30]):
 
 - Sleep at 5h / night for two months is **independently
   treatable** and may be a major contributor to the apparent
@@ -111,7 +111,7 @@ Han's reasoning at 04-23 ([[2026-04-23-psychiatry-han#^[22:30]]]):
 
 By 2026-05-14 the client is leaning to defer the trazodone too,
 on the rationale that sleep is beginning to shift slowly
-([[2026-05-14-session-reyes#^[16:42]]]). Reyes endorses
+([[2026-05-14-session-reyes]] [16:42]). Reyes endorses
 deferring to Han; the actual 2026-05-21 decision is not yet in
 the worked example.
 
@@ -123,22 +123,22 @@ demonstration of how the process channel and psychiatric channel
 
 - **Han references Reyes's framing** of the protector-part as a
   positive prognostic indicator
-  ([[2026-04-23-psychiatry-han#^[33:18]]]) without doing process
+  ([[2026-04-23-psychiatry-han]] [33:18]) without doing process
   work on it himself.
 - **Reyes asks Mark to bring information back to Han** — for
   example, the cottage-cheese work in session 2 should be
   relayed to Han so Han's decision-making has the data
-  ([[2026-04-16-session-reyes#^[26:30]]]).
+  ([[2026-04-16-session-reyes]] [26:30]).
 - **Reyes also relays Han's decisions back into the therapy
   frame** — in session 4, she names Han's medication-deferral as
   one of the structural validators that made the foreman's
   re-deployment possible
-  ([[2026-05-14-session-reyes#^[12:14]]]).
+  ([[2026-05-14-session-reyes]] [12:14]).
 - **Neither clinician overrides the other**. When the client
   leans to defer trazodone in session 4, Reyes does not advocate
   for trazodone; she tells him to make that call with Han, with
   the data Han would want
-  ([[2026-05-14-session-reyes#^[16:42]]]).
+  ([[2026-05-14-session-reyes]] [16:42]).
 
 ## What this arc demonstrates structurally
 

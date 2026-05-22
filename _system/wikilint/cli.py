@@ -27,7 +27,7 @@ from pathlib import Path
 from wikilint import __version__
 from wikilint.config import RULES, Config, rule_by_id, rule_by_name
 from wikilint.formatters import FORMATTERS
-from wikilint.runner import lint_all, lint_paths, lint_staged
+from wikilint.runner import lint_all, lint_diff, lint_paths, lint_staged
 
 
 def _resolve_repo() -> Path:
@@ -94,6 +94,14 @@ def _build_parser() -> argparse.ArgumentParser:
 
     sub = parser.add_subparsers(dest="command")
 
+    # Explicit `lint` subcommand. Mirrors the top-level lint flags so both
+    # `wikilint --all` (legacy) and `wikilint lint --all` (canonical) work.
+    lint_sub = sub.add_parser(
+        "lint",
+        help="run the linter (default command; same flags as bare `wikilint`)",
+    )
+    _add_lint_args(lint_sub)
+
     rules = sub.add_parser("rules", help="list all rules with their IDs")
     rules.add_argument(
         "--format",
@@ -118,6 +126,16 @@ def _add_lint_args(parser: argparse.ArgumentParser) -> None:
         "--all",
         action="store_true",
         help="check every markdown file in the repo",
+    )
+    group.add_argument(
+        "--diff",
+        metavar="BASE_REF",
+        default=None,
+        help=(
+            "check the BASE_REF..HEAD range using the staged rules + "
+            "file rules; lets CI enforce AGENTS001/002/007 on every PR "
+            "(e.g. --diff origin/main)"
+        ),
     )
     parser.add_argument(
         "paths",
@@ -150,9 +168,10 @@ def _add_lint_args(parser: argparse.ArgumentParser) -> None:
 
 
 def _cmd_lint(args: argparse.Namespace) -> int:
-    if not (args.staged or args.all or args.paths):
+    if not (args.staged or args.all or args.diff or args.paths):
         print(
-            "error: specify --staged, --all, or one or more PATHs",
+            "error: specify --staged, --all, --diff BASE_REF, "
+            "or one or more PATHs",
             file=sys.stderr,
         )
         return 2
@@ -165,6 +184,8 @@ def _cmd_lint(args: argparse.Namespace) -> int:
 
     if args.staged:
         report = lint_staged(repo, config)
+    elif args.diff:
+        report = lint_diff(repo, args.diff, config)
     elif args.all:
         report = lint_all(repo, config)
     else:

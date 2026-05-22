@@ -10,7 +10,7 @@ compiled_against: 1
 # Example domains — choose, adapt, remove, or replace
 
 > **What this is.** A practical guide for the *first 30 minutes* with
-> the `llm-wiki-starter` template. Five example L2 domains ship under
+> the `llm-wiki-starter` template. Three example L2 domains ship under
 > `domains/`. They're worked examples, not endorsements — most users
 > will keep one or two and delete the rest before their first real
 > ingest. This doc helps you decide, then walks you through the
@@ -56,7 +56,7 @@ Three traps to avoid:
   content is the noise the LLM has to filter through every time it
   runs `lint` or follows a wikilink. Delete aggressively.
 
-- **The "let me read all five L2 AGENTS.md files first" trap.** You
+- **The "let me read all three L2 AGENTS.md files first" trap.** You
   don't need to. The example you're most likely to keep is the one
   whose name you reacted to with "oh, that's me". The others can be
   evaluated in 30 seconds: read the L2 AGENTS.md's first 20 lines
@@ -197,7 +197,7 @@ Pick the example whose page-type set is closest to what you need
 
 ### Designing the L2 itself
 
-A few load-bearing principles, drawn from the five worked examples:
+A few load-bearing principles, drawn from the three worked examples:
 
 - **Persona before schema.** The Persona section drives the LLM's
   voice on every ingest. A precise persona ("careful science-
@@ -208,8 +208,8 @@ A few load-bearing principles, drawn from the five worked examples:
   you've felt the absence) is cheap; removing one after you've used
   it is expensive (deprecation chain).
 - **Folder = type, mostly.** One folder per page type, named after
-  the type. The 5 examples all follow this. Exceptions exist but
-  needs justification in the L2 AGENTS.md.
+  the type. The 3 examples all follow this. Exceptions exist but
+  need justification in the L2 AGENTS.md.
 - **L2-required frontmatter sparingly.** Each required field is a
   tax the LLM pays on every ingest. Add fields whose absence would
   produce a real bug ("we forgot to record session date"); skip

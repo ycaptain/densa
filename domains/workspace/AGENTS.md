@@ -3,11 +3,13 @@
 Inherits from `/AGENTS.md`. Overrides apply only inside
 `domains/workspace/`.
 
-This is the **medium-weight reference L2** — eight page types, a
-session-centric ingest flow, and lint rules tuned for the
+This is the **medium-weight reference L2** — eight effective page
+types (`source` and `session` are alias rows of the same raw bucket,
+so the Allowed-types table below has 9 rows but counts as 8 toward
+L1 §3.1), a session-centric ingest flow, and lint rules tuned for the
 narrative-arc of work. It sits between
 [`research-papers`](../research-papers/AGENTS.md) (light: paper-in,
-analysis-out, three page types) and
+analysis-out, six page types) and
 [`psychology`](../psychology/AGENTS.md) (heavy: privacy postures,
 ASR correction, clinical framing). Reach for `workspace` when the
 material is meetings + decisions + multi-stakeholder threads and you
@@ -42,10 +44,11 @@ domains/workspace/
 ├── AGENTS.md
 ├── index.md
 ├── log.md
-└── raw/
-    ├── meetings/      ← meeting transcripts / notes (dated)
-    ├── decisions/     ← ADR-style decision docs (dated)
-    └── threads/       ← long-running async threads (Slack exports, email)
+├── raw/
+│   ├── meetings/      ← meeting transcripts / notes (dated)
+│   └── decisions/     ← ADR-style decision docs (dated)
+│   # ← optional buckets (create on-demand on first such raw):
+│   # raw/threads/     ← long-running async threads (Slack exports, email)
 └── wiki/
     ├── analyses/      ← per-raw analysis (1:1 with one raw file)
     ├── syntheses/     ← cross-raw narratives spanning ≥2 raws
@@ -90,14 +93,19 @@ updated / sources / tags / aliases / status / compiled_against` plus
   Raw meetings without frontmatter are still valid; if you add it,
   these fields apply.
 - `entity` pages: `role: stakeholder|team`. When `role: stakeholder`,
-  also `team: [[team-<slug>]]` (the team they belong to) and
-  `title: "<job title>"`. When `role: team`, also `lead:
-  [[stakeholder-<slug>]]` (optional, single link).
+  also `team: [[team-<slug>]] | "<team-name>"` (a wikilink when the
+  team has its own entity page, or a plain string when no team
+  entity is warranted yet) and `title: "<job title>"`. When `role:
+  team`, also `lead: [[stakeholder-<slug>]] | "<person-name>"`
+  (optional; wikilink or plain string under the same rule).
 - `project` pages: `project_status: planning|active|paused|done|cancelled`
   (named `project_status` to avoid colliding with L1's universal
   `status: active|deprecated`), `start_date: YYYY-MM-DD`,
   `target_date: YYYY-MM-DD` (optional), `lead:
-  [[stakeholder-<slug>]]`.
+  [[stakeholder-<slug>]] | "<person-name>"` (wikilink when the
+  lead has their own stakeholder page, or a plain string when no
+  stakeholder entity is warranted yet — the lead is recorded for
+  attribution rather than to anchor a wiki sub-graph).
 - `decision` pages: `adr_id: "ADR-<NNN>"` (matches the raw ADR if any,
   empty string if the decision was informal),
   `decision_date: YYYY-MM-DD`, `reversibility:
@@ -116,6 +124,16 @@ updated / sources / tags / aliases / status / compiled_against` plus
 is empty). Lint enforces this.
 
 ## Ingest flow (workspace-specific)
+
+> The concrete shape of every meeting / decision / thread analysis
+> in this L2 — required readability elements, body sections,
+> side-effects matrix, decision-page-creation rule, pattern
+> detection — is encoded in
+> [`_system/prompts/domains/workspace-meeting-analysis.md`](../../_system/prompts/domains/workspace-meeting-analysis.md).
+> Load that sub-prompt when running `ingest <path>` against any
+> raw under `raw/meetings/`, `raw/decisions/`, or `raw/threads/`.
+> The summary below is the L2-level contract; the sub-prompt is
+> the procedural detail.
 
 When ingesting a raw file under `raw/meetings/<slug>.md`,
 `raw/decisions/<slug>.md`, or `raw/threads/<slug>.md`:
@@ -199,6 +217,39 @@ When ingesting a raw file under `raw/meetings/<slug>.md`,
 - Every stakeholder mentioned by a meeting analysis whose
   `entity` page has no inbound link from that analysis → flag as
   a missing cross-reference (auto-fix on lint with greenlight).
+
+## Onboarding reading order (for new ingesters and interns)
+
+A teammate (or onboarding intern) landing on this domain cold
+should read these pages in order to come up to speed in ~30
+minutes:
+
+1. **[`engineering-decisions-retrospective-may-2026`](wiki/syntheses/engineering-decisions-retrospective-may-2026.md)**
+   — the cross-project synthesis. Single page, deliberately
+   designed as intern-onboarding reading; gives the mental model
+   for how the team makes engineering decisions and what the
+   patterns to recognise are.
+2. **[`q2-platform-arc-may`](wiki/syntheses/q2-platform-arc-may.md)**
+   — the single-project arc synthesis. Goes deeper on the
+   negative-case arc (planning → ADR → incident).
+3. **[`engineering-decision-style`](wiki/patterns/engineering-decision-style.md)**
+   — the positive pattern's 6-step shape. Useful when the
+   intern is about to convene their first decision meeting.
+4. **[`decision-delay-from-skipped-stakeholder`](wiki/patterns/decision-delay-from-skipped-stakeholder.md)**
+   — the negative pattern's mechanism. Useful when reviewing
+   any ADR draft for "is there a residual risk without owner +
+   date?".
+5. **One worked analysis end-to-end** — pick
+   [`2026-05-13-meeting-api-style-decision-analysis`](wiki/analyses/2026-05-13-meeting-api-style-decision-analysis.md)
+   (clean positive instance) or
+   [`2026-04-22-decision-microservices-split-analysis`](wiki/analyses/2026-04-22-decision-microservices-split-analysis.md)
+   (partial-instance / near-miss) depending on which decision
+   shape you want to internalise first.
+6. **Drill into individual stakeholder pages** as questions arise
+   — they exist to answer "who works with whom on what".
+
+Pages 1-5 cover the structural skeleton; pages 6+ fill in
+specifics on demand.
 
 ## What's intentionally missing
 

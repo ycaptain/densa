@@ -9,7 +9,6 @@ on:
       - "SECURITY.md"
       - "CONTRIBUTING.md"
       - ".editorconfig"
-      - ".github/FUNDING.yml"
       - ".github/ISSUE_TEMPLATE/**"
       - ".github/pull_request_template.md"
   pull_request:
@@ -20,7 +19,6 @@ on:
       - "SECURITY.md"
       - "CONTRIBUTING.md"
       - ".editorconfig"
-      - ".github/FUNDING.yml"
       - ".github/ISSUE_TEMPLATE/**"
       - ".github/pull_request_template.md"
 
@@ -31,10 +29,18 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Full history so `wikilint --diff` can resolve the PR base.
+          fetch-depth: 0
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
       - name: Install wikilint (strict extras)
         run: pip install -e ".[strict]"
-      - name: Run wikilint
+      - name: Run wikilint over the full repo (file rules)
         run: wikilint --all --format=github
+      - name: Run wikilint over the PR range (staged rules)
+        if: github.event_name == 'pull_request'
+        run: |
+          wikilint --diff "origin/${{ github.event.pull_request.base.ref }}" \
+            --format=github

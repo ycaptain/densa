@@ -4,6 +4,7 @@ domain: <your-domain>
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 sources: []
+aliases: []
 experiment_id: <area>-<NNN>
 hypothesis: ""
 started: <% tp.date.now("YYYY-MM-DD") %>
@@ -12,6 +13,7 @@ status: planned
 outcome: tbd
 metric_links: []
 tags: []
+compiled_against: 1
 ---
 
 # <% tp.file.title %>

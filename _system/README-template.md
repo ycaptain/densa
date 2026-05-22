@@ -22,8 +22,8 @@ An Obsidian-based personal LLM wiki, built on Andrej Karpathy's
 ## Start here
 
 1. **First-time orientation** — read
-   [`_system/MANUAL.md`](_system/MANUAL.md) end-to-end (~250 lines, ~10
-   minutes).
+   [`_system/MANUAL.md`](_system/MANUAL.md) end-to-end (~460 lines,
+   ~20 minutes).
 2. **Schema source of truth** — [`AGENTS.md`](AGENTS.md) (L1) and each
    `domains/<X>/AGENTS.md` (L2).
 3. **Install / plugin setup** — [`_system/SETUP.md`](_system/SETUP.md).

@@ -7,6 +7,7 @@ domain: <your-domain>
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 sources: ["[[<analysis-or-raw-wikilink>]]"]
+aliases: []
 severity: <% tp.system.suggester(["low", "medium", "high"], ["low", "medium", "high"], false, "Severity") %>
 first_observed: <% tp.date.now("YYYY-MM-DD") %>
 last_observed: <% tp.date.now("YYYY-MM-DD") %>

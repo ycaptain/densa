@@ -4,6 +4,7 @@ domain: <your-domain>
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 sources: []
+aliases: []
 # `area:` is optional and L2-defined. Add it here only if your L2's
 # AGENTS.md declares an `area` enum (e.g. an L2 that organises
 # protocols by topical bucket); otherwise leave it out.
@@ -12,6 +13,8 @@ started: <% tp.date.now("YYYY-MM-DD") %>
 last_revised: <% tp.date.now("YYYY-MM-DD") %>
 evidence: anecdote
 tags: []
+compiled_against: 1
+last_validated: <% tp.date.now("YYYY-MM-DD") %>
 ---
 
 # <% tp.file.title %>

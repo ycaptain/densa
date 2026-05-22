@@ -3,11 +3,12 @@
 Inherits from `/AGENTS.md`. Overrides apply only inside
 `domains/research-papers/`.
 
-This is the **lightweight reference L2** — three page types, one
-ingest flow, one lint rule. Use it as the template when standing up
-your own domain. For a heavier L2 with privacy postures, ASR
-correction, multi-modal handling, and clinical framing, see
-`domains/psychology/AGENTS.md` instead.
+This is the **lightweight reference L2** — six page types
+(`source`, `concept`, `analysis`, `synthesis`, `framework`,
+`question`), one ingest flow, a focused set of lint rules. Use it as
+the template when standing up your own domain. For a heavier L2 with
+privacy postures, ASR correction, multi-modal handling, and clinical
+framing, see `domains/psychology/AGENTS.md` instead.
 
 ## Persona
 

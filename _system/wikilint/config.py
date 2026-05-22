@@ -57,8 +57,10 @@ REQUIRED_FRONTMATTER_KEYS: Final[tuple[str, ...]] = (
     "updated",
     "status",
 )
-"""Universal frontmatter contract. L2 schemas add more keys; lint
-delegates those to :func:`wikilint.checks.l2_extensions.check`.
+"""Universal frontmatter contract enforced by AGENTS003. L2 schemas
+add their own required keys (e.g. `last_validated` for `concept`); those
+are enforced by the L2's own lint pass per the L2 AGENTS.md, not by
+this module.
 """
 
 
@@ -139,10 +141,12 @@ OPERATION_WRITES: Final[dict[str, frozenset[str]]] = {
         "outputs/**",
         "projects/**",
         "writing/**",
+        ".github/**",
         "AGENTS.md",
         "README.md",
         "CHANGELOG.md",
         "CONTRIBUTING.md",
+        "CODE_OF_CONDUCT.md",
         "SECURITY.md",
         "LICENSE",
         ".gitignore",
@@ -192,6 +196,12 @@ class RuleSpec:
 
 
 RULES: Final[tuple[RuleSpec, ...]] = (
+    RuleSpec(
+        id="WIKILINT-IO",
+        name="io-failure",
+        summary="meta diagnostic: the validator could not read a file",
+        agents_anchor="(meta)",
+    ),
     RuleSpec(
         id="AGENTS001",
         name="raw-immutability",

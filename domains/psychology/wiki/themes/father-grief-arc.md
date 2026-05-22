@@ -87,7 +87,7 @@ side-effects across four ingests cumulatively show*:
 ## Turning point
 
 **2026-05-09** — the client-initiated phone call with his mother
-([[2026-05-14-session-reyes#^[02:48]]]). This date is *load-bearing*
+([[2026-05-14-session-reyes]] [02:48]). This date is *load-bearing*
 for the arc:
 
 - It is the **first behaviourally observable** breach of the
@@ -131,7 +131,7 @@ work, not a single-session event.
   2026-05-09 call was one call. Whether the new cadence
   stabilises over the next 3-6 months is the per-week marker
   Han identified for the mid-July SSRI decision
-  ([[2026-04-23-psychiatry-han#^[22:30]]]).
+  ([[2026-04-23-psychiatry-han]] [22:30]).
 - **Work-mode loosening**. Deliberately not the focal target
   ([[automaton-work-mode]] §"Why this pattern is not the focal
   clinical target"). Tracked passively.

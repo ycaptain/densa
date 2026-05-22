@@ -83,20 +83,20 @@ post-bereavement with the classic
 - **Sudden cardiac death of father** (no warning, no
   anticipated-grief preparation).
 - **Unresolved pre-death conflict** producing a regret-loop
-  ([[2026-04-02-session-reyes#^[07:14]]]).
+  ([[2026-04-02-session-reyes]] [07:14]).
 - **Sustained somatic anchor** in upper chest / lower throat,
   not cardiac (PCP work-up negative).
 - **Maintenance insomnia** at 3:40 a.m. every night, ~6/7
   nights, eight-week duration by session 1.
 - **Avoidance-cluster behaviour** — refusing maternal calls,
   emotionally limited disclosure with partner
-  ([[2026-04-02-session-reyes#^[17:22]]]).
+  ([[2026-04-02-session-reyes]] [17:22]).
 - **Multi-generational paternal-lineage emotional-containment
   substrate** — the predisposing layer that makes the case
-  high-risk for PGD trajectory ([[2026-04-02-session-reyes#^[07:14]]]).
+  high-risk for PGD trajectory ([[2026-04-02-session-reyes]] [07:14]).
 - **PHQ-9 = 14** at both PCP and psychiatry consult; **PCL-5 =
   28** sub-threshold avoidance-cluster dominant; **GAD-7 = 9**;
-  **DES-II brief WNL** ([[2026-04-23-psychiatry-han#^[14:00]]]).
+  **DES-II brief WNL** ([[2026-04-23-psychiatry-han]] [14:00]).
 
 All four [[complicated-grief]] PGD risk-trajectory markers
 present at 11 weeks: sudden loss + unresolved thread + early
@@ -113,13 +113,13 @@ four ingests:
 
 | Variable | Session 1 (04-02) | Session 4 (05-14) | Delta | Anchor |
 | --- | --- | --- | --- | --- |
-| [[avoidant-mother-contact]] | Voicemail-default; 10+ day gap | Client-initiated 70-min call; weekly target | **Transformed** | [[2026-05-14-session-reyes#^[02:48]]] |
-| [[somatic-grief-containment]] | "Hand closing around the bottom of my throat" — constant | "Foreman sitting on a bucket" — loosest in months | **Materially softer** | [[2026-05-14-session-reyes#^[06:30]]] |
-| [[automaton-work-mode]] | Two-of-me at work; cost paid at home | Same at work; home-side breach with Sarah | Partial loosening at home | [[2026-05-14-session-reyes#^[12:14]]] |
-| [[inner-protector-stoic]] | Visible only by inference, un-named | Re-deployed unprompted — *"the foreman dialled. He just dialled with new information"* | **Job-redesign** | [[2026-05-14-session-reyes#^[12:14]]] |
-| Guilt-charge fused to grief | Dominant; "regretting something I was constitutionally incapable of doing" | Lifted; "we were both walking toward each other and the road ended early" | **Resolved (specific charge)** | [[2026-05-14-session-reyes#^[06:30]]] |
-| Self-frame vocabulary | "I'm depressed in the can't-feel-anything way" | "Grief is love with no place to go" + own generation re: Theo | **Vocabulary expanded** | [[2026-05-14-session-reyes#^[24:00]]], [[2026-05-14-session-reyes#^[30:08]]] |
-| Sleep (3:40 a.m. waking) | 6/7 nights, 8-week duration | Slight loosening; one ~5:50 wake, two drift-back-to-sleep | Beginning to shift | [[2026-05-14-session-reyes#^[16:42]]] |
+| [[avoidant-mother-contact]] | Voicemail-default; 10+ day gap | Client-initiated 70-min call; weekly target | **Transformed** | [[2026-05-14-session-reyes]] [02:48] |
+| [[somatic-grief-containment]] | "Hand closing around the bottom of my throat" — constant | "Foreman sitting on a bucket" — loosest in months | **Materially softer** | [[2026-05-14-session-reyes]] [06:30] |
+| [[automaton-work-mode]] | Two-of-me at work; cost paid at home | Same at work; home-side breach with Sarah | Partial loosening at home | [[2026-05-14-session-reyes]] [12:14] |
+| [[inner-protector-stoic]] | Visible only by inference, un-named | Re-deployed unprompted — *"the foreman dialled. He just dialled with new information"* | **Job-redesign** | [[2026-05-14-session-reyes]] [12:14] |
+| Guilt-charge fused to grief | Dominant; "regretting something I was constitutionally incapable of doing" | Lifted; "we were both walking toward each other and the road ended early" | **Resolved (specific charge)** | [[2026-05-14-session-reyes]] [06:30] |
+| Self-frame vocabulary | "I'm depressed in the can't-feel-anything way" | "Grief is love with no place to go" + own generation re: Theo | **Vocabulary expanded** | [[2026-05-14-session-reyes]] [24:00], [[2026-05-14-session-reyes]] [30:08] |
+| Sleep (3:40 a.m. waking) | 6/7 nights, 8-week duration | Slight loosening; one ~5:50 wake, two drift-back-to-sleep | Beginning to shift | [[2026-05-14-session-reyes]] [16:42] |
 | PCL-5 avoidance cluster | n/a (first measured at 04-23) | n/a (not re-measured by 05-14) | Pending re-measurement | — |
 
 The most clinically informative cell is the
@@ -154,13 +154,13 @@ the system. Three classes of evidence over the prior six weeks:
    Manager part.
 2. **Structural validation from psychiatry**. Han's
    medication-deferral conversation
-   ([[2026-04-23-psychiatry-han#^[22:30]]]) implicitly
+   ([[2026-04-23-psychiatry-han]] [22:30]) implicitly
    communicated *"the way you are working is correct."* The
    protector heard a doctor in a white coat endorse the
    route. This is a structural intervention on the Manager
    part's confidence, not a process-work intervention.
 3. **A proximal cue with informational content**. Theo's
-   drawing on Saturday morning ([[2026-05-14-session-reyes#^[02:48]]])
+   drawing on Saturday morning ([[2026-05-14-session-reyes]] [02:48])
    placed the father into the family-pictures register at the
    *next* generation. The cue was not random; it carried
    forward-direction meaning that the cumulative process work
@@ -191,22 +191,22 @@ The coordination practice across this period:
 
 - **Reyes routes Mark to Han early.** First-session signposting
   of the 04-23 psychiatry consult
-  ([[2026-04-02-session-reyes#^[12:08]]]) sets up the
+  ([[2026-04-02-session-reyes]] [12:08]) sets up the
   medication conversation as a *separate channel*, not a
   competing one.
 - **Han references Reyes's framing.** The foreman / IFS work
   is named in Han's session as positive prognostic indicator
-  ([[2026-04-23-psychiatry-han#^[33:18]]]) without Han doing
+  ([[2026-04-23-psychiatry-han]] [33:18]) without Han doing
   process work himself.
 - **Reyes asks Mark to relay session content to Han.** The
   session-2 cottage-cheese work is explicitly routed to the
   next psychiatry session
-  ([[2026-04-16-session-reyes#^[26:30]]]) so Han's
+  ([[2026-04-16-session-reyes]] [26:30]) so Han's
   medication-decision-making has the data.
 - **Han routes process material back to Reyes.** Reciprocal —
   Han mentions to Mark that the cottage-cheese work should be
   taken back to Reyes, not worked through in psychiatry
-  ([[2026-04-23-psychiatry-han#^[33:18]]]).
+  ([[2026-04-23-psychiatry-han]] [33:18]).
 - **Pre-scheduled decision points.** Han names the
   trazodone-decision date (2026-05-07) and the SSRI-review
   date (mid-July, ~12-week post-loss) **in writing in chart**

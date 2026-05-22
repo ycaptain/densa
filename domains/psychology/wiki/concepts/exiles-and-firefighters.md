@@ -52,19 +52,19 @@ Reyes name as *the foreman* — see [[inner-protector-stoic]].
 
 - **Origin marker**: client locates the part as forming around age
   12, the period of his parents' separation
-  ([[2026-04-16-session-reyes#^[04:38]]]).
+  ([[2026-04-16-session-reyes]] [04:38]).
 - **Job description, in client's own words**: *"Don't be the guy
   who falls apart. Get up. Go to work. Do the job. Pay the
   mortgage. Show up for Theo. Be the rock."*
-  ([[2026-04-16-session-reyes#^[04:38]]]).
+  ([[2026-04-16-session-reyes]] [04:38]).
 - **Visible mechanism**: the somatic-band ("hand holding the chest
   down") is the foreman's per-second containment work
-  ([[2026-04-16-session-reyes#^[04:38]]],
+  ([[2026-04-16-session-reyes]] [04:38],
   [[somatic-grief-containment]]).
 - **What the foreman is guarding** (Exile material visible): the
   cottage-cheese moment — the raw grief of his father's daily
   ordinariness no longer existing
-  ([[2026-04-16-session-reyes#^[18:01]]]).
+  ([[2026-04-16-session-reyes]] [18:01]).
 - **Treatment trajectory across the arc**:
   1. Session 1 (04-02): foreman visible only by inference (the
      "watching myself" two-of-me phenomenology).
@@ -77,7 +77,7 @@ Reyes name as *the foreman* — see [[inner-protector-stoic]].
   4. Session 4 (05-14): foreman *re-deployed* — same part, with
      new information, initiates the call to mother. Client
      explicitly notes "the foreman dialled. He just dialled with
-     new information." ([[2026-05-14-session-reyes#^[12:14]]]).
+     new information." ([[2026-05-14-session-reyes]] [12:14]).
      The Manager has not been "fired"; he has accepted a partial
      job-redesign.
 
@@ -87,15 +87,15 @@ Held material that surfaces in flashes when the foreman briefly
 allows access:
 
 - The half-empty tub of cottage cheese in his father's apartment
-  ([[2026-04-02-session-reyes#^[07:14]]],
-  [[2026-04-16-session-reyes#^[18:01]]]).
+  ([[2026-04-02-session-reyes]] [07:14],
+  [[2026-04-16-session-reyes]] [18:01]).
 - The unspoken last conversation; the regret-loop; the
   "constitutionally incapable of saying the words"
-  ([[2026-04-02-session-reyes#^[12:08]]]).
+  ([[2026-04-02-session-reyes]] [12:08]).
 - After the 2026-05-09 phone call with mother, the
   guilt-distortion lifts and the Exile material becomes *tender*
   rather than *unbearable* — a marker of partial unburdening
-  ([[2026-05-14-session-reyes#^[24:00]]]).
+  ([[2026-05-14-session-reyes]] [24:00]).
 
 ### Firefighter activity (minimal but present)
 
@@ -103,13 +103,13 @@ Firefighters are not the dominant pattern here, but two
 low-intensity behaviours are functionally Firefighter-shaped:
 
 - **Two beers most evenings** since the bereavement — up from
-  baseline of weekends only ([[2026-04-23-psychiatry-han#^[02:18]]]).
+  baseline of weekends only ([[2026-04-23-psychiatry-han]] [02:18]).
   Modest enough that Han endorses watching for creep rather than
   intervening.
 - **The "watching dumb TV" couch evenings** functioning as
   attentional distraction rather than connection
-  ([[2026-04-02-session-reyes#^[03:47]]]). Reyes's session-4
-  laundry-room moment ([[2026-05-14-session-reyes#^[12:14]]])
+  ([[2026-04-02-session-reyes]] [03:47]). Reyes's session-4
+  laundry-room moment ([[2026-05-14-session-reyes]] [12:14])
   is partly the breakage of this Firefighter pattern.
 
 A useful clinical observation: the *absence* of strong Firefighter
@@ -137,7 +137,7 @@ pathologise the protector. Compare:
 The latter framing is what made the 04-16 session land. The
 client noted unprompted that the foreman "saved" him and that the
 work was about earning the foreman's permission, not overriding
-him ([[2026-04-16-session-reyes#^[14:55]]]).
+him ([[2026-04-16-session-reyes]] [14:55]).
 
 ## Cross-references
 
@@ -154,11 +154,11 @@ him ([[2026-04-16-session-reyes#^[14:55]]]).
 - 2026-04-16 — IFS framing introduced by Reyes; client names the
   Manager part as the "foreman"; first Exile-contact (cottage
   cheese) at ~60 sec duration
-  ([[2026-04-16-session-reyes#^[14:55]]],
-  [[2026-04-16-session-reyes#^[18:01]]]).
+  ([[2026-04-16-session-reyes]] [14:55],
+  [[2026-04-16-session-reyes]] [18:01]).
 - 2026-05-14 — client articulates the Manager's job-redesign
   unprompted (Manager dialled the call rather than the call
   stepping around the Manager); cottage-cheese Exile material is
   now *tender* rather than *unbearable*
-  ([[2026-05-14-session-reyes#^[12:14]]],
-  [[2026-05-14-session-reyes#^[24:00]]]).
+  ([[2026-05-14-session-reyes]] [12:14],
+  [[2026-05-14-session-reyes]] [24:00]).

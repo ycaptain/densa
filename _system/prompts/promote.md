@@ -71,9 +71,10 @@ design).
 and reorder the body to match the template's section outline. The
 Q&A's "Issues to surface at next lint" section is **not** copied into
 the new wiki page — instead, append it to today's
-`outputs/lint/<YYYY-MM-DD>.md` under "Human-review queue" (creating
-the file with `tags: [lint]` if it does not yet exist), so the next
-`lint` run picks it up.
+`outputs/lint/<YYYY-MM-DD>.md` under the `## Human-review queue`
+section declared in [`_system/prompts/lint.md`](lint.md) step 7
+(create the file with `tags: [lint]` if it does not yet exist, using
+the report skeleton). The next `lint` run reconciles the queue.
 
 ### 3. Git operations (single commit; prefix `promote:`)
 

@@ -4,8 +4,11 @@ domain: <your-domain>
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 sources: []
+aliases: []
 tags: []
 status: active
+compiled_against: 1
+last_validated: <% tp.date.now("YYYY-MM-DD") %>
 ---
 
 # <% tp.file.title %>

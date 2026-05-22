@@ -237,7 +237,7 @@ distinguishes meaning-reconstruction from blame-restructuring.
 Without the non-contempt, the narrative would re-organise
 *against* the deceased; with it, the narrative integrates the
 deceased as a continuing presence (the *continuing-bond*
-concept) ([[2026-05-14-session-reyes#^[30:08]]]).
+concept) ([[2026-05-14-session-reyes]] [30:08]).
 
 *(attachment-theory lens)*
 
@@ -386,7 +386,7 @@ intention.
    verbatim to two short fragments anchoring (a) the
    "I don't know how to do this kind of conversation" line
    and (b) "it's been eating at me." The full text is
-   referenced via [[2026-05-14-session-reyes#^[02:48]]]
+   referenced via [[2026-05-14-session-reyes]] [02:48]
    anchor so a reader can open it in the raw if needed.
 2. **[item (e) framework theory expansion]** — Stage 1 draft's
    §"Working formulation" *(narrative lens)* paragraph

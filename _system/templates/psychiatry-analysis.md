@@ -4,12 +4,14 @@ domain: psychology
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 sources: ["[[<raw-psychiatry-session-wikilink>]]"]
+aliases: []
 session_kind: psychiatry
 participants: [self, <psychiatrist-slug>]
 analysis_lens: [biopsychosocial-4P, diagnostic-differential]
 diagnostic_signals: []
 tags: [psychiatry, medication]
 status: active
+compiled_against: 1
 ---
 
 # <% tp.file.title %>

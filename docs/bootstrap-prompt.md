@@ -36,7 +36,7 @@ Read these four files end-to-end before doing anything else:
 1. [`AGENTS.md`](AGENTS.md) — L1 schema (the universal contract).
 2. [`_system/MANUAL.md`](_system/MANUAL.md) — design philosophy + FAQ.
 3. [`domains/psychology/AGENTS.md`](domains/psychology/AGENTS.md) — one
-   of five shipped L2 examples (the heaviest). Study its structure;
+   of three shipped L2 examples (the heaviest). Study its structure;
    you'll be writing similar
    files for my domains.
 4. [`_system/prompts/ingest.md`](_system/prompts/ingest.md) — the
@@ -223,12 +223,18 @@ Suggested commands (run only if I approve):
 cp _system/README-template.md README.md
 # (Now edit README.md and replace `_my-vault_` with my vault name.)
 
+# Preserve the upstream MIT LICENSE alongside the wikilint code that
+# travels with the template. Deleting LICENSE outright would strip
+# the copyright/attribution that MIT requires you keep on any
+# redistribution of the code under `_system/wikilint/`.
+git mv LICENSE LICENSE-upstream
+
 # Remove project-only docs but keep EXAMPLE-DOMAINS.md as a reference.
 # (Drop docs/CJK-WORKFLOW.md from the rm list if you work in CJK.)
 rm docs/DESIGN.md docs/bootstrap-prompt.md docs/EXAMPLES.md \
    docs/CJK-WORKFLOW.md
 rm -rf .github/ CODE_OF_CONDUCT.md CONTRIBUTING.md SECURITY.md \
-       CHANGELOG.md LICENSE _system/README-template.md
+       CHANGELOG.md _system/README-template.md
 ```
 
 If I want to keep more of the project metadata as reference, ask me

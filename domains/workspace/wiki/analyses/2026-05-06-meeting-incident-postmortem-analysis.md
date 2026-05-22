@@ -2,7 +2,7 @@
 type: analysis
 domain: workspace
 created: 2026-05-20
-updated: 2026-05-20
+updated: 2026-05-21
 sources: ["[[2026-05-06-meeting-incident-postmortem]]"]
 tags: [q2-platform-migration, postmortem, webhooks, sla, customer-success]
 aliases: []
@@ -13,6 +13,65 @@ meeting_date: 2026-05-06
 ---
 
 # Webhook delivery incident postmortem — analysis
+
+> [!important]
+> **30-second TL;DR.** Phase-2 of ADR-001 ran for 6 days before a
+> 14-hour silent-drop incident affected ~1.7M deliveries on 8% of
+> customer endpoints; two enterprise SLA accounts impacted
+> (Northbridge triggered service credits at 0.71% monthly loss).
+> Root cause: the routing-layer-local queue-depth assertion was
+> structurally blind under sharded traffic at <10% rollout — the
+> exact failure mode [[stakeholder-alex-cs]] described on
+> 2026-04-08. Rollback worked (18 min). The load-bearing trade-off
+> the postmortem surfaces is **the workflow gap between
+> "documented residual risk" and "scheduled mitigation work"**.
+> Single most important deferral: CS sign-off authority — partial
+> vs blocking — parked into [[should-we-revisit-cs-veto-power]].
+
+## At-a-glance
+
+| Field                       | Content |
+| --------------------------- | ------- |
+| **Working subject**         | 2026-05-04 webhook silent-drop incident postmortem (phase-2 of ADR-001 rollout) |
+| **Meeting type**            | postmortem |
+| **Attendees**               | Maya Chen, Priya Shah, Tom Becker, Jordan Liu (on-call), Sam Okafor (CS), [[stakeholder-alex-cs]], Devon Park |
+| **Decision produced**       | Phase-2 rolled back to 0%; cross-layer reconciliation now blocking phase 3 (owner: Priya, due 2026-05-20) |
+| **Reversibility**           | n/a — postmortem decisions are remediation-shaped |
+| **Load-bearing constraint** | The 2026-04-22 ADR's deferred residual risk landed exactly as forecast; phase 3 cannot proceed until the structural mitigation is in place |
+| **Residual risks accepted** | (a) CS sign-off authority question deferred to a separate meeting (parked into [[should-we-revisit-cs-veto-power]]); (b) Riverdale's request for formal CS veto on phase progression not yet committed |
+| **Owners assigned**         | Priya → cross-layer reconciliation (blocking phase 3, due 2026-05-20); Tom + Devon → "blocking vs deferrable risks" one-pager (due 2026-05-13); Maya → Northbridge + Riverdale postmortems (2026-05-08); Maya + Alex → joint review of partial-sign-off process (2026-05-15) |
+
+## Causal-chain timeline
+
+```mermaid
+timeline
+    title Q2 platform-migration causal chain (2026-04-08 → 2026-05-06)
+    section Planning
+        2026-04-08 : Planning meeting : Alex names silent-acceptance failure : Shadow + local-assertion + named-reviewer-status committed
+    section Decision
+        2026-04-22 : ADR-001 accepted : Local assertion as immediate mitigation : Cross-layer reconciliation deferred without owner+date : Alex partial-sign-off on record
+    section Execution
+        2026-04-23 : Phase 0 (staging soak) starts : clean
+        2026-04-29 : Phase 1 (production shadow) : clean
+        2026-05-04 : Phase 2 (10% traffic) goes live + 09:14 UTC silent drops begin (assertion blind)
+    section Failure
+        2026-05-04 : 23:08 UTC paged from CS complaints : Routing layer green; Worker pool green : Queue-depth assertion never fired
+        2026-05-05 : 00:45 UTC root cause confirmed : Phase 2 rolled back in 18 min
+    section Review
+        2026-05-06 : Blameless postmortem : Cross-layer reconciliation now blocking phase 3 : CS sign-off authority parked
+```
+
+## Cast and stakes
+
+| Stakeholder                    | Stake                                                              | Position                                                                                | Outcome                                                                                              |
+| ------------------------------ | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| Tom Becker (SRE)               | Postmortem discipline; cross-team learning                         | Runs blameless format; pulls Alex's reframe forward                                     | Action items capture the structural lesson, not blame                                                |
+| Jordan Liu (on-call)           | Timeline accuracy from on-call view                                | Reports assertion was clean throughout; escalated to Priya at 23:30                     | Establishes the assertion was not just slow — it was blind                                           |
+| Priya Shah                     | Technical root-cause clarity                                       | Names that the assertion checked global queue depth, dominated by 90% monolith traffic  | Cross-layer reconciliation taken as owner, blocking phase 3                                          |
+| Maya Chen ([[team-platform]])  | Decision-process accountability                                    | "Owning that. It was my call to ship phase 2 without cross-layer monitoring in place." | Names the cognitive shape of the failure (shadow data couldn't have answered the deferred question)  |
+| [[stakeholder-alex-cs]]        | Future SLA exposure; process change                                | **Declines "Alex was right" framing**; reframes to "what authority would have made this P0?" | The reframe becomes the postmortem's organising question                                             |
+| Sam Okafor (CS, account mgr)   | Northbridge + Riverdale customer relationship                      | Reports Riverdale formally asking for CS veto on phase progression                      | Action item: schedule Riverdale follow-up on phase-3 conditions                                      |
+| Devon Park (Product)           | Process design across CS-flagged risks                             | Takes the action on "when CS-flagged risks block a phase gate" one-pager with Tom       | Drafted as a generalisable process artifact, due 2026-05-13                                          |
 
 ## Context
 
@@ -115,6 +174,12 @@ migration causal arc covered in [[q2-platform-arc-may]].
 - [[q2-platform-arc-may]] — the cross-raw synthesis.
 - [[should-we-revisit-cs-veto-power]] — the open question this
   postmortem opens.
+- [[engineering-decision-style]] — the positive pattern documenting
+  the workflow shape (including steps 5-6) whose absence in
+  ADR-001 contributed to this incident.
+- [[engineering-decisions-retrospective-may-2026]] — cross-arc
+  synthesis braiding this postmortem with the May decisions that
+  closed the steps-5-6 gap.
 
 ## Notes
 

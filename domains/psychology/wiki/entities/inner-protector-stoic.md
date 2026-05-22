@@ -38,12 +38,12 @@ or family member would.
   around age 12, in the context of his parents' separation. *"Since
   before Dad died. Maybe since I was — I don't know. Since I was a
   kid. Since I was twelve maybe."*
-  ([[2026-04-16-session-reyes#^[04:38]]])
+  ([[2026-04-16-session-reyes]] [04:38])
 - **Inheritance line**: a multi-generational pattern of
   emotional containment in the paternal lineage. Grandfather
   (Korea-era), father (Vietnam-era, non-combat) — both
   characterised by reliable presence + unspoken affect.
-  ([[2026-04-02-session-reyes#^[07:14]]])
+  ([[2026-04-02-session-reyes]] [07:14])
 
 ## Job description (in client's own words)
 
@@ -51,7 +51,7 @@ or family member would.
 > who falls apart. That's its whole — that's its whole brief.
 > Don't be the guy who falls apart. Get up. Go to work. Do the
 > job. Pay the mortgage. Show up for Theo. Be the rock."*
-> — [[2026-04-16-session-reyes#^[04:38]]]
+> — [[2026-04-16-session-reyes]] [04:38]
 
 ## Per-second mechanism
 
@@ -60,21 +60,21 @@ The foreman's containment work is felt somatically. See
 
 - **In-room image**: a hand — *"someone strong who's holding my
   chest down, gently but firmly. Not crushing. Just — holding it
-  down"* ([[2026-04-16-session-reyes#^[04:38]]]).
+  down"* ([[2026-04-16-session-reyes]] [04:38]).
 - **The hand's fear**: *"if the hand wasn't there, my chest would
   just blow open"* (same anchor).
 - **What the hand is guarding**: the cottage-cheese Exile material
   — the grief of the father's daily ordinariness no longer
-  existing ([[2026-04-16-session-reyes#^[18:01]]]).
+  existing ([[2026-04-16-session-reyes]] [18:01]).
 
 ## Cross-session evolution
 
 | Date | Foreman's state | Trigger / intervention |
 | --- | --- | --- |
-| 2026-04-02 | Visible only by inference — the "two of me" / "watching myself" phenomenology. Un-named. | None; intake-mode session, deliberately no parts work. ([[2026-04-02-session-reyes#^[03:47]]]) |
-| 2026-04-16 | **Named**. Allows ~60 sec Exile contact at cottage-cheese anchor. Reyes addresses the part directly. | Somatic anchoring + IFS frame introduction. ([[2026-04-16-session-reyes#^[14:55]]]) |
-| 2026-04-23 | Implicitly validated by Han ("the way you're working is correct"); the foreman "heard a doctor in a white coat" endorse the process. | Psychiatry channel; structural intervention without parts-work content. ([[2026-04-23-psychiatry-han#^[33:18]]]) |
-| 2026-05-14 | **Partially re-deployed.** Same part, new information, **initiates** the phone call to mother — the call the foreman had been avoiding for two months. | Convergent: Theo's drawing (5:30 a.m. trigger) + cumulative trust from sessions 2-3 + Han validation. ([[2026-05-14-session-reyes#^[12:14]]]) |
+| 2026-04-02 | Visible only by inference — the "two of me" / "watching myself" phenomenology. Un-named. | None; intake-mode session, deliberately no parts work. ([[2026-04-02-session-reyes]] [03:47]) |
+| 2026-04-16 | **Named**. Allows ~60 sec Exile contact at cottage-cheese anchor. Reyes addresses the part directly. | Somatic anchoring + IFS frame introduction. ([[2026-04-16-session-reyes]] [14:55]) |
+| 2026-04-23 | Implicitly validated by Han ("the way you're working is correct"); the foreman "heard a doctor in a white coat" endorse the process. | Psychiatry channel; structural intervention without parts-work content. ([[2026-04-23-psychiatry-han]] [33:18]) |
+| 2026-05-14 | **Partially re-deployed.** Same part, new information, **initiates** the phone call to mother — the call the foreman had been avoiding for two months. | Convergent: Theo's drawing (5:30 a.m. trigger) + cumulative trust from sessions 2-3 + Han validation. ([[2026-05-14-session-reyes]] [12:14]) |
 
 ## Notable verbatim moments
 
@@ -102,7 +102,7 @@ The foreman's containment work is felt somatically. See
   *information* so it can do its job with less constriction.
 - The **presence** of a coherent, articulable protector part is
   itself a positive prognostic indicator (Han notes this
-  explicitly in [[2026-04-23-psychiatry-han#^[33:18]]]). Cases
+  explicitly in [[2026-04-23-psychiatry-han]] [33:18]). Cases
   with diffuse / un-articulable protector dynamics are harder to
   work because there is no part with which to negotiate.
 - The foreman remains **active** in the day-to-day functioning at

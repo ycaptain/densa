@@ -4,9 +4,10 @@ domain: <your-domain>
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 sources: []
-analysis_lens: []
+aliases: []
 tags: []
 status: active
+compiled_against: 1
 ---
 
 # <% tp.file.title %>

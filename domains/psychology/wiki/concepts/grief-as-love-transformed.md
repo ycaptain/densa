@@ -42,7 +42,7 @@ becomes available.
    the depth of what mattered. SSRI-driven affective flattening
    in early grief may blunt access to that information; this is
    the empirical argument Han cites in
-   [[2026-04-23-psychiatry-han#^[22:30]]] for deferring SSRI
+   [[2026-04-23-psychiatry-han]] [22:30] for deferring SSRI
    initiation at 11 weeks post-loss.
 3. **Meaning emerges, it is not imposed.** Forced meaning-making
    ("everything happens for a reason") is iatrogenic — it
@@ -60,7 +60,7 @@ becomes available.
 
 - The five-stages model (Kübler-Ross 1969) was about people
   facing their own deaths, not about survivors. Reyes flags this
-  explicitly in [[2026-04-02-session-reyes#^[34:18]]]:
+  explicitly in [[2026-04-02-session-reyes]] [34:18]:
   *"grief isn't a stage process — that five-stages thing is a
   misreading of Kübler-Ross."*
 - The Freudian *grief work* model implies *completion* — that
@@ -78,19 +78,19 @@ The concept is named explicitly by Reyes in session 4:
 
 > *"Grief is love with no place to go. Without the guilt-distortion,
 > it's still grief — it'll still hurt for a long time — but it has
-> more shape than it had. It can integrate."* ([[2026-05-14-session-reyes#^[24:00]]])
+> more shape than it had. It can integrate."* ([[2026-05-14-session-reyes]] [24:00])
 
 The concept then *generates content* in the same session:
 
 - Mark unprompted reframes his own grief as *taking what was
   unspoken from his father, naming what was missing without
   contempt, and choosing to give Theo more vocabulary than his
-  father gave him* ([[2026-05-14-session-reyes#^[30:08]]]).
+  father gave him* ([[2026-05-14-session-reyes]] [30:08]).
 - This is not a "letting go" move. It is a **transmission** move
   — the love continues, transformed into a parental practice
   Mark will perform with his son.
 - Reyes names this in clinical language as classic
-  meaning-reconstruction ([[2026-05-14-session-reyes#^[30:08]]]).
+  meaning-reconstruction ([[2026-05-14-session-reyes]] [30:08]).
 
 The session-4 *continuing-bonds practices* Reyes suggests are also
 canonical meaning-reconstruction interventions:
@@ -134,7 +134,7 @@ the integrative work only fits *after* the regret-loop loosens.
   not integration. Mark's session-4 articulation of "a different
   sad — it's not a *guilty* sad" is a marker of integration
   rather than numbing: the affect is still painful but is now
-  *clean* ([[2026-05-14-session-reyes#^[24:00]]]).
+  *clean* ([[2026-05-14-session-reyes]] [24:00]).
 
 ## Cross-references
 
@@ -150,10 +150,10 @@ the integrative work only fits *after* the regret-loop loosens.
 
 - 2026-05-14 — concept introduced by Reyes via Anderson quote,
   with explicit Neimeyer pointer
-  ([[2026-05-14-session-reyes#^[24:00]]]).
+  ([[2026-05-14-session-reyes]] [24:00]).
 - 2026-05-14 — client generates own meaning-reconstruction
   unprompted: paternal-inheritance reframe with Theo
-  ([[2026-05-14-session-reyes#^[30:08]]]).
+  ([[2026-05-14-session-reyes]] [30:08]).
 - 2026-05-14 — Reyes offers three continuing-bond practice
   options (walk, letter, truck-conversation); client to choose
-  one or none ([[2026-05-14-session-reyes#^[30:08]]]).
+  one or none ([[2026-05-14-session-reyes]] [30:08]).

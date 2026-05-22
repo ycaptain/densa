@@ -53,7 +53,7 @@ Three nested sub-questions, in order of difficulty:
 
 The avoidance loop is the per-week marker of the
 [[complicated-grief]] PGD trajectory in this case
-([[2026-04-23-psychiatry-han#^[22:30]]]). Han named the
+([[2026-04-23-psychiatry-han]] [22:30]). Han named the
 mid-July SSRI decision as keying on this loop's loosening.
 *Partial* loosening from one call is meaningful but
 insufficient — the 3-6 month follow-on cadence is what

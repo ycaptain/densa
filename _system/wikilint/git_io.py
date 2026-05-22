@@ -28,11 +28,17 @@ class StagedEntry:
 
     ``letter`` is the standard porcelain status character:
     ``A`` add, ``M`` modify, ``D`` delete, ``R`` rename, ``C`` copy.
-    For renames and copies, ``path`` is the *destination* path.
+    For renames and copies, ``path`` is the *destination* path and
+    ``src`` is the *source* path. For other letters ``src`` is ``None``.
+
+    Keeping ``src`` matters for rules that must distinguish "rename
+    into protected scope" (allowed, e.g. ``git mv inbox/x raw/y`` per
+    L1 §2.4) from "rename within protected scope" (forbidden).
     """
 
     letter: str
     path: str
+    src: str | None = None
 
 
 @dataclass(frozen=True)
@@ -50,9 +56,16 @@ class StagedDiff:
 
 # --- Process helpers ------------------------------------------------------
 
-_DIFF_HEADERS = (
-    "---",
-    "+++",
+# Lines that appear above the first hunk header in a unified diff and
+# carry diff metadata, not file content. Critically, the bare ``---``
+# and ``+++`` file markers are matched STRICTLY (with a trailing space)
+# so that a markdown frontmatter delimiter ``---`` showing up as
+# ``----`` (one diff marker + three content chars) inside a hunk body
+# is not mistaken for a header — that bug silently weakened AGENTS002
+# (log-append-only) detection.
+_DIFF_HEADER_PREFIXES = (
+    "--- ",
+    "+++ ",
     "diff ",
     "index ",
     "new file",
@@ -60,9 +73,21 @@ _DIFF_HEADERS = (
     "rename ",
     "similarity ",
     "Binary ",
-    "@@ ",
 )
 _HUNK_RE = re.compile(r"^@@ -(\d+)(?:,\d+)? \+\d+(?:,\d+)? @@")
+
+
+def _is_diff_header(line: str) -> bool:
+    """Return True if *line* is unified-diff metadata (not file content).
+
+    Recognises ``--- a/...``, ``--- /dev/null``, ``+++ b/...``, hunk
+    headers (``@@ ... @@``), and the pre-hunk preamble
+    (``diff --git``, ``index``, ``new file mode``, etc.). Does NOT
+    treat a bare ``---`` or ``----`` content line inside a hunk as a
+    header — those are valid markdown frontmatter delimiters and must
+    flow through as ordinary diff content.
+    """
+    return line.startswith(_DIFF_HEADER_PREFIXES) or line.startswith("@@ ")
 
 
 def _git(repo: Path, *args: str) -> str:
@@ -76,9 +101,8 @@ def _git(repo: Path, *args: str) -> str:
 
 # --- Public API -----------------------------------------------------------
 
-def staged_entries(repo: Path) -> list[StagedEntry]:
-    """List every path with a staged change."""
-    parts = _git(repo, "diff", "--cached", "--name-status", "-z").split("\x00")
+def _parse_name_status(raw: str) -> list[StagedEntry]:
+    parts = raw.split("\x00")
     result: list[StagedEntry] = []
     i = 0
     while i < len(parts):
@@ -87,14 +111,35 @@ def staged_entries(repo: Path) -> list[StagedEntry]:
             i += 1
             continue
         if status[0] in ("R", "C"):
+            src = parts[i + 1] if i + 1 < len(parts) else ""
             dest = parts[i + 2] if i + 2 < len(parts) else ""
-            result.append(StagedEntry(status[0], dest))
+            result.append(StagedEntry(status[0], dest, src=src or None))
             i += 3
         else:
             path = parts[i + 1] if i + 1 < len(parts) else ""
             result.append(StagedEntry(status[0], path))
             i += 2
     return result
+
+
+def staged_entries(repo: Path) -> list[StagedEntry]:
+    """List every path with a staged change."""
+    return _parse_name_status(
+        _git(repo, "diff", "--cached", "--name-status", "-z"),
+    )
+
+
+def diff_entries(repo: Path, base_ref: str) -> list[StagedEntry]:
+    """List every path that changed between *base_ref* and ``HEAD``.
+
+    Used by ``wikilint --diff <ref>`` so CI / batch jobs can apply the
+    staged rules (AGENTS001/002/007) over a push or PR range without a
+    real git index — pre-commit alone cannot catch a ``--no-verify``
+    bypass.
+    """
+    return _parse_name_status(
+        _git(repo, "diff", "--name-status", "-z", f"{base_ref}..HEAD"),
+    )
 
 
 def staged_blob(repo: Path, path: str) -> str | None:
@@ -107,16 +152,40 @@ def staged_blob(repo: Path, path: str) -> str | None:
         return None
 
 
+def ref_blob(repo: Path, ref: str, path: str) -> str | None:
+    """Return the blob content for *path* at *ref* (e.g. ``HEAD``), or
+    ``None`` on error.
+    """
+    try:
+        return _git(repo, "show", f"{ref}:{path}")
+    except subprocess.CalledProcessError:
+        return None
+
+
 def staged_diff(repo: Path, path: str) -> StagedDiff:
-    """Return separated ``removed`` / ``added`` lines for *path*."""
+    """Return separated ``removed`` / ``added`` lines for *path*.
+
+    Pre-hunk metadata (file markers, ``index`` lines, ``@@`` headers)
+    is stripped; the rest is content. A bare ``---`` content line is
+    preserved as the string ``"--"`` in ``removed`` (the leading ``-``
+    is the diff marker; what follows is the actual line).
+    """
     try:
         out = _git(repo, "diff", "--cached", "-U0", "--", path)
     except subprocess.CalledProcessError:
         return StagedDiff()
     removed: list[str] = []
     added: list[str] = []
+    in_hunk = False
     for ln in out.split("\n"):
-        if ln.startswith(_DIFF_HEADERS):
+        if _HUNK_RE.match(ln):
+            in_hunk = True
+            continue
+        # Header lines only appear before the first hunk; once we're
+        # in a hunk, every `-` / `+` line is content.
+        if not in_hunk and _is_diff_header(ln):
+            continue
+        if not in_hunk:
             continue
         if ln.startswith("-"):
             removed.append(ln[1:])
@@ -133,12 +202,16 @@ def staged_deletions(repo: Path, path: str) -> list[tuple[int, str]]:
         return []
     result: list[tuple[int, str]] = []
     cur = 0
+    in_hunk = False
     for ln in out.split("\n"):
         h = _HUNK_RE.match(ln)
         if h:
             cur = int(h.group(1))
+            in_hunk = True
             continue
-        if ln.startswith(_DIFF_HEADERS):
+        if not in_hunk and _is_diff_header(ln):
+            continue
+        if not in_hunk:
             continue
         if ln.startswith("-"):
             result.append((cur, ln[1:]))

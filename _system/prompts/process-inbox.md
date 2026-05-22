@@ -1,9 +1,10 @@
 # Prompt: process-inbox
 
 Use this prompt body when the human says `process-inbox` or `inbox`.
-This is the **fourth operation** alongside `ingest / query / lint`,
-introduced for routing un-classified material that has been parked in
-`/inbox/`. See [`/AGENTS.md`](../../AGENTS.md) §2.4.
+This is **one of the five canonical operations** alongside
+`ingest / query / lint / promote`, introduced for routing
+un-classified material that has been parked in `/inbox/`. See
+[`/AGENTS.md`](../../AGENTS.md) §2.4.
 
 ## Input
 

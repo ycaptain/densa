@@ -2,13 +2,13 @@
 type: entity
 domain: workspace
 created: 2026-05-20
-updated: 2026-05-20
-sources: ["[[2026-04-08-meeting-q2-planning]]", "[[2026-04-22-decision-microservices-split]]", "[[2026-05-06-meeting-incident-postmortem]]"]
+updated: 2026-05-21
+sources: ["[[2026-04-08-meeting-q2-planning]]", "[[2026-04-22-decision-microservices-split]]", "[[2026-05-06-meeting-incident-postmortem]]", "[[2026-05-13-meeting-api-style-decision]]", "[[2026-05-19-meeting-vector-db-selection]]"]
 tags: [team, platform, engineering]
 aliases: ["Platform team", "Platform engineering"]
 status: active
 compiled_against: 1
-last_validated: 2026-05-20
+last_validated: 2026-05-21
 role: team
 lead: "Maya Chen"
 ---
@@ -53,6 +53,14 @@ the Platform team's reporting line.
 - [[2026-05-06-meeting-incident-postmortem]] — runs the
   blameless postmortem; owns cross-layer reconciliation work
   going forward.
+- [[2026-05-13-meeting-api-style-decision]] — cross-team
+  appearance (Maya). Confirms identity team can start (D) hybrid
+  work in parallel with cross-layer reconciliation; identity
+  service consumer team for the API Platform decision.
+- [[2026-05-19-meeting-vector-db-selection]] — cross-team
+  appearance (Priya). Operations perspective decisive ("second-
+  most-expensive-database" argument at ~10:18); Postgres 15 → 16
+  Q3 upgrade is the dependency owner for the HNSW migration path.
 
 ## Cross-stakeholder interfaces
 
@@ -63,6 +71,17 @@ the Platform team's reporting line.
   arc is the team's first sustained collaboration with CS on a
   platform-level decision, which is partly why the partial-sign-
   off process was under-defined.
+- **[[team-api-platform]]** ([[stakeholder-marcus-api]]) — sibling
+  team. Platform builds the underlying identity + webhook
+  services; API Platform designs the API contract those services
+  expose. First sustained cross-team collaboration on the
+  2026-05-13 API style decision; Platform's identity work
+  produces the surface API Platform exposes.
+- **[[team-ml-platform]]** ([[stakeholder-hiro-ml]]) — sibling
+  team. Platform owns the Postgres infrastructure that the new
+  semantic-search pgvector stack runs on; the Q3 Postgres 15 → 16
+  upgrade is a Platform-owned dependency for ML Platform's HNSW
+  migration path.
 
 ## Open work items inherited from postmortem
 
@@ -72,6 +91,18 @@ the Platform team's reporting line.
 - Coordination with SRE + Product on the "blocking vs deferrable
   risks" one-pager.
 
+## Patterns observed
+
+- [[decision-delay-from-skipped-stakeholder]] — the Q2 ADR-001
+  arc is the negative pattern's N=1 instance. The defect is
+  workflow-seam, not interpersonal.
+- [[engineering-decision-style]] — the team's behaviour across
+  the Q2 arc exhibits steps 1-4 of the positive pattern; the
+  failure point is steps 5-6. Cf. the team's downstream
+  collaboration with [[team-api-platform]] and
+  [[team-ml-platform]] in May, where the team contributes to
+  full-instance executions of the pattern.
+
 ## Notes
 
 The team's behaviour across the arc is **structurally good** —
@@ -80,4 +111,7 @@ of-rollout constraints from outside the team, and ran a blameless
 postmortem. The defect is at the workflow seam where documented
 residual risks are tracked: they were named, not owned, not
 dated. See [[decision-delay-from-skipped-stakeholder]] for the
-pattern this generalises to.
+pattern this generalises to, and
+[[engineering-decisions-retrospective-may-2026]] for how the May
+decisions (in which Maya and Priya cross-team-attended) closed
+this exact workflow seam.

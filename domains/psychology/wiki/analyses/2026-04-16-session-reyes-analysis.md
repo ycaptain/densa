@@ -75,7 +75,7 @@ reported (Saturday 20-min call held).
 - **[00:00]** — Client describes Thursday-morning 4:30 a.m.
   kitchen-table sit-doing-nothing. The cost the watching-self
   ([[automaton-work-mode]]) accumulates during workdays is now
-  surfacing in non-work time. ([[2026-04-16-session-reyes#^[00:00]]])
+  surfacing in non-work time. ([[2026-04-16-session-reyes]] [00:00])
 - **[04:38]** — Somatic-anchoring entry: Reyes pivots from
   discussion to body. The chest band becomes a *hand* becomes a
   *foreman*. The Manager part is named.

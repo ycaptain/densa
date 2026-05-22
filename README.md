@@ -317,9 +317,11 @@ setup, not an afterthought**:
   *before* the first ingest. Ships with an idempotent
   [`_system/scripts/setup_encryption.sh`](_system/scripts/setup_encryption.sh) and a
   [`.gitattributes.example`](.gitattributes.example) — set both up the
-  same hour you clone the template. Walkthrough in
-  [`_system/SETUP.md`](_system/SETUP.md) §"Privacy" and the hardening
-  checklist in [`SECURITY.md`](SECURITY.md).
+  same hour you clone the template. The script ships with no default
+  paths (so it cannot silently encrypt anything you didn't choose);
+  uncomment a line in its `ENCRYPT_PATHS` array before running.
+  Walkthrough in [`_system/SETUP.md`](_system/SETUP.md) §"Privacy"
+  and the hardening checklist in [`SECURITY.md`](SECURITY.md).
 - **Each L2 declares its own privacy posture** in its
   `domains/<X>/AGENTS.md`. `domains/psychology/AGENTS.md` ships with
   a *conservative* default (≤3-line quote cap, pseudonymous slugs,
@@ -349,7 +351,7 @@ setup, not an afterthought**:
 - [`docs/EXAMPLES.md`](docs/EXAMPLES.md) — guided tour of the demo
   domains under [`domains/`](domains/).
 - [`docs/EXAMPLE-DOMAINS.md`](docs/EXAMPLE-DOMAINS.md) — how to keep,
-  delete, or adopt each of the five shipped example L2s.
+  delete, or adopt each of the three shipped example L2s.
 - [`AGENTS.md`](AGENTS.md) — the full L1 schema (~440 lines). The
   most important file in the whole project.
 - [`_system/MANUAL.md`](_system/MANUAL.md) — the user manual,

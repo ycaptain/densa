@@ -22,9 +22,9 @@ compiled_against: 1
 > for maintenance insomnia (originally 2026-05-07, rescheduled to
 > 2026-05-21) and **SSRI** at the ~12-week post-loss mark
 > (mid-July). Both pending in this worked example. Han's
-> reasoning at first consult ([[2026-04-23-psychiatry-han#^[22:30]]])
+> reasoning at first consult ([[2026-04-23-psychiatry-han]] [22:30])
 > sets the *grief is informational* frame as the central claim;
-> session 4 ([[2026-05-14-session-reyes#^[16:42]]]) shows client
+> session 4 ([[2026-05-14-session-reyes]] [16:42]) shows client
 > integrating that frame into his own medication-deferral
 > reasoning. The question is the L2's flagship instance of a
 > long-arc tracked across the cross-clinical boundary.
@@ -77,7 +77,7 @@ the *grief is informational* stance Han endorsed at 04-23:
   shift that earlier pharmacology might have produced more
   reliably.
 
-Han's case-specific reasoning ([[2026-04-23-psychiatry-han#^[22:30]]])
+Han's case-specific reasoning ([[2026-04-23-psychiatry-han]] [22:30])
 turns on (a) active engagement with process work (Reyes's IFS
 work is *landing*, per Han's read of the foreman framing),
 (b) absence of closed-loop features (no SI, no work

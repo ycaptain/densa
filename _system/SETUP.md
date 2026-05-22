@@ -164,8 +164,12 @@ medical records, NDA-bound meeting notes, etc.), encrypt that L2's
 `raw/` tree with `git-crypt` before pushing to any remote.
 
 1. Install: `brew install git-crypt gnupg` (and ensure you have a GPG key).
-2. Edit `_system/scripts/setup_encryption.sh` to list the path(s) you
-   want to encrypt (it defaults to `domains/<your-sensitive-domain>/raw/**`).
+2. Edit `_system/scripts/setup_encryption.sh` and **uncomment a path
+   in the `ENCRYPT_PATHS` array** for each tree you want encrypted
+   (e.g. `"domains/psychology/raw/**"`). The script ships with all
+   defaults commented out so it cannot silently encrypt anything you
+   didn't pick; running it with an empty array exits with
+   `No paths configured.` and instructions.
    Then run: `bash _system/scripts/setup_encryption.sh`
    It is idempotent: it appends the `.gitattributes` filter rule if
    absent and prints the next manual steps (`git-crypt init`,

@@ -177,9 +177,20 @@ first pass — bake them in):
   (`Bastani 2024 PNAS math` not `Bastani 2024: PNAS math`).
 - Quote node labels that contain spaces or punctuation:
   `A["Identical lecture<br/>(all arms)"]`.
-- Keep one diagram per analysis. A second diagram inside the same
-  page belongs in a concept page (mechanism) or a synthesis (cross-
-  paper comparison).
+- **The required structural Mermaid lives *before* `## Claim`** —
+  exactly one, per the page-shape decision table. A **second
+  paper-specific Mermaid is permitted inside `## Evidence`** when
+  (and only when) it carries paper-specific numerical mechanism data
+  that would not transplant cleanly into a concept-page diagram. The
+  worked example is
+  [[2024-bastani-generative-ai-guardrails-analysis|Bastani 2024]],
+  whose Evidence-section flowchart attaches the +48% / +127% /
+  −17% / −0.4% headline numbers to each arm's outcome — that
+  paper-specific numeric content is precisely why it does not belong
+  in the more abstract [[cognitive-offloading]] concept page's
+  mechanism diagram. **Do not add a second Mermaid that merely
+  restates a concept page's diagram with different cosmetics** — if
+  the diagram is concept-general, link to the concept page instead.
 
 ### 4. Headline-numbers table
 
@@ -415,4 +426,8 @@ copy the structural shape:
   one paper against its sub-literature.
 - [[2024-anthropic-sparse-autoencoders-analysis]] — mechanism /
   technique example (interpretability, not education); shows the
-  pipeline flowchart pattern.
+  **pipeline flowchart** pattern (encoder → sparse latent → decoder,
+  with the L1 + MSE loss signal as a sub-graph), plus the
+  **Method × Headline metric × Baseline(s)** headline-table shape and
+  the rater-bias / baseline / steering identification ladder that
+  earns `evidence_quality: controlled` (not `rct`).

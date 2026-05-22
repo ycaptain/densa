@@ -501,19 +501,12 @@ turns the soft norms into hard rules.
 
 Each rule has a stable ID (`AGENTS00N`) so users can target it with
 `--select` / `--ignore` and reference it in `# noqa` comments without
-fearing renumbering:
-
-| ID         | Rule                             | Anchor          |
-| ---------- | -------------------------------- | --------------- |
-| AGENTS001  | raw-immutability                 | AGENTS.md §6    |
-| AGENTS002  | log-append-only                  | AGENTS.md §6    |
-| AGENTS003  | frontmatter-required-keys        | AGENTS.md §3    |
-| AGENTS004  | frontmatter-type-allowed         | AGENTS.md §3    |
-| AGENTS005  | analysis-sources-cardinality     | AGENTS.md §3.1  |
-| AGENTS006  | wikilink-resolvable              | AGENTS.md §4    |
-| AGENTS007  | operation-writes-within-scope    | AGENTS.md §2.0  |
-
-`python -m wikilint rules` prints this table at runtime.
+fearing renumbering. The canonical table lives in
+[`AGENTS.md`](../AGENTS.md) §6.1 — see that section for the
+ID → rule → anchor mapping. At runtime, `python -m wikilint rules`
+prints the table direct from the code (the single source of truth
+is [`_system/wikilint/config.py::RULES`](../_system/wikilint/config.py));
+both the AGENTS.md mirror and this section are documentation.
 
 ### Architecture
 

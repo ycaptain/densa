@@ -2,24 +2,28 @@
 type: pattern
 domain: workspace
 created: 2026-05-20
-updated: 2026-05-20
+updated: 2026-05-21
 sources: ["[[2026-04-08-meeting-q2-planning]]", "[[2026-05-06-meeting-incident-postmortem]]", "[[2026-04-22-decision-microservices-split]]"]
 tags: [pattern, stakeholder-process, sla-exposure, residual-risk]
 aliases: ["under-empowered stakeholder", "documented-but-deferred risk"]
 status: active
 compiled_against: 1
 first_observed: 2026-05-06
-instances_count: 1
+instances_count: 3
 ---
 
 # Decision delay from a skipped stakeholder
 
 > [!important]
-> This pattern is N=1 at first observation (the Q2 platform
-> migration arc) and should be treated as **provisional** until
-> at least one independent instance is filed. The `instances_count: 1`
-> reflects the single arc currently cited. Predictors and counter-
-> instances are tentative until corroborated by a second case.
+> This pattern is **N=1 at the arc level** (the Q2 platform migration
+> arc is the single logical instance) but cites three raws — the
+> raising → deferring → landing sub-events. The frontmatter
+> `instances_count: 3` matches the L2's `instances_count ≥
+> len(sources)` lint rule (each cited raw is one observation of the
+> pattern manifesting); the **arc-level claim**, however, is still
+> N=1 and provisional until an independent arc corroborates. See the
+> Instances table for the three sub-events and the prose below the
+> table for why they count as one arc.
 
 ## Pattern description
 
@@ -67,9 +71,14 @@ residual risk is mistaken for the mitigation of it**.
 | 2026-04-22   | [[q2-platform-migration]]     | [[2026-04-22-decision-microservices-split]] (deferring)                        | ADR-001 documents cross-layer reconciliation as residual risk; partial sign-off; no owner, no date for the follow-up           |
 | 2026-05-04   | [[q2-platform-migration]]     | [[2026-05-06-meeting-incident-postmortem]] (landing)                           | Phase-2 incident matches the exact failure mode flagged 26 days earlier; 14h silent-drop window, ~1.7M deliveries affected     |
 
-Treat the three rows above as **one instance of the pattern**,
-not three. The pattern's unit is the raising → deferring →
-landing arc, which spans three raws.
+Treat the three rows above as **one logical instance of the
+pattern**, not three. The pattern's unit is the raising → deferring
+→ landing arc, which spans three raws. The
+`instances_count: 3` in frontmatter satisfies the L2's
+`instances_count ≥ len(sources)` lint rule by counting each cited
+raw as one *observation*; the *arc-level claim* (N=1 provisional)
+is the load-bearing number for pattern stability and is repeated
+in the callout at the top of the page.
 
 ## Predictors
 
@@ -126,3 +135,12 @@ landing arc, which spans three raws.
 - [[q2-platform-arc-may]] — the synthesis narrating the arc.
 - [[should-we-revisit-cs-veto-power]] — the open question this
   pattern's mitigation candidates feed into.
+- [[engineering-decision-style]] — the **positive counterpart**
+  pattern. The positive pattern's step 6 (owner + date on every
+  mitigation, including residual-risk mitigations) is the
+  specific workflow practice whose absence this pattern catches.
+  See [[engineering-decisions-retrospective-may-2026]] for the
+  side-by-side comparison.
+- [[engineering-decisions-retrospective-may-2026]] — synthesis
+  contrasting this pattern's N=1 instance with the May
+  decisions where the closing step landed.

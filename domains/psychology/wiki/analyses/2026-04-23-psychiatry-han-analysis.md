@@ -160,7 +160,7 @@ clinically interesting move:
 > about what mattered, what's unfinished, what to do next.
 > SSRIs can be helpful when grief becomes a closed-loop trap,
 > but you're not in a closed loop yet — you're in active
-> processing."* ([[2026-04-23-psychiatry-han#^[22:30]]])
+> processing."* ([[2026-04-23-psychiatry-han]] [22:30])
 
 This is not a uniformly-held position in contemporary
 psychiatry — Han is making a clinical judgment in light of
@@ -295,7 +295,7 @@ returned to the therapy channel.
   enter; Han's reframing of the "half-volume" as anhedonia
   rather than dissociation (this re-framing matters for how
   Reyes carries the somatic work forward).
-- **Per [[2026-05-14-session-reyes#^[16:42]]]** the 2026-05-07
+- **Per [[2026-05-14-session-reyes]] [16:42]** the 2026-05-07
   appointment was rescheduled to 2026-05-21 (client work
   conflict); the 2026-05-21 row in [[medication-arc]] is the
   next pending entry.

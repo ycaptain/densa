@@ -36,8 +36,15 @@ _LIST_ITEM_RE = re.compile(r"^\s+-\s+")
 
 
 def _extract_block(text: str) -> str | None:
-    """Return the inner YAML of the frontmatter block, or ``None``."""
-    m = _FRONTMATTER_DELIM_RE.match(text)
+    """Return the inner YAML of the frontmatter block, or ``None``.
+
+    Strips a leading UTF-8 BOM and normalises CRLF → LF before matching
+    so that Windows-authored or BOM-prefixed wiki pages don't silently
+    appear to have no frontmatter (which would then surface as a false
+    AGENTS003 missing-keys error).
+    """
+    normalised = text.lstrip("\ufeff").replace("\r\n", "\n")
+    m = _FRONTMATTER_DELIM_RE.match(normalised)
     return m.group(1) if m else None
 
 

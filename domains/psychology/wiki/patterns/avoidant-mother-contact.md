@@ -42,7 +42,7 @@ compiled_against: 1
   expression during call; client reports "I can hold it for the
   first three minutes and then it's like every muscle in my face
   is trying to be the right face and I can't"
-  ([[2026-04-02-session-reyes#^[17:22]]]).
+  ([[2026-04-02-session-reyes]] [17:22]).
 - **Post-call consequence**: client "wrecked for the rest of the
   day"; this consequence functions as **reinforcement** of the
   avoidance.
@@ -73,10 +73,10 @@ compiled_against: 1
 
 | Date | Session | Pattern state | Source |
 | --- | --- | --- | --- |
-| 2026-04-02 | Session 1 (Reyes) | **Heavy.** "I haven't called her in like ten days. She calls me, I let it go to voicemail and I tell myself I'll call back tonight, and then I, um. I don't." Reyes asks the client only to *notice* what happens in his body when he thinks about calling — no behavioural prescription. | [[2026-04-02-session-reyes#^[17:22]]] |
-| 2026-04-16 | Session 2 (Reyes) | **First partial breach.** Client picked up Saturday call (20 min); held; decompressed for an hour afterwards. Reyes names this as "the foreman doing his job *and* letting twenty minutes through." The avoidance pattern is not broken but the protector has shown it can permit a contained breach. | [[2026-04-16-session-reyes#^[26:30]]] |
-| 2026-04-23 | Psychiatry consult (Han) | **Indexed by PCL-5 = 28** with avoidance cluster dominant; Han names this as "the per-week marker" and the **12-week SSRI-decision criterion** (avoidance softening = trajectory away from PGD consolidation). Pattern self-described to Han identically to Reyes account; no contradiction. | [[2026-04-23-psychiatry-han#^[22:30]]] |
-| 2026-05-14 | Session 4 (Reyes) | **Major shift.** Client **initiates** the call on 2026-05-09 (mother had not called first); 70-minute call; disclosed the fight with father, received reframe via mother's recollection (father was working toward repair). Pattern transformed from voicemail-default to client-initiated weekly cadence Reyes asks for going forward. | [[2026-05-14-session-reyes#^[02:48]]], [[2026-05-14-session-reyes#^[12:14]]] |
+| 2026-04-02 | Session 1 (Reyes) | **Heavy.** "I haven't called her in like ten days. She calls me, I let it go to voicemail and I tell myself I'll call back tonight, and then I, um. I don't." Reyes asks the client only to *notice* what happens in his body when he thinks about calling — no behavioural prescription. | [[2026-04-02-session-reyes]] [17:22] |
+| 2026-04-16 | Session 2 (Reyes) | **First partial breach.** Client picked up Saturday call (20 min); held; decompressed for an hour afterwards. Reyes names this as "the foreman doing his job *and* letting twenty minutes through." The avoidance pattern is not broken but the protector has shown it can permit a contained breach. | [[2026-04-16-session-reyes]] [26:30] |
+| 2026-04-23 | Psychiatry consult (Han) | **Indexed by PCL-5 = 28** with avoidance cluster dominant; Han names this as "the per-week marker" and the **12-week SSRI-decision criterion** (avoidance softening = trajectory away from PGD consolidation). Pattern self-described to Han identically to Reyes account; no contradiction. | [[2026-04-23-psychiatry-han]] [22:30] |
+| 2026-05-14 | Session 4 (Reyes) | **Major shift.** Client **initiates** the call on 2026-05-09 (mother had not called first); 70-minute call; disclosed the fight with father, received reframe via mother's recollection (father was working toward repair). Pattern transformed from voicemail-default to client-initiated weekly cadence Reyes asks for going forward. | [[2026-05-14-session-reyes]] [02:48], [[2026-05-14-session-reyes]] [12:14] |
 
 ## Trajectory across the arc
 
@@ -94,7 +94,7 @@ flowchart LR
 
 Convergent — no single intervention "caused" the shift. The
 session-4 client articulation explicitly names a chain
-([[2026-05-14-session-reyes#^[12:14]]]):
+([[2026-05-14-session-reyes]] [12:14]):
 
 1. **Somatic anchoring** in session 2 — chest band articulated;
    first Exile contact.

@@ -2,7 +2,7 @@
 type: analysis
 domain: workspace
 created: 2026-05-20
-updated: 2026-05-20
+updated: 2026-05-21
 sources: ["[[2026-04-08-meeting-q2-planning]]"]
 tags: [q2-platform-migration, planning, webhooks, identity-service]
 aliases: []
@@ -13,6 +13,59 @@ meeting_date: 2026-04-08
 ---
 
 # Q2 platform planning — analysis
+
+> [!important]
+> **30-second TL;DR.** Platform proposes extracting `identity` +
+> `webhooks` from the monolith for Q2. The scoping meeting reshapes
+> the rollout from 4-phase to 5-phase after
+> [[stakeholder-alex-cs]] surfaces the silent-acceptance webhook
+> failure mode (routing layer 202s without enqueueing) — invisible
+> to standard retry logic. Shadow mode + queue-depth assertion +
+> rollback-as-runbook adopted as cutover prerequisites. **The
+> single most important deferral** is to the 2026-04-22 ADR
+> review; what the meeting commits is the *constraints the ADR
+> must satisfy*, not the decision itself.
+
+## At-a-glance
+
+| Field                       | Content |
+| --------------------------- | ------- |
+| **Working subject**         | Q2 monolith → microservices split scoping (identity + webhooks first) |
+| **Meeting type**            | planning |
+| **Attendees**               | [[team-platform]] (Maya, Priya); Devon Park (Product); Tom Becker (SRE); [[stakeholder-alex-cs]] (Customer Success — enterprise SLA exposure) |
+| **Decision produced**       | none — decision deferred to ADR review on or before 2026-04-22 |
+| **Reversibility**           | n/a — no decision yet committed |
+| **Load-bearing constraint** | enterprise webhook delivery SLA (<0.1% loss for two accounts); the silent-acceptance failure mode named by Alex |
+| **Residual risks accepted** | none yet — the meeting *adds* mitigation requirements (shadow mode + queue-depth assertion + step-by-step rollback) rather than accepting deferrals |
+| **Owners assigned**         | Maya → ADR-001 draft (2026-04-18); Priya → session-state dual-write staging validation (2026-04-17); Tom → rollback runbook (2026-04-18); [[stakeholder-alex-cs]] → ADR-001 webhook-section reviewer |
+
+## Decision-shape diagram
+
+```mermaid
+flowchart LR
+    subgraph In["Constraints entering the room"]
+        I1["Deploy queue is bottleneck<br/>(Platform)"]
+        I2["Dual-running migration window<br/>(SRE)"]
+        I3["Session-state Redis ↔ Postgres<br/>(staging-proven)"]
+    end
+    subgraph New["Constraints surfaced in-room"]
+        N1["Enterprise SLA <0.1% loss<br/>(2 accounts, Alex)"]
+        N2["Silent-acceptance failure mode<br/>(no failure signal → no retry)"]
+        N3["Shadow mode prerequisite<br/>(Priya at ~10:25)"]
+    end
+    In --> Out["Output: constraint set for ADR-001<br/>Decision deferred to 2026-04-22"]
+    New --> Out
+```
+
+## Cast and stakes
+
+| Stakeholder                    | Stake                                                  | Position                                                                        | Outcome                                                                |
+| ------------------------------ | ------------------------------------------------------ | ------------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Maya Chen ([[team-platform]])  | Deploy-frequency unlock; team throughput               | Proposes identity + webhook split as the two cleanest bounded contexts          | Accepted in principle; constraints from Alex reshape the rollout shape |
+| Devon Park (Product)           | Q3 deploy-frequency gain vs Q2 no-customer-visible-upside | Accepts the Q2-as-plumbing framing                                              | Time-pressured but agreeable                                           |
+| Tom Becker (SRE)               | Rollback discipline; operability                       | Insists rollback be a runbook with state reconciliation, not `kubectl rollout undo` | Accepted by Maya                                                       |
+| Priya Shah ([[team-platform]]) | Session-state dual-write feasibility                   | Reports staging dual-write works; proposes shadow mode at ~10:25                | Both accepted as cutover prerequisites                                 |
+| [[stakeholder-alex-cs]]        | Enterprise webhook delivery SLA <0.1% loss             | Names the silent-acceptance failure mode; demands shadow + zero-tolerance       | Granted named-reviewer status on ADR-001 webhook section               |
 
 ## Context
 
@@ -102,6 +155,14 @@ the split is deferred to the ADR review on or before 2026-04-22
   that the postmortem will eventually re-validate as a near-miss
   (the structural mitigation surfaced here was the right one;
   the follow-through gap is what later breaks).
+- [[engineering-decision-style]] — the planning meeting establishes
+  most of the positive pattern's shape (pre-read deck, constraint-
+  owners in the room, stress-testing). Where the arc later breaks
+  is steps 5-6 (exit triggers + owner-on-mitigation), not in this
+  meeting.
+- [[engineering-decisions-retrospective-may-2026]] — cross-arc
+  synthesis comparing this arc's failure mode against the May
+  decisions' success.
 
 ## Notes
 

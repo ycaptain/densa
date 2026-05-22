@@ -4,6 +4,7 @@ domain: <your-domain>
 created: <% tp.date.now("YYYY-MM-DD") %>
 updated: <% tp.date.now("YYYY-MM-DD") %>
 sources: []
+aliases: []
 project: <slug>
 status: discovery
 owners: [self]
@@ -11,6 +12,7 @@ started: <% tp.date.now("YYYY-MM-DD") %>
 target:
 priority: P1
 tags: []
+compiled_against: 1
 ---
 
 # <% tp.file.title %>

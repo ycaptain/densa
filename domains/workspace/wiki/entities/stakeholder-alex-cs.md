@@ -2,7 +2,7 @@
 type: entity
 domain: workspace
 created: 2026-05-20
-updated: 2026-05-20
+updated: 2026-05-21
 sources: ["[[2026-04-08-meeting-q2-planning]]", "[[2026-04-22-decision-microservices-split]]", "[[2026-05-06-meeting-incident-postmortem]]"]
 tags: [stakeholder, customer-success, enterprise-accounts, sla-exposure]
 aliases: ["Alex Rivera", "Alex from CS"]
@@ -84,3 +84,13 @@ excluding them. Be careful not to conflate the two on this page.
 - [[q2-platform-arc-may]] — the synthesis covering the arc.
 - [[should-we-revisit-cs-veto-power]] — the open process
   question Alex's experience raises.
+- [[stakeholder-bram-partner]] — the analogous external-
+  contractual stakeholder on the API surface; the 2026-05-13
+  meeting's handling of Bram's concern is the structural
+  improvement over the 2026-04-22 ADR-001 handling of Alex's
+  concern.
+- [[engineering-decision-style]] — positive pattern; the
+  difference between Alex's experience on ADR-001 and Bram's on
+  ADR-002 is the pattern's identifying feature.
+- [[engineering-decisions-retrospective-may-2026]] — synthesis
+  contrasting these two experiences.

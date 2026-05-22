@@ -8,4 +8,11 @@ cd "$REPO_ROOT"
 #   git config core.hooksPath _system/hooks
 # the validator runs on every commit, no `pip install` required.
 export PYTHONPATH="$REPO_ROOT/_system:${PYTHONPATH:-}"
+
+# Prefer `python3` over `python` — macOS ships without `python` on
+# the default PATH and some minimal Linux containers do too. Fall
+# back to `python` only when `python3` is absent.
+if command -v python3 >/dev/null 2>&1; then
+    exec python3 -m wikilint --staged
+fi
 exec python -m wikilint --staged

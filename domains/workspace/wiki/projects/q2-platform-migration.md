@@ -2,7 +2,7 @@
 type: project
 domain: workspace
 created: 2026-05-20
-updated: 2026-05-20
+updated: 2026-05-21
 sources: ["[[2026-04-08-meeting-q2-planning]]", "[[2026-04-22-decision-microservices-split]]", "[[2026-05-06-meeting-incident-postmortem]]"]
 tags: [platform, microservices, migration, q2-2026]
 aliases: ["Q2 platform migration", "identity-webhook split"]
@@ -103,3 +103,10 @@ expects to resume phase 2 after cross-layer reconciliation lands.
 - [[q2-platform-arc-may]] — narrative synthesis across the arc.
 - [[decision-delay-from-skipped-stakeholder]] — the pattern this
   project provides an instance of.
+- [[api-platform-evolution]] — downstream project: API style for
+  the new identity service produced by this migration.
+- [[engineering-decision-style]] — positive pattern; ADR-001 is
+  the partial-instance / near-miss the May decisions improve on.
+- [[engineering-decisions-retrospective-may-2026]] — cross-decision
+  synthesis braiding this project's ADR-001 with the May
+  decisions.

@@ -26,14 +26,14 @@ compiled_against: 1
 > from the inside it feels *"like there's a version of me running
 > standup, and there's a version of me sitting six feet behind that
 > one watching. Both of them are competent. Neither one feels like
-> me"* ([[2026-04-02-session-reyes#^[03:47]]]). The behavioural
+> me"* ([[2026-04-02-session-reyes]] [03:47]). The behavioural
 > counterpart of the [[somatic-grief-containment]] band; both are
 > manifestations of [[inner-protector-stoic]] doing the work of
 > keeping the system running.
 
 Distinct from clinical depersonalisation / derealisation: DES-II
 brief at psychiatry consult was within normal limits
-([[2026-04-23-psychiatry-han#^[14:00]]]). Reframed by Han as
+([[2026-04-23-psychiatry-han]] [14:00]). Reframed by Han as
 *attentional / affective flattening expected in a depressive
 episode* — i.e. the phenomenology is on a continuum with normal
 attention rather than a separate dissociative axis.
@@ -42,7 +42,7 @@ attention rather than a separate dissociative axis.
 
 - **At work**: meetings happen, decisions get made, words come out
   of the client's mouth. *"People at work, I think, don't notice
-  anything different."* ([[2026-04-02-session-reyes#^[00:00]]])
+  anything different."* ([[2026-04-02-session-reyes]] [00:00])
 - **Watching-self quality**: a stable observer position behind the
   performing self. Both selves "competent"; neither "feels like
   me."
@@ -54,7 +54,7 @@ attention rather than a separate dissociative axis.
   to coworkers and to a significant degree even to Sarah —
   Mark's session-1 framing is that Sarah knows *that* he's not
   great but not *how* he's not great
-  ([[2026-04-02-session-reyes#^[17:22]]]).
+  ([[2026-04-02-session-reyes]] [17:22]).
 
 ## Mechanism
 
@@ -65,26 +65,26 @@ attention rather than a separate dissociative axis.
   two-of-me phenomenology is what this allocation feels like
   from the inside.
 - **Reinforcement**: the pattern is rewarded externally — client
-  ships a release ([[2026-04-16-session-reyes#^[00:00]]]),
+  ships a release ([[2026-04-16-session-reyes]] [00:00]),
   performance is maintained, no one at work notices. The
   professional context provides *zero corrective feedback*; the
   pattern is invisible because it works, in the narrow sense of
   "work."
 - **Cost**: the watching self accumulates fatigue that surfaces
   outside work hours — couch evenings of non-watching TV
-  ([[2026-04-02-session-reyes#^[03:47]]]) and the Thursday-morning
+  ([[2026-04-02-session-reyes]] [03:47]) and the Thursday-morning
   4:30 sit-at-the-kitchen-table moment
-  ([[2026-04-16-session-reyes#^[00:00]]]) are the cost being
+  ([[2026-04-16-session-reyes]] [00:00]) are the cost being
   paid in non-work time.
 
 ## Instances
 
 | Date | Session | State of pattern | Source |
 | --- | --- | --- | --- |
-| 2026-04-02 | Session 1 (Reyes) | **Fully established.** Client articulates the "two of me" phenomenology spontaneously. Reyes does not intervene — the pattern is correctly read as the protector's work, and the protector is too active for direct intervention. | [[2026-04-02-session-reyes#^[03:47]]] |
-| 2026-04-16 | Session 2 (Reyes) | **Same intensity at work; first internal contact at home.** Client describes shipping a Tuesday release without registering the affective layer, then sitting at the kitchen table for an hour Thursday morning doing nothing — i.e. the watching layer became *visible* outside work hours. | [[2026-04-16-session-reyes#^[00:00]]] |
-| 2026-04-23 | Psychiatry consult (Han) | Indexed by PHQ-9 = 14 + the "half-volume" articulation. Han names it as *anhedonia partial loss of capacity to feel pleasure* — clinical re-framing of the watching-self phenomenology as affective flattening rather than dissociation. DES-II WNL rules out primary dissociative axis. | [[2026-04-23-psychiatry-han#^[08:22]]], [[2026-04-23-psychiatry-han#^[14:00]]] |
-| 2026-05-14 | Session 4 (Reyes) | **Partial loosening at home; work-mode still dominant at office.** The laundry-room moment with Sarah ([[2026-05-14-session-reyes#^[12:14]]]) breaks the watching-self stance interpersonally; work-mode is not directly addressed in session 4 but the client describes Sunday and Monday as "bad" (i.e. the protector working harder to compensate for the home-side breach). | [[2026-05-14-session-reyes#^[12:14]]] |
+| 2026-04-02 | Session 1 (Reyes) | **Fully established.** Client articulates the "two of me" phenomenology spontaneously. Reyes does not intervene — the pattern is correctly read as the protector's work, and the protector is too active for direct intervention. | [[2026-04-02-session-reyes]] [03:47] |
+| 2026-04-16 | Session 2 (Reyes) | **Same intensity at work; first internal contact at home.** Client describes shipping a Tuesday release without registering the affective layer, then sitting at the kitchen table for an hour Thursday morning doing nothing — i.e. the watching layer became *visible* outside work hours. | [[2026-04-16-session-reyes]] [00:00] |
+| 2026-04-23 | Psychiatry consult (Han) | Indexed by PHQ-9 = 14 + the "half-volume" articulation. Han names it as *anhedonia partial loss of capacity to feel pleasure* — clinical re-framing of the watching-self phenomenology as affective flattening rather than dissociation. DES-II WNL rules out primary dissociative axis. | [[2026-04-23-psychiatry-han]] [08:22], [[2026-04-23-psychiatry-han]] [14:00] |
+| 2026-05-14 | Session 4 (Reyes) | **Partial loosening at home; work-mode still dominant at office.** The laundry-room moment with Sarah ([[2026-05-14-session-reyes]] [12:14]) breaks the watching-self stance interpersonally; work-mode is not directly addressed in session 4 but the client describes Sunday and Monday as "bad" (i.e. the protector working harder to compensate for the home-side breach). | [[2026-05-14-session-reyes]] [12:14] |
 
 ## Why this pattern is *not* the focal clinical target
 
