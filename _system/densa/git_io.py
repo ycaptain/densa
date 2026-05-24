@@ -132,7 +132,7 @@ def staged_entries(repo: Path) -> list[StagedEntry]:
 def diff_entries(repo: Path, base_ref: str) -> list[StagedEntry]:
     """List every path that changed between *base_ref* and ``HEAD``.
 
-    Used by ``wikilint --diff <ref>`` so CI / batch jobs can apply the
+    Used by ``densa --diff <ref>`` so CI / batch jobs can apply the
     staged rules (AGENTS001/002/007) over a push or PR range without a
     real git index — pre-commit alone cannot catch a ``--no-verify``
     bypass.

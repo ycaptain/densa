@@ -4,6 +4,7 @@ domain: psychology
 created: 2026-05-21
 updated: 2026-05-21
 sources: ["[[2026-04-16-session-reyes]]"]
+aliases: []
 session_kind: therapy
 participants: [self, therapist-reyes]
 analysis_lens: [ifs, somatic, eft, biopsychosocial-4P]

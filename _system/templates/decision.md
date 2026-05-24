@@ -7,7 +7,8 @@ sources: []
 aliases: []
 decision_id: <project>-<NNN>
 decided_on: <% tp.date.now("YYYY-MM-DD") %>
-status: proposed
+status: active
+decision_status: proposed     # L2-defined: proposed | accepted | rejected | superseded
 project: <project-slug>
 supersedes: []
 superseded_by: []

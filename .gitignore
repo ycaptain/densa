@@ -33,3 +33,4 @@ docs/dogfood/
 docs/user-research/
 docs/prior-art/
 docs/MASTER-PLAN-2026-05.md
+.venv-test/

@@ -15,6 +15,27 @@ for entry format.
 
 ---
 
+## [2026-05-21] ingest | session 3 retrofit (2026-04-30 — chair-work with the foreman)
+- Source: [[2026-04-30-session-reyes]] (synthesised raw — fills the
+  gap previously documented as "raw not in this ingest" across six
+  wiki pages).
+- Pages touched:
+  [[2026-04-30-session-reyes-analysis]] (new),
+  [[therapist-reyes]] (Appearances table + session-3 note),
+  [[avoidant-mother-contact]] (chair-work citation upgraded),
+  [[somatic-grief-containment]], [[automaton-work-mode]],
+  [[inner-protector-stoic]] (entity page's "first spoken to" event),
+  [[father-grief-arc]] (theme timeline),
+  [[2026-05-14-six-week-retrospective]] (cross-clinical coordination
+  section corrected — four therapy sessions, not three),
+  [[2026-05-14-session-reyes-analysis]] (session-3 citation
+  upgraded).
+- Closes the partial-coverage gap the original ingest deliberately
+  left open. The chair-work session is the IFS unblending hinge of
+  the arc; subsequent session-4 release is partly attributable to
+  the protector's "by who?" challenge surfaced here ([14:45]) and
+  the direct address Mark makes at [20:00].
+
 ## [2026-05-21] ingest | worked-example bundle (six-week father-grief arc)
 - Sources: [[2026-04-02-session-reyes]], [[2026-04-16-session-reyes]],
   [[2026-04-23-psychiatry-han]], [[2026-05-14-session-reyes]]

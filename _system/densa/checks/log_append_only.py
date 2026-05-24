@@ -25,10 +25,10 @@ import re
 from collections import Counter
 from pathlib import Path
 
-from wikilint.config import LOG_REORDER_BYPASS_ENV
-from wikilint.git_io import StagedDiff, StagedEntry, staged_deletions, staged_diff
-from wikilint.paths import is_log
-from wikilint.report import Diagnostic, Report, Severity
+from densa.config import LOG_REORDER_BYPASS_ENV
+from densa.git_io import StagedDiff, StagedEntry, staged_deletions, staged_diff
+from densa.paths import is_log
+from densa.report import Diagnostic, Report, Severity
 
 _RULE_ID = "AGENTS002"
 
@@ -103,8 +103,12 @@ class LogAppendOnly:
                     path=path,
                     line=lineno,
                     message=(
-                        "log is append-only; staged deletion: "
-                        f"{content.rstrip()!r}"
+                        "AGENTS002 log-append-only: staged deletion of "
+                        f"{content.rstrip()!r}. Logs are append-only and "
+                        "reverse-chronological (L1 §6); new entries go above "
+                        "older ones. For a one-shot reorder sweep, set "
+                        f"`{LOG_REORDER_BYPASS_ENV}=1` and include a "
+                        "`## [YYYY-MM-DD] maintenance | ...` audit entry."
                     ),
                 ))
 

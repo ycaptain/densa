@@ -8,10 +8,17 @@ the L1 schema version recorded in [`AGENTS.md`](AGENTS.md) frontmatter
 
 ## [Unreleased]
 
-Tracked but not yet shipped — file an issue or PR against any of these:
+The two subsections below capture two different states. **Planned**
+items haven't been built yet — file an issue or PR. **Fixed / Added /
+Example L2 cleanup** items have already landed on `main` after the
+0.1.0 tag; they're waiting for a 0.1.1 / 0.2.0 release tag to ship.
 
 ### Planned
 
+- **Publish `densa` to PyPI** so the `pipx install densa` flow in
+  `README.md` works without first cloning the repo (today: install the
+  CLI via `pip install -e .` inside a clone, then use `densa init`
+  for additional vaults).
 - First-`ingest` end-to-end walkthrough in `docs/EXAMPLES.md` (mirrors
   the existing `promote` walkthrough), using a shipped real-paper raw.
 - `how-to-read-this-domain.md` synthesis page for `workspace` (matching
@@ -43,12 +50,12 @@ Validator bugs (would otherwise bite first-week adopters):
 
 CI coverage:
 
-- **`wikilint --diff <base_ref>` mode** so CI can apply the staged
+- **`densa --diff <base_ref>` mode** so CI can apply the staged
   rules (AGENTS001 / AGENTS002 / AGENTS007) over a PR range. Before
   this, a local `git commit --no-verify` bypassed every staged rule
-  and CI had no way to catch it. `validate.yml` now runs both
-  `--all` (file rules) and `--diff origin/<base>` (staged rules) on
-  every PR.
+  and CI had no way to catch it. `.github/workflows/ci.yml` now runs
+  both `--all` (file rules) and `--diff origin/<base>` (staged rules)
+  on every PR.
 
 Docs / OSS polish:
 
@@ -67,10 +74,10 @@ Docs / OSS polish:
   there is a default path list.
 - `AGENTS.md` §3.4 formalises `cross-domain` as a first-class tag
   (the ingest/lint prompts already required it).
-- `WIKILINT-IO` (meta diagnostic for unreadable files) is now in
-  the rule registry, so `--ignore WIKILINT-IO` works.
+- `DENSA-IO` (meta diagnostic for unreadable files) is now in
+  the rule registry, so `--ignore DENSA-IO` works.
 - Dropped dead references to `pydantic` and
-  `wikilint.checks.l2_extensions` from `__init__.py` / `config.py`.
+  `densa.checks.l2_extensions` from `__init__.py` / `config.py`.
 
 Example L2 cleanup:
 
@@ -99,9 +106,9 @@ Example L2 cleanup:
 ### Added
 
 - **AGENTS.md §3.4** — `cross-domain` tagging contract.
-- **`wikilint` rule `WIKILINT-IO`** registered in `config.RULES`
+- **`densa` rule `DENSA-IO`** registered in `config.RULES`
   with stable ID + summary + anchor.
-- **`wikilint --diff <base_ref>`** subcommand.
+- **`densa --diff <base_ref>`** subcommand.
 - **11 new regression tests** covering each of the fixes above
   (index exclusion, explicit-path fallback, inbox→raw rename,
   raw-to-raw rename, source-aware fallback, analysis source must
@@ -121,10 +128,10 @@ Example L2 cleanup:
 - **Page templates** for every page type under
   [`_system/templates/`](_system/templates/), including
   domain-specialised variants and a Q&A template.
-- **`wikilint` Python validator** ([`_system/wikilint/`](_system/wikilint/)) —
+- **`densa` Python validator** ([`_system/densa/`](_system/densa/)) —
   pure-stdlib (~1k lines) schema + red-line enforcement; pre-commit
   hook under [`_system/hooks/`](_system/hooks/) and GitHub Action
-  under [`.github/workflows/validate.yml`](.github/workflows/validate.yml).
+  under [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 - **Three worked-example domains** under [`domains/`](domains/) covering
   light/medium/heavy schema density (`research-papers`, `workspace`,
   `psychology`).

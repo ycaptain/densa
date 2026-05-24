@@ -2,7 +2,7 @@
 type: log
 scope: research-papers
 domain: research-papers
-updated: 2026-05-21
+updated: 2026-05-23
 compiled_against: 1
 ---
 
@@ -14,6 +14,11 @@ preamble (newest first); older entries scroll down. See
 for entry format.
 
 ---
+
+## [2026-05-23] ingest | Kim et al. 2025, "Unlocking the Future: A Comprehensive Review of ChatGPT in Education"
+- Source: [[2025-kim-chatgpt-education-review-tkl]] (*Technology, Knowledge and Learning*, DOI 10.1007/s10758-025-09923-w; PDF-to-markdown extraction; full-text body of §§1–6 included, Figs. 1–5 + Appendix-A 52-row table partially summarised — see "Extraction scope" note in the raw)
+- Pages touched: [[2025-kim-chatgpt-education-review-tkl-analysis]] (new), [[cognitive-offloading]] (Appearances row), [[llm-tutoring-systems]] (new "Connected reviews" subsection), [[llm-tutoring-cognitive-offload]] (Evidence-so-far row), [[llm-tutoring-equity-impact]] (Evidence-so-far row)
+- One-line synthesis: a content-analysis review of 52 empirical ChatGPT-in-education studies (Jan 2023–Dec 2024) **quantifies the methodological gap** — only 1/52 explicit RCT and 25% geographically unspecified, with the three RCT anchors already in this wiki (Vanzo/Bastani/Kestin) sitting *outside* the corpus due to the "ChatGPT" keyword + 7-journal venue filters; **load-bearing limit**: position-paper layering in §5 means the four pedagogical recommendations are framework-informed syntheses, not derivations from §4 counts.
 
 ## [2026-05-21] maintenance | readability sweep + prompt-ingest reconciliation across worked examples
 - Pages touched:

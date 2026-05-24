@@ -53,7 +53,7 @@ timeline
                        : Scales baseline
                        : Medication deferred to 05-07
     2026-04-30 : Session 3 (Reyes)
-                       : Chair-work with the foreman
+                       : Chair-work with the foreman ([[2026-04-30-session-reyes]])
                        : (not in worked-example raw set)
     2026-05-09 : Mother phone call (TURNING POINT)
                        : Client-initiated, 70 min
@@ -164,6 +164,6 @@ list. The arc was deliberately constructed to exhibit:
 
 - [[2026-05-14-six-week-retrospective]] — the synthesis tying
   the arc together for the clinical reader.
-- [[domains/psychology/wiki/syntheses/how-to-read-this-domain|how-to-read-this-domain]]
+- [[how-to-read-psychology-domain|psychology reading guide]]
   — three-audience navigator.
 - [[medication-decision-arc]] — the parallel psychiatric arc.

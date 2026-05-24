@@ -5,8 +5,8 @@ from __future__ import annotations
 import io
 import json
 
-from wikilint.formatters import format_github, format_json, format_text
-from wikilint.report import Diagnostic, Report, Severity
+from densa.formatters import format_github, format_json, format_text
+from densa.report import Diagnostic, Report, Severity
 
 
 def _populated_report() -> Report:

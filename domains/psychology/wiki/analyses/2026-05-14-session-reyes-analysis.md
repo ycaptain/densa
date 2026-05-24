@@ -4,6 +4,7 @@ domain: psychology
 created: 2026-05-21
 updated: 2026-05-21
 sources: ["[[2026-05-14-session-reyes]]"]
+aliases: []
 session_kind: therapy
 participants: [self, therapist-reyes]
 analysis_lens: [narrative, attachment-theory, eft, biopsychosocial-4P]
@@ -167,9 +168,9 @@ over the prior six weeks:
 1. The cottage-cheese contact in session 2 — evidence that
    "letting a little bit of grief through, in the right room,
    doesn't break the system."
-2. Chair-work with the foreman in session 3 (2026-04-30, raw
-   not in this ingest) — evidence that the protector "could be
-   talked to without being fired."
+2. Chair-work with the foreman in session 3
+   ([[2026-04-30-session-reyes]] [09:15]–[20:00]) — evidence that
+   the protector "could be talked to without being fired."
 3. Han's medication-deferral validation — *"a doctor in a white
    coat say the way you're working is correct."*
 

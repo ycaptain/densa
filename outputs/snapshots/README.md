@@ -12,16 +12,22 @@ compiled_against: 1
 
 # `outputs/snapshots/`
 
-Lint generates `index-snapshot.md` here on every run — a static
+Lint regenerates `index-snapshot.md` here on every run — a static
 mirror of every Dataview / dataviewjs block in `index.md` and
 `domains/<X>/index.md`, since LLM sessions can't execute Dataview.
 
-> [!warning] Empty on a fresh clone
-> If `index-snapshot.md` is absent (you just cloned the template, or
-> nobody has run `lint` yet) the L1 §1.1 step-4 onboarding pointer
-> resolves to nothing. **Run `lint` once** — the snapshot becomes
-> part of its auto-applied output (see
-> [`_system/prompts/lint.md`](../../_system/prompts/lint.md) step 8).
+The template ships a pre-populated snapshot so the L1 §1.1 step-4
+onboarding pointer always resolves to something readable on a fresh
+clone. Re-run `lint` whenever:
+
+- the snapshot's `updated:` field lags the most recent `ingest` entry
+  in `log.md`, **or**
+- you deleted the file (`git rm outputs/snapshots/index-snapshot.md`)
+  to force a clean rebuild.
+
+In either case the new snapshot is part of `lint`'s auto-applied
+output (see [`_system/prompts/lint.md`](../../_system/prompts/lint.md)
+step 8).
 
 This directory is in git so the snapshot travels across machines,
 but the wikilink resolver ignores everything under `outputs/`; wiki

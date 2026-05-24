@@ -5,16 +5,16 @@ share the same shortest-unique slug) is a WARNING — Obsidian will pick
 one of them at render time so the link still works, but the
 ambiguity is a maintenance smell worth surfacing.
 
-The set of files this rule examines is :func:`~wikilint.paths.wikilinks_scoped`:
+The set of files this rule examines is :func:`~densa.paths.wikilinks_scoped`:
 canonical markdown content (domains, root index/log), excluding
 schema docs (AGENTS, templates, prompts) and ``raw/``.
 """
 
 from __future__ import annotations
 
-from wikilint.paths import wikilinks_scoped
-from wikilint.report import Diagnostic, Report, Severity
-from wikilint.wikilink import ResolutionStatus, SlugIndex, resolve, scan
+from densa.paths import wikilinks_scoped
+from densa.report import Diagnostic, Report, Severity
+from densa.wikilink import ResolutionStatus, SlugIndex, resolve, scan
 
 
 class WikilinkResolvable:

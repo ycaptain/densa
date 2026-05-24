@@ -1,7 +1,7 @@
 ---
 type: log
 scope: global
-updated: 2026-05-21
+updated: 2026-05-23
 compiled_against: 1
 ---
 
@@ -21,6 +21,17 @@ Entry format:
 ```
 
 ---
+
+## [2026-05-23] maintenance | rename project llm-wiki-starter → densa + carry-forward of 81f4e83's residue
+- Bypass used: WIKI_ALLOW_CROSS_SCOPE=1 (single sweep touches `_system/**`, `.github/**`, `domains/**`, root docs, `integrations/**`, `pyproject.toml`).
+- Why rename: the starter shipped under two names — repo `llm-wiki-starter`, validator `wikilint` — and neither covered the whole (schema + prompts + validator + integrations); `wikilint` in particular undersold the validator's scope (schema, write scopes, red lines — not just wikilinks). An in-flight candidate `lectern` collided with an existing unrelated PyPI package (`lectern` 0.35.0, "Literate Minecraft data packs"). `densa` is unclaimed on PyPI + GitHub and names the artefact itself — the dense, LLM-compiled distillation the wiki accumulates. Renames are mechanical: package directory `_system/wikilint/` → `_system/densa/`; CLI `wikilint` → `densa`; meta rule `WIKILINT-IO` → `DENSA-IO`. No back-compat alias kept — nothing was ever published under the old names.
+- Concurrent carry-forward: this commit also lands the ~95 unstaged items from the post-`81f4e83` sweep that were on disk but not yet committed (new psychology session-3 retrofit raw + analyses, research-papers Kim 2025 paper raw + analyses + frameworks, `outputs/snapshots/`, `noxfile.py`, agent-inject / init / upgrade subcommands, new templates, new regression tests, doc cleanups). Folding them into the rename commit avoids a churny rebase against the directory move.
+- Validator self-check: `python -m densa --all` is green (168 files, 0 error, 0 warning); pytest suite passes (329 tests).
+
+## [2026-05-21] ingest(psychology) | session 3 retrofit (2026-04-30 — chair-work with the foreman)
+- Source: [[2026-04-30-session-reyes]] (synthesised raw — fills the partial-coverage gap that the original ingest deliberately left open).
+- Pages touched: [[2026-04-30-session-reyes-analysis]] (new), [[therapist-reyes]], [[avoidant-mother-contact]], [[somatic-grief-containment]], [[automaton-work-mode]], [[inner-protector-stoic]], [[father-grief-arc]], [[2026-05-14-six-week-retrospective]], [[2026-05-14-session-reyes-analysis]].
+- The chair-work session is the IFS unblending hinge of the six-week arc; subsequent session-4 release is partly attributable to the protector's "by who?" challenge surfaced at [14:45] and Mark's direct address at [20:00].
 
 ## [2026-05-21] maintenance | cross-scope sweep — validator bugs, doc drift, example L2 cleanup
 - Bypass used: WIKI_ALLOW_CROSS_SCOPE=1 (single sweep touches `_system/**`, `.github/**`, `domains/**`, root docs).

@@ -1,9 +1,9 @@
 {
-  "name": "llm-wiki-starter",
-  "displayName": "LLM Wiki Starter",
-  "summary": "Slash commands for the agent-neutral LLM-maintained wiki template.",
-  "homepage": "https://github.com/ycaptain/llm-wiki-starter",
-  "repository": "https://github.com/ycaptain/llm-wiki-starter",
+  "name": "densa",
+  "displayName": "Densa",
+  "summary": "Slash commands for a Densa vault — the agent-neutral LLM-maintained wiki.",
+  "homepage": "https://github.com/ycaptain/densa",
+  "repository": "https://github.com/ycaptain/densa",
   "license": "MIT",
-  "tags": ["llm-wiki", "agents-md", "pkm", "obsidian"]
+  "tags": ["densa", "agents-md", "pkm", "obsidian"]
 }

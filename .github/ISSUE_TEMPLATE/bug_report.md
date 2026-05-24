@@ -24,10 +24,10 @@ assignees: ""
 - LLM agent: <!-- Cursor 0.x.x / Claude Code / Codex / other -->
 - Obsidian version (if relevant): <!-- 1.x.x -->
 
-## `wikilint --all` output
+## `densa --all` output
 
 ```
-<!-- paste full output of `python -m wikilint --all` -->
+<!-- paste full output of `python -m densa --all` -->
 ```
 
 ## Additional context

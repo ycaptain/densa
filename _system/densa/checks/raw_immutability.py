@@ -16,9 +16,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from wikilint.git_io import StagedEntry
-from wikilint.paths import is_raw
-from wikilint.report import Diagnostic, Report, Severity
+from densa.git_io import StagedEntry
+from densa.paths import is_raw
+from densa.report import Diagnostic, Report, Severity
 
 _RULE_ID = "AGENTS001"
 _IN_PLACE_LETTERS = frozenset({"M", "D"})
@@ -55,6 +55,13 @@ class RawImmutability:
                     path=entry.path,
                     line=0,
                     message=(
-                        f"raw/ is immutable; staged status={entry.letter}"
+                        f"AGENTS001 raw-immutability: staged status="
+                        f"{entry.letter} against raw/. raw/ is the immutable "
+                        f"evidence layer (L1 §6); this rule has no sanctioned "
+                        f"bypass env var. If you found a transcription error, "
+                        f"document a one-shot sweep in your L2's "
+                        f"'Known transcription corrections' section, then "
+                        f"bypass with `git commit --no-verify` for that one "
+                        f"commit."
                     ),
                 ))

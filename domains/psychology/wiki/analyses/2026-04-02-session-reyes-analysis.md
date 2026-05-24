@@ -4,6 +4,7 @@ domain: psychology
 created: 2026-05-21
 updated: 2026-05-21
 sources: ["[[2026-04-02-session-reyes]]"]
+aliases: []
 session_kind: therapy
 participants: [self, therapist-reyes]
 analysis_lens: [biopsychosocial-4P, attachment-theory, existential]

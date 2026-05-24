@@ -9,9 +9,9 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from wikilint.checks.raw_immutability import RawImmutability
-from wikilint.git_io import StagedEntry
-from wikilint.report import Report
+from densa.checks.raw_immutability import RawImmutability
+from densa.git_io import StagedEntry
+from densa.report import Report
 
 
 def _entry(letter: str, path: str, src: str | None = None) -> StagedEntry:

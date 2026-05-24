@@ -14,22 +14,23 @@ matching prompt file in `_system/prompts/`. Schema, red lines, and
 behaviour come from [`AGENTS.md`](../../AGENTS.md), exactly as for any
 other agent.
 
+> [!warning] Experimental — falls back gracefully
+> The Claude Code plugin marketplace is still evolving (2026-05).
+> Manifest formats and the install command may shift. **If the
+> plugin fails to load, fall back to invoking the prompts directly**:
+> `read _system/prompts/ingest.md and apply it to <path>`. The vault
+> works identically without this directory; the slash commands are
+> just a UX shortcut.
+
 ## Install
 
 ```text
-/plugin marketplace add ycaptain/llm-wiki-starter
-/plugin install llm-wiki-starter
+/plugin marketplace add ycaptain/densa
+/plugin install densa
 ```
 
 Once installed, type `/ingest`, `/query`, `/lint`, `/process-inbox`,
 or `/promote` in a fresh Claude Code chat opened against this vault.
-
-> [!warning] Experimental
-> The Claude Code plugin marketplace is still evolving (2026-05).
-> Manifest formats and the install command may shift. If the plugin
-> fails to load, fall back to invoking the prompts directly:
-> `read _system/prompts/ingest.md and apply it to <path>`. The vault
-> works identically without this directory.
 
 ## What's in here
 

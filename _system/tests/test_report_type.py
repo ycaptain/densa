@@ -14,12 +14,12 @@ from __future__ import annotations
 
 import pytest
 
-from wikilint.checks.frontmatter_required import (
+from densa.checks.frontmatter_required import (
     FrontmatterRequiredKeys,
     FrontmatterTypeAllowed,
 )
-from wikilint.report import Report
-from wikilint.wikilink import build_index
+from densa.report import Report
+from densa.wikilink import build_index
 
 from .conftest import MiniVault
 
@@ -31,7 +31,10 @@ def _report_page(type_: str = "report", omit_status: bool = False) -> str:
         "domain: vault\n"
         "created: 2026-05-19\n"
         "updated: 2026-05-19\n"
+        "sources: []\n"
+        "aliases: []\n"
         "tags: [lint]\n"
+        "compiled_against: 1\n"
     )
     if not omit_status:
         body += "status: active\n"
@@ -121,8 +124,10 @@ def _qa_page() -> str:
         "created: 2026-05-20\n"
         "updated: 2026-05-20\n"
         "sources: []\n"
+        "aliases: []\n"
         "tags: [qa]\n"
         "status: active\n"
+        "compiled_against: 1\n"
         "---\n"
         "# Karpathy vs Yanhua on outputs/\n"
         "\n## Question\n\n…\n\n## Answer\n\n…\n"

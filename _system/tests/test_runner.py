@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from wikilint.config import Config
-from wikilint.runner import lint_all
+from densa.config import Config
+from densa.runner import lint_all
 
 from .conftest import MiniVault, make_wiki_page
 

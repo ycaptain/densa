@@ -1,4 +1,4 @@
-"""Tests for :func:`wikilint.runner.lint_paths`.
+"""Tests for :func:`densa.runner.lint_paths`.
 
 This entry point feeds explicit file paths (relative or absolute) and
 returns a :class:`Report`. Three behaviours matter:
@@ -6,7 +6,7 @@ returns a :class:`Report`. Three behaviours matter:
 1. Relative paths are resolved against the repo root.
 2. Absolute paths must point inside the repo (else
    :class:`Path.relative_to` raises a clear `ValueError`).
-3. Missing paths surface as a `WIKILINT-IO` diagnostic, not a crash.
+3. Missing paths surface as a `DENSA-IO` diagnostic, not a crash.
 """
 
 from __future__ import annotations
@@ -15,7 +15,7 @@ from pathlib import Path
 
 import pytest
 
-from wikilint.runner import lint_paths
+from densa.runner import lint_paths
 
 
 def _seed(tmp_path: Path) -> Path:
@@ -63,7 +63,7 @@ def test_absolute_path_inside_repo_resolves(tmp_path: Path) -> None:
     assert report.files_checked == 1
 
 
-def test_missing_path_reports_wikilint_io_not_crash(
+def test_missing_path_reports_densa_io_not_crash(
     tmp_path: Path,
 ) -> None:
     repo = _seed(tmp_path)
@@ -71,7 +71,7 @@ def test_missing_path_reports_wikilint_io_not_crash(
     # `files_checked` only counts files the visitor actually opened;
     # a read-error short-circuits before `saw()`. What matters is that
     # the error is reported and the runner did not crash.
-    assert any(d.rule_id == "WIKILINT-IO" for d in report.diagnostics)
+    assert any(d.rule_id == "DENSA-IO" for d in report.diagnostics)
     assert report.has_errors
 
 

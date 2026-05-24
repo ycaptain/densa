@@ -1,10 +1,10 @@
-"""Unit tests for the path classifiers in :mod:`wikilint.paths`."""
+"""Unit tests for the path classifiers in :mod:`densa.paths`."""
 
 from __future__ import annotations
 
 import pytest
 
-from wikilint.paths import (
+from densa.paths import (
     is_log,
     is_output_artifact,
     is_outputs,

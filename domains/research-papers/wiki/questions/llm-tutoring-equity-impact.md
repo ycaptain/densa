@@ -2,8 +2,8 @@
 type: question
 domain: research-papers
 created: 2026-05-20
-updated: 2026-05-21
-sources: ["[[2024-vanzo-gpt4-homework-tutor-analysis]]", "[[2024-bastani-generative-ai-guardrails-analysis]]", "[[2025-kestin-ai-tutoring-active-learning-analysis]]"]
+updated: 2026-05-23
+sources: ["[[2024-vanzo-gpt4-homework-tutor-analysis]]", "[[2024-bastani-generative-ai-guardrails-analysis]]", "[[2025-kestin-ai-tutoring-active-learning-analysis]]", "[[2025-kim-chatgpt-education-review-tkl-analysis]]"]
 tags: [open-question, llm-tutoring, equity, access, deployment, policy]
 aliases: ["AI tutoring equity gap", "does LLM tutoring widen or narrow inequality"]
 status: active
@@ -78,6 +78,7 @@ the case for public investment changes qualitatively.
 | 2024-09    | [[2024-vanzo-gpt4-homework-tutor-analysis]]                          | Single-school positive evidence; cost-of-deployment was a single topic-prompt — **low** authoring cost       |
 | 2024-fall  | [[2024-bastani-generative-ai-guardrails-analysis]]                   | Negative evidence for the *naive-tool* configuration; positive-but-no-uplift for guardrailed — **high** cost |
 | 2025       | [[2025-kestin-ai-tutoring-active-learning-analysis]]                 | Strong positive evidence but with **high** authoring cost (physics-education experts wrote the prompt)        |
+| 2025-10    | [[2025-kim-chatgpt-education-review-tkl-analysis]]                   | Systematic review explicitly names the **economic-barrier mechanism** (paid tier + connectivity + device may exacerbate inequity) and the **geographic-coverage gap** (only 4/52 studies from China, 3 from US; 13/52 — 25% — don't specify country at all) — but **no study in the 52-corpus directly tests cross-resource-tier deployment** |
 | TODO       | Khanmigo Puerto Rico pilot (Digital Promise 2024; not yet ingested)  | Equity-focused pilot in a vulnerable population; infrastructure constraints flagged as a major obstacle      |
 | TODO       | LearnLM/Eedi UK RCT (Google DeepMind 2025; not yet ingested)         | Human-in-the-loop reduces direct authoring cost but reintroduces dependence on a skilled human tutor          |
 

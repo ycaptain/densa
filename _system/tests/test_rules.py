@@ -14,14 +14,14 @@ from __future__ import annotations
 
 import pytest
 
-from wikilint.checks.analysis_sources import AnalysisSourcesCardinality
-from wikilint.checks.frontmatter_required import (
+from densa.checks.analysis_sources import AnalysisSourcesCardinality
+from densa.checks.frontmatter_required import (
     FrontmatterRequiredKeys,
     FrontmatterTypeAllowed,
 )
-from wikilint.checks.wikilink_resolvable import WikilinkResolvable
-from wikilint.report import Report, Severity
-from wikilint.wikilink import build_index
+from densa.checks.wikilink_resolvable import WikilinkResolvable
+from densa.report import Report, Severity
+from densa.wikilink import build_index
 
 from .conftest import MiniVault, make_wiki_page
 
@@ -59,13 +59,52 @@ class TestFrontmatterRequiredKeys:
             "domain: psychology\n"
             "created: 2026-01-01\n"
             "updated: 2026-01-01\n"
-            "---\n"  # missing status
+            "sources: []\n"
+            "aliases: []\n"
+            "tags: []\n"
+            "compiled_against: 1\n"
+            "---\n"  # missing status (a non-empty REQUIRED key)
         )
         report = Report()
         FrontmatterRequiredKeys().visit(
             path, text, build_index(mini_vault.root), report,
         )
         assert _ids(report) == [self.rule_id]
+
+    def test_missing_presence_only_key(self, mini_vault: MiniVault) -> None:
+        """Universal presence-only keys (sources/tags/aliases) MUST be
+        declared even when empty. The rule errors when the key is
+        absent entirely; an empty list is fine."""
+        path = "domains/psychology/wiki/concepts/x.md"
+        text = (
+            "---\n"
+            "type: concept\n"
+            "domain: psychology\n"
+            "created: 2026-01-01\n"
+            "updated: 2026-01-01\n"
+            "tags: []\n"
+            "status: active\n"
+            "compiled_against: 1\n"
+            "---\n"  # missing both `sources:` and `aliases:`
+        )
+        report = Report()
+        FrontmatterRequiredKeys().visit(
+            path, text, build_index(mini_vault.root), report,
+        )
+        # Two diagnostics, both AGENTS003.
+        assert _ids(report) == [self.rule_id, self.rule_id]
+
+    def test_empty_presence_only_key_is_clean(
+        self, mini_vault: MiniVault,
+    ) -> None:
+        """`sources: []` (key declared, list empty) MUST pass — see L1
+        §3.1's `≥ 0` cardinality for concept-type pages."""
+        path = "domains/psychology/wiki/concepts/x.md"
+        report = Report()
+        FrontmatterRequiredKeys().visit(
+            path, make_wiki_page(), build_index(mini_vault.root), report,
+        )
+        assert _ids(report) == []
 
 
 class TestFrontmatterTypeAllowed:

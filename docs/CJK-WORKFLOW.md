@@ -208,7 +208,7 @@ Before bulk-ingesting CJK material, run this once:
    `Linking with alias: [[测试页]] works.`
 2. Open the file in Obsidian, click the wikilink. It should
    resolve back to the same page.
-3. `python -m wikilint --all` should report no AGENTS006
+3. `python -m densa --all` should report no AGENTS006
    violations.
 
 If all three pass, your vault is CJK-ready.

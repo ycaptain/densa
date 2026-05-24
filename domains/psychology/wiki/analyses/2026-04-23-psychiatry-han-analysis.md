@@ -4,6 +4,7 @@ domain: psychology
 created: 2026-05-21
 updated: 2026-05-21
 sources: ["[[2026-04-23-psychiatry-han]]"]
+aliases: []
 session_kind: psychiatry
 participants: [self, psychiatrist-han]
 analysis_lens: [biopsychosocial-4P, diagnostic-differential, cbt]

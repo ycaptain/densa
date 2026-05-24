@@ -9,7 +9,8 @@ experiment_id: <area>-<NNN>
 hypothesis: ""
 started: <% tp.date.now("YYYY-MM-DD") %>
 ends:
-status: planned
+status: active
+experiment_status: planned    # L2-defined: planned | running | done | cancelled
 outcome: tbd
 metric_links: []
 tags: []

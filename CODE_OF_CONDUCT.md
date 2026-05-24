@@ -43,7 +43,7 @@ officially representing the project in public spaces.
 
 If you experience or witness unacceptable behaviour, please report it
 to the project maintainer via
-[GitHub Security Advisories](https://github.com/ycaptain/llm-wiki-starter/security/advisories/new)
+[GitHub Security Advisories](https://github.com/ycaptain/densa/security/advisories/new)
 (use the private channel rather than a public issue). Reports will be
 reviewed and investigated promptly and fairly. The maintainer is
 obligated to respect the privacy and security of the reporter.

@@ -68,7 +68,7 @@ flowchart LR
     P --> T1["Session 1, Reyes<br/>2026-04-02 (wk 8)<br/>three-layer formulation"]
     T1 --> T2["Session 2, Reyes<br/>2026-04-16 (wk 10)<br/>IFS frame in<br/>foreman named<br/>cottage-cheese contact ~60s"]
     T2 --> H1["Psychiatry, Han<br/>2026-04-23 (wk 11)<br/>scales baseline<br/>no medication<br/>decisions deferred"]
-    H1 --> T3["Session 3, Reyes<br/>2026-04-30 (wk 12)<br/>chair-work with foreman<br/>(raw not in this ingest)"]
+    H1 --> T3["Session 3, Reyes<br/>2026-04-30 (wk 12)<br/>chair-work with foreman"]
     T3 --> M["Mother phone call<br/>2026-05-09 (wk 13)<br/>TURNING POINT<br/>guilt-charge lifted"]
     M --> T4["Session 4, Reyes<br/>2026-05-14 (wk 14)<br/>partial unburdening<br/>meaning-reconstruction"]
     T4 --> O["Open — integrative phase<br/>wk 14 onward"]
@@ -146,7 +146,7 @@ the system. Three classes of evidence over the prior six weeks:
 
 1. **Process-work evidence inside therapy**. Sessions 2 (IFS
    frame in, cottage-cheese ~60s Exile contact) and 3
-   (chair-work with the foreman, raw not in this ingest)
+   ([[2026-04-30-session-reyes]] — chair-work with the foreman)
    demonstrated to the Manager part — directly — that
    permitting brief affect contact in the right room did *not*
    destabilise the system. The Manager part is the audience
@@ -184,9 +184,10 @@ was not.
 
 ## Cross-clinical coordination
 
-Six weeks have produced one psychiatry consult, three therapy
-sessions documented in this worked example (plus session 3 on
-04-30 referenced but not in this ingest), zero medications.
+Six weeks have produced one psychiatry consult, four therapy
+sessions ([[2026-04-02-session-reyes]],
+[[2026-04-16-session-reyes]], [[2026-04-30-session-reyes]],
+[[2026-05-14-session-reyes]]), zero medications.
 The coordination practice across this period:
 
 - **Reyes routes Mark to Han early.** First-session signposting
@@ -295,6 +296,6 @@ prediction.
 - [[medication-decision-arc]] — the parallel medication arc.
 
 For the navigator-style entry to this arc, see
-[[domains/psychology/wiki/syntheses/how-to-read-this-domain|how-to-read-this-domain]].
+[[how-to-read-psychology-domain|psychology reading guide]].
 For the explicit capability list, see
 [[what-this-domain-demonstrates]].

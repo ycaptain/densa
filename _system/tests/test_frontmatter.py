@@ -7,7 +7,7 @@ suite if needed).
 
 from __future__ import annotations
 
-from wikilint.frontmatter import parse_stdlib
+from densa.frontmatter import parse_stdlib
 
 
 def test_returns_none_without_delimiter() -> None:

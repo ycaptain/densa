@@ -14,12 +14,12 @@ from pathlib import Path
 
 import pytest
 
-from wikilint.checks.operation_writes_scope import (
+from densa.checks.operation_writes_scope import (
     OperationWritesScope,
     _glob_match,
 )
-from wikilint.git_io import StagedEntry
-from wikilint.report import Report
+from densa.git_io import StagedEntry
+from densa.report import Report
 
 
 def _init_repo(tmp_path: Path, subject: str = "") -> Path:
@@ -179,6 +179,25 @@ class TestPromoteScope:
         OperationWritesScope().apply(
             repo,
             [StagedEntry("R", "domains/psy/wiki/syntheses/foo.md")],
+            report,
+        )
+        assert _ids(report) == []
+
+    def test_promote_appending_to_lint_report_is_clean(
+        self, tmp_path: Path,
+    ) -> None:
+        """`promote` Stage 4 appends 'Issues to surface' to today's lint report."""
+        repo = _init_repo(tmp_path, "promote: foo ← 2026-05-20-qa-foo")
+        report = Report()
+        OperationWritesScope().apply(
+            repo,
+            [
+                StagedEntry("D", "outputs/qa/2026-05-20-qa-foo.md"),
+                StagedEntry("A", "domains/psy/wiki/syntheses/foo.md"),
+                StagedEntry("M", "outputs/lint/2026-05-20.md"),
+                StagedEntry("M", "domains/psy/log.md"),
+                StagedEntry("M", "log.md"),
+            ],
             report,
         )
         assert _ids(report) == []

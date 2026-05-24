@@ -3,29 +3,65 @@ name: ci
 on:
   push:
     branches: [main]
-    paths:
-      - "_system/wikilint/**"
-      - "_system/tests/**"
-      - "_system/templates/**"
-      - "_system/prompts/**"
-      - "AGENTS.md"
-      - "domains/*/AGENTS.md"
-      - "pyproject.toml"
-      - ".github/workflows/ci.yml"
+    paths-ignore:
+      - "LICENSE"
+      - "CHANGELOG.md"
+      - "SECURITY.md"
+      - "CONTRIBUTING.md"
+      - "CODE_OF_CONDUCT.md"
+      - ".editorconfig"
+      - ".github/ISSUE_TEMPLATE/**"
+      - ".github/pull_request_template.md"
   pull_request:
     branches: [main]
-    paths:
-      - "_system/wikilint/**"
-      - "_system/tests/**"
-      - "_system/templates/**"
-      - "_system/prompts/**"
-      - "AGENTS.md"
-      - "domains/*/AGENTS.md"
-      - "pyproject.toml"
-      - ".github/workflows/ci.yml"
+    paths-ignore:
+      - "LICENSE"
+      - "CHANGELOG.md"
+      - "SECURITY.md"
+      - "CONTRIBUTING.md"
+      - "CODE_OF_CONDUCT.md"
+      - ".editorconfig"
+      - ".github/ISSUE_TEMPLATE/**"
+      - ".github/pull_request_template.md"
 
+# Two jobs, one workflow:
+# - `validate` runs the densa AGENTS001-009 rules on every change
+#   (file + staged + PR-diff scope). This is the gate every PR must clear.
+# - `tests` runs pytest/ruff/mypy across the Python matrix. Only kicks in
+#   when the validator code, templates, prompts, or schema changes —
+#   `domains/<X>/wiki/` edits do not need to retest the validator.
 jobs:
-  test:
+  validate:
+    name: schema + wikilink check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history so `densa --diff` can resolve the PR base.
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: pyproject.toml
+      - name: Install densa (strict extras)
+        run: pip install -e ".[strict]"
+      - name: Run densa over the full repo (file rules)
+        # Local equivalent: `nox -s lint-strict`. The CI step adds
+        # `--format=github` for PR annotations; otherwise identical.
+        run: DENSA_STRICT=1 densa --all --format=github
+      - name: Run densa over the PR range (staged rules)
+        # Local equivalent: `nox -s lint-diff` (with the base ref as
+        # the posarg). CI hard-codes the PR base ref via the event
+        # payload and adds GitHub-Actions PR annotations.
+        if: github.event_name == 'pull_request'
+        run: |
+          DENSA_STRICT=1 densa --diff \
+            "origin/${{ github.event.pull_request.base.ref }}" \
+            --format=github
+
+  tests:
     name: tests (py${{ matrix.python-version }})
     runs-on: ubuntu-latest
     strategy:
@@ -37,22 +73,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+          cache: pip
+          cache-dependency-path: pyproject.toml
       - name: Install dev deps
         run: pip install -e ".[dev]"
-      - name: Run pytest
-        run: pytest
-
-  lint:
-    name: ruff + mypy
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-      - name: Install dev deps
-        run: pip install -e ".[dev]"
-      - name: Run ruff
-        run: ruff check _system/wikilint _system/tests
-      - name: Run mypy
-        run: mypy _system/wikilint
+      # `nox -s check` runs the same lint + test + ruff + mypy gate
+      # contributors run locally. If `nox -s check` is green locally
+      # this job is green, modulo Python-version-specific issues
+      # caught by the matrix.
+      - name: Run developer gate (lint + test + ruff + mypy)
+        run: nox -s check

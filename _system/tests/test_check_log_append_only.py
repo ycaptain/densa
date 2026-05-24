@@ -17,9 +17,9 @@ from pathlib import Path
 
 import pytest
 
-from wikilint.checks.log_append_only import LogAppendOnly
-from wikilint.git_io import StagedEntry, staged_entries
-from wikilint.report import Report
+from densa.checks.log_append_only import LogAppendOnly
+from densa.git_io import StagedEntry, staged_entries
+from densa.report import Report
 
 _GIT = shutil.which("git")
 

@@ -60,7 +60,7 @@ in this domain.
 >
 > For the full navigator with time-budgeted reading paths and
 > the wiki-graph map, start at
-> [[domains/psychology/wiki/syntheses/how-to-read-this-domain|how-to-read-this-domain]].
+> [[how-to-read-psychology-domain|psychology reading guide]].
 
 ## Featured: Father-grief six-week arc (2026-04 → 2026-05)
 
@@ -81,7 +81,7 @@ in this domain.
 >   [[2026-05-14-six-week-retrospective]] — the clinician-grade
 >   six-week synthesis.
 > - **Three-audience navigator**:
->   [[domains/psychology/wiki/syntheses/how-to-read-this-domain|how-to-read-this-domain]]
+>   [[how-to-read-psychology-domain|psychology reading guide]]
 >   — clinician / client / evaluator reading paths.
 > - **Theme page**: [[father-grief-arc]] — the multi-session
 >   arc with turning point annotated.

@@ -56,17 +56,16 @@ compiled_against: 1
 | --- | --- | --- | --- |
 | 2026-04-02 | Session 1 ([[2026-04-02-session-reyes]]) | Attachment formulation + 4P framing | Names the three-layer structure (proximal loss / regret-loop / containment style); asks client to *notice* before *acting* — no calls to mother prescribed. — [[2026-04-02-session-reyes]] [26:40] |
 | 2026-04-16 | Session 2 ([[2026-04-16-session-reyes]]) | Somatic + IFS introduction | Brings attention to the chest band; lets client locate the "foreman"; brief Exile contact at cottage-cheese (~60s) then closes. — [[2026-04-16-session-reyes]] [04:38], [[2026-04-16-session-reyes]] [18:01] |
+| 2026-04-30 | Session 3 ([[2026-04-30-session-reyes]]) | IFS unblending — two-chair work | Moves an empty chair into the room and runs the chair-work exercise with the foreman; protector's "by who?" challenge surfaces ([14:45]); client makes a direct address to the protector ([20:00]) and the chest band visibly loosens. — [[2026-04-30-session-reyes]] [09:15], [[2026-04-30-session-reyes]] [20:00] |
 | 2026-05-14 | Session 4 ([[2026-05-14-session-reyes]]) | EFT + narrative / meaning-reconstruction | Receives client's account of 05-09 phone call; introduces continuing-bonds practices (walk, letter, truck-conversation); names the integration as classic meaning-reconstruction. — [[2026-05-14-session-reyes]] [24:00], [[2026-05-14-session-reyes]] [30:08] |
 
-> Session 3 (2026-04-30) is referenced inside the session-4 narrative
-> ([[2026-05-14-session-reyes]] [12:14] — *"the session with you on
-> the 30th — when we did that thing with the chair, when I talked
-> to the foreman — that was, like, the foreman getting evidence
-> that he could be talked to without being fired"*) but the raw
-> transcript for 2026-04-30 is **not** part of this worked-example
-> ingest. Reading sessions 1, 2, and 4 plus the psychiatry consult
-> still demonstrates the arc; the missing-session pointer is
-> preserved as honest documentation of partial coverage.
+> Session 3 (2026-04-30, [[2026-04-30-session-reyes]]) introduces
+> the IFS two-chair unblending exercise — Reyes brings a second
+> chair into the room, places the foreman in it, and asks Mark to
+> address the protector directly. The session's load-bearing
+> moment is at [09:15]–[20:00] (the chair-work proper) and the
+> protector's "by who?" challenge at [14:45], which becomes the
+> question session 4 catches Mark answering.
 
 ## Clinical signature observable across sessions
 

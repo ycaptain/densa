@@ -98,8 +98,11 @@ session-4 client articulation explicitly names a chain
 
 1. **Somatic anchoring** in session 2 — chest band articulated;
    first Exile contact.
-2. **Chair-work with the foreman** in session 3 (2026-04-30, not
-   in this worked-example raw set) — protector dialogued with.
+2. **Chair-work with the foreman** in session 3
+   ([[2026-04-30-session-reyes]] [09:15]–[20:00]) — protector
+   addressed directly; "by who?" challenge surfaces ([14:45]);
+   client makes a direct in-session address that loosens the chest
+   band ([20:00]).
 3. **Han's structural validation** — "the way you're working is
    correct" implicitly endorsed by the medication-deferral
    stance.

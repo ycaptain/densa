@@ -8,7 +8,7 @@ Four entry points mirror the four CLI modes:
   ``base_ref..HEAD`` range instead of the git index. Lets CI catch
   ``--no-verify`` bypasses of AGENTS001 / AGENTS002 / AGENTS007.
 - :func:`lint_all`     — walk every markdown in the repo (minus
-  :data:`~wikilint.config.SKIP_DIRS`), run file rules. Staged rules are
+  :data:`~densa.config.SKIP_DIRS`), run file rules. Staged rules are
   no-ops here.
 - :func:`lint_paths`   — only the explicit paths; useful for
   ``pre-commit`` integration with ``--files`` and for IDE plugins.
@@ -19,12 +19,12 @@ from __future__ import annotations
 from collections.abc import Iterable
 from pathlib import Path
 
-from wikilint.checks import FILE_RULES, STAGED_RULES
-from wikilint.checks.base import FileRule, StagedRule
-from wikilint.config import SKIP_DIRS, Config
-from wikilint.git_io import diff_entries, ref_blob, staged_blob, staged_entries
-from wikilint.report import Diagnostic, Report, Severity
-from wikilint.wikilink import SlugIndex, build_index
+from densa.checks import FILE_RULES, STAGED_RULES
+from densa.checks.base import FileRule, StagedRule
+from densa.config import SKIP_DIRS, Config
+from densa.git_io import diff_entries, ref_blob, staged_blob, staged_entries
+from densa.report import Diagnostic, Report, Severity
+from densa.wikilink import SlugIndex, build_index
 
 
 def _enabled_file_rules(config: Config) -> tuple[FileRule, ...]:
@@ -141,7 +141,7 @@ def _check_path(
         text = (repo / rel).read_text(encoding="utf-8")
     except (OSError, UnicodeDecodeError) as exc:
         report.add(Diagnostic(
-            rule_id="WIKILINT-IO",
+            rule_id="DENSA-IO",
             severity=Severity.ERROR,
             path=rel,
             line=0,

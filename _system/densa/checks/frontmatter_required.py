@@ -7,11 +7,15 @@ that introduces a new type).
 
 from __future__ import annotations
 
-from wikilint.config import ALLOWED_TYPES, REQUIRED_FRONTMATTER_KEYS
-from wikilint.frontmatter import parse
-from wikilint.paths import is_output_artifact, is_wiki
-from wikilint.report import Diagnostic, Report, Severity
-from wikilint.wikilink import SlugIndex
+from densa.config import (
+    ALLOWED_TYPES,
+    PRESENCE_ONLY_FRONTMATTER_KEYS,
+    REQUIRED_FRONTMATTER_KEYS,
+)
+from densa.frontmatter import parse
+from densa.paths import is_output_artifact, is_wiki
+from densa.report import Diagnostic, Report, Severity
+from densa.wikilink import SlugIndex
 
 
 def _needs_frontmatter(path: str) -> bool:
@@ -20,7 +24,7 @@ def _needs_frontmatter(path: str) -> bool:
     Wiki pages under ``domains/<X>/wiki/`` and operation artifacts
     under ``outputs/<bucket>/`` (e.g. ``outputs/lint/<date>.md``) both
     carry the universal frontmatter. The bare ``outputs/README.md`` is
-    exempt (see :func:`wikilint.paths.is_output_artifact`).
+    exempt (see :func:`densa.paths.is_output_artifact`).
     """
     return is_wiki(path) or is_output_artifact(path)
 
@@ -58,6 +62,18 @@ class FrontmatterRequiredKeys:
                     path=path,
                     line=1,
                     message=f"missing required frontmatter key: {key}",
+                ))
+        for key in PRESENCE_ONLY_FRONTMATTER_KEYS:
+            if key not in fm:
+                report.add(Diagnostic(
+                    rule_id=self.id,
+                    severity=Severity.ERROR,
+                    path=path,
+                    line=1,
+                    message=(
+                        f"missing universal frontmatter key: {key} "
+                        f"(may be empty list, but key must be declared)"
+                    ),
                 ))
 
 

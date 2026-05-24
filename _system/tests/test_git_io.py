@@ -1,4 +1,4 @@
-"""Tests for git plumbing in :mod:`wikilint.git_io`.
+"""Tests for git plumbing in :mod:`densa.git_io`.
 
 The critical regression these tests guard against: ``staged_diff`` /
 ``staged_deletions`` previously matched ``"---"`` and ``"+++"`` as
@@ -24,7 +24,7 @@ from pathlib import Path
 
 import pytest
 
-from wikilint.git_io import staged_deletions, staged_diff
+from densa.git_io import staged_deletions, staged_diff
 
 _GIT = shutil.which("git")
 

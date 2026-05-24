@@ -1,6 +1,6 @@
 """CLI surface tests.
 
-Cover the argparse plumbing in :mod:`wikilint.cli` — specifically that
+Cover the argparse plumbing in :mod:`densa.cli` — specifically that
 every advertised subcommand is registered and dispatches without
 raising. The actual linting behaviour is covered by ``test_runner``;
 this file only protects against the regression where a subcommand is
@@ -17,7 +17,7 @@ from pathlib import Path
 
 import pytest
 
-from wikilint import cli
+from densa import cli
 
 
 def _run(argv: list[str]) -> int:
@@ -28,7 +28,7 @@ def _run(argv: list[str]) -> int:
 
 
 class TestSubcommandRegistration:
-    """Both `wikilint <flag>` and `wikilint lint <flag>` MUST work.
+    """Both `densa <flag>` and `densa lint <flag>` MUST work.
 
     The legacy form (bare `--staged` / `--all`) keeps `attic/scripts/
     validate.py` and the pre-commit hook unbroken; the explicit
@@ -49,7 +49,7 @@ class TestSubcommandRegistration:
         self,
         capsys: pytest.CaptureFixture[str],
     ) -> None:
-        """`wikilint lint --help` must exit 0 (argparse SystemExit(0))."""
+        """`densa lint --help` must exit 0 (argparse SystemExit(0))."""
         with pytest.raises(SystemExit) as exc:
             cli.main(["lint", "--help"])
         assert exc.value.code == 0
@@ -62,7 +62,7 @@ class TestSubcommandRegistration:
         assert _run(["lint"]) == 2
 
     def test_top_level_lint_without_args_fails_cleanly(self) -> None:
-        """Legacy form: bare `wikilint` with no flags → exit 2."""
+        """Legacy form: bare `densa` with no flags → exit 2."""
         assert _run([]) == 2
 
 
@@ -76,6 +76,11 @@ class TestLintAgainstRealRepo:
     ) -> None:
         (tmp_path / "AGENTS.md").write_text(
             "---\ntype: schema\nscope: L1\n---\n", encoding="utf-8",
+        )
+        # _is_wiki_root double-factor marker.
+        (tmp_path / "_system" / "densa").mkdir(parents=True)
+        (tmp_path / "_system" / "densa" / "__init__.py").write_text(
+            "", encoding="utf-8",
         )
         (tmp_path / "log.md").write_text(
             "---\ntype: log\nscope: global\nupdated: 2026-05-21\n"
@@ -114,6 +119,12 @@ class TestDiffMode:
         self._git(repo, "config", "user.name", "Test")
         (repo / "AGENTS.md").write_text(
             "---\ntype: schema\nscope: L1\n---\n", encoding="utf-8",
+        )
+        # _is_wiki_root double-factor check: needs both AGENTS.md and
+        # the in-repo _system/densa/ marker directory.
+        (repo / "_system" / "densa").mkdir(parents=True)
+        (repo / "_system" / "densa" / "__init__.py").write_text(
+            "", encoding="utf-8",
         )
         (repo / "domains/x/raw/sessions").mkdir(parents=True)
         (repo / "domains/x/raw/sessions/baseline.md").write_text(
@@ -155,7 +166,11 @@ class TestDiffMode:
             "domain: x\n"
             "created: 2026-05-21\n"
             "updated: 2026-05-21\n"
+            "sources: []\n"
+            "aliases: []\n"
+            "tags: []\n"
             "status: active\n"
+            "compiled_against: 1\n"
             "---\n# Foo\n",
             encoding="utf-8",
         )

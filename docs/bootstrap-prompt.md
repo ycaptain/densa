@@ -2,19 +2,21 @@
 
 > Paste the body of this file (everything below the `---` line) into
 > Cursor / Claude Code / Codex / a similar IDE-bound coding agent
-> *after* you've instantiated the template into a new directory:
+> *after* you've forked the Densa upstream into your own vault:
 >
 > ```bash
-> # Option 1: GitHub template
-> gh repo create your-vault --template ycaptain/llm-wiki-starter --private --clone
-> cd your-vault
+> # Fork ycaptain/densa on GitHub (one click), then:
+> git clone git@github.com:<you>/densa.git ~/your-vault
+> cd ~/your-vault
+> git remote add upstream https://github.com/ycaptain/densa.git
 >
-> # Option 2: degit (no GitHub account needed)
-> npx degit ycaptain/llm-wiki-starter your-vault
-> cd your-vault && git init && git add -A && git commit -m "init: LLM wiki"
->
-> # Then open ~/your-vault in your AI-pair coding IDE and paste the prompt
+> # Open ~/your-vault in your AI-pair coding IDE and paste the prompt below.
 > ```
+>
+> Forking (not template-cloning) keeps your vault on the upgrade
+> train: `git fetch upstream && git merge upstream/main` brings in
+> new lint rules and schema versions. Upstream never touches
+> `domains/**`, so merges stay clean.
 >
 > The prompt below is what the AI should read. It's deliberately
 > step-by-step, with a hard "no edits until I confirm" gate at each
@@ -22,12 +24,12 @@
 
 ---
 
-You are setting up a personal LLM-maintained wiki for me, based on
-Andrej Karpathy's `llm-wiki` pattern adapted to Obsidian + an
-IDE-resident AI agent. The starter scaffolding is already in the
-current directory (it was just `cp -r`'d here from a sharable
-template). Your job is to walk me through standing it up, one step at
-a time, **never editing anything until I explicitly approve**.
+You are setting up a personal LLM-maintained wiki for me — a
+Densa vault, based on Andrej Karpathy's `llm-wiki` pattern adapted
+to Obsidian + an IDE-resident AI agent. The fork is already cloned in
+the current directory with `upstream` configured. Your job is to
+walk me through standing it up, one step at a time, **never editing
+anything until I explicitly approve**.
 
 ## Step 1 — orient yourself (read-only)
 
@@ -113,14 +115,17 @@ lint rule is better than a 200-line spec we'll edit five times.
 
 The template ships **three** example domains:
 
-- `domains/research-papers/` — a light-weight L2 with a 4-paper
-  LLM-tutoring causal-evidence arc (2024-2025). The cleanest
-  reference for designing your own.
+- `domains/research-papers/` — a light-weight L2 with a 5-paper
+  LLM-tutoring evidence arc (3 real RCTs + 1 real review + 1
+  synthesised SAE stand-in, 2024-2025). The cleanest reference for
+  designing your own.
 - `domains/workspace/` — a medium L2 demonstrating
-  meetings/decisions/stakeholders with a Q2 platform-migration arc.
+  meetings / decisions / stakeholders with the Q2 platform-migration
+  arc plus a positive-pattern engineering-decision retrospective.
 - `domains/psychology/` — the heavy L2: 6-week father-grief therapy +
-  psychiatry arc (~25 wiki pages). Advanced features: ASR correction,
-  privacy postures, biopsychosocial-4P framing.
+  psychiatry arc (5 synthesised raws → 25 wiki pages). Advanced
+  features: ASR correction, privacy postures, biopsychosocial-4P
+  framing.
 
 See [`docs/EXAMPLE-DOMAINS.md`](docs/EXAMPLE-DOMAINS.md) for the full
 per-domain matrix and the keep/delete/adopt decision tree.
@@ -163,12 +168,14 @@ re-running this question with the same scaffolding logic.
 
 Once at least one L2 is approved and committed:
 
-1. Initialise the repo (`git init` if not already done).
+1. Initialise the repo with `git init` **only if you didn't use
+   `densa init` or `git clone`** — both already created the `.git`
+   directory. Skip this in the common case.
 2. Wire the pre-commit hook:
    `git config core.hooksPath _system/hooks`.
 3. Make a small test commit (e.g. add a placeholder file under
    `domains/<X>/wiki/concepts/` with proper frontmatter) to verify
-   the hook fires and `wikilint` runs.
+   the hook fires and `densa` runs.
 4. If any of my domains was flagged "high privacy stakes" in Step 2,
    walk me through the git-crypt setup in
    [`_system/SETUP.md`](_system/SETUP.md) §"Privacy: encrypt
@@ -223,10 +230,10 @@ Suggested commands (run only if I approve):
 cp _system/README-template.md README.md
 # (Now edit README.md and replace `_my-vault_` with my vault name.)
 
-# Preserve the upstream MIT LICENSE alongside the wikilint code that
+# Preserve the upstream MIT LICENSE alongside the densa code that
 # travels with the template. Deleting LICENSE outright would strip
 # the copyright/attribution that MIT requires you keep on any
-# redistribution of the code under `_system/wikilint/`.
+# redistribution of the code under `_system/densa/`.
 git mv LICENSE LICENSE-upstream
 
 # Remove project-only docs but keep EXAMPLE-DOMAINS.md as a reference.

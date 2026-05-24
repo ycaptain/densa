@@ -12,9 +12,9 @@ vault* as the primary asset to protect.
 ## Reporting a vulnerability
 
 Please report any of the following privately via
-[GitHub Security Advisories](https://github.com/ycaptain/llm-wiki-starter/security/advisories/new):
+[GitHub Security Advisories](https://github.com/ycaptain/densa/security/advisories/new):
 
-- A bypass in `_system/wikilint/` that allows red-line violations
+- A bypass in `_system/densa/` that allows red-line violations
   (e.g. silent `raw/` mutation, log history rewrite, `analysis.sources`
   cardinality breach) to slip through pre-commit or CI.
 - A schema ambiguity an adversarial LLM run could exploit to exfiltrate
@@ -77,8 +77,8 @@ If you instantiate this template for sensitive material:
 
 ## Supply-chain notes
 
-The validator (`_system/wikilint/`) is pure Python with no runtime
+The validator (`_system/densa/`) is pure Python with no runtime
 third-party dependencies — it imports only the standard library. The
-pre-commit hook invokes the same package via `python -m wikilint`.
+pre-commit hook invokes the same package via `python -m densa`.
 Both are short enough (~1k lines including the rule registry) to read
 end-to-end before trusting in a security-sensitive vault.

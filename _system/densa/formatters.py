@@ -1,4 +1,4 @@
-"""Render a :class:`~wikilint.report.Report` for human or machine readers.
+"""Render a :class:`~densa.report.Report` for human or machine readers.
 
 Three formats:
 
@@ -20,7 +20,7 @@ import json
 import sys
 from typing import Protocol, TextIO
 
-from wikilint.report import Diagnostic, Report, Severity
+from densa.report import Diagnostic, Report, Severity
 
 
 class Formatter(Protocol):

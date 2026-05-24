@@ -38,6 +38,20 @@ that file changes, this prompt loses authority — re-read the schema.
    the human only if ambiguous.
 4. **Read the corresponding `domains/<X>/AGENTS.md`** for the domain-specific
    ingest flow. Follow it.
+4.5. **Load the domain analysis sub-prompt** if one exists. Glob
+    `_system/prompts/domains/<domain>-*-analysis.md` (e.g.
+    `_system/prompts/domains/psychology-analysis.md`,
+    `_system/prompts/domains/research-papers-paper-analysis.md`,
+    `_system/prompts/domains/workspace-meeting-analysis.md`); if **any**
+    match the current `<domain>` (and, where multiple match, the source
+    bucket — e.g. a `domains/workspace/raw/meetings/<file>` matches
+    `workspace-meeting-analysis.md`), read it end-to-end before
+    drafting the plan in step 6. These sub-prompts carry the
+    **load-bearing per-domain procedure** the L2 AGENTS.md only
+    sketches (e.g. psychology's biopsychosocial-4P framing, workspace's
+    decision-record extraction). Skipping them produces analyses that
+    look schema-compliant but miss the domain's actual reasoning shape.
+    If no sub-prompt matches, proceed with the generic procedure below.
 5. **Read `domains/<X>/index.md`** to understand what wiki pages already
    exist. Bias heavily toward updating existing pages over creating new ones.
 6. **Plan the touched pages** before writing. Output a short plan:

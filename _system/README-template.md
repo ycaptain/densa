@@ -15,32 +15,32 @@ the root, the relative links below (`AGENTS.md`, `_system/MANUAL.md`,
 An Obsidian-based personal LLM wiki, built on Andrej Karpathy's
 [llm-wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) pattern.
 
-> The vault is the codebase, Obsidian is the IDE, the LLM is the
+> The vault is the codebase. Obsidian is the IDE. The LLM is the
 > programmer. You curate sources, ask questions, and review — the LLM
-> does all the bookkeeping.
+> does the bookkeeping.
 
-## Start here
+## 🚀 Start here
 
-1. **First-time orientation** — read
-   [`_system/MANUAL.md`](_system/MANUAL.md) end-to-end (~460 lines,
-   ~20 minutes).
+1. **First-time orientation** —
+   [`_system/MANUAL.md`](_system/MANUAL.md) (a day-in-the-life, the
+   seams between operations, the FAQ).
 2. **Schema source of truth** — [`AGENTS.md`](AGENTS.md) (L1) and each
    `domains/<X>/AGENTS.md` (L2).
 3. **Install / plugin setup** — [`_system/SETUP.md`](_system/SETUP.md).
 
-## Daily use
+## 📅 Daily use
 
-The five operations the human ever runs:
+The five operations you ever run:
 
-- `ingest <path>` — file a new source into the wiki
-- `query <question>` — ask the wiki a question (read-only by default)
-- `lint [--domain <X>]` — health-check the wiki
-- `process-inbox` — triage un-routed material in `/inbox/`
-- `promote <outputs/qa/...>` — lift a Q&A archive into a first-class wiki page
+- 📥 `ingest <path>` — file a new source into the wiki
+- 🔍 `query <question>` — ask the wiki a question (read-only by default)
+- 🩺 `lint [--domain <X>]` — health-check the wiki
+- 📨 `process-inbox` — triage un-routed material in `/inbox/`
+- ⬆️ `promote <outputs/qa/...>` — lift a Q&A archive into a first-class wiki page
 
-Each one has a canonical procedure in `_system/prompts/`.
+Each has a canonical procedure in `_system/prompts/`.
 
-## Layout
+## 🧱 Layout
 
 ```
 <vault>/
@@ -49,7 +49,8 @@ Each one has a canonical procedure in `_system/prompts/`.
 ├── log.md               ← global timeline
 ├── _system/             ← prompts, templates, scripts, hooks
 ├── domains/
-│   └── psychology/      ← example L2 (rename or remove to taste)
+│   └── <your-domain>/   ← your L2(s)
+├── outputs/             ← lint reports, Q&A archives, index snapshots
 ├── inbox/               ← un-routed material (optional)
 └── attic/               ← deprecated / quarantined files
 ```

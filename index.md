@@ -14,23 +14,24 @@ Global directory for the LLM-maintained wiki.
   real ingest: [[docs/EXAMPLE-DOMAINS]].
 - **Day-to-day reference** for concepts, scenarios, FAQ:
   [[_system/MANUAL]].
-- **Schema source of truth**: [[AGENTS]] (L1) and `domains/<X>/AGENTS.md` (L2).
+- **Schema source of truth**: [`AGENTS.md`](AGENTS.md) (L1) and `domains/<X>/AGENTS.md` (L2).
 - **Install / plugin setup**: [[_system/SETUP]].
 
 ## Domains (example L2s — keep, adapt, or remove per [[docs/EXAMPLE-DOMAINS]])
 
 - [[domains/research-papers/index|Research papers]] — light L2 (6 page
   types). Reading academic papers / technical articles. Ships with a
-  **4-paper LLM-tutoring causal-evidence arc (2024-2025)**: three real
-  RCTs (Vanzo / Bastani / Kestin) plus one synthesised stand-in
-  (Anthropic SAE), cross-paper synthesis, researcher guide, and
-  three-audience navigator.
+  **5-paper LLM-tutoring evidence arc (2024-2025)**: three real RCTs
+  (Vanzo / Bastani / Kestin), one real review (Kim 2025), and one
+  synthesised stand-in (Anthropic SAE) — plus a cross-paper synthesis,
+  researcher guide, and three-audience navigator.
 - [[domains/workspace/index|Workspace]] — medium L2 covering meetings,
-  decisions, projects, and stakeholder dynamics. Ships with a 3-raw
-  worked example (Q2 platform-migration arc).
+  decisions, projects, and stakeholder dynamics. Ships with a multi-raw
+  Q2 platform-migration arc and a positive-pattern engineering-decision
+  retrospective.
 - [[domains/psychology/index|Psychology]] — heavy L2 for therapy /
   inner work. Ships with a **6-week father-grief arc worked example
-  (4 synthesised raws → ~25 wiki pages)** demonstrating IFS / EFT /
+  (5 synthesised raws → 25 wiki pages)** demonstrating IFS / EFT /
   attachment / biopsychosocial 4P / cross-clinical coordination /
   diagnostic conservatism / meaning-reconstruction. See
   [[domains/psychology/wiki/syntheses/what-this-domain-demonstrates|the capability list]]

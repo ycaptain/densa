@@ -3,7 +3,7 @@
 Each commit is classified by its leading commit-message prefix
 (``ingest(<domain>):``, ``query:``, ``lint:``, ``process-inbox:``,
 ``promote:``). The prefix selects an allow-list of glob patterns from
-:data:`wikilint.config.OPERATION_WRITES`; every staged path must match
+:data:`densa.config.OPERATION_WRITES`; every staged path must match
 at least one pattern, otherwise we report an error.
 
 Commits without a recognised prefix fall back to the ``""`` (no-prefix)
@@ -22,9 +22,9 @@ import re
 import subprocess
 from pathlib import Path
 
-from wikilint.config import CROSS_SCOPE_BYPASS_ENV, OPERATION_WRITES
-from wikilint.git_io import StagedEntry
-from wikilint.report import Diagnostic, Report, Severity
+from densa.config import CROSS_SCOPE_BYPASS_ENV, OPERATION_WRITES
+from densa.git_io import StagedEntry
+from densa.report import Diagnostic, Report, Severity
 
 _RULE_ID = "AGENTS007"
 
@@ -54,17 +54,43 @@ class OperationWritesScope:
                 continue
             if _matches_any(entry.path, allowed):
                 continue
+            would_allow = _prefixes_allowing(entry.path)
+            current = f"`{op}:`" if op else "`(no prefix)`"
+            if would_allow:
+                hint = (
+                    f" Allowed prefixes for this path: "
+                    f"{', '.join(would_allow)}."
+                )
+            else:
+                hint = (
+                    " No prefix's scope covers this path; review the "
+                    "OPERATION_WRITES table in AGENTS.md §2.0."
+                )
             report.add(Diagnostic(
                 rule_id=self.id,
                 severity=Severity.ERROR,
                 path=entry.path,
                 line=0,
                 message=(
-                    f"staged path is outside the write scope for "
-                    f"`{op or '(no prefix)'}` (set "
-                    f"{CROSS_SCOPE_BYPASS_ENV}=1 to bypass for one commit)"
+                    f"AGENTS007 operation-writes-within-scope: path is "
+                    f"outside the write scope for {current}.{hint} "
+                    f"For sanctioned multi-scope maintenance set "
+                    f"`{CROSS_SCOPE_BYPASS_ENV}=1` and add a "
+                    f"`## [YYYY-MM-DD] maintenance | ...` log entry "
+                    f"(see CONTRIBUTING.md §'If the pre-commit hook "
+                    f"rejects your first commit')."
                 ),
             ))
+
+
+def _prefixes_allowing(path: str) -> list[str]:
+    """Reverse-lookup: which commit prefixes would allow this path?"""
+    normalised = path.replace("\\", "/")
+    matches: list[str] = []
+    for prefix, patterns in OPERATION_WRITES.items():
+        if any(_glob_match(normalised, p) for p in patterns):
+            matches.append(f"`{prefix}:`" if prefix else "`(no prefix)`")
+    return sorted(matches)
 
 
 def _commit_subject(repo: Path) -> str:
@@ -74,7 +100,7 @@ def _commit_subject(repo: Path) -> str:
       1. ``.git/COMMIT_EDITMSG`` if the file exists and is non-empty
          (this is the file the pre-commit hook sees mid-commit).
       2. Most recent ``git log -1 --format=%s HEAD`` (covers post-commit
-         re-runs and ``wikilint --staged`` invoked manually).
+         re-runs and ``densa --staged`` invoked manually).
       3. Empty string (falls back to the ``(no prefix)`` scope).
     """
     editmsg = repo / ".git" / "COMMIT_EDITMSG"

@@ -1,46 +1,90 @@
-"""Command-line entry point for wikilint.
+"""Command-line entry point for densa.
 
-Three subcommands:
+Subcommands:
 
-- ``lint``     — the default. Runs the checks against one of three
-  sources (``--staged`` for pre-commit, ``--all`` for the full repo,
-  or one or more explicit paths).
+- ``lint``     — runs the checks against one of four sources
+  (``--staged`` for pre-commit, ``--all`` for the full repo,
+  ``--diff <base_ref>`` for a PR range, or one or more explicit
+  paths).
 - ``rules``    — print the rule registry as a table or JSON. Useful
   in ``--select`` discovery and in docs generation.
 - ``version``  — print the package version.
+- ``init``     — bootstrap a personal Densa vault from upstream.
+- ``upgrade``  — pull upstream schema/validator changes into a vault.
 
-Backwards-compatibility: the top-level flags ``--staged`` / ``--all`` /
-positional paths are also accepted directly on the ``wikilint`` invocation
-(without the ``lint`` subcommand). This kept the legacy ``validate.py
---all`` shim working during the v0.2 → v0.3 cutover; the shim itself now
-lives in ``attic/scripts/validate.py`` and ``python -m wikilint`` is the
-canonical entry point.
+The **canonical lint invocation is the bare form** (``densa --all``,
+``densa --staged``, ``densa --diff <ref>``, ``densa <paths>``); the
+pre-commit hook, the CI workflow, ``noxfile.py``, and every test in
+``_system/tests/`` use this form. The explicit ``lint`` subcommand
+(``densa lint --all``) accepts the same flags and is provided for
+ergonomic discoverability — ``densa --help`` lists both.
+
+**No ``--fix`` flag by design.** Every red-line violation the
+validator surfaces is something the human MUST consciously decide to
+fix or bypass (per L1 §6). Auto-fix would let the LLM silently mutate
+load-bearing material on behalf of a decision the user hasn't taken.
+The sanctioned escape hatches are ``git commit --no-verify`` and the
+``WIKI_ALLOW_*`` bypass env vars; they require explicit intent.
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import subprocess
 import sys
 from pathlib import Path
 
-from wikilint import __version__
-from wikilint.config import RULES, Config, rule_by_id, rule_by_name
-from wikilint.formatters import FORMATTERS
-from wikilint.runner import lint_all, lint_diff, lint_paths, lint_staged
+from densa import __version__
+from densa.commands import init as init_cmd
+from densa.commands import upgrade as upgrade_cmd
+from densa.config import RULES, Config, rule_by_id, rule_by_name
+from densa.formatters import FORMATTERS
+from densa.runner import lint_all, lint_diff, lint_paths, lint_staged
+
+
+def _is_wiki_root(path: Path) -> bool:
+    """Double-factor check: a real wiki repo has both AGENTS.md and the
+    in-repo ``_system/densa/`` package. This stops a parent vault that
+    happens to ship its own ``AGENTS.md`` from shadowing the wiki we're
+    actually validating.
+    """
+    return (path / "AGENTS.md").is_file() and (
+        path / "_system" / "densa"
+    ).is_dir()
 
 
 def _resolve_repo() -> Path:
-    """Discover the repo root by walking up from CWD looking for AGENTS.md.
+    """Discover the repo root.
 
-    Falls back to the legacy ``parents[2]`` heuristic used by the old
-    script if no AGENTS.md is found upward.
+    Order:
+      1. ``git rev-parse --show-toplevel`` (cheap, accurate inside any
+         git checkout) — but only accept it if it passes the
+         ``_is_wiki_root`` double-factor check.
+      2. Walk up from CWD looking for an ``AGENTS.md`` that also
+         satisfies the double-factor check.
+      3. Fall back to the install-relative ``parents[2]`` of this file
+         (works when densa is invoked from inside its package
+         directly, e.g. via ``python -m densa`` with PYTHONPATH set).
     """
+    try:
+        out = subprocess.check_output(
+            ["git", "rev-parse", "--show-toplevel"],
+            text=True,
+            stderr=subprocess.DEVNULL,
+        ).strip()
+        if out:
+            top = Path(out).resolve()
+            if _is_wiki_root(top):
+                return top
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        pass
+
     cwd = Path.cwd().resolve()
     for candidate in (cwd, *cwd.parents):
-        if (candidate / "AGENTS.md").exists():
+        if _is_wiki_root(candidate):
             return candidate
-    # Last resort: the install-relative path that worked for the old script.
+
     return Path(__file__).resolve().parents[2]
 
 
@@ -64,7 +108,7 @@ def _parse_rule_csv(raw: str | None) -> frozenset[str]:
         if rid is None:
             raise argparse.ArgumentTypeError(
                 f"unknown rule: {token!r} "
-                "(use `wikilint rules` to list available IDs)"
+                "(use `densa rules` to list available IDs)"
             )
         out.add(rid)
     return frozenset(out)
@@ -74,31 +118,34 @@ def _build_parser() -> argparse.ArgumentParser:
     """Build the top-level parser.
 
     The parser doubles as the ``lint`` subcommand's parser: any
-    invocation without a subcommand (``wikilint --all``,
-    ``wikilint --staged``, ``wikilint path1 path2``) is interpreted as
-    ``wikilint lint <same args>``. This also keeps the archived
-    ``validate.py --all`` shim (``attic/scripts/validate.py``)
-    working without explicit aliasing.
+    invocation without a subcommand (``densa --all``,
+    ``densa --staged``, ``densa --diff <ref>``, ``densa path1 path2``)
+    is interpreted as ``densa lint <same args>``. The bare form is
+    canonical (see module docstring); the ``lint`` subcommand exists
+    for discoverability via ``densa --help``. This dual entry also
+    keeps the archived ``validate.py --all`` shim
+    (``attic/scripts/validate.py``) working without explicit aliasing.
     """
     parser = argparse.ArgumentParser(
-        prog="wikilint",
+        prog="densa",
         description=(
-            "Validate an llm-wiki vault against the L1 schema "
-            "(see AGENTS.md §3, §6)."
+            "Densa — compile your sources into a queryable markdown wiki. "
+            "Validate a vault against the L1 schema (see AGENTS.md §3, §6)."
         ),
     )
     parser.add_argument(
-        "--version", action="version", version=f"wikilint {__version__}",
+        "--version", action="version", version=f"densa {__version__}",
     )
     _add_lint_args(parser)
 
     sub = parser.add_subparsers(dest="command")
 
     # Explicit `lint` subcommand. Mirrors the top-level lint flags so both
-    # `wikilint --all` (legacy) and `wikilint lint --all` (canonical) work.
+    # `densa --all` (canonical; used by hook, CI, nox) and
+    # `densa lint --all` (explicit; helpful for discoverability) work.
     lint_sub = sub.add_parser(
         "lint",
-        help="run the linter (default command; same flags as bare `wikilint`)",
+        help="run the linter (default command; same flags as bare `densa`)",
     )
     _add_lint_args(lint_sub)
 
@@ -111,6 +158,9 @@ def _build_parser() -> argparse.ArgumentParser:
     )
 
     sub.add_parser("version", help="print the package version")
+
+    init_cmd.add_parser(sub)
+    upgrade_cmd.add_parser(sub)
 
     return parser
 
@@ -182,14 +232,20 @@ def _cmd_lint(args: argparse.Namespace) -> int:
     )
     repo = _resolve_repo()
 
-    if args.staged:
-        report = lint_staged(repo, config)
-    elif args.diff:
-        report = lint_diff(repo, args.diff, config)
-    elif args.all:
-        report = lint_all(repo, config)
-    else:
-        report = lint_paths(repo, args.paths, config)
+    try:
+        if args.staged:
+            report = lint_staged(repo, config)
+        elif args.diff:
+            report = lint_diff(repo, args.diff, config)
+        elif args.all:
+            report = lint_all(repo, config)
+        else:
+            report = lint_paths(repo, args.paths, config)
+    except ValueError as exc:
+        # lint_paths raises when an explicit path is outside the repo —
+        # surface as a clean error rather than a traceback.
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
 
     formatter = FORMATTERS[args.format]
     formatter(report, args.no_warnings)
@@ -243,6 +299,8 @@ def main(argv: list[str] | None = None) -> int:
         "lint": _cmd_lint,
         "rules": _cmd_rules,
         "version": _cmd_version,
+        "init": init_cmd.run,
+        "upgrade": upgrade_cmd.run,
     }
     return dispatch[command](args)
 

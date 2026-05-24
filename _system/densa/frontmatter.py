@@ -9,9 +9,12 @@ Two backends are provided:
 - ``parse_pyyaml``  — full YAML via the optional ``pyyaml`` dependency.
   Use this in ``--all`` / ``--ci`` modes and tests.
 
-The default :func:`parse` picks pyyaml when importable, otherwise
-stdlib. Rules should call :func:`parse` (or one of the explicit
-backends in tests).
+The default :func:`parse` is **stdlib-only** unless the user opts into
+pyyaml explicitly by setting ``DENSA_STRICT=1`` in the environment.
+This keeps validator behaviour deterministic across machines: a clone
+with pyyaml on the global ``site-packages`` no longer silently parses
+differently from a clone without it. Rules should call :func:`parse`
+(or one of the explicit backends in tests).
 
 The contract returned by all backends is identical:
 
@@ -24,9 +27,11 @@ Returning ``None`` means "no leading ``---`` delimiter was found"
 
 from __future__ import annotations
 
+import os
 import re
+import sys
 from collections.abc import Callable
-from typing import Any
+from typing import Any, Final
 
 _FRONTMATTER_DELIM_RE = re.compile(
     r"\A---\n(.*?)(?:\n)?---(?:\n|\Z)", re.DOTALL,
@@ -132,13 +137,34 @@ def parse_pyyaml(text: str) -> dict[str, Any] | None:
     return loaded
 
 
+_STRICT_ENV: Final[str] = "DENSA_STRICT"
+
+
 def _pick_default_backend() -> Callable[[str], dict[str, Any] | None]:
+    """Pick the default parser.
+
+    Stdlib is the deterministic default. Users opt into pyyaml by
+    setting ``DENSA_STRICT=1``; if pyyaml is missing in that case
+    we emit a one-line stderr banner and fall back to stdlib (rather
+    than crashing the validator at import time).
+    """
+    if os.environ.get(_STRICT_ENV) != "1":
+        return parse_stdlib
     try:
         import yaml  # noqa: F401, PLC0415
     except ImportError:
+        print(
+            f"{_STRICT_ENV}=1 set but pyyaml is not installed; "
+            f"falling back to stdlib parser. "
+            f"Install with: pip install -e \".[strict]\"",
+            file=sys.stderr,
+        )
         return parse_stdlib
     return parse_pyyaml
 
 
 parse: Callable[[str], dict[str, Any] | None] = _pick_default_backend()
-"""Default parser, picked at import time. pyyaml > stdlib if available."""
+"""Default parser, picked at import time.
+
+Stdlib by default. ``DENSA_STRICT=1`` opts into pyyaml.
+"""

@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from typing import Final
 
-from wikilint.config import WIKILINK_SKIP_TOP_LEVEL
+from densa.config import WIKILINK_SKIP_TOP_LEVEL
 
 
 def normalise(path: str) -> str:

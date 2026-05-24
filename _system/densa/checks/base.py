@@ -4,7 +4,7 @@ The runner sorts rules into two buckets by interface:
 
 - :class:`FileRule` is asked, for each markdown file in scope,
   "does this file violate you?". Implementations append to the
-  :class:`~wikilint.report.Report`.
+  :class:`~densa.report.Report`.
 - :class:`StagedRule` is asked once per lint run, holding the staged
   entries and a callback for fetching diffs. Used for rules that look
   at the *shape* of staged changes rather than file contents.
@@ -19,9 +19,9 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Protocol
 
-from wikilint.git_io import StagedEntry
-from wikilint.report import Report
-from wikilint.wikilink import SlugIndex
+from densa.git_io import StagedEntry
+from densa.report import Report
+from densa.wikilink import SlugIndex
 
 
 class FileRule(Protocol):
@@ -42,7 +42,7 @@ class StagedRule(Protocol):
     """A rule applied to the staged change set as a whole.
 
     The repo path is passed so the rule can fetch diffs lazily via
-    :mod:`wikilint.git_io`.
+    :mod:`densa.git_io`.
     """
 
     id: str

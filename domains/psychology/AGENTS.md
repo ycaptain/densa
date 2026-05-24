@@ -6,7 +6,7 @@
 > clinical material; each raw begins with an HTML-comment banner
 > declaring this. The schema (this file), the ingest prompts under
 > `_system/prompts/`, the templates under `_system/templates/`,
-> and the validator under `_system/wikilint/` are
+> and the validator under `_system/densa/` are
 > production-grade. **Clinical adopters MUST re-read §"Privacy
 > posture" below and select a posture matched to their own
 > storage / sharing reality before ingesting any real session.**
@@ -14,7 +14,7 @@
 > the wrong-posture failure mode (relaxed posture with a repo
 > that gets pushed) is the single highest-cost mistake possible
 > in this L2. For the navigator-style entry to the worked example
-> see [`wiki/syntheses/how-to-read-this-domain.md`](wiki/syntheses/how-to-read-this-domain.md);
+> see [`wiki/syntheses/how-to-read-psychology-domain.md`](wiki/syntheses/how-to-read-psychology-domain.md);
 > for the explicit capability list see
 > [`wiki/syntheses/what-this-domain-demonstrates.md`](wiki/syntheses/what-this-domain-demonstrates.md).
 

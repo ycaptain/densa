@@ -2,8 +2,8 @@
 type: question
 domain: research-papers
 created: 2026-05-20
-updated: 2026-05-21
-sources: ["[[2024-bastani-generative-ai-guardrails-analysis]]", "[[2024-vanzo-gpt4-homework-tutor-analysis]]", "[[2025-kestin-ai-tutoring-active-learning-analysis]]"]
+updated: 2026-05-23
+sources: ["[[2024-bastani-generative-ai-guardrails-analysis]]", "[[2024-vanzo-gpt4-homework-tutor-analysis]]", "[[2025-kestin-ai-tutoring-active-learning-analysis]]", "[[2025-kim-chatgpt-education-review-tkl-analysis]]"]
 tags: [open-question, llm-tutoring, cognitive-offload, retention, long-arc]
 aliases: ["does AI tutoring cause skill displacement", "cognitive offload arc"]
 status: active
@@ -52,6 +52,7 @@ Three reasons:
 | 2024-09    | [[2024-vanzo-gpt4-homework-tutor-analysis]]                          | Within-term positive engagement and grammar gain; **no retention test** — does not constrain the long-arc question     |
 | 2024-fall  | [[2024-bastani-generative-ai-guardrails-analysis]]                   | **Pre-registered, large-N**: GPT Base −17% on unassisted exam vs. control. GPT Tutor neutralises the harm within term  |
 | 2025       | [[2025-kestin-ai-tutoring-active-learning-analysis]]                 | Within-term positive uplift with pedagogy-aware prompt; **no retention probe** — leaves multi-term question untested    |
+| 2025-10    | [[2025-kim-chatgpt-education-review-tkl-analysis]]                   | Systematic content-analysis review of 52 empirical ChatGPT-in-education studies (Jan 2023–Dec 2024): **none of the 52 use a Bastani-style withdrawal-exam design**; confirms the multi-term retention gap is *field-wide*, not specific to the RCTs we've already ingested |
 | TODO       | LearnLM/Eedi UK RCT (Google DeepMind 2025; not yet ingested)         | Adds human-in-the-loop arm; near-term knowledge-transfer gain on subsequent topics; multi-term retention still untested |
 
 **Status: `arc_status: partial`.** The *within-term* portion of the

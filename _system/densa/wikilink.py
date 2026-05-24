@@ -14,7 +14,7 @@ from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 
-from wikilint.config import SKIP_DIRS, WIKILINK_SKIP_TOP_LEVEL
+from densa.config import SKIP_DIRS, WIKILINK_SKIP_TOP_LEVEL
 
 WIKILINK_RE = re.compile(r"\[\[([^\[\]\n]+?)\]\]")
 """Match ``[[anything-but-brackets-or-newline]]``. Greedy non-empty body."""
@@ -45,7 +45,7 @@ paths-without-extension that end with that suffix.
 
 The graph-relevant index (built by :func:`build_index`) excludes the
 top-level directories listed in
-:data:`~wikilint.config.WIKILINK_SKIP_TOP_LEVEL` so that a bare slug
+:data:`~densa.config.WIKILINK_SKIP_TOP_LEVEL` so that a bare slug
 like ``[[concept]]`` cannot silently resolve to a template / prompt /
 artifact under those trees. A second, full-repo path-existence index
 (:data:`SlugIndex` returned by :func:`build_index` carries it under
@@ -63,7 +63,7 @@ def _walk_markdown(
     """Yield markdown paths relative to *repo*.
 
     By default mirrors the exclusions in
-    :func:`wikilint.paths.wikilinks_scoped`: ``_system/`` / ``attic/`` /
+    :func:`densa.paths.wikilinks_scoped`: ``_system/`` / ``attic/`` /
     ``inbox/`` / ``outputs/`` hold templates / prompts / artifacts that
     contain ``[[placeholder]]`` examples by design. Set
     ``include_skipped_top_level=True`` to walk the full repo, used to

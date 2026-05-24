@@ -3,16 +3,28 @@ set -euo pipefail
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 cd "$REPO_ROOT"
 
-# Make the in-repo wikilint package importable without installing it.
+# Make the in-repo densa package importable without installing it.
 # This keeps the hook zero-setup: as soon as you run
 #   git config core.hooksPath _system/hooks
 # the validator runs on every commit, no `pip install` required.
+# Note: the in-repo densa shadows any pip-installed densa by
+# design — the schema/code travel together.
 export PYTHONPATH="$REPO_ROOT/_system:${PYTHONPATH:-}"
 
 # Prefer `python3` over `python` — macOS ships without `python` on
 # the default PATH and some minimal Linux containers do too. Fall
-# back to `python` only when `python3` is absent.
+# back to `python` only when `python3` is absent. If neither exists,
+# print an actionable error rather than a cryptic `command not found`.
 if command -v python3 >/dev/null 2>&1; then
-    exec python3 -m wikilint --staged
+    exec python3 -m densa --staged
 fi
-exec python -m wikilint --staged
+if command -v python >/dev/null 2>&1; then
+    exec python -m densa --staged
+fi
+cat >&2 <<'EOF'
+error: densa pre-commit hook requires python3 (>= 3.10).
+       Install Python 3.10+ and retry.
+       Temporary bypass for one commit: git commit --no-verify
+       Permanent disable:                git config --unset core.hooksPath
+EOF
+exit 1

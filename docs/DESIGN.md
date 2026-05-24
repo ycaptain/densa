@@ -1,11 +1,14 @@
 # DESIGN — why the LLM wiki looks this way
 
-> Companion to [`README.md`](../README.md). The README sells the pattern;
-> this file explains the load-bearing decisions and how to extend the
-> schema to your own domains.
+> Companion to [`README.md`](../README.md). The README shows you how
+> to use the template; this file explains *why* each load-bearing
+> decision exists and how to extend the schema to your own domains.
 
 ## Table of contents
 
+- [Why this exists](#why-this-exists)
+- [How it compares](#how-it-compares)
+- [Who this is not for](#who-this-is-not-for)
 - [The core invariant](#the-core-invariant)
 - [Why L1 / L2 schema layering](#why-l1--l2-schema-layering)
 - [The frontmatter contract](#the-frontmatter-contract)
@@ -18,6 +21,70 @@
 - [Engineering hooks: turning soft norms into hard rules](#engineering-hooks)
 - [How to design your own L2](#how-to-design-your-own-l2)
 - [Anti-patterns to avoid](#anti-patterns-to-avoid)
+
+---
+
+## Why this exists
+
+A vector-DB-backed RAG layer is great for "look up something I half
+remember in a haystack". It's the wrong tool for the question I
+actually want my second brain to answer:
+
+> *Given everything you've read for me over the past two years,
+> what's the most accurate model of X right now?*
+
+That question needs a model that **compounds** — every new source
+should make the structure denser, not just the haystack bigger. So
+the LLM doesn't search your notes at query time; it incrementally
+*compiles* them, page by page, into a queryable wiki you can read
+like a textbook.
+
+> The wiki is the codebase. Obsidian is the IDE. The LLM is the programmer.
+
+---
+
+## How it compares
+
+| Tool                                       | Storage              | Compounds?         | Open / portable?  | Cites sources by default? | Local-first? |
+| ------------------------------------------ | -------------------- | ------------------ | ----------------- | ------------------------- | ------------ |
+| **Densa** (this repo)                    | plain markdown + git | yes                | yes               | enforced by validator     | yes          |
+| Vector RAG (LlamaIndex, LangChain, etc.)   | vector DB            | no                 | partially         | optional                  | varies       |
+| Notion AI                                  | proprietary DB       | partially          | no                | sometimes                 | no           |
+| mem.ai                                     | proprietary DB       | partially          | no                | sometimes                 | no           |
+| Reflect / Tana / Logseq AI                 | proprietary / md     | partially          | partially         | no                        | varies       |
+| Obsidian + Smart Connections               | markdown + index     | no (retrieve-only) | yes               | no                        | yes          |
+| Cursor `@docs` / Claude Projects           | session-local        | no                 | no                | sometimes                 | no           |
+
+The pattern composes: at ~500+ pages, layer embedding search (Smart
+Connections, Obsidian Bases, even a small vector index) on top of the
+wiki as a fallback. The wiki gives you compounded structure; embedding
+search gives you fuzzy fallback. Both, not either.
+
+---
+
+## Who this is not for
+
+**This template is not designed for narrative long-form writers,
+journalists, or memoirists.** If you write essays, articles, or books
+that need to preserve voice, branch drafts, and stay in dialogue with
+editors — this tool's compiler-style "raw → wiki" structure will work
+against you. Try Scrivener, Ulysses, or Obsidian + Longform instead.
+**Creative writing workflows are intentional out-of-scope; we will
+not be adding support for them.**
+
+And a few more things this is *not*:
+
+- **Not a RAG replacement** at millions-of-chunks scale. Sweet spot
+  is hundreds of curated sources with high synthesis frequency.
+- **Not a SaaS or hosted product.** Markdown + git, run locally with
+  the LLM agent of your choice.
+- **Not an autopilot.** Every ingest plans first and waits for your
+  confirmation; every lint report is a dashboard, not an auto-apply.
+- **Not coupled to one model vendor.** The schema and prompts are
+  agent-agnostic; switch Cursor ↔ Claude Code ↔ Codex freely.
+- **Not novel research.** It's a careful systematisation of Andrej
+  Karpathy's [llm-wiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f)
+  gist into a working template — credit where it's due.
 
 ---
 
@@ -132,7 +199,7 @@ If you find yourself wanting to put two raw files into an `analysis.sources`
 list, you're not writing an analysis — you're writing a synthesis. Change
 `type: analysis` to `type: synthesis`, move the file from
 `wiki/analyses/` to `wiki/syntheses/`, and you're good. The pre-commit
-hook (`wikilint`) enforces this.
+hook (`densa`) enforces this.
 
 Why? Because an `analysis` is a 1:1 contract between a raw source and
 its first-order LLM reading. Mixing sources at the analysis layer
@@ -353,7 +420,7 @@ LLM's own past synthesis errors can silently propagate into the
 evidence base — and you've built a closed epistemic loop (the wiki
 cites itself, not the world).
 
-**Enforcement.** `wikilint` rejects any staged `M`/`D`/`R` against
+**Enforcement.** `densa` rejects any staged `M`/`D`/`R` against
 `*/raw/*` paths in the pre-commit hook.
 
 **Sanctioned exception.** When ASR transcription tools persistently
@@ -372,7 +439,7 @@ Rewriting it would erase the LLM-vs-human collaboration history — the
 single most useful artifact when you later want to ask "why did we
 decide X back in March?".
 
-**Enforcement.** `wikilint` rejects staged `-` (deletion) lines in
+**Enforcement.** `densa` rejects staged `-` (deletion) lines in
 any `log.md`, except the `---` frontmatter delimiter and a paired
 `updated: YYYY-MM-DD` bump.
 
@@ -428,7 +495,7 @@ gaps.
 Each commit declares an *operation* via its leading commit-message
 prefix, and the validator pins which paths that operation may touch.
 The allow-list lives at [`AGENTS.md`](../AGENTS.md) §2.0; the canonical
-machine table is `wikilint.config.OPERATION_WRITES`.
+machine table is `densa.config.OPERATION_WRITES`.
 
 | Prefix                     | May write                                             |
 | -------------------------- | ----------------------------------------------------- |
@@ -436,11 +503,11 @@ machine table is `wikilint.config.OPERATION_WRITES`.
 | `query: …`                 | `outputs/qa/**`, both logs                            |
 | `lint: …`                  | `outputs/**`, both logs                               |
 | `process-inbox: …`         | `domains/*/raw/**` (`git mv` only), both logs         |
-| `promote: …`               | `outputs/qa/**` (delete via `git mv`), `domains/*/wiki/**`, both logs |
-| *(no recognised prefix)*   | `_system/**`, `docs/**`, `integrations/**`, `outputs/**`, top-level config files, AGENTS.md, README.md, CHANGELOG.md — **never `domains/**`** |
+| `promote: …`               | `outputs/qa/**` (delete via `git mv`), `outputs/lint/**` (append Issues-to-surface), `domains/*/wiki/**`, both logs |
+| *(no recognised prefix)*   | `_system/**`, `docs/**`, `integrations/**`, `outputs/**`, top-level config / task-runner files (`pyproject.toml`, `noxfile.py`, `.editorconfig`, …), AGENTS.md, README.md, CHANGELOG.md — **never `domains/**`** |
 
 **Why.** Without this rule, the LLM can silently bundle "small fixes"
-into an `ingest` commit (e.g. patch `_system/wikilint/` while
+into an `ingest` commit (e.g. patch `_system/densa/` while
 ingesting a session). That noise is the single hardest thing to review
 six months later when you're trying to reconstruct *what one specific
 ingest actually changed*. AGENTS007 keeps every commit's blast radius
@@ -494,7 +561,7 @@ must not silently guess routing for an inbox file — see L1 §2.4.
 ## Engineering hooks
 
 The red lines above are easy to *describe* and hard to *uphold*
-without enforcement. The [`wikilint`](../_system/wikilint/) package
+without enforcement. The [`densa`](../_system/densa/) package
 turns the soft norms into hard rules.
 
 ### Rule registry
@@ -503,17 +570,17 @@ Each rule has a stable ID (`AGENTS00N`) so users can target it with
 `--select` / `--ignore` and reference it in `# noqa` comments without
 fearing renumbering. The canonical table lives in
 [`AGENTS.md`](../AGENTS.md) §6.1 — see that section for the
-ID → rule → anchor mapping. At runtime, `python -m wikilint rules`
+ID → rule → anchor mapping. At runtime, `python -m densa rules`
 prints the table direct from the code (the single source of truth
-is [`_system/wikilint/config.py::RULES`](../_system/wikilint/config.py));
+is [`_system/densa/config.py::RULES`](../_system/densa/config.py));
 both the AGENTS.md mirror and this section are documentation.
 
 ### Architecture
 
 ```
-_system/wikilint/
+_system/densa/
 ├── __init__.py     — public API: lint_staged / lint_all / lint_paths / Diagnostic
-├── __main__.py     — `python -m wikilint`
+├── __main__.py     — `python -m densa`
 ├── cli.py          — argparse: lint / rules / version subcommands
 ├── runner.py       — orchestration: source → rules → Report
 ├── config.py       — schema constants + RuleSpec registry
@@ -543,7 +610,7 @@ hottest spot of glue code in the predecessor.
 The pre-commit hook (`_system/hooks/pre-commit`) is the path that runs
 on every `git commit`, and so is **pure stdlib**: no `pip install`
 required before adopting the template. The hook just sets
-`PYTHONPATH` and invokes `python -m wikilint --staged` from the in-repo
+`PYTHONPATH` and invokes `python -m densa --staged` from the in-repo
 package.
 
 CI and local `--all` runs can opt into the `[strict]` extra
@@ -557,7 +624,7 @@ actually use.
 The `_system/tests/` suite exercises every rule with a hermetic
 mini-vault fixture, plus parser, formatter, and runner integration
 tests. CI runs `pytest`, `ruff`, and `mypy --strict` on every PR
-touching `_system/wikilint/`. Bypass exists (`git commit --no-verify`)
+touching `_system/densa/`. Bypass exists (`git commit --no-verify`)
 but is a deliberate emergency exit, not a routine.
 
 ---
@@ -678,9 +745,12 @@ and graduate to `writing/published/<slug>.md` once shipped. Templates:
 [`../_system/templates/writing-publication.md`](../_system/templates/writing-publication.md).
 
 Frontmatter is **advisory**, not enforced — `writing/` is excluded
-from the L1 page-type contract. If you want post-publication
-immutability, add a per-L2 lint rule for it; `share/` v0.x does not
-ship one.
+from the L1 page-type contract (the templates ship with `type:
+fleeting` for compatibility with AGENTS004, but the `writing/` tree
+is otherwise outside the AGENTS003-006 scope; see
+`densa.config.WIKILINK_SKIP_TOP_LEVEL`). If you want post-
+publication immutability, add a per-L2 lint rule for it; `share/`
+v0.x does not ship one.
 
 Enable when: you actively publish externally and want your drafts in
 the same repo as the wiki they cite. Skip when: you compose in a

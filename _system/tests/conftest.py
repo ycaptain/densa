@@ -18,7 +18,7 @@ from pathlib import Path
 
 import pytest
 
-# Make ``wikilint`` importable when pytest is invoked from the repo root.
+# Make ``densa`` importable when pytest is invoked from the repo root.
 _HERE = Path(__file__).resolve().parents[1]
 if str(_HERE) not in sys.path:
     sys.path.insert(0, str(_HERE))
@@ -52,14 +52,21 @@ def make_wiki_page(
     sources: str | list[str] | None = None,
     extra: str = "",
 ) -> str:
-    """Produce a minimally-valid wiki page body for a given page type."""
-    src_block = ""
-    if sources is not None:
-        if isinstance(sources, list):
+    """Produce a minimally-valid wiki page body for a given page type.
+
+    Carries all nine universal frontmatter keys per AGENTS.md §3 so
+    AGENTS003 does not fire spuriously on fixtures.
+    """
+    if sources is None:
+        src_block = "sources: []\n"
+    elif isinstance(sources, list):
+        if sources:
             inner = ", ".join(f'"{s}"' for s in sources)
             src_block = f"sources: [{inner}]\n"
         else:
-            src_block = f"sources: [\"{sources}\"]\n"
+            src_block = "sources: []\n"
+    else:
+        src_block = f"sources: [\"{sources}\"]\n"
     return (
         "---\n"
         f"type: {type_}\n"
@@ -67,6 +74,8 @@ def make_wiki_page(
         "created: 2026-01-01\n"
         "updated: 2026-01-01\n"
         f"{src_block}"
+        "aliases: []\n"
+        "tags: []\n"
         "status: active\n"
         "compiled_against: 1\n"
         "---\n"

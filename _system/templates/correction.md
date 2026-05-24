@@ -11,7 +11,8 @@ aliases: []
 severity: <% tp.system.suggester(["low", "medium", "high"], ["low", "medium", "high"], false, "Severity") %>
 first_observed: <% tp.date.now("YYYY-MM-DD") %>
 last_observed: <% tp.date.now("YYYY-MM-DD") %>
-status: open
+status: active
+correction_status: open       # L2-defined: open | resolved | recurring
 linked_concept: "[[<concept-slug>]]"
 linked_protocol: "[[<protocol-slug>]]"
 tags: []

@@ -1,79 +1,106 @@
-# Contributing to llm-wiki-starter
+# Contributing to Densa
 
-Thanks for your interest. This project is a *schema-first* template: the
-load-bearing artifacts are markdown contracts (`AGENTS.md`, prompts,
-templates) and a small validator (`_system/wikilint/`). Most
-useful contributions improve those, not application code.
-
-By participating you agree to follow our
+This is a schema-first template. The interesting contributions are
+markdown contracts (`AGENTS.md`, prompts, templates) and a small
+validator (`_system/densa/`) — not application code. By
+participating you agree to follow our
 [Code of Conduct](CODE_OF_CONDUCT.md).
 
-## Where to start
+## 🚀 Where to start
 
 | You want to...                                  | Open                                                              |
 | ----------------------------------------------- | ----------------------------------------------------------------- |
-| Report a bug in `wikilint` / hooks / prompts    | a `bug_report` issue                                              |
-| Propose a schema change (new page type, etc.)   | a `feature_request` issue (discuss before PR — L1 changes are not lightly merged) |
-| Get help designing your own L2 domain           | a `domain-design-help` issue (we'll work through the four design questions with you) |
+| Report a bug in `densa` / hooks / prompts     | a `bug_report` issue                                              |
+| Propose a schema change (new page type, etc.)   | a `feature_request` issue first — L1 changes are not lightly merged |
+| Get help designing your own L2 domain           | a `domain-design-help` issue (we'll work the four design questions with you) |
 | Fix a typo, broken link, or doc clarity         | a PR directly                                                     |
 
-## Before submitting a PR
+### Good first PRs
 
-1. **Run the validator locally** against the whole tree:
+If you want to contribute but don't have an itch yet:
 
-   ```bash
-   python -m wikilint --all
-   ```
+- A typo or clarity fix anywhere in `docs/`, `_system/`, or the
+  README.
+- A new pytest case under `_system/tests/` exercising an edge case
+  one of the AGENTS001–009 rules currently doesn't catch.
+- A worked example seed L2 (see *Adding an example L2 domain* below).
 
-   It must report `OK: ... 0 error(s) ...`. CI runs the same check on
-   every PR.
+## 🛠 Before submitting a PR
 
-2. **Wire the pre-commit hook** (one-time):
+This project uses [**nox**](https://nox.thea.codes) as its task
+runner — the Scientific Python Development Guide's PY007
+recommendation. Cross-platform, Python-coded, explicit about what each
+session runs.
 
-   ```bash
-   git config core.hooksPath _system/hooks
-   ```
+### One-time setup
 
-   This catches red-line violations (raw immutability, log append-only,
-   `analysis.sources` cardinality, wikilink resolvability) before they
-   reach a PR. The hook is pure stdlib — no `pip install` required.
+```bash
+pip install -e ".[dev]"               # installs pytest + ruff + mypy + nox + pyyaml
+git config core.hooksPath _system/hooks
+git config --get core.hooksPath       # sanity check; should print: _system/hooks
+```
 
-3. **For changes to the validator** (`_system/wikilint/`):
+The pre-commit hook itself is **pure stdlib** — it doesn't need the
+`[dev]` extra. Install is only for the validator's own dev suite.
 
-   ```bash
-   pip install -e ".[dev]"
-   pytest             # unit tests
-   ruff check _system/wikilint _system/tests
-   mypy _system/wikilint
-   ```
+### Run every gate CI runs
 
-   All four must be green. The same tools run in CI on every PR
-   touching the validator. To iterate on a single check, run
-   `pytest _system/tests/ -k <check-name> -v`.
+```bash
+nox -s check                          # = lint + test + ruff + mypy
+```
 
-4. **Follow the commit message convention** from `AGENTS.md` §9:
+Or invoke them individually (these mirror `noxfile.py` verbatim;
+the bare `densa --all` form is canonical because the pre-commit
+hook and CI use it too):
 
-   ```
-   <op>(<scope>): <short summary>
+| Session              | What it runs                                                                   |
+| -------------------- | ------------------------------------------------------------------------------ |
+| `nox -s lint`        | `python -m densa --all` (PYTHONPATH-set so it works pre-install)               |
+| `nox -s lint-strict` | `DENSA_STRICT=1 python -m densa --all` (pyyaml backend)                        |
+| `nox -s lint-diff`   | `python -m densa --diff origin/main` (PR-range staged-rule pass; override base via `nox -s lint-diff -- <ref>`) |
+| `nox -s test`        | `python -m pytest`                                                             |
+| `nox -s ruff`        | `python -m ruff check .`                                                       |
+| `nox -s ruff-fix`    | `python -m ruff check --fix .`                                                 |
+| `nox -s mypy`        | `python -m mypy`                                                               |
+| `nox -s hook`        | `git config core.hooksPath _system/hooks` + verify                             |
 
-   <optional body explaining the why>
-   ```
+Sessions reuse your current Python env (`venv_backend = "none"`) so
+they run instantly — no per-session venv churn. CI runs the same
+sessions over a Python 3.10 / 3.11 / 3.12 matrix.
 
-   Examples:
-   - `docs(readme): clarify quickstart`
-   - `feat(validate): warn on stale last_validated`
-   - `fix(prompts): unbroken wikilink in ingest.md`
+### Iterate on a single check
 
-5. **Keep PRs small.** One concern per PR. A typo fix and a schema
-   tweak should not share a branch.
+```bash
+nox -s test -- -k <check-name> -v   # args after `--` reach pytest
+nox -s ruff-fix                     # auto-apply ruff fixes
+```
+
+### Commit message convention
+
+Follow [`AGENTS.md`](AGENTS.md) §9:
+
+```
+<op>(<scope>): <short summary>
+
+<optional body explaining the why>
+```
+
+Examples: `docs(readme): clarify quickstart`,
+`feat(validate): warn on stale last_validated`,
+`fix(prompts): unbroken wikilink in ingest.md`.
+
+### Keep PRs small
+
+One concern per PR. A typo fix and a schema tweak shouldn't share a
+branch.
 
 ## If the pre-commit hook rejects your first commit (AGENTS007)
 
 The validator classifies commits by their leading prefix
 (`ingest(<domain>):`, `query:`, `lint:`, `process-inbox:`,
-`promote:`, or no recognised prefix). Each class has its own
-allowed write scope — see [`AGENTS.md`](AGENTS.md) §2.0. The most
-common first-commit rejection looks like:
+`promote:`, or no recognised prefix). Each class has its own allowed
+write scope — see [`AGENTS.md`](AGENTS.md) §2.0. The most common
+first-commit rejection looks like:
 
 ```
 ✗ AGENTS007 operation-writes-within-scope
@@ -84,18 +111,17 @@ common first-commit rejection looks like:
   violation: domains/research-papers/wiki/concepts/new-page.md
 ```
 
-What the message is telling you: a commit without an operation
-prefix is treated as schema / docs / integrations maintenance and
-MUST NOT touch `domains/**`. Two recoveries:
+A commit without an operation prefix is treated as schema / docs /
+integrations maintenance and MUST NOT touch `domains/**`. Two
+recoveries:
 
-- **Did you mean to ingest?** The change belongs in an `ingest`
-  commit. Move the wiki edit out of this commit, redo it via the
-  `ingest` flow (`_system/prompts/ingest.md`), and use
+- **Did you mean to ingest?** Move the wiki edit out of this commit,
+  redo it via the `ingest` flow
+  ([`_system/prompts/ingest.md`](_system/prompts/ingest.md)), and use
   `git commit -m "ingest(<domain>): <date> <slug>"`.
-- **Did you mean to do unrelated docs work?** Move the
-  `domains/**` edit to a separate commit (with the correct prefix)
-  and keep the original commit prefix-free. Two small commits
-  beat one rejected omnibus.
+- **Did you mean unrelated docs work?** Move the `domains/**` edit to
+  a separate commit (with the correct prefix) and keep the original
+  commit prefix-free. Two small commits beat one rejected omnibus.
 
 Last-resort bypass (sanctioned multi-scope maintenance only):
 
@@ -103,12 +129,12 @@ Last-resort bypass (sanctioned multi-scope maintenance only):
 WIKI_ALLOW_CROSS_SCOPE=1 git commit -m "<your message>"
 ```
 
-The bypass MUST be paired with a follow-up `## [YYYY-MM-DD]
-maintenance | …` entry in `log.md` explaining the cross-scope
-write. Don't reach for this on a first contribution — the
-two-commit fix above is almost always cleaner.
+The bypass MUST be paired with a follow-up
+`## [YYYY-MM-DD] maintenance | …` entry in `log.md` explaining the
+cross-scope write. Don't reach for this on a first contribution — the
+two-commit fix is almost always cleaner.
 
-## Red lines (will block merge)
+## ⚠️ Red lines (will block merge)
 
 These mirror the L1 contract in [`AGENTS.md`](AGENTS.md) §6. Do not:
 
@@ -121,7 +147,7 @@ These mirror the L1 contract in [`AGENTS.md`](AGENTS.md) §6. Do not:
 - Change `compiled_against:` schema version without shipping a
   migration script under `_system/scripts/migrate_NN_<slug>.py`.
 
-## Changing the L1 schema
+## 🧬 Changing the L1 schema
 
 `AGENTS.md` encodes invariants the LLM relies on across every domain.
 Changes here have outsized blast radius. Before opening a PR:
@@ -132,25 +158,25 @@ Changes here have outsized blast radius. Before opening a PR:
 3. Then send the PR, which must include:
    - The schema edit itself.
    - A migration script under `_system/scripts/` if the change is
-     breaking (i.e. existing wiki pages would no longer validate).
+     breaking (existing wiki pages would no longer validate).
    - Bumped `schema_version` in the frontmatter at the top of
      `AGENTS.md` if breaking.
    - An entry in `CHANGELOG.md` under `## [Unreleased]`.
 
-## Adding an example L2 domain
+## 🌱 Adding an example L2 domain
 
-The repo ships **three** example L2s (`research-papers`, `workspace`,
+The repo ships three example L2s (`research-papers`, `workspace`,
 `psychology`) covering light/medium/heavy schema density across
 distinct working subjects. See
-[`docs/EXAMPLE-DOMAINS.md`](docs/EXAMPLE-DOMAINS.md) for the full
+[`docs/EXAMPLE-DOMAINS.md`](docs/EXAMPLE-DOMAINS.md) for the
 per-domain matrix.
 
-New seed L2s are welcome — open an issue first (use the
+New seed L2s are welcome — open a
 [`domain-design-help`](.github/ISSUE_TEMPLATE/domain-design-help.md)
-template) to discuss persona / page-types / required frontmatter, then
-PR a directory under `domains/`. The bar for inclusion is "would a
-plausible adopter of this template ship this exact L2 unmodified" —
-worked examples need a real-looking persona and a synthesised raw set
+issue first to discuss persona / page-types / required frontmatter,
+then PR a directory under `domains/`. Bar for inclusion: *would a
+plausible adopter of this template ship this exact L2 unmodified?*
+Worked examples need a real-looking persona and a synthesised raw set
 that ingests cleanly.
 
 ## License

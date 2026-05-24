@@ -6,7 +6,8 @@ updated: <% tp.date.now("YYYY-MM-DD") %>
 sources: []
 aliases: []
 project: <slug>
-status: discovery
+status: active
+project_status: discovery     # L2-defined: discovery | active | paused | shipped | abandoned
 owners: [self]
 started: <% tp.date.now("YYYY-MM-DD") %>
 target:

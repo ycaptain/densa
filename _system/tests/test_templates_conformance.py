@@ -7,7 +7,7 @@ the mechanical gate that keeps that from happening — when adding a
 new template, the gate fires once and the contributor adds the
 missing fields before merge.
 
-Uses :func:`wikilint.frontmatter.parse_stdlib` rather than pyyaml so
+Uses :func:`densa.frontmatter.parse_stdlib` rather than pyyaml so
 the test does not pull in optional dependencies; the stdlib backend
 handles the YAML subset we ship in templates.
 """
@@ -18,7 +18,7 @@ from pathlib import Path
 
 import pytest
 
-from wikilint.frontmatter import parse_stdlib
+from densa.frontmatter import parse_stdlib
 
 TEMPLATES_DIR = Path(__file__).resolve().parents[1] / "templates"
 
@@ -100,9 +100,17 @@ def test_domain_is_placeholder_or_psychology_l2_specific(
         assert domain == "psychology", (
             f"{name}: L2-specific template should declare `domain: psychology`"
         )
+    elif name.startswith("writing-"):
+        # writing/ is an opt-in workspace outside the L2 schema (see
+        # DESIGN.md §"Optional layers"); its templates hard-code
+        # `domain: writing` for symmetry, but the tree is excluded from
+        # AGENTS003/006 enforcement via WIKILINK_SKIP_TOP_LEVEL.
+        assert domain == "writing", (
+            f"{name}: writing-* template should declare `domain: writing`"
+        )
     else:
         assert domain.startswith("<") and domain.endswith(">"), (
             f"{name}: generic template must use a placeholder domain "
-            f"(got {domain!r}); only psychology-*/psychiatry-* templates "
-            f"may hard-code a domain"
+            f"(got {domain!r}); only psychology-*/psychiatry-*/writing-* "
+            f"templates may hard-code a domain"
         )

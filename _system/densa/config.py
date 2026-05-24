@@ -56,11 +56,33 @@ REQUIRED_FRONTMATTER_KEYS: Final[tuple[str, ...]] = (
     "created",
     "updated",
     "status",
+    "compiled_against",
 )
-"""Universal frontmatter contract enforced by AGENTS003. L2 schemas
-add their own required keys (e.g. `last_validated` for `concept`); those
-are enforced by the L2's own lint pass per the L2 AGENTS.md, not by
-this module.
+"""Universal frontmatter keys whose value MUST be present and non-empty.
+
+L1 §3 lists nine universal keys; this tuple covers the six that MUST
+carry a meaningful value. The remaining three (``sources``, ``tags``,
+``aliases``) are also universal but **may be empty lists** — see
+:data:`PRESENCE_ONLY_FRONTMATTER_KEYS`. The split lets AGENTS003 fire
+when a value is missing without inflating false-positives on legitimate
+empty lists (e.g. an evergreen concept with ``sources: []``).
+
+L2 schemas add their own required keys (e.g. `last_validated` for
+`concept`); those are enforced by AGENTS008 plus the L2's own lint
+pass per the L2 AGENTS.md.
+"""
+
+
+PRESENCE_ONLY_FRONTMATTER_KEYS: Final[tuple[str, ...]] = (
+    "sources",
+    "tags",
+    "aliases",
+)
+"""Universal frontmatter keys that MUST be present but MAY be empty.
+
+AGENTS003 errors when these keys are missing entirely; an empty list
+or empty scalar is allowed (e.g. ``sources: []`` for evergreen
+concepts). See L1 §3 / §3.1 for cardinality rules per page type.
 """
 
 
@@ -68,13 +90,13 @@ this module.
 
 LOG_REORDER_BYPASS_ENV: Final[str] = "WIKI_ALLOW_LOG_REORDER"
 """Sanctioned narrow exception to log append-only — see L1 §6 and
-:class:`wikilint.checks.log_append_only.LogAppendOnly`.
+:class:`densa.checks.log_append_only.LogAppendOnly`.
 """
 
 
 CROSS_SCOPE_BYPASS_ENV: Final[str] = "WIKI_ALLOW_CROSS_SCOPE"
 """Sanctioned narrow exception to AGENTS007 — see L1 §2.0 and
-:class:`wikilint.checks.operation_writes_scope.OperationWritesScope`.
+:class:`densa.checks.operation_writes_scope.OperationWritesScope`.
 """
 
 
@@ -95,13 +117,19 @@ WIKILINK_SKIP_TOP_LEVEL: Final[frozenset[str]] = frozenset({
     "attic",
     "inbox",
     "outputs",
+    "writing",
+    "projects",
 })
 """Top-level directories whose markdown files contain ``[[placeholder]]``
 examples by design — wikilink resolvability is not enforced there.
 
 ``outputs/`` is included here for symmetry with
-:func:`wikilint.paths.is_outputs`; the canonical exclusion happens in
+:func:`densa.paths.is_outputs`; the canonical exclusion happens in
 ``wikilinks_scoped``.
+
+``writing/`` and ``projects/`` are opt-in workspaces (see DESIGN.md
+§"Optional layers"): they may cite wiki pages with ``[[wikilink]]``
+but the reverse is forbidden and their frontmatter is advisory.
 """
 
 
@@ -130,6 +158,7 @@ OPERATION_WRITES: Final[dict[str, frozenset[str]]] = {
     }),
     "promote": frozenset({
         "outputs/qa/**",
+        "outputs/lint/**",
         "domains/*/wiki/**",
         "domains/*/log.md",
         "log.md",
@@ -155,6 +184,7 @@ OPERATION_WRITES: Final[dict[str, frozenset[str]]] = {
         ".editorconfig",
         ".pre-commit-hooks.yaml",
         "pyproject.toml",
+        "noxfile.py",
         "index.md",
         "*.md",
     }),
@@ -176,7 +206,7 @@ L1 §2.0 is the human-readable mirror of this table.
 class RuleSpec:
     """Metadata for one rule, independent of its implementation.
 
-    The implementation lives in :mod:`wikilint.checks`; this class only
+    The implementation lives in :mod:`densa.checks`; this class only
     carries the things humans look up: the stable ID, a short name for
     error messages, a one-line description, and the anchor in
     ``AGENTS.md`` it enforces.
@@ -197,7 +227,7 @@ class RuleSpec:
 
 RULES: Final[tuple[RuleSpec, ...]] = (
     RuleSpec(
-        id="WIKILINT-IO",
+        id="DENSA-IO",
         name="io-failure",
         summary="meta diagnostic: the validator could not read a file",
         agents_anchor="(meta)",
@@ -246,6 +276,24 @@ RULES: Final[tuple[RuleSpec, ...]] = (
             "declared for its commit-message prefix"
         ),
         agents_anchor="AGENTS.md §2.0",
+    ),
+    RuleSpec(
+        id="AGENTS008",
+        name="last-validated-fresh",
+        summary=(
+            "warn when `last_validated` on concept/framework/protocol/entity "
+            "is older than 180 days"
+        ),
+        agents_anchor="AGENTS.md §3.3",
+    ),
+    RuleSpec(
+        id="AGENTS009",
+        name="compiled-against-current",
+        summary=(
+            "warn when a page's `compiled_against` lags the current "
+            "schema_version"
+        ),
+        agents_anchor="AGENTS.md §3.2",
     ),
 )
 

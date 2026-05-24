@@ -3,13 +3,13 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "wikilint"
+name = "densa"
 version = "0.1.0"
-description = "Schema + wikilink validator for the llm-wiki template."
+description = "Densa — compile your sources into a queryable markdown wiki. CLI + schema validator."
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
-keywords = ["agents-md", "obsidian", "lint", "validator", "llm-wiki"]
+keywords = ["agents-md", "obsidian", "lint", "validator", "densa", "llm-wiki"]
 authors = [
     { name = "ycaptain" },
 ]
@@ -39,32 +39,34 @@ dependencies = []
 strict = [
     "pyyaml>=6.0",
 ]
-# Everything needed to develop wikilint itself.
+# Everything needed to develop densa itself. Contributors install
+# this once (`pip install -e ".[dev]"`) and then use ``nox`` as the
+# task runner (see ``noxfile.py`` and CONTRIBUTING.md).
 dev = [
     "pyyaml>=6.0",
     "pytest>=8.0",
-    "pytest-cov>=4.0",
     "ruff>=0.6",
     "mypy>=1.10",
+    "nox>=2024.4.15",
     "types-pyyaml",
 ]
 
 [project.scripts]
-wikilint = "wikilint.cli:main"
+densa = "densa.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/ycaptain/llm-wiki-starter"
-Documentation = "https://github.com/ycaptain/llm-wiki-starter#readme"
-Issues = "https://github.com/ycaptain/llm-wiki-starter/issues"
+Homepage = "https://github.com/ycaptain/densa"
+Documentation = "https://github.com/ycaptain/densa#readme"
+Issues = "https://github.com/ycaptain/densa/issues"
 
 # ---------------------------------------------------------------------------
 # setuptools — point at the `_system/` source layout. The package is
-# `wikilint` and lives under `_system/wikilint/`.
+# `densa` and lives under `_system/densa/`.
 # ---------------------------------------------------------------------------
 
 [tool.setuptools.packages.find]
 where = ["_system"]
-include = ["wikilint*"]
+include = ["densa*"]
 
 # ---------------------------------------------------------------------------
 # pytest
@@ -86,7 +88,7 @@ python_functions = ["test_*"]
 [tool.ruff]
 line-length = 100
 target-version = "py310"
-src = ["_system/wikilint", "_system/tests"]
+src = ["_system/densa", "_system/tests"]
 extend-exclude = [
     "domains",
     "docs",
@@ -113,7 +115,7 @@ ignore = [
 ]
 
 [tool.ruff.lint.isort]
-known-first-party = ["wikilint"]
+known-first-party = ["densa"]
 
 # ---------------------------------------------------------------------------
 # mypy
@@ -122,7 +124,7 @@ known-first-party = ["wikilint"]
 [tool.mypy]
 python_version = "3.10"
 strict = true
-files = ["_system/wikilint"]
+files = ["_system/densa"]
 ignore_missing_imports = true
 warn_unused_ignores = true
 
@@ -134,11 +136,13 @@ disallow_untyped_defs = false
 disallow_untyped_calls = false
 
 # ---------------------------------------------------------------------------
-# coverage (used by pytest-cov)
+# coverage: opt-in only. `pytest-cov` is not in the default [dev] extra;
+# install it ad-hoc when you want to inspect coverage of a single rule:
+#   pip install pytest-cov && pytest --cov=densa --cov-report=term-missing
 # ---------------------------------------------------------------------------
 
 [tool.coverage.run]
-source = ["wikilint"]
+source = ["densa"]
 
 [tool.coverage.report]
 show_missing = true

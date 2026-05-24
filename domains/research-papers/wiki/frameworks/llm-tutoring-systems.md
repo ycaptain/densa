@@ -2,13 +2,13 @@
 type: framework
 domain: research-papers
 created: 2026-05-20
-updated: 2026-05-21
-sources: ["[[2024-vanzo-gpt4-homework-tutor-analysis]]", "[[2024-bastani-generative-ai-guardrails-analysis]]", "[[2025-kestin-ai-tutoring-active-learning-analysis]]"]
+updated: 2026-05-23
+sources: ["[[2024-vanzo-gpt4-homework-tutor-analysis]]", "[[2024-bastani-generative-ai-guardrails-analysis]]", "[[2025-kestin-ai-tutoring-active-learning-analysis]]", "[[2025-kim-chatgpt-education-review-tkl-analysis]]"]
 tags: [framework, ai-education, llm-tutoring, research-programme, pedagogy]
 aliases: ["LLM tutoring", "generative AI in education", "AI tutors", "LLM-ITS"]
 status: active
 compiled_against: 1
-last_validated: 2026-05-21
+last_validated: 2026-05-23
 programme_start: 2022-12-01
 programme_status: active
 ---
@@ -111,6 +111,26 @@ representative.
 - [[2025-kestin-ai-tutoring-active-learning-analysis]] —
   undergraduate physics, pedagogy-aware tutor exceeds active-learning
   classroom.
+
+### Connected reviews (systematic syntheses of the literature)
+
+- [[2025-kim-chatgpt-education-review-tkl-analysis]] — Kim et al.
+  (2025, *Technology, Knowledge and Learning*). Qualitative content
+  analysis of **52 empirical ChatGPT-in-education studies** from
+  Jan 2023 – Dec 2024 (ERIC + Google Scholar + 7 edtech journals).
+  Quantifies the methodological landscape: **only 1 / 52 studies is
+  explicitly an RCT** (Lee et al. 2024, GCLA hint-tool ANCOVA), and
+  25% of studies do not specify their geographic context. The
+  three RCT anchors above ([[2024-vanzo-gpt4-homework-tutor-analysis|Vanzo]],
+  [[2024-bastani-generative-ai-guardrails-analysis|Bastani]],
+  [[2025-kestin-ai-tutoring-active-learning-analysis|Kestin]]) do
+  **not** appear in the review's corpus — likely because of the
+  "ChatGPT" keyword filter and the seven-journal venue list. The
+  review's value to this programme is therefore primarily
+  *diagnostic*: it confirms that as of Dec 2024 the public
+  ChatGPT-in-education literature was overwhelmingly qualitative /
+  perception-based, single-site, and causal-evidence-poor outside
+  the venues this wiki tracks.
 
 ## Cross-paper synthesis
 

@@ -1,21 +1,21 @@
-# Pre-commit framework manifest for the `wikilint` hook.
+# Pre-commit framework manifest for the `densa` hook.
 #
 # Users adopt this in their own vault's `.pre-commit-config.yaml`:
 #
 #   repos:
-#     - repo: https://github.com/ycaptain/llm-wiki-starter
+#     - repo: https://github.com/ycaptain/densa
 #       rev: v0.1.0
 #       hooks:
-#         - id: wikilint
+#         - id: densa
 #
 # The local hook in `_system/hooks/pre-commit` covers users who prefer
 # not to install the pre-commit framework. Both call into the same
-# `python -m wikilint --staged` entry point.
+# `python -m densa --staged` entry point.
 
-- id: wikilint
-  name: wikilint (schema + wikilink check)
-  description: Validate llm-wiki vault against AGENTS.md §3 / §6.
-  entry: python -m wikilint --staged
+- id: densa
+  name: densa (schema + wikilink check)
+  description: Validate a Densa vault against AGENTS.md §3 / §6.
+  entry: python -m densa --staged
   language: python
   pass_filenames: false
   always_run: true

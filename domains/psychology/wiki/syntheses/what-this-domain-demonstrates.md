@@ -9,7 +9,7 @@ sources: [
   "[[2026-04-23-psychiatry-han-analysis]]",
   "[[2026-05-14-session-reyes-analysis]]",
   "[[2026-05-14-six-week-retrospective]]",
-  "[[domains/psychology/wiki/syntheses/how-to-read-this-domain]]"
+  "[[how-to-read-psychology-domain]]"
 ]
 scope: capability-demo
 tags: [meta, capability-demo, evaluator, schema-demonstration, ten-capabilities, demo-claims]
@@ -35,7 +35,7 @@ compiled_against: 1
 > sizing up whether to adopt the LLM-wiki pattern. The clinical
 > entry point is [[2026-05-14-six-week-retrospective]]. If you
 > are arriving here from the L2 onboarding navigator
-> ([[domains/psychology/wiki/syntheses/how-to-read-this-domain|how-to-read-this-domain]])
+> ([[how-to-read-psychology-domain|psychology reading guide]])
 > and you want the doctor-to-doctor
 > view, switch to the retrospective.
 
@@ -335,7 +335,7 @@ investment order:
 - [[2026-05-14-six-week-retrospective]] — the clinician-grade
   arc-level entry point this synthesis points to under
   Capability 2 / 7 / 8.
-- [[domains/psychology/wiki/syntheses/how-to-read-this-domain|how-to-read-this-domain]]
+- [[how-to-read-psychology-domain|psychology reading guide]]
   — the three-audience navigator;
   the *process-indexed* counterpart to this *capability-
   indexed* synthesis.

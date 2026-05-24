@@ -39,8 +39,8 @@ class Diagnostic:
     ----------
     rule_id :
         Stable identifier such as ``"AGENTS001"``. See
-        :mod:`wikilint.config` for the canonical registry. Used by
-        ``--select`` / ``--ignore`` and by ``# noqa`` (future).
+        :mod:`densa.config` for the canonical registry. Used by
+        ``--select`` / ``--ignore``.
     severity :
         ``Severity.ERROR`` flips exit code; ``Severity.WARNING`` does not.
     path :

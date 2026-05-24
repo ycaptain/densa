@@ -8,15 +8,15 @@
 
 - [ ] Doc / typo / clarity fix
 - [ ] Prompt or template edit
-- [ ] Validator (`_system/wikilint/`) bug fix or improvement
+- [ ] Validator (`_system/densa/`) bug fix or improvement
 - [ ] L1 schema change (`AGENTS.md`) — **requires prior issue discussion**
 - [ ] New example L2 or example seed
 - [ ] CI / tooling
 
 ## Checklist
 
-- [ ] Ran `python -m wikilint --all` locally; it reports `OK: ... 0 error(s) ...`.
-- [ ] For validator changes (`_system/wikilint/`): `pytest`, `ruff`, and `mypy` all pass.
+- [ ] Ran `python -m densa --all` locally; it reports `OK: ... 0 error(s) ...`.
+- [ ] For validator changes (`_system/densa/`): `pytest`, `ruff`, and `mypy` all pass.
 - [ ] Wired the pre-commit hook (`git config core.hooksPath _system/hooks`) so future commits stay clean.
 - [ ] Commit messages follow the `<op>(<scope>): <summary>` convention from `AGENTS.md` §9.
 - [ ] No `raw/` files were edited, renamed, moved, or deleted.

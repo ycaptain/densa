@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from wikilint.wikilink import (
+from densa.wikilink import (
     ResolutionStatus,
     WikilinkHit,
     build_index,

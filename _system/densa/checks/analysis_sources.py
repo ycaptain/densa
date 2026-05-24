@@ -11,10 +11,10 @@ analysis.
 
 from __future__ import annotations
 
-from wikilint.frontmatter import parse
-from wikilint.paths import is_raw, is_wiki
-from wikilint.report import Diagnostic, Report, Severity
-from wikilint.wikilink import (
+from densa.frontmatter import parse
+from densa.paths import is_raw, is_wiki
+from densa.report import Diagnostic, Report, Severity
+from densa.wikilink import (
     WIKILINK_RE,
     ResolutionStatus,
     SlugIndex,
