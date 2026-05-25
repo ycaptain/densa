@@ -5,7 +5,7 @@
 # `bash _system/scripts/setup_encryption.sh` (which is also idempotent
 # and can append these rules for you).
 #
-# Reference: _system/SETUP.md §"Privacy: encrypt sensitive raw/ with git-crypt"
+# Reference: docs/setup.md §"Privacy — sensitive material"
 
 # domains/psychology/raw/**     filter=git-crypt diff=git-crypt
 # domains/<your-sensitive-domain>/raw/**     filter=git-crypt diff=git-crypt

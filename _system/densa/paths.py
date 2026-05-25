@@ -89,6 +89,17 @@ def is_output_artifact(path: str) -> bool:
     )
 
 
+_ROOT_DOC_EXEMPT: Final[frozenset[str]] = frozenset({
+    "AGENTS.md",
+    "GUIDE.md",
+    "README.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "CODE_OF_CONDUCT.md",
+})
+
+
 def wikilinks_scoped(path: str) -> bool:
     """True iff wikilink resolvability is enforced for *path*.
 
@@ -98,17 +109,32 @@ def wikilinks_scoped(path: str) -> bool:
       - Anything under ``outputs/`` (operation artifacts; reports may
         reference wiki pages but their own outbound wikilinks are not
         graph-relevant and the directory is excluded by design).
-      - Anything under ``_system/`` / ``attic/`` / ``inbox/`` (templates,
-        prompts, AGENTS docs — all of which contain ``[[<placeholder>]]``
-        examples by design).
-      - Any ``AGENTS.md`` file (L1 or L2), for the same reason.
+      - Anything under ``_system/`` / ``attic/`` / ``inbox/`` /
+        ``examples/`` (templates, prompts, AGENTS docs, showcase
+        domains — all of which contain ``[[<placeholder>]]`` examples
+        or shipped-reference wikilinks by design).
+      - The root-level documentation files (``AGENTS.md`` at any depth,
+        plus ``GUIDE.md`` / ``README.md`` / ``CHANGELOG.md`` /
+        ``CONTRIBUTING.md`` / ``SECURITY.md`` / ``CODE_OF_CONDUCT.md``
+        at the repo root) — these contain ``[[placeholder]]`` examples
+        and historical references by design.
+      - Any ``log.md`` at any depth — the log is an append-only audit
+        ledger. Past entries' wikilinks reflect the state when the
+        entry was written; targets may legitimately disappear later
+        (deprecation, showcase moves, schema migrations). Enforcing
+        resolvability against history would force log rewrites, which
+        AGENTS002 forbids.
       - Non-markdown files.
     """
     if not normalise(path).endswith(".md") or is_raw(path):
         return False
     if is_outputs(path):
         return False
+    if is_log(path):
+        return False
     p = parts(path)
     if p[0] in WIKILINK_SKIP_TOP_LEVEL:
         return False
-    return p[-1] != "AGENTS.md"
+    if p[-1] == "AGENTS.md":
+        return False
+    return not (len(p) == 1 and p[0] in _ROOT_DOC_EXEMPT)

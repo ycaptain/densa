@@ -28,9 +28,13 @@ dist/
 htmlcov/
 coverage.xml
 
-# Private design archive — kept locally, not published
-docs/dogfood/
-docs/user-research/
-docs/prior-art/
-docs/MASTER-PLAN-2026-05.md
+# Maintainer-only design archive — kept locally, not published. Users
+# who fork this template never see this directory; it holds dogfood
+# retrospectives, prior-art surveys, user-research personas, and
+# release master-plans the maintainers reference while evolving the
+# schema.
+docs/maintainers/
+
+# Local virtualenvs
 .venv-test/
+.venv/

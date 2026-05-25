@@ -1,5 +1,17 @@
 # Prompt: query
 
+## What this command will write (schema contract)
+
+| Path                                       | When                                  | Why                                                  |
+|--------------------------------------------|---------------------------------------|------------------------------------------------------|
+| `outputs/qa/<YYYY-MM-DD>-<slug>.md`        | when the answer is substantive        | Q&A artifact; not a wiki page until `promote` runs   |
+| `domains/<X>/log.md`                       | always                                | audit trail                                          |
+| `log.md`                                   | only when the query spans ≥2 domains  | global timeline                                      |
+
+> This table mirrors `densa.schema.OPERATIONS['query'].writes`.
+> AGENTS011 warns on drift. `query` never writes to `wiki/**` — if a
+> Q&A earns wiki-grade status, the human runs `promote` (§2.5).
+
 Use this prompt body when the human asks a question that should be answered
 from the wiki. Canonical procedure for `/AGENTS.md` §2.2.
 

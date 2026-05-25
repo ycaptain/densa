@@ -2,8 +2,8 @@
 type: log
 scope: research-papers
 domain: research-papers
-updated: 2026-05-23
-compiled_against: 1
+updated: 2026-05-25
+compiled_against: 2
 ---
 
 # Research papers — Log
@@ -17,19 +17,19 @@ for entry format.
 
 ## [2026-05-23] ingest | Kim et al. 2025, "Unlocking the Future: A Comprehensive Review of ChatGPT in Education"
 - Source: [[2025-kim-chatgpt-education-review-tkl]] (*Technology, Knowledge and Learning*, DOI 10.1007/s10758-025-09923-w; PDF-to-markdown extraction; full-text body of §§1–6 included, Figs. 1–5 + Appendix-A 52-row table partially summarised — see "Extraction scope" note in the raw)
-- Pages touched: [[2025-kim-chatgpt-education-review-tkl-analysis]] (new), [[cognitive-offloading]] (Appearances row), [[llm-tutoring-systems]] (new "Connected reviews" subsection), [[llm-tutoring-cognitive-offload]] (Evidence-so-far row), [[llm-tutoring-equity-impact]] (Evidence-so-far row)
+- Pages touched: [[2025-kim-chatgpt-education-review-tkl-summary]] (new), [[cognitive-offloading]] (Appearances row), [[llm-tutoring-systems]] (new "Connected reviews" subsection), [[llm-tutoring-cognitive-offload]] (Evidence-so-far row), [[llm-tutoring-equity-impact]] (Evidence-so-far row)
 - One-line synthesis: a content-analysis review of 52 empirical ChatGPT-in-education studies (Jan 2023–Dec 2024) **quantifies the methodological gap** — only 1/52 explicit RCT and 25% geographically unspecified, with the three RCT anchors already in this wiki (Vanzo/Bastani/Kestin) sitting *outside* the corpus due to the "ChatGPT" keyword + 7-journal venue filters; **load-bearing limit**: position-paper layering in §5 means the four pedagogical recommendations are framework-informed syntheses, not derivations from §4 counts.
 
 ## [2026-05-21] maintenance | readability sweep + prompt-ingest reconciliation across worked examples
 - Pages touched:
-  [[2024-anthropic-sparse-autoencoders-analysis]] (rewritten to meet
+  [[2024-anthropic-sparse-autoencoders-summary]] (rewritten to meet
   L2 §"Required analysis structure" — added 30-second TL;DR, How-to-
   read callout with §-anchor reading order, pipeline-flowchart
   Mermaid, Method × Headline × Baseline headline-numbers table, and
   the feature-splitting mechanism-level datum inside Evidence; added
   `mechanistic` methodology tag; promoted the demo-stand-in caveat to
   a proper `> [!note]` callout),
-  [[2024-vanzo-gpt4-homework-tutor-analysis]] (added the previously
+  [[2024-vanzo-gpt4-homework-tutor-summary]] (added the previously
   missing **Headline numbers table** — a "Result × Anchor" shape
   appropriate for Vanzo's positional contribution, concentrating the
   §4.3.2 engagement-mediation OLS `coef = −0.446 p = 0.666`, the
@@ -72,10 +72,10 @@ for entry format.
   plus [[2024-anthropic-sparse-autoencoders]] as an additional
   synthesised demo stand-in.
 - Pages touched:
-  [[2024-vanzo-gpt4-homework-tutor-analysis]],
-  [[2024-bastani-generative-ai-guardrails-analysis]],
-  [[2025-kestin-ai-tutoring-active-learning-analysis]],
-  [[2024-anthropic-sparse-autoencoders-analysis]],
+  [[2024-vanzo-gpt4-homework-tutor-summary]],
+  [[2024-bastani-generative-ai-guardrails-summary]],
+  [[2025-kestin-ai-tutoring-active-learning-summary]],
+  [[2024-anthropic-sparse-autoencoders-summary]],
   [[two-sigma-problem]], [[learning-guardrails]],
   [[cognitive-offloading]], [[intelligent-tutoring-system]],
   [[sparse-autoencoder]], [[mechanistic-interpretability]],

@@ -14,7 +14,13 @@ analysis_lens: [onboarding, reading-pathway, time-budget]
 tags: [onboarding, navigator, phd-guide, reading-pathway, demo, time-budgeted]
 aliases: ["how to read this domain", "PhD onboarding navigator", "AI education reading map", "research-papers reading pathway"]
 status: active
-compiled_against: 1
+compiled_against: 2
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-24
+    mode: in-place
+    notes: 'type stayed synthesis'
 ---
 
 # How to read this domain — a navigator for new PhD students and researchers
@@ -124,7 +130,7 @@ single reading note cannot.
 > [!faq]- Path B — 30 minutes (one paper, fully)
 >
 > Path A first, then read **one analysis end-to-end** —
-> [[2024-bastani-generative-ai-guardrails-analysis]] is the
+> [[2024-bastani-generative-ai-guardrails-summary]] is the
 > recommended choice because it is the densest worked example
 > (TL;DR + How-to-read + Mermaid + headline table + Claim + Method
 > + Evidence + Limits + Open questions + Wiki cross-references,
@@ -160,8 +166,8 @@ single reading note cannot.
 > [!faq]- Path C — 2 hours (the three-paper picture)
 >
 > Path B first, then read the other two analyses
-> ([[2025-kestin-ai-tutoring-active-learning-analysis]] and
-> [[2024-vanzo-gpt4-homework-tutor-analysis]]) and the
+> ([[2025-kestin-ai-tutoring-active-learning-summary]] and
+> [[2024-vanzo-gpt4-homework-tutor-summary]]) and the
 > cross-paper synthesis at
 > [[llm-tutoring-causal-evidence-2024-2025]].
 >
@@ -178,7 +184,7 @@ single reading note cannot.
 > 3. **Vanzo** (~15 min) — the cheap-design corner of the
 >    cost/evidence trade-off (one teacher-supplied topic line, no
 >    fine-tuning). See the quadrant chart in
->    [[2024-vanzo-gpt4-homework-tutor-analysis#Where this paper sits in the cost / evidence trade-off]].
+>    [[2024-vanzo-gpt4-homework-tutor-summary#Where this paper sits in the cost / evidence trade-off]].
 > 4. **Cross-paper synthesis** (~30 min) —
 >    [[llm-tutoring-causal-evidence-2024-2025]] braids the three
 >    into "what we now know" and "what we don't". The two
@@ -210,7 +216,7 @@ single reading note cannot.
 >
 > 1. Open [[2024-bastani-generative-ai-guardrails-pnas]] (the
 >    actual paper text) side-by-side with
->    [[2024-bastani-generative-ai-guardrails-analysis]] (the wiki
+>    [[2024-bastani-generative-ai-guardrails-summary]] (the wiki
 >    analysis). Pick three claims from the analysis (the −17%
 >    headline, the 56%→67% superficial-conversation drift in §3.B,
 >    the awareness-gap finding in §3.4) and verify each against
@@ -220,7 +226,7 @@ single reading note cannot.
 > 2. Repeat for **Vanzo** (note the §4.2.3 confidence drop and the
 >    §4.3.2 engagement-mediation OLS — both are easy to miss in
 >    summaries and both are now expanded in
->    [[2024-vanzo-gpt4-homework-tutor-analysis#Secondary findings (longitudinal + sub-population)]])
+>    [[2024-vanzo-gpt4-homework-tutor-summary#Secondary findings (longitudinal + sub-population)]])
 >    and **Kestin** (note the explicit list of seven best-practice
 >    pedagogical principles in the Discussion §"Designing successful
 >    student-AI interactions" — all seven are now itemised in
@@ -322,9 +328,9 @@ To save you wandering paths that aren't here:
   is the executable procedure that turns one raw paper into the
   cluster of wiki pages above.
 - **If you want the deeper PKM design philosophy:**
-  [`_system/MANUAL.md`](../../../_system/MANUAL.md) explains why
+  [`GUIDE.md`](../../../GUIDE.md) explains why
   the architecture looks like it does (why raw is immutable, why
-  L1+L2 schemas, why `analysis` is 1:1 with raw, etc.). MANUAL
+  L1+L2 schemas, why `analysis` is 1:1 with raw, etc.). GUIDE
   and AGENTS disagree only at the level of "explanation vs.
   contract"; AGENTS is normative.
 

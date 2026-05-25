@@ -6,6 +6,21 @@ The operation upgrades a `query`-produced Q&A artifact under
 `outputs/qa/` into a first-class wiki page, performing a controlled
 information-shape transform rather than a bare `git mv`.
 
+## What this command will write (schema contract)
+
+| Path                                              | When                                                      | Why                                                  |
+|---------------------------------------------------|-----------------------------------------------------------|------------------------------------------------------|
+| `domains/<X>/wiki/<folder>/<slug>.md`             | always (created via git mv from outputs/qa/)              | the promoted Q&A becomes a first-class wiki page     |
+| `outputs/qa/<source>.md`                          | always (the source Q&A is moved away)                     | git mv preserves history; `git log --follow` traces back |
+| `outputs/lint/<latest>.md`                        | when the latest lint report has a Human-review queue      | append residual issues from the promoted Q&A         |
+| `domains/<X>/log.md`                              | always                                                    | audit trail                                          |
+| `log.md`                                          | only when cross-domain                                    | global timeline                                      |
+
+> This table mirrors `densa.schema.OPERATIONS['promote'].writes`.
+> AGENTS011 warns on drift. Promote is **1:1**: one Q&A becomes one
+> wiki page; never batch multiple Q&As in a single promote commit.
+
+
 ## Input
 
 - **`<qa-path>`**: path to the Q&A file (`outputs/qa/<YYYY-MM-DD>-<slug>.md`).
@@ -49,7 +64,7 @@ prose:
   already point at real wiki/raw files.
 - Strip epistemic hedging ("I think", "似乎", "也许") **unless** the
   uncertainty itself is the knowledge being captured — in which
-  case promote to `type: question` with `arc_status: open`.
+  case promote to `type: open-question` with `arc_status: open`.
 
 **Stage 2 — Citation hoist.** Scan the body for every distinct
 `[[wikilink]]` and `[[raw-source]]`; deduplicate; write the list
@@ -59,13 +74,15 @@ design).
 
 **Stage 3 — L2 fill-in.** Apply target-type-specific frontmatter:
 
-| Target type    | Required L2 fields                                                              |
-| -------------- | ------------------------------------------------------------------------------- |
-| `concept`      | `first_appeared` (ask user), `last_validated: <today>`, `also_known_as: []`     |
-| `framework`    | `programme_start`, `programme_status: active \| dormant \| superseded`           |
-| `question`     | `arc_status: open \| partial \| answered`, `first_asked`                         |
-| `synthesis`    | (none beyond §3.1's `sources: ≥ 2`)                                              |
-| (universal)    | `compiled_against: 1`, `status: active`, `created: <today>`, `updated: <today>`, `domain: <inferred>`, `tags: […]` |
+| Target type      | Required L2 fields                                                              |
+| ---------------- | ------------------------------------------------------------------------------- |
+| `concept`        | `first_appeared` (ask user), `last_validated: <today>`, `also_known_as: []`     |
+| `overview`       | `programme_start`, `programme_status: active \| dormant \| superseded`           |
+| `open-question`  | `arc_status: open \| partial \| answered`, `first_asked`                         |
+| `synthesis`      | (none beyond the L1 cardinality `sources: ≥ 2`)                                  |
+| `comparison`     | (none beyond `sources: ≥ 2`)                                                     |
+| `entity`         | `last_validated: <today>`, `aliases: [...]` (and L2-specific lifecycle fields)   |
+| (universal)      | `compiled_against: 2`, `status: active`, `created: <today>`, `updated: <today>`, `domain: <inferred>`, `tags: […]` |
 
 **Stage 4 — Section restructure.** Load `_system/templates/<target-type>.md`
 and reorder the body to match the template's section outline. The
@@ -80,7 +97,7 @@ the report skeleton). The next `lint` run reconciles the queue.
 
 ```bash
 git mv outputs/qa/<YYYY-MM-DD>-<orig-slug>.md \
-       domains/<X>/wiki/<type>/<new-slug>.md
+       domains/<X>/wiki/<folder>/<new-slug>.md
 # rewrite frontmatter + body per Stage 1–4
 # append "Issues to surface" content to outputs/lint/<YYYY-MM-DD>.md
 # prepend log entries (see step 4)
@@ -88,7 +105,7 @@ git commit -m "promote: <new-slug> ← <YYYY-MM-DD>-<orig-slug>"
 ```
 
 The `git mv` is load-bearing: `git log --follow
-domains/<X>/wiki/<type>/<new-slug>.md` then traces the full Q&A
+domains/<X>/wiki/<folder>/<new-slug>.md` then traces the full Q&A
 history. Replacing the move with a new write + delete loses history.
 
 ### 4. Prepend to logs (per L1 §6 — newest first)
@@ -116,7 +133,7 @@ resolver excludes that directory by design.
   `--slug`; for N:1 merges, promote one Q&A and treat subsequent
   ones as `ingest`s that touch the new page.
 - **No `--in-place` mode.** The move is always `outputs/qa/` →
-  `domains/<X>/wiki/<type>/`; otherwise the AGENTS007 write-scope
+  `domains/<X>/wiki/<folder>/`; otherwise the AGENTS007 write-scope
   contract for `query` and `promote` would overlap.
 - **No autonomous promotion from `lint`.** `lint` may flag candidates
   in a "Promotion candidates" section, but only the human decides to

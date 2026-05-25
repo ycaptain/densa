@@ -37,10 +37,9 @@ normal [bug report issue](.github/ISSUE_TEMPLATE/bug_report.md).
 
 If you instantiate this template for sensitive material:
 
-- [ ] Wire the pre-commit hook: `git config core.hooksPath _system/hooks`.
+- [ ] Wire the pre-commit hook per [`README.md` §"Quickstart"](README.md#quickstart).
 - [ ] Configure encryption for any sensitive L2 before the first push:
-      see [`_system/SETUP.md`](_system/SETUP.md) §"Privacy: encrypt
-      sensitive raw/ with git-crypt".
+      see [`docs/setup.md` §"Privacy — sensitive material"](docs/setup.md#privacy--sensitive-material).
 - [ ] Verify encryption is active: `git-crypt status -e` should list
       every path you intended to encrypt.
 - [ ] Use a **second cold-backup remote** on a different provider
@@ -49,9 +48,10 @@ If you instantiate this template for sensitive material:
 - [ ] Store your GPG private key on a hardware token (YubiKey, Nitrokey)
       or in a vetted secrets manager. Loss of the key = loss of encrypted
       history. Never commit `.git-crypt/keys/default`.
-- [ ] Treat the LLM agent's web access as adversarial: per L1 §6, no
-      silent web fetches during ingest. Review every prompt-driven
-      enrichment before it lands in the wiki.
+- [ ] Treat the LLM agent's web access as adversarial: per the
+      [L1 red lines](AGENTS.md#6-red-lines-non-negotiable), no silent
+      web fetches during ingest. Review every prompt-driven enrichment
+      before it lands in the wiki.
 - [ ] **Treat `raw/` content as untrusted input to the LLM.** A clipped
       article, an ASR-transcribed call, or a web-clip can contain
       adversarial instructions targeting the agent ("ignore previous

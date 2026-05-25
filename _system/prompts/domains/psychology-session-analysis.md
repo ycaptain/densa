@@ -53,8 +53,8 @@ The three stages compose; do NOT shortcut to a single pass.
    process if the raw includes images, audio, or non-text data (per L1 §6
    multi-modal red line).
 4. **Draft** the appropriate template:
-   - therapy → [`_system/templates/psychology-analysis.md`](../../templates/psychology-analysis.md)
-   - psychiatry → [`_system/templates/psychiatry-analysis.md`](../../templates/psychiatry-analysis.md)
+   - therapy → [`attic/templates-v1/psychology-analysis.md`](../../../attic/templates-v1/psychology-analysis.md) (legacy v1 template; under v2 these become `type: summary` pages — see [`_system/templates/summary.md`](../../templates/summary.md))
+   - psychiatry → [`attic/templates-v1/psychiatry-analysis.md`](../../../attic/templates-v1/psychiatry-analysis.md) (legacy v1 template; same v2 note as above)
 5. **Do not write to disk yet.** Hold the draft in working memory.
 
 ### Stage 2 — Critique

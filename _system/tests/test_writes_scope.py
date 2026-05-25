@@ -257,7 +257,7 @@ class TestGlobMatcher:
         ("log.md", "log.md", True),
         ("domains/x/log.md", "domains/*/log.md", True),
         ("AGENTS.md", "AGENTS.md", True),
-        ("docs/DESIGN.md", "docs/**", True),
+        ("docs/setup.md", "docs/**", True),
         ("outputs/lint/2026-01-01.md", "outputs/**", True),
         ("README.md", "*.md", True),
         # ``*`` should not span path separators

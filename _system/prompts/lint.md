@@ -3,6 +3,21 @@
 Use this prompt body when the human says `lint` or `lint --domain <X>`.
 Canonical procedure for `/AGENTS.md` §2.3.
 
+## What this command will write (schema contract)
+
+| Path                                          | When                          | Why                                                  |
+|-----------------------------------------------|-------------------------------|------------------------------------------------------|
+| `outputs/lint/<YYYY-MM-DD>.md`                | always                        | the lint report itself                               |
+| `outputs/snapshots/index-snapshot.md`         | always                        | machine-readable index mirror (refreshed every lint) |
+| `domains/<X>/wiki/<page>.md`                  | additive auto-fix only        | missing cross-references / cross-domain tag / index entry |
+| `domains/<X>/log.md`                          | always                        | audit trail                                          |
+| `log.md`                                      | always                        | global lint timeline                                 |
+
+> This table mirrors `densa.schema.OPERATIONS['lint'].writes`.
+> AGENTS011 warns on drift. Destructive fixes (page deletion, rename,
+> rewrite) are *always* surfaced as human-review, never auto-applied.
+
+
 > **Note**: the pre-commit hook (`_system/hooks/pre-commit` →
 > `python -m densa --staged`) already enforces raw immutability,
 > `log.md` append-only, universal frontmatter presence, `analysis`
@@ -89,12 +104,12 @@ Canonical procedure for `/AGENTS.md` §2.3.
      Propose adding the tag (auto-applicable as an additive frontmatter
      fix). The global `index.md` Dataview block depends on this tag, so
      missing tags = invisible cross-pollination.
-   - **MANUAL ↔ AGENTS drift**: read `_system/MANUAL.md` §0
-     cheat-sheet table; for each row, locate the corresponding
-     canonical statement in `/AGENTS.md` (or `domains/<X>/AGENTS.md`).
-     If the two disagree, flag as `human-review`. AGENTS wins per L1 §1
-     authority rule, but the LLM should suggest the textual delta to
-     bring MANUAL back in line.
+   - **GUIDE ↔ AGENTS drift**: read `GUIDE.md` §"Cheat sheet" table;
+     for each row, locate the corresponding canonical statement in
+     `AGENTS.md` (or `domains/<X>/AGENTS.md`). If the two disagree,
+     flag as `human-review`. AGENTS wins per L1 §1 authority rule,
+     but the LLM should suggest the textual delta to bring GUIDE back
+     in line.
 6. **Domain-specific checks**: read the `Domain-specific lint rules`
    section in each `domains/<X>/AGENTS.md` and run those too.
 6.5. **Q&A spot-check ingestion**. Scan every `outputs/qa/*.md` for an

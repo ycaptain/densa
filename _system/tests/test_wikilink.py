@@ -80,7 +80,7 @@ def test_index_excludes_system_templates(tmp_path: Path) -> None:
     `_system/templates/concept.md` because every markdown file in the
     repo was indexed. The fix excludes WIKILINK_SKIP_TOP_LEVEL trees
     from the suffix index; the explicit-path fallback still resolves
-    `[[_system/MANUAL]]` though.
+    `[[_system/templates/concept]]` though (explicit-path fallback).
     """
     (tmp_path / "_system/templates").mkdir(parents=True)
     (tmp_path / "_system/templates/concept.md").write_text(
@@ -98,13 +98,17 @@ def test_index_excludes_system_templates(tmp_path: Path) -> None:
 
 
 def test_resolve_accepts_explicit_system_path(tmp_path: Path) -> None:
-    """`[[_system/MANUAL]]` resolves via the explicit-path fallback.
+    """`[[_system/templates/concept]]` resolves via the explicit-path fallback.
 
     Companion to test_index_excludes_system_templates: the index
     intentionally drops _system/ from suffix slots, but the explicit
     path index still surfaces it so users can wikilink schema docs.
     """
-    (tmp_path / "_system").mkdir()
-    (tmp_path / "_system/MANUAL.md").write_text("x", encoding="utf-8")
+    (tmp_path / "_system/templates").mkdir(parents=True)
+    (tmp_path / "_system/templates/concept.md").write_text(
+        "x", encoding="utf-8",
+    )
     idx = build_index(tmp_path)
-    assert resolve("_system/MANUAL", idx).status is ResolutionStatus.OK
+    assert (
+        resolve("_system/templates/concept", idx).status is ResolutionStatus.OK
+    )

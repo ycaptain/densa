@@ -158,6 +158,8 @@ class TestDiffMode:
     ) -> None:
         """A commit that only adds a new wiki page (no raw edits, no
         log changes) passes a `--diff HEAD^` check."""
+        from densa.config import SCHEMA_VERSION  # noqa: PLC0415
+
         self._init_repo_with_baseline(tmp_path)
         (tmp_path / "domains/x/wiki/concepts").mkdir(parents=True)
         (tmp_path / "domains/x/wiki/concepts/foo.md").write_text(
@@ -170,7 +172,7 @@ class TestDiffMode:
             "aliases: []\n"
             "tags: []\n"
             "status: active\n"
-            "compiled_against: 1\n"
+            f"compiled_against: {SCHEMA_VERSION}\n"
             "---\n# Foo\n",
             encoding="utf-8",
         )

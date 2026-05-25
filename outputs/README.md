@@ -13,6 +13,12 @@ Layout:
 | `snapshots/`   | `lint` op | `index-snapshot.md` machine-readable index mirror     | overwritten each run        |
 | `qa/`          | `query` op | `<YYYY-MM-DD>-<slug>.md` Q&A archives (`type: report`) | one per substantive query   |
 
+> **On-demand creation.** `lint/` and `qa/` don't ship in a fresh
+> fork — the agent creates them the first time it writes a report or
+> Q&A artifact. `snapshots/` ships pre-populated (it carries the
+> bootstrap `index-snapshot.md` that the LLM onboarding set in
+> [AGENTS.md §1.1](../AGENTS.md) points at).
+
 The canonical onboarding entry for fresh LLM sessions is
 [`outputs/snapshots/index-snapshot.md`](snapshots/) (see
 [AGENTS.md §1.1](../AGENTS.md)).

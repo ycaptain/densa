@@ -25,7 +25,7 @@ on:
       - ".github/pull_request_template.md"
 
 # Two jobs, one workflow:
-# - `validate` runs the densa AGENTS001-009 rules on every change
+# - `validate` runs the densa AGENTS001-012 rules on every change
 #   (file + staged + PR-diff scope). This is the gate every PR must clear.
 # - `tests` runs pytest/ruff/mypy across the Python matrix. Only kicks in
 #   when the validator code, templates, prompts, or schema changes —

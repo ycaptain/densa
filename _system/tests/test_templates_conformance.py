@@ -36,17 +36,28 @@ REQUIRED_UNIVERSAL: frozenset[str] = frozenset({
     "compiled_against",
 })
 
-# AGENTS.md §3.3 — these `type` values MUST also carry `last_validated`.
+# AGENTS.md §3.3 — these v2 `type` values MUST also carry `last_validated`
+# (pages with no built-in raw anchor). Schema v1's `framework` / `protocol`
+# collapsed into `concept` and `overview` during the v2 migration.
 REQUIRES_LAST_VALIDATED: frozenset[str] = frozenset({
     "concept",
-    "framework",
-    "protocol",
     "entity",
+})
+
+# These templates are *not* wiki-page seeds and so are exempt from the
+# universal frontmatter contract:
+# - vault-readme.md: a vault-level README skeleton copied to the repo
+#   root during bootstrap (Step 7); has only an HTML usage comment.
+NOT_WIKI_TEMPLATES: frozenset[str] = frozenset({
+    "vault-readme.md",
 })
 
 
 def _all_templates() -> list[Path]:
-    return sorted(TEMPLATES_DIR.glob("*.md"))
+    return sorted(
+        p for p in TEMPLATES_DIR.glob("*.md")
+        if p.name not in NOT_WIKI_TEMPLATES
+    )
 
 
 @pytest.mark.parametrize(
@@ -102,9 +113,10 @@ def test_domain_is_placeholder_or_psychology_l2_specific(
         )
     elif name.startswith("writing-"):
         # writing/ is an opt-in workspace outside the L2 schema (see
-        # DESIGN.md §"Optional layers"); its templates hard-code
-        # `domain: writing` for symmetry, but the tree is excluded from
-        # AGENTS003/006 enforcement via WIKILINK_SKIP_TOP_LEVEL.
+        # docs/reference/design-rationale.md §"Optional layers"); its
+        # templates hard-code `domain: writing` for symmetry, but the
+        # tree is excluded from AGENTS003/006 enforcement via
+        # WIKILINK_SKIP_TOP_LEVEL.
         assert domain == "writing", (
             f"{name}: writing-* template should declare `domain: writing`"
         )

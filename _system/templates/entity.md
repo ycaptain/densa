@@ -9,7 +9,7 @@ sources: []
 aliases: []
 tags: []
 status: active
-compiled_against: 1
+compiled_against: 2
 last_validated: <% tp.date.now("YYYY-MM-DD") %>
 ---
 
@@ -30,9 +30,10 @@ represent in the wiki.
 
 - YYYY-MM-DD — [[<source>]] — short note
 
-## Patterns and themes they participate in
+## Recurring threads they participate in
 
-<!-- Wikilinks to [[pattern-…]] or [[theme-…]] pages. -->
+<!-- Wikilinks to [[concept-…]] / [[synthesis-…]] / [[overview-…]]
+pages this entity recurs in. -->
 
 ## Open questions
 

@@ -7,23 +7,29 @@ sources: [
   "[[2024-vanzo-gpt4-homework-tutor-eth]]",
   "[[2024-bastani-generative-ai-guardrails-pnas]]",
   "[[2025-kestin-ai-tutoring-active-learning-harvard]]",
-  "[[2024-vanzo-gpt4-homework-tutor-analysis]]",
-  "[[2024-bastani-generative-ai-guardrails-analysis]]",
-  "[[2025-kestin-ai-tutoring-active-learning-analysis]]"
+  "[[2024-vanzo-gpt4-homework-tutor-summary]]",
+  "[[2024-bastani-generative-ai-guardrails-summary]]",
+  "[[2025-kestin-ai-tutoring-active-learning-summary]]"
 ]
 tags: [synthesis, llm-tutoring, rct, evidence-arc, replication, cross-paper]
 aliases: ["LLM tutoring evidence arc 2024-2025", "AI education RCT synthesis"]
 status: active
-compiled_against: 1
+compiled_against: 2
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-24
+    mode: in-place
+    notes: 'type stayed synthesis'
 ---
 
 # LLM tutoring — the 2024-2025 causal-evidence arc
 
 > Cross-paper synthesis weaving the three RCT-grade papers currently
 > ingested into this domain
-> ([[2024-vanzo-gpt4-homework-tutor-analysis|Vanzo 2024]] /
-> [[2024-bastani-generative-ai-guardrails-analysis|Bastani 2024]] /
-> [[2025-kestin-ai-tutoring-active-learning-analysis|Kestin 2025]])
+> ([[2024-vanzo-gpt4-homework-tutor-summary|Vanzo 2024]] /
+> [[2024-bastani-generative-ai-guardrails-summary|Bastani 2024]] /
+> [[2025-kestin-ai-tutoring-active-learning-summary|Kestin 2025]])
 > into a single picture of what is *known*, what is *known-unknown*,
 > and what should be tested next.
 
@@ -46,13 +52,13 @@ causal — not just correlational — evidence on whether LLMs help or
 hurt learning**. Read in sequence they tell a coherent and
 non-trivial story: cheap-design LLM homework tutors **improve
 short-term engagement and narrow skill gains**
-([[2024-vanzo-gpt4-homework-tutor-analysis|Vanzo]]); naive in-class
+([[2024-vanzo-gpt4-homework-tutor-summary|Vanzo]]); naive in-class
 deployments **measurably harm retained skill, while pedagogically
 guardrailed prompts neutralise the harm without delivering uplift**
-([[2024-bastani-generative-ai-guardrails-analysis|Bastani]]); and
+([[2024-bastani-generative-ai-guardrails-summary|Bastani]]); and
 deeply pedagogy-aware prompts **can exceed the best-practice
 active-learning classroom on matched learning outcomes**
-([[2025-kestin-ai-tutoring-active-learning-analysis|Kestin]]). The
+([[2025-kestin-ai-tutoring-active-learning-summary|Kestin]]). The
 load-bearing variable across all three is **design depth**, not
 model strength.
 
@@ -74,7 +80,7 @@ the harm or the promise.
 
 ## Cross-paper comparison
 
-| Axis                                    | [[2024-vanzo-gpt4-homework-tutor-analysis\|Vanzo 2024]] | [[2024-bastani-generative-ai-guardrails-analysis\|Bastani 2024]]                 | [[2025-kestin-ai-tutoring-active-learning-analysis\|Kestin 2025]]              |
+| Axis                                    | [[2024-vanzo-gpt4-homework-tutor-summary\|Vanzo 2024]] | [[2024-bastani-generative-ai-guardrails-summary\|Bastani 2024]]                 | [[2025-kestin-ai-tutoring-active-learning-summary\|Kestin 2025]]              |
 | --------------------------------------- | --------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
 | Sample                                  | 4 classes, Italian high school (ESL)                | ~1,000 students, Turkish high school (math)                                     | N=194 Harvard undergrads (physics)                                             |
 | Randomisation unit                      | Class                                               | Classroom (clustered SEs)                                                       | Within-subject crossover                                                       |
@@ -92,7 +98,7 @@ the harm or the promise.
 1. **Naive ChatGPT-style access during practice is empirically a
    net negative for skill acquisition**, at least in K-12
    mathematics within one term. The
-   [[2024-bastani-generative-ai-guardrails-analysis|Bastani −17% exam penalty]]
+   [[2024-bastani-generative-ai-guardrails-summary|Bastani −17% exam penalty]]
    is the strongest single causal estimate in the programme.
 2. **Pedagogical [[learning-guardrails|guardrails]] reliably
    neutralise the harm** of naive access — this is the most robust
@@ -108,7 +114,7 @@ the harm or the promise.
    prompt and curriculum design, not by which frontier model is
    loaded.
 6. **Deep pedagogical design**
-   ([[2025-kestin-ai-tutoring-active-learning-analysis|Kestin's pedagogy-aware prompt]])
+   ([[2025-kestin-ai-tutoring-active-learning-summary|Kestin's pedagogy-aware prompt]])
    can move LLM tutoring from "match-the-control" to "exceed the
    best classroom" — at least within a single-site, two-topic,
    two-week test.
@@ -130,7 +136,7 @@ the harm or the promise.
 4. **Whether guardrail authoring cost can be amortised.** The
    positive results depend on expert prompt design; the
    cheap-design positive
-   ([[2024-vanzo-gpt4-homework-tutor-analysis|Vanzo]])
+   ([[2024-vanzo-gpt4-homework-tutor-summary|Vanzo]])
    is also the one most exposed to the missing-retention-test
    critique. See [[llm-tutoring-equity-impact]].
 5. **The Bastani–Kestin reconciliation.** Bastani's GPT Tutor only
@@ -170,9 +176,9 @@ How much weight should each finding carry in current policy thinking?
 
 | Date    | Source                                                                                       | What it adds                                                                          |
 | ------- | -------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| 2024-09 | [[2024-vanzo-gpt4-homework-tutor-analysis]]                                                  | Cheap-design positive; K-12 ESL; no retention test                                    |
-| 2024-fall → 2025 | [[2024-bastani-generative-ai-guardrails-analysis]]                                   | Pre-registered, large-N; naive AI harm + guardrails neutralise; awareness gap          |
-| 2025    | [[2025-kestin-ai-tutoring-active-learning-analysis]]                                          | Within-subject crossover; pedagogy-aware AI exceeds active learning                    |
+| 2024-09 | [[2024-vanzo-gpt4-homework-tutor-summary]]                                                  | Cheap-design positive; K-12 ESL; no retention test                                    |
+| 2024-fall → 2025 | [[2024-bastani-generative-ai-guardrails-summary]]                                   | Pre-registered, large-N; naive AI harm + guardrails neutralise; awareness gap          |
+| 2025    | [[2025-kestin-ai-tutoring-active-learning-summary]]                                          | Within-subject crossover; pedagogy-aware AI exceeds active learning                    |
 | TODO    | LearnLM / Eedi UK RCT (Google DeepMind 2025) — *not yet ingested*                            | Adds human-in-the-loop design; +5.5pp on novel-problem transfer                       |
 | TODO    | Khanmigo Puerto Rico pilot (Digital Promise 2024) — *not yet ingested*                       | Equity-focused; positive engagement, mixed learning; infrastructure constraints        |
 | TODO    | Khanmigo physics concepts RCT (Asuncion-Sapida et al. 2024) — *not yet ingested*             | Null on learning gains vs. Google search control; design-dependence echo               |

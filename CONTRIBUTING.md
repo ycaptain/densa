@@ -22,7 +22,7 @@ If you want to contribute but don't have an itch yet:
 - A typo or clarity fix anywhere in `docs/`, `_system/`, or the
   README.
 - A new pytest case under `_system/tests/` exercising an edge case
-  one of the AGENTS001–009 rules currently doesn't catch.
+  one of the AGENTS001–012 rules currently doesn't catch.
 - A worked example seed L2 (see *Adding an example L2 domain* below).
 
 ## 🛠 Before submitting a PR
@@ -36,12 +36,13 @@ session runs.
 
 ```bash
 pip install -e ".[dev]"               # installs pytest + ruff + mypy + nox + pyyaml
-git config core.hooksPath _system/hooks
-git config --get core.hooksPath       # sanity check; should print: _system/hooks
 ```
 
-The pre-commit hook itself is **pure stdlib** — it doesn't need the
-`[dev]` extra. Install is only for the validator's own dev suite.
+Wire the pre-commit hook per
+[`README.md` §"Quickstart"](README.md#quickstart) (one
+`git config core.hooksPath _system/hooks` line). The hook itself is
+**pure stdlib** — it doesn't need the `[dev]` extra. Install is only
+for the validator's own dev suite.
 
 ### Run every gate CI runs
 
@@ -77,7 +78,7 @@ nox -s ruff-fix                     # auto-apply ruff fixes
 
 ### Commit message convention
 
-Follow [`AGENTS.md`](AGENTS.md) §9:
+Follow [`AGENTS.md` §"Versioning"](AGENTS.md#9-versioning):
 
 ```
 <op>(<scope>): <short summary>
@@ -99,7 +100,9 @@ branch.
 The validator classifies commits by their leading prefix
 (`ingest(<domain>):`, `query:`, `lint:`, `process-inbox:`,
 `promote:`, or no recognised prefix). Each class has its own allowed
-write scope — see [`AGENTS.md`](AGENTS.md) §2.0. The most common
+write scope — see
+[`AGENTS.md` §"Operation writes"](AGENTS.md#20-operation-writes-machine-enforced-via-agents007).
+The most common
 first-commit rejection looks like:
 
 ```
@@ -136,7 +139,9 @@ two-commit fix is almost always cleaner.
 
 ## ⚠️ Red lines (will block merge)
 
-These mirror the L1 contract in [`AGENTS.md`](AGENTS.md) §6. Do not:
+These mirror the L1 contract in
+[`AGENTS.md` §"Red lines"](AGENTS.md#6-red-lines-non-negotiable).
+Do not:
 
 - Edit, rename, move, or delete anything under `*/raw/`.
 - Rewrite past entries in any `log.md` (newest entry goes immediately
@@ -168,8 +173,8 @@ Changes here have outsized blast radius. Before opening a PR:
 The repo ships three example L2s (`research-papers`, `workspace`,
 `psychology`) covering light/medium/heavy schema density across
 distinct working subjects. See
-[`docs/EXAMPLE-DOMAINS.md`](docs/EXAMPLE-DOMAINS.md) for the
-per-domain matrix.
+[`docs/setup.md` §"Choosing or replacing the default domain"](docs/setup.md#choosing-or-replacing-the-default-domain)
+for the per-domain matrix.
 
 New seed L2s are welcome — open a
 [`domain-design-help`](.github/ISSUE_TEMPLATE/domain-design-help.md)

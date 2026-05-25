@@ -1,13 +1,16 @@
 """Tests for AGENTS009 — compiled_against vs SCHEMA_VERSION.
 
-At schema_version=1 the rule is a near-no-op (only fires for the
-hypothetical case of a page declaring compiled_against=0 or below). The
-tests pin the contract so that v2 migrations have a ready audit gate.
+AGENTS009 (this rule) warns when a page lags the current
+SCHEMA_VERSION; AGENTS010 (``schema_version_consistency``) escalates
+to error when the lagging page lives outside ``.legacy/``. Tests pin
+the contract independently of the current SCHEMA_VERSION value so
+schema bumps don't require touching them.
 """
 
 from __future__ import annotations
 
 from densa.checks.compiled_against_lag import CompiledAgainstCurrent
+from densa.config import SCHEMA_VERSION
 from densa.report import Report, Severity
 
 _EMPTY_INDEX: dict[str, list[str]] = {}
@@ -35,7 +38,7 @@ class TestCompiledAgainstCurrent:
         report = Report()
         CompiledAgainstCurrent().visit(
             "domains/x/wiki/concepts/foo.md",
-            _page(1),
+            _page(SCHEMA_VERSION),
             _EMPTY_INDEX,
             report,
         )
@@ -45,7 +48,7 @@ class TestCompiledAgainstCurrent:
         report = Report()
         CompiledAgainstCurrent().visit(
             "domains/x/wiki/concepts/foo.md",
-            _page(0),
+            _page(SCHEMA_VERSION - 1),
             _EMPTY_INDEX,
             report,
         )

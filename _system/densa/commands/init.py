@@ -71,8 +71,8 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:  # type: ignore[
         choices=("cursor", "claude-code", "codex", "auto", "none"),
         default="none",
         help=(
-            "after bootstrap, inject docs/bootstrap-prompt.md into the "
-            "named AI agent. `auto` detects which agent's CLI is on "
+            "after bootstrap, inject _system/prompts/bootstrap.md into "
+            "the named AI agent. `auto` detects which agent's CLI is on "
             "PATH; `none` (default) just prints next-step instructions."
         ),
     )
@@ -266,7 +266,7 @@ def _print_next_steps(dest: Path, auto_inject: str) -> None:
     print("      pointing at your fork, when you're ready to push.)")
     if auto_inject == "none":
         print("  3. Open the folder in Cursor / Claude Code / Codex / Cline")
-        print("     and paste docs/bootstrap-prompt.md into the chat.")
+        print("     and paste _system/prompts/bootstrap.md into the chat.")
     else:
         print("  3. We'll inject the bootstrap prompt into your agent now...")
     print()

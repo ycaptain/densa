@@ -183,7 +183,7 @@ first pass — bake them in):
   (and only when) it carries paper-specific numerical mechanism data
   that would not transplant cleanly into a concept-page diagram. The
   worked example is
-  [[2024-bastani-generative-ai-guardrails-analysis|Bastani 2024]],
+  [[2024-bastani-generative-ai-guardrails-summary|Bastani 2024]],
   whose Evidence-section flowchart attaches the +48% / +127% /
   −17% / −0.4% headline numbers to each arm's outcome — that
   paper-specific numeric content is precisely why it does not belong
@@ -415,16 +415,16 @@ output a "done" message.
 When in doubt about depth or voice, open one of these analyses and
 copy the structural shape:
 
-- [[2024-bastani-generative-ai-guardrails-analysis]] — the fully-
+- [[2024-bastani-generative-ai-guardrails-summary]] — the fully-
   worked multi-arm RCT example; mechanism flowchart + headline
   table + How-to-read all visible.
-- [[2025-kestin-ai-tutoring-active-learning-analysis]] — crossover-
+- [[2025-kestin-ai-tutoring-active-learning-summary]] — crossover-
   design example; shows how the diagram makes a within-subject
   design legible at a glance.
-- [[2024-vanzo-gpt4-homework-tutor-analysis]] — single-site,
+- [[2024-vanzo-gpt4-homework-tutor-summary]] — single-site,
   smaller-N example; shows the `quadrantChart` use for positioning
   one paper against its sub-literature.
-- [[2024-anthropic-sparse-autoencoders-analysis]] — mechanism /
+- [[2024-anthropic-sparse-autoencoders-summary]] — mechanism /
   technique example (interpretability, not education); shows the
   **pipeline flowchart** pattern (encoder → sparse latent → decoder,
   with the L1 + MSE loss signal as a sub-graph), plus the

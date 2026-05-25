@@ -38,7 +38,7 @@ class TestFrontmatterRequiredKeysScope:
         "_system/templates/concept.md",
         "_system/prompts/ingest.md",
         "AGENTS.md",
-        "docs/DESIGN.md",
+        "docs/setup.md",
         "inbox/dropped.md",
         "attic/legacy.md",
         "outputs/README.md",  # explicitly exempt

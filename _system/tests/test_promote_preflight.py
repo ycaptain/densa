@@ -30,6 +30,21 @@ def agents_md() -> str:
     return (repo / "AGENTS.md").read_text(encoding="utf-8")
 
 
+@pytest.fixture(scope="module")
+def operation_scopes_md() -> str:
+    """The per-prefix write-scope table lives in the reference doc."""
+    repo = Path(__file__).resolve().parents[2]
+    path = repo / "docs" / "reference" / "operation-scopes.md"
+    return path.read_text(encoding="utf-8")
+
+
+@pytest.fixture(scope="module")
+def guide_md() -> str:
+    """The natural-language → operation mapping table lives in GUIDE.md."""
+    repo = Path(__file__).resolve().parents[2]
+    return (repo / "GUIDE.md").read_text(encoding="utf-8")
+
+
 class TestPromotePromptExists:
     def test_prompt_file_present(self) -> None:
         repo = Path(__file__).resolve().parents[2]
@@ -101,14 +116,24 @@ class TestAgentsMdAlignment:
     def test_agents_md_mentions_promote(self, agents_md: str) -> None:
         assert "promote" in agents_md.lower()
 
-    def test_agents_md_workflow_table_lists_promote(
-        self, agents_md: str,
+    def test_workflow_table_lists_promote(
+        self, guide_md: str,
     ) -> None:
-        """§8 workflow table picks up the new trigger pattern."""
-        assert "promote (§2.5)" in agents_md
+        """The natural-language → operation mapping table picks up the
+        new trigger pattern. The table lived in AGENTS.md §8 in v0.2.0
+        and earlier; it moved to GUIDE.md §"Mapping natural language to
+        operations" in the post-0.2.0 onboarding cleanup so AGENTS.md
+        stays contract-only.
+        """
+        assert "promote (§2.5)" in guide_md
 
-    def test_agents_md_writes_table_lists_promote(
-        self, agents_md: str,
+    def test_operation_scopes_lists_promote(
+        self, operation_scopes_md: str,
     ) -> None:
-        """§2.0 OPERATION_WRITES table includes a `promote` row."""
-        assert "| promote" in agents_md
+        """The per-prefix write-scope reference table includes promote.
+
+        AGENTS.md §2.0 keeps the headline; the full table moved to
+        docs/reference/operation-scopes.md when AGENTS.md was trimmed
+        to a contract-only file.
+        """
+        assert "promote" in operation_scopes_md.lower()

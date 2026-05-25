@@ -7,7 +7,7 @@ sources: []
 aliases: []
 tags: []
 status: active
-compiled_against: 1
+compiled_against: 2
 last_validated: <% tp.date.now("YYYY-MM-DD") %>
 ---
 

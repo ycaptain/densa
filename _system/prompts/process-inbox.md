@@ -6,6 +6,26 @@ This is **one of the five canonical operations** alongside
 un-classified material that has been parked in `/inbox/`. See
 [`/AGENTS.md`](../../AGENTS.md) §2.4.
 
+> **`inbox/` is created on demand.** A fresh fork has no `inbox/`
+> directory; it materialises the first time the human drops an
+> un-routed clip (typically via Obsidian Web Clipper). If the user
+> runs `process-inbox` with no `inbox/` present, reply "nothing to
+> triage — `inbox/` does not exist yet" and exit; do not create the
+> directory speculatively.
+
+## What this command will write (schema contract)
+
+| Path                                       | When     | Why                                                  |
+|--------------------------------------------|----------|------------------------------------------------------|
+| `domains/<X>/raw/<bucket>/<slug>`          | always   | git mv from inbox/ into the correct raw bucket       |
+| `domains/<X>/log.md`                       | always   | audit trail of the move                              |
+| `log.md`                                   | always   | global timeline                                      |
+
+> This table mirrors `densa.schema.OPERATIONS['process-inbox'].writes`.
+> AGENTS011 warns on drift. `process-inbox` never touches `wiki/**` —
+> it only files raw material; ingest (§2.1) is the next, separate step.
+
+
 ## Input
 
 - **Scope**: every file in `/inbox/` whose name does not start with `.`.

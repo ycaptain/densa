@@ -8,8 +8,10 @@ assignees: ""
 
 > Use this template when you want feedback on a new L2 you're standing
 > up in your own vault. We'll work through the four design questions
-> from [`docs/DESIGN.md`](../../docs/DESIGN.md) §"How to design your
-> own L2" together. Answer what you can; leave the rest blank.
+> from
+> [`docs/reference/design-rationale.md`](../../docs/reference/design-rationale.md)
+> §"How to design your own L2" together. Answer what you can; leave
+> the rest blank.
 
 ## Domain in one sentence
 
@@ -43,27 +45,24 @@ domains/<your-domain>/
 
 ## 3. Page types
 
-Which subset of L1's allowed types does this domain use?
-Any domain-specific types you need that aren't in L1? (Rare — please
-justify.)
+Which subset of L1's nine allowed types does this domain use?
+L1 v2 is a *closed* enum (`type:` cannot be invented) — sub-
+categorise within an existing type via L2-specific `kind:` fields
+rather than proposing a new top-level type.
 
-- [ ] source / session
+- [ ] source
+- [ ] summary
 - [ ] entity
 - [ ] concept
-- [ ] pattern
-- [ ] theme
-- [ ] framework
-- [ ] analysis
+- [ ] comparison
+- [ ] overview
 - [ ] synthesis
-- [ ] protocol
-- [ ] experiment
-- [ ] project
-- [ ] stakeholder
-- [ ] decision
-- [ ] question
-- [ ] fleeting
-- [ ] correction
-- New L2-specific type(s): <!-- list with justification -->
+- [ ] open-question
+- [ ] report
+- L2-specific `kind:` sub-categories you'd want
+  (e.g. `entity_kind: project / decision`, `concept_kind: pattern`):
+  <!-- list -->
+
 
 ## 4. L2-required frontmatter additions
 

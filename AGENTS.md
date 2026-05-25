@@ -1,293 +1,240 @@
 ---
 type: schema
 scope: L1
-schema_version: 1
-updated: 2026-04-30
+schema_version: 2
+updated: 2026-05-24
 ---
 
-# AGENTS.md — LLM Wiki (Karpathy pattern)
+# AGENTS.md — Densa L1 schema
 
-You are the maintainer of an Obsidian-based personal knowledge base built on
-Andrej Karpathy's `llm-wiki` pattern. This file is the **L1 schema**: it
-defines the universal contract every domain inherits. Each
-`domains/<X>/AGENTS.md` is an **L2** override/extension; treat conflicts as
-L2 wins inside that domain.
+You are the maintainer of an Obsidian-based personal knowledge base
+built on Andrej Karpathy's
+[llm-wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f).
+This file is the **L1 schema**: it defines the universal contract
+every domain inherits. Each `domains/<X>/AGENTS.md` is an **L2**
+override/extension; treat conflicts as L2-wins inside that domain.
 
-> **Core insight.** Wiki is the codebase, Obsidian is the IDE, you (the LLM) are
-> the programmer. The human curates sources, asks questions, and reviews — they
-> never write the wiki. You do all bookkeeping: summarising, cross-referencing,
-> filing, deduplicating.
+> **Core insight.** Wiki is the codebase, Obsidian is the IDE, you
+> (the LLM) are the programmer. The human curates sources, asks
+> questions, and reviews — they never write the wiki. You do all
+> bookkeeping: summarising, cross-referencing, filing, deduplicating.
+
+> **Vocabulary lineage.** Every page-type name in this schema —
+> `summary`, `entity`, `concept`, `comparison`, `overview`,
+> `synthesis`, `open-question` — comes verbatim from Karpathy's
+> gist. Side-by-side glossary:
+> [`docs/reference/karpathy-mapping.md`](docs/reference/karpathy-mapping.md).
+
+This file states the **contract** in the smallest readable form.
+The machine-readable source of truth lives in
+[`_system/densa/schema.py`](_system/densa/schema.py); when prose
+and Python disagree, the Python wins (AGENTS011 catches drift).
+Long-form rationale and tables live under
+[`docs/reference/`](docs/reference/); load them on demand.
 
 ## 1. Layered architecture
 
+Three semantic layers per domain:
+
 ```
-<vault>/
-├── AGENTS.md                    ← you are here (L1 schema)
-├── index.md                     ← global content map
-├── log.md                       ← global append-only timeline
-├── inbox/                       ← optional: un-routed material (see §2.4)
-├── outputs/                     ← operation artifacts (in git, not in wikilink graph)
-│   ├── lint/<YYYY-MM-DD>.md     ←   lint reports (type: report)
-│   ├── snapshots/index-snapshot.md  ← machine-readable index mirror (§1.1)
-│   └── qa/<YYYY-MM-DD>-<slug>.md ←  query Q&A archives (type: report)
-├── _system/
-│   ├── MANUAL.md                ← human-facing user manual (explanatory)
-│   ├── SETUP.md                 ← one-time install / plugin setup
-│   ├── prompts/{ingest,query,lint,process-inbox,promote}.md  ← reusable command bodies
-│   ├── prompts/domains/         ← domain-specific sub-prompts
-│   ├── templates/               ← Templater page templates
-│   ├── scripts/                 ← install + migration scripts (`migrate_NN_<slug>.py` per §3.2)
-│   ├── hooks/pre-commit         ← stdlib-only shim → `python -m densa --staged`
-│   ├── densa/                  ← Python validator package (enforces AGENTS00N rules; see §6)
-│   └── tests/                   ← pytest suite for densa
-├── integrations/                ← (optional) agent-specific UX add-ons (e.g. claude-code)
-├── projects/                    ← (optional) multi-week research workspaces
-├── writing/                     ← (optional) drafts/<slug>.md + published/<slug>.md
-├── domains/<X>/
-│   ├── AGENTS.md                ← L2 schema (persona + ontology)
-│   ├── index.md                 ← per-domain content map
-│   ├── log.md                   ← per-domain timeline
-│   ├── raw/                     ← READ ONLY: source material
-│   └── wiki/                    ← LLM-owned synthesised pages
-│       ├── (typed buckets per L2 — entities/, concepts/, patterns/, ...)
-│       ├── questions/           ← optional: long-lived questions to chase (PKM capture-side)
-│       └── .legacy/             ← optional: pre-redo snapshots from bulk re-ingest (§6)
-└── attic/                       ← deprecated / quarantined files
+domains/<X>/
+├── AGENTS.md   ← L2 schema (persona + ontology)
+├── raw/        ← READ ONLY: source material (immutable)
+└── wiki/       ← LLM-owned synthesised pages
+    ├── overview.md         ← per-domain reader entry
+    └── {summaries, entities, concepts, comparisons,
+         overviews, syntheses, open-questions}/
 ```
 
-> **`outputs/` vs `wiki/`.** Files under `outputs/` are *rebuildable
-> artifacts* — lint reports (`outputs/lint/`), index snapshots
-> (`outputs/snapshots/`), and query Q&A archives (`outputs/qa/`). They
-> live in git so the audit trail is intact across machines, but the
-> wikilink resolver ignores them: wiki pages never cite outputs. Stale
-> artifacts can be deleted manually (`git rm outputs/lint/<old>.md`)
-> without breaking any wiki link. When a Q&A in `outputs/qa/` earns
-> wiki-grade status, run `promote <qa-path>` (§2.5) to perform a
-> controlled lift into the wiki — never copy by hand.
-
-> **Authority.** `AGENTS.md` files (L1 + L2) are the **normative** schema —
-> machine-readable contracts the LLM must obey. `_system/MANUAL.md` is
-> **explanatory** (why the design looks like this, scenario walkthroughs,
-> FAQ); when MANUAL and AGENTS disagree, AGENTS wins.
+Beyond `domains/`, the vault holds: schema docs (`AGENTS.md`,
+`GUIDE.md`), the validator package (`_system/densa/`), operation
+prompts (`_system/prompts/`), templates (`_system/templates/`),
+operation artifacts (`outputs/`), and opt-in worked examples
+(`examples/`). Full annotated tree:
+[`docs/reference/repository-layout.md`](docs/reference/repository-layout.md).
 
 Three responsibilities per domain:
-- `raw/` — immutable source of truth. Articles, transcripts, screenshots,
-  PDFs. Never edited, never deleted.
-- `wiki/` — your output. Entities, concepts, patterns, syntheses. Fully owned
-  and rewritten by the LLM.
-- `AGENTS.md` — the rules book. Co-evolved with the human.
 
-## 1.1 Minimal onboarding set (for a fresh LLM session)
+- `raw/` — immutable source of truth.
+- `wiki/` — your output; LLM-owned, rewritten freely.
+- `AGENTS.md` — the rules book.
 
-A new Cursor / Claude Code / Codex session can safely operate this
-vault after reading **exactly four** files. Loading more is wasteful;
-loading fewer leads to schema violations.
+> **`outputs/` vs `wiki/`.** Files under `outputs/` are *rebuildable
+> artifacts* (lint reports, index snapshots, Q&A archives). They live
+> in git but the wikilink resolver ignores them. Wiki pages never
+> cite outputs. When a Q&A in `outputs/qa/` earns wiki-grade status,
+> run `promote <qa-path>` (§2.5) — never copy by hand.
+
+> **Authority.** `AGENTS.md` files (L1 + L2) are the **normative**
+> schema. `GUIDE.md` is **explanatory** (day-in-the-life, FAQ); when
+> GUIDE and AGENTS disagree, AGENTS wins.
+
+### 1.1 Minimal onboarding set (for a fresh LLM session)
+
+> **This section is the onboarding contract for the LLM, not for a
+> human reader.** Humans enter at [`README.md`](README.md) §"Pick
+> your path"; the four-file set below is what a fresh agent session
+> loads before doing any work.
+
+A new Cursor / Claude Code / Codex session operates this vault after
+reading **exactly four** files:
 
 1. `/AGENTS.md` (this file) — L1 contract.
 2. `domains/<active-X>/AGENTS.md` — L2 contract for the domain in
-   scope. If the user's request is cross-domain, read all relevant L2
-   files; if no domain is implied, defer reading L2 until routing
-   resolves it (per §5).
-3. `_system/prompts/<op>.md` — the prompt for the operation about
-   to be run (`ingest` / `query` / `lint` / `process-inbox` /
-   `promote`). For `ingest`, also glob
+   scope. Cross-domain requests read all relevant L2s; if no domain
+   is implied, defer reading L2 until §5 routing resolves it.
+3. `_system/prompts/<op>.md` — the prompt for the operation being
+   run. For `ingest`, also glob
    `_system/prompts/domains/<domain>-*-analysis.md` and read any
-   matching domain-specific sub-prompt before drafting the plan
-   (per `_system/prompts/ingest.md` step 4.5); these carry the
-   load-bearing per-domain procedure.
-4. `outputs/snapshots/index-snapshot.md` — the **machine-readable**
-   mirror of the index, regenerated by lint (per
-   `_system/prompts/lint.md` step 8). LLMs cannot execute Dataview
-   queries; reading the source `index.md` shows them only the DQL,
-   not the rendered page list. The snapshot is the substitute.
+   matching domain-specific sub-prompt.
+4. `outputs/snapshots/index-snapshot.md` — the machine-readable
+   mirror of the index (LLMs cannot execute Dataview queries). The
+   template ships a pre-populated snapshot; regenerate via `lint` if
+   its `updated:` lags the most recent `ingest` entry in `log.md`.
 
-   The template ships a pre-populated snapshot so fresh clones can
-   start onboarding immediately. Two conditions trigger a
-   regeneration before answering anything non-trivial:
-   (a) the snapshot's `updated:` is older than the most recent
-   `ingest` entry in `log.md`, or
-   (b) the file is genuinely absent (the user `git rm`'d it).
-   In both cases, run `lint` first — the regenerated snapshot is one
-   of `lint`'s auto-applied outputs.
+Anything beyond these four files is loaded **on demand** — specific
+wiki pages via wikilinks, raw files for spot-checks, the GUIDE for
+explanatory purposes, reference docs under `docs/reference/` when you
+need the long table.
 
-Anything beyond these four files should be loaded **on demand** —
-specific wiki pages reached via wikilinks, specific raw files for
-spot-checks, the MANUAL only for explanatory purposes.
+### 1.2 Upgrading an existing vault
+
+When upstream ships a breaking schema change (a bump to
+`schema_version`), pull and migrate:
+
+```bash
+python -m densa upgrade          # git fetch + merge upstream
+python -m densa migrate          # apply all pending migrations
+python -m densa --all            # confirm a clean baseline
+```
+
+Three modes available — `in-place` (default; preserves content),
+`archive` (parks v(N-1) under `wiki/.legacy/`), `recover` (inverse of
+archive). Each migration script under
+`_system/scripts/migrate_NN_<slug>.py` is idempotent; multi-version
+jumps walk the chain step by step. `raw/` is never touched.
+
+Full runbook + the three-mode comparison table:
+[`docs/reference/schema-versioning.md`](docs/reference/schema-versioning.md)
+§"Migration runbook".
 
 ## 2. The five operations
 
 ### 2.0 Operation writes (machine-enforced via AGENTS007)
 
-Each operation declares which paths its commit may touch. The validator
-classifies a staged commit by its leading commit-message prefix
-(`ingest(<domain>):`, `query:`, `lint:`, `process-inbox:`, `promote:`).
-Commits without a recognised prefix fall under the `(no prefix)` row
-and are restricted to schema/docs/integrations maintenance — they MUST
-NOT touch `domains/**`.
+Each operation declares which paths its commit may touch. The
+validator classifies a staged commit by its leading commit-message
+prefix (`ingest(<domain>):`, `query:`, `lint:`, `process-inbox:`,
+`promote:`). Commits without a recognised prefix fall under the
+`(no prefix)` row and **MUST NOT touch `domains/**`**.
 
-| operation       | may write                                                               |
-|-----------------|-------------------------------------------------------------------------|
-| ingest          | domains/*/wiki/**, domains/*/log.md, log.md                             |
-| query           | outputs/qa/**, domains/*/log.md, log.md                                 |
-| lint            | outputs/**, domains/*/log.md, log.md                                    |
-| process-inbox   | domains/*/raw/** (rename/move only via `git mv`), log.md, domains/*/log.md |
-| promote         | outputs/qa/** (delete-intent, single file), outputs/lint/** (append Issues-to-surface), domains/*/wiki/**, domains/*/log.md, log.md |
-| (no prefix)     | _system/**, docs/**, integrations/**, outputs/**, projects/**, writing/**, .github/**, AGENTS.md, README.md, CHANGELOG.md, CONTRIBUTING.md, SECURITY.md, LICENSE, `*.md` at repo root, pyproject.toml, noxfile.py, .editorconfig, .gitignore, .gitattributes*, .pre-commit-hooks.yaml |
+**Source of truth for the per-operation write contract**:
+[`_system/densa/schema.py`](_system/densa/schema.py) (the
+`OPERATIONS` constant). Each operation's prompt under
+`_system/prompts/<op>.md` opens with a `## What this command will
+write` table that mirrors the same schema; AGENTS011 warns when the
+prompt drifts from the schema.
+
+Human-readable per-prefix table:
+[`docs/reference/operation-scopes.md`](docs/reference/operation-scopes.md).
+When prose and Python disagree, the Python wins.
 
 **Bypass.** Set `WIKI_ALLOW_CROSS_SCOPE=1` for one commit to skip
-AGENTS007 (mirrors `WIKI_ALLOW_LOG_REORDER`). Use only for sanctioned
-multi-scope maintenance; the bypass MUST be paired with a follow-up
-`## [YYYY-MM-DD] maintenance | …` entry in `log.md` explaining why.
+AGENTS007. Pair with a `## [YYYY-MM-DD] maintenance | …` log entry.
 
 ### 2.1 `ingest <path>`
 
-When given a new source path:
-
-1. Resolve the target domain via the **routing rules** (§5). If the file is
-   under `domains/<X>/raw/`, that domain is implicit.
-2. Read the full source. Discuss key takeaways with the human if they are
-   present, otherwise proceed silently.
-3. Update or create the relevant `wiki/` pages. The number of pages a
-   single source touches depends on the L2's information density — use
-   the following **tiered** range as a guide rather than a hard rule:
-   - **light L2** (e.g. `research-papers`, articles digest): **3–6 pages**
-     — typically one analysis + 1–3 concept pages + the domain index.
-   - **medium L2** (e.g. ongoing project / multi-stakeholder work):
-     **5–10 pages** — analysis + concept/entity updates + 1–2
-     synthesis touches + index.
-   - **heavy L2** (e.g. `psychology` session transcript): **8–15 pages**
-     — analysis + multiple pattern/theme/entity updates + framework
-     refs + index. Be willing to make wide edits in one pass; under-
-     editing here loses the compounding benefit.
-4. Append a synthesis page in `wiki/syntheses/` if the source warrants
-   second-order analysis (e.g. session transcripts).
-5. Refresh `domains/<X>/index.md` to list new pages.
-6. Append to `domains/<X>/log.md` and the global `log.md`:
+1. Resolve the target domain via the routing rules (§5). If the file
+   is under `domains/<X>/raw/`, the domain is implicit.
+2. Read the full source.
+3. Create **one** summary page at `domains/<X>/wiki/summaries/<slug>.md`
+   (1:1 with the raw). Update existing `concepts/`, `entities/`, and
+   `open-questions/` pages whose Appearances tables the source
+   extends — never restate the underlying fact, only add a wikilink
+   row pointing back to the new summary.
+4. Page-count tier per L2 information density: **light**
+   (`research-papers`) 3–6 pages; **medium** 5–10; **heavy** (e.g.
+   `psychology` session) 8–15. Under-editing here loses the compounding
+   benefit. Wiki pages live under the 7 buckets defined in §3 (no
+   ad-hoc folders).
+5. Update `domains/<X>/wiki/overview.md` only when the ingest creates
+   a *new* wiki page (existing-page updates flow into Dataview blocks
+   automatically). The overview is the per-domain reader entry point;
+   keep its mindmap current.
+6. Prepend a new entry to `domains/<X>/log.md` and, when cross-domain,
+   the global `log.md` (entry insertion point per §6). The entry MUST
+   list the actual writes so subsequent `lint` runs can verify them:
    ```
    ## [YYYY-MM-DD] ingest | <source title>
    - Source: [[path/to/source]]
-   - Pages touched: [[entity-A]], [[concept-B]], …
+   - Wrote:
+     - domains/<X>/wiki/summaries/<slug>.md (created)
+     - domains/<X>/wiki/concepts/<slug>.md (Appearances +1)
+     - domains/<X>/wiki/overview.md (mindmap node added)
+   - Read-but-not-touched:
+     - domains/<X>/wiki/open-questions/<slug>.md — bears on thread but no new evidence
    - One-line synthesis.
    ```
 7. Never modify the source under `raw/`.
 
-The full procedure is encoded in `_system/prompts/ingest.md`; load it when the
-user invokes `ingest`.
+Full procedure: [`_system/prompts/ingest.md`](_system/prompts/ingest.md).
 
 ### 2.2 `query <question>`
 
-1. Read the global `index.md`, then drill into relevant domain `index.md`.
+1. Read the global `index.md`, then drill into relevant domain
+   `index.md`.
 2. Follow wikilinks; read pages in full when relevant.
-3. Synthesise an answer with **inline citations** to the wiki pages used.
-4. If the answer is non-trivial and reusable (a comparison, a thesis, a
-   timeline), propose to **file it back** as a new Q&A artifact under
-   `outputs/qa/<YYYY-MM-DD>-<slug>.md` (`type: report`, same artifact
-   semantics as lint reports — see [`outputs/README.md`](outputs/README.md)).
-   Do this by default for substantial answers; ask only if uncertain.
-   If the answer later proves wiki-grade, run `promote <qa-path>`
-   (§2.5) to lift it into the wiki — do not edit `wiki/syntheses/`
-   from inside a `query` commit.
-5. Append to `log.md`:
-   ```
-   ## [YYYY-MM-DD] query | <one-line question>
-   - Filed as: outputs/qa/<YYYY-MM-DD>-<slug>.md   (plain path; outputs/ is outside the wikilink graph)
-   ```
+3. Synthesise an answer with **inline citations** to the wiki pages
+   used.
+4. If the answer is non-trivial and reusable (a comparison, a thesis,
+   a timeline), file it as a Q&A artifact under
+   `outputs/qa/<YYYY-MM-DD>-<slug>.md` (`type: report`). Do this by
+   default for substantial answers. Never edit `wiki/syntheses/` from
+   inside a `query` commit; if a Q&A later proves wiki-grade, run
+   `promote` (§2.5).
+5. Prepend a `query` entry to `log.md`.
 
-The full procedure is in `_system/prompts/query.md`.
+Full procedure: [`_system/prompts/query.md`](_system/prompts/query.md).
 
 ### 2.3 `lint [--domain <X>]`
 
-Run a health check on the wiki. Surface:
-- Contradictions between pages (cite both pages).
-- Stale claims that newer sources have superseded.
-- Orphan pages (no inbound wikilinks).
-- Concepts mentioned in ≥2 pages but lacking their own wiki page.
-- Missing cross-references (page A talks about entity B but does not link).
-- Empty or stub pages older than 14 days.
-- `index.md` drift (pages that exist on disk but not in index, or vice versa).
-- Broken wikilinks.
+Health-check the wiki. Surface contradictions, stale claims, orphan
+pages, missing concept pages, missing cross-references, stub pages
+older than 14 days, `index.md` drift, broken wikilinks.
 
-**Output format:** a markdown report under `outputs/lint/<YYYY-MM-DD>.md`
-(`type: report` frontmatter), grouped by issue category, with proposed
-fixes. The file lives in git but is deliberately excluded from the
-wikilink graph — wiki pages never cite lint reports. Do **not**
-auto-apply destructive changes (deletions, renames). Auto-apply only
-additive fixes (creating missing index entries, adding obvious
-cross-references); for the rest wait for the human to greenlight.
+**Output.** Markdown report under `outputs/lint/<YYYY-MM-DD>.md`
+(`type: report`). Auto-apply only **additive** fixes (missing index
+entries, obvious cross-references); destructive changes (deletions,
+renames) wait for human greenlight.
 
-The full procedure is in `_system/prompts/lint.md`.
+Full procedure: [`_system/prompts/lint.md`](_system/prompts/lint.md).
 
 ### 2.4 `process-inbox` (optional, opt-in)
 
-When un-routed material has been dropped into `/inbox/`, the human may
-invoke `process-inbox` to triage it. The operation classifies each file
-by domain + bucket, proposes a canonical slug, and uses `git mv` to
-move it into `domains/<X>/raw/<bucket>/`. It does **not** ingest — that
-remains a deliberate next step per §2.1.
+Triage `/inbox/` into `domains/<X>/raw/<bucket>/` via `git mv`. Does
+**not** ingest — that remains a separate decision per §2.1. Inbox is
+**off by default**; most material can be dropped directly into the
+correct raw bucket.
 
-Inbox is **off by default**: most material can be dropped directly into
-the correct `domains/<X>/raw/<bucket>/` without round-tripping through
-inbox. Use inbox only when classification is genuinely uncertain. Files
-in `inbox/` are not subject to §6's red lines (specifically, they may
-be moved or renamed) until they are routed into `raw/`.
+Files in `inbox/` are not subject to §5 routing until `process-inbox`
+moves them; this prevents the LLM silently guessing a domain.
 
-> **Routing priority.** Files inside `inbox/` are **not** subject to the
-> automatic content-signal routing in §5. They MUST be triaged by an
-> explicit `process-inbox` invocation that performs a `git mv` into the
-> correct `domains/<X>/raw/<bucket>/`. Only after that move do §5 and
-> §2.1 apply. This prevents two failure modes: (1) the LLM silently
-> guessing the domain for an ambiguous inbox file, and (2) the inbox
-> growing as a parallel, un-curated raw store.
-
-The full procedure is in `_system/prompts/process-inbox.md`.
+Full procedure:
+[`_system/prompts/process-inbox.md`](_system/prompts/process-inbox.md).
 
 ### 2.5 `promote <qa-path>` (Q&A → wiki page)
 
-When a Q&A artifact under `outputs/qa/` proves to be evergreen
-knowledge worth wikilink-graph membership, the human invokes
-`promote <outputs/qa/...>` (optionally `--as <type>` and
-`--slug <new-slug>`). The operation is **not** a bare `git mv` — it
-performs a controlled information-shape transform:
+Lift an evergreen Q&A from `outputs/qa/` into a first-class wiki
+page. Not a bare `git mv` — it performs a controlled
+information-shape transform (voice transform, citation hoist, L2
+fill-in, section restructure), wrapped in a `git mv` so
+`git log --follow` traces the new wiki page back to the source Q&A.
 
-1. **Pre-flight checks** (any failure aborts; no partial apply):
-   source lives in `outputs/qa/` with `type: report`; target type is
-   in the L2's allowed set; target slug + aliases don't collide with
-   existing wiki pages; `sources:` cardinality meets §3.1 for the
-   target type; required L2 type-specific fields are derivable.
-2. **Voice transform**: Q→declarative; strip Q&A scaffold; keep
-   inline `[[wikilinks]]`; remove epistemic hedging unless the
-   uncertainty itself is the knowledge (then promote to `question`).
-3. **Citation hoist**: dedupe inline `[[wikilinks]]` and `[[raw]]`
-   refs; write them into frontmatter `sources:` per §3.1.
-4. **L2 fill-in**: add target-type-specific required fields
-   (e.g. `concept` → `first_appeared` + `last_validated`).
-5. **Section restructure**: reorder body to match
-   `_system/templates/<target-type>.md`; the Q&A "Issues to surface"
-   section is **appended to the `## Human-review queue` section of
-   today's `outputs/lint/<date>.md`** (see `_system/prompts/lint.md`
-   step 7 report skeleton), not copied into the new wiki page.
-6. **Single commit** (prefix `promote:`): `git mv outputs/qa/<file>.md
-   domains/<X>/wiki/<type>/<new-slug>.md` + rewrite + prepend log
-   entries.
+1:1 granularity only — one Q&A becomes one wiki page. `lint` may
+surface promotion candidates but never executes promote itself.
 
-The `git mv` is load-bearing: `git log --follow` traces the new wiki
-page back to the source Q&A. **1:1 granularity only** — one Q&A
-becomes one wiki page; 1:N splits use multiple invocations, N:1 merges
-go through `ingest` after the first promote.
-
-```
-## [YYYY-MM-DD] promote | <Q&A core question>
-- From: outputs/qa/<YYYY-MM-DD>-<orig-slug>.md
-- To: [[<new-slug>]]
-- Type: <synthesis|concept|framework|question|…>
-- Sources: <N> wiki + <M> raw
-- Reason: <one-line: why this Q&A warrants wiki-grade status>
-```
-
-`lint` may surface "Promotion candidates" but never executes promote
-itself — the decision stays with the human.
-
-The full procedure is in `_system/prompts/promote.md`.
+Full procedure:
+[`_system/prompts/promote.md`](_system/prompts/promote.md).
 
 ## 3. Frontmatter schema (universal)
 
@@ -295,391 +242,192 @@ Every wiki page MUST have YAML frontmatter:
 
 ```yaml
 ---
-type: source | entity | concept | pattern | session | analysis | synthesis | protocol | experiment | project | stakeholder | decision | theme | framework | question | fleeting | correction | report
-domain: <your-domain>   # enumerate your actual domains in this file's frontmatter once you design L2s
+type: summary | entity | concept | comparison | overview | synthesis | open-question | source | report
+domain: <your-domain>
 created: YYYY-MM-DD
 updated: YYYY-MM-DD
-sources: ["[[wikilink]]", ...]                  # provenance — see §3.1 for rules per type
-tags: [tag1, tag2]                              # lowercase, hyphenated, domain-prefixed when ambiguous
-aliases: ["alt-term", "替代说法"]               # additional slugs / multilingual synonyms used by [[wikilink]] resolvers
+sources: ["[[wikilink]]", ...]    # cardinality per page type; see docs/reference/sources-cardinality.md
+tags: [tag1, tag2]                # lowercase-hyphenated
+aliases: ["alt-term", "替代说法"] # multilingual synonyms for [[wikilink]] resolvers
 status: active | deprecated
-compiled_against: 1                             # the schema version this page was authored under; see §3.2
-last_validated: YYYY-MM-DD                      # required for concept/framework/protocol/entity (see §3.3)
+compiled_against: 2               # schema version this page was authored under
+last_validated: YYYY-MM-DD        # required for concept / entity (pages with no built-in raw anchor)
 ---
 ```
 
-> **`analysis` vs `synthesis`.** An `analysis` is bound 1:1 to a single raw
-> source (e.g. one therapy session → one analysis page). A `synthesis`
-> spans multiple sources (cross-session arcs, comparisons, lint reports).
-> If you find yourself writing an analysis that pulls from >1 raw source,
-> it's actually a synthesis; promote it.
+The **nine page types** — seven that live under `wiki/`, plus
+`source` (under `raw/`) and `report` (under `outputs/`) — come
+verbatim from Karpathy's gist; the full mapping table is at
+[`docs/reference/karpathy-mapping.md`](docs/reference/karpathy-mapping.md).
+The machine-readable registry lives in
+[`_system/densa/schema.py`](_system/densa/schema.py)
+`PAGE_TYPES`.
 
-> **`synthesis` is for explicit cross-source narratives** —
-> comparisons, retrospectives, theme essays that braid multiple
-> analyses, deliberately produced during `ingest` or promoted from a
-> Q&A via `promote` (§2.5). Recurring second-order concepts that
-> warrant their own first-class type (e.g. `pattern`, `theme`,
-> `concept`) live in their own folders, not in `wiki/syntheses/`.
-> Query Q&A artifacts live under [`outputs/qa/`](outputs/), not here —
-> they are runtime products with `type: report`, ignored by the
-> wikilink resolver. An empty `syntheses/` folder is a healthy steady
-> state for a domain that has not yet produced a cross-source essay.
+| `type`          | Folder              | One-line litmus                                       |
+|-----------------|---------------------|-------------------------------------------------------|
+| `summary`       | `summaries/`        | I just read one source; here's the distilled take    |
+| `entity`        | `entities/`         | A person / org / object referenced across summaries  |
+| `concept`       | `concepts/`         | A recurring term worth defining once                 |
+| `comparison`    | `comparisons/`      | X vs Y — contrasting ≥2 things                       |
+| `overview`      | `overviews/` + `overview.md` | A bird's-eye view of a domain or sub-area    |
+| `synthesis`     | `syntheses/`        | A braided narrative across ≥2 sources                |
+| `open-question` | `open-questions/`   | A long-arc question accumulating evidence            |
+| `source`        | `raw/`              | The raw material itself; never edited by the LLM     |
+| `report`        | `outputs/`          | Operation artifact (lint report, Q&A); not a wiki page |
 
-> **`fleeting` is opt-in.** It is listed in the type enum so any L2
-> that needs it can adopt it without re-versioning the schema, but
-> **the default L2 template ships without a `wiki/fleeting/`
-> bucket**. Most humans capture between-session thoughts outside the
-> wiki, so leave the bucket out and the type unreferenced by default —
-> lint will not complain. Only opt in to `fleeting` if your workflow
-> actively uses it.
+L2 schemas may add **required** fields (e.g. `participants` on a
+source / session). They may not remove the universal ones, nor
+invent new top-level `type` values — `type` is closed at the L1
+level. Sub-categorise within a type via L2-specific `kind:` /
+`session_kind:` / similar fields.
 
-> **`status` is strictly `active | deprecated`.** It encodes whether a
-> page is the current best model (`active`) or has been replaced by a
-> successor via the deprecation pattern (`deprecated` + redirect line;
-> see §4). Domain-specific lifecycle state belongs in a type-specific
-> `<type>_status` field — e.g. `project_status: discovery | active |
-> paused | shipped`, `experiment_status: planned | running | done`,
-> `decision_status: proposed | accepted | superseded`,
-> `correction_status: open | resolved | recurring`,
-> `protocol_status: considering | trialing | adopted | retired`,
-> `arc_status: open | partial | answered` (questions). Conflating the
-> two breaks the deprecation contract (a `deprecated` page that also
-> claims `status: accepted` cannot redirect correctly).
+`raw/` files do not require frontmatter; if they have it, do not
+modify it.
 
-L2 schemas may add **required** fields (e.g. a `psychology`-flavoured L2
-may require `participants` on session pages). They may not remove the
-universal ones.
+### Two load-bearing distinctions
 
-`raw/` files do not require frontmatter; if they have it, do not modify it.
+> **`summary` vs `synthesis`.** A `summary` is bound 1:1 to a single
+> raw source. A `synthesis` braids ≥2 sources (or ≥2 summaries). If
+> you find yourself writing a summary that draws on >1 raw source,
+> it's actually a synthesis; change the type and folder.
 
-### 3.1 `sources` semantics by page type
+> **`status` is strictly `active | deprecated`.** It encodes whether
+> a page is the current best model or has been replaced via the
+> deprecation pattern (§4). Domain-specific lifecycle state belongs
+> in a type-specific `<type>_status` field — e.g.
+> `project_status: discovery|active|paused|shipped` on an entity
+> page representing a project. Conflating the two breaks the
+> deprecation contract.
 
-The `sources` field is provenance, but what counts as a "source" depends on
-the page type. Treat this as a **strict schema contract**; lint enforces it.
+The **canonical-fact rule** (numbers / dates / verbatim quotes live
+ONLY in `summaries/<slug>.md`; second-order pages cite via wikilink)
+is what makes a v2 vault compoundable rather than self-replicating.
+Full list and rationale:
+[`docs/reference/karpathy-mapping.md`](docs/reference/karpathy-mapping.md)
+§"Canonical-fact rules" (registry: `densa.schema.CANONICAL_FACTS`).
 
-| `type`                              | `sources` points to                                       | Cardinality |
-| ----------------------------------- | --------------------------------------------------------- | ----------- |
-| `source` / `session`                | n/a (the file *is* the source)                            | empty       |
-| `analysis`                          | the **one** raw file in `raw/` that this analyses          | exactly 1   |
-| `synthesis`                         | wiki pages and/or raw files this synthesis weaves together | ≥ 2         |
-| `pattern` / `theme`                 | wiki pages (analyses, sessions) and/or raw files where the pattern/theme manifests | ≥ 2 |
-| `entity`                            | wiki pages and/or raw files where the entity appears       | ≥ 1         |
-| `concept` / `framework`             | raw files (papers, articles) and/or canonical wiki pages   | ≥ 0 (may be empty for evergreen concepts; ≥ 1 once cited) |
-| `protocol` / `experiment`           | raw articles + linked experiments / metric files           | ≥ 1         |
-| `project` / `stakeholder` / `decision` | raw meeting/doc files relevant to the project; for stakeholders also their `Appearances` raw refs | project ≥ 0; stakeholder ≥ 1; decision ≥ 1 (the meeting/thread that produced it) |
-| `correction` (recurring failure-mode tracking — see `_system/templates/correction.md`) | analyses / raw files where the failure mode was observed (≥1, since first observation = N=1) | ≥ 1 |
-| `question`                          | wiki pages and/or raw files that bear on the question      | ≥ 0 (may be empty when first asked; populated as evidence accrues) |
-| `fleeting`                          | n/a — short-lived note, no provenance required             | empty       |
-| `report` (operation artifact under `outputs/`) | n/a — may reference wiki pages inline via `[[wikilink]]` but the wikilink resolver ignores the report itself | 0..* (empty allowed) |
+### Reference details
 
-Two implications:
+- `sources` cardinality per page type:
+  [`docs/reference/sources-cardinality.md`](docs/reference/sources-cardinality.md).
+- Schema versioning (`compiled_against`) + `last_validated`
+  semantics:
+  [`docs/reference/schema-versioning.md`](docs/reference/schema-versioning.md).
+- Karpathy ↔ Densa vocabulary glossary:
+  [`docs/reference/karpathy-mapping.md`](docs/reference/karpathy-mapping.md).
 
-1. **Wiki-to-wiki citations are first-class** for second-order pages
-   (`pattern`, `theme`, `synthesis`, `entity`). They are *not* a violation
-   of the "every claim traces to ≥1 source" rule (§6) — those second-order
-   pages cite the analyses they generalise, and each analysis cites the
-   raw file directly. The chain still terminates at raw.
-2. **`analysis.sources` MUST contain exactly one raw wikilink**, never a
-   wiki page. If you find yourself wanting to cite a second raw file or a
-   prior analysis, you are writing a `synthesis`, not an `analysis` —
-   change the `type` field and move the file under `wiki/syntheses/`.
+### Cross-domain tagging
 
-### 3.2 Schema versioning
-
-The L1 schema itself carries a version. The current version is **1**.
-Every wiki page MUST set `compiled_against: <N>` in frontmatter to record
-the schema version it was authored under. New pages set it to the current
-version; migrations bump it. The version number lives at the top of this
-file (see frontmatter of `/AGENTS.md`).
-
-When the L1 schema undergoes a breaking change (e.g. a new required
-field, a `sources` semantics change), bump the version and ship a
-`_system/scripts/migrate_<NN>_<slug>.py` script that idempotently brings
-existing pages forward. Append a one-liner to `_system/migrations.log`
-recording the migration.
-
-Lint surfaces pages whose `compiled_against` lags the current schema
-version as `human-review` (a re-ingest may be needed; pages may still be
-correct under newer rules but the audit cannot prove it).
-
-### 3.3 `last_validated` semantics
-
-Long-lived pages drift silently when their underlying sources evolve.
-The `last_validated` field is a self-declared "this page still
-reflects what the cited sources say" timestamp.
-
-| `type`                                                    | `last_validated` requirement |
-| --------------------------------------------------------- | ---------------------------- |
-| concept, framework, protocol, entity                      | required; bump on any edit that re-checks the cited sources |
-| pattern, theme                                            | optional; an L2 may make it equivalent to its own `last_observed` field   |
-| analysis, synthesis, source, session, question, fleeting  | not applicable; these have explicit dates from `created` / `updated` |
-| correction, experiment, project, stakeholder, decision    | not applicable; freshness is tracked via type-specific fields (`last_observed`, `ends`, `decided_on`, `Appearances`) |
-| report                                                    | not applicable; operation artifacts have a fixed date in the filename |
-
-Lint flags pages whose `last_validated` is older than **180 days** as
-`human-review`. Auto-applying a fresh stamp without re-reading sources
-is a closed-epistemic-loop violation — never do that.
-
-### 3.4 Cross-domain tagging
-
-When a wiki page legitimately spans ≥2 L2 domains (e.g. an analysis
-filed under one domain whose load-bearing content also bears on
-another — see §5.4 for routing), tag it with `cross-domain` in
-frontmatter `tags:`.
-
-The tag exists so the global `index.md`'s "Cross-domain syntheses"
-Dataview block (and `lint`'s cross-domain checks) can surface
-genuinely cross-cutting pages without polluting each per-domain
-`index.md`. `ingest` (per `_system/prompts/ingest.md`) and `lint`
-(per `_system/prompts/lint.md`) reference this tag normatively.
-
-Operationally:
-
-- The tag is **optional** for pages whose working subject is wholly
-  inside one domain (the common case).
-- The tag is **required** on every newly-created or substantially-
-  updated wiki page that crosses domains during an `ingest`. Apply it
-  before the commit, not after.
-- L2s may define additional cross-domain tags (e.g.
-  `cross-domain-psychology-projects`); `cross-domain` itself is the
-  universal one and the only one L1 enforces.
+When a wiki page legitimately spans ≥2 L2 domains, tag it
+`cross-domain` in frontmatter `tags:`. The global `index.md`
+Cross-domain syntheses block depends on this tag. Required on every
+newly-created or substantially-updated wiki page that crosses domains
+during an `ingest`.
 
 ## 4. Naming and linking conventions
 
-- **Filenames**: lowercase-kebab-case for wiki pages (`decision-anxiety.md`,
-  `therapist-<slug>.md`). Sessions and dated sources keep ISO date prefix
+- **Filenames**: lowercase-kebab-case for wiki pages
+  (`decision-anxiety.md`, `therapist-<slug>.md`). Sessions and dated
+  sources keep an ISO date prefix
   (`2024-12-11-session-<slug>.md`). Never spaces in wiki filenames.
-- **Wikilinks**: prefer `[[short-slug]]` over full paths. Obsidian resolves
-  shortest unique slug. Use `[[slug|display label]]` when display differs.
+- **Wikilinks**: prefer `[[short-slug]]` over full paths. Use
+  `[[slug|display label]]` when display differs.
 - **Page titles** (H1): natural language, human-readable, can contain
-  Chinese/spaces. Don't repeat the title in the body.
-- **One concept = one page.** If a concept fragments across pages, lint flags
-  it; merge with redirects.
-- **Deprecation:** never delete a wiki page. Set `status: deprecated`, add a
-  `> Superseded by [[new-page]]` redirect line at the top, and remove from
-  `index.md`.
+  CJK / spaces. Don't repeat the title in the body.
+- **One concept = one page.** Fragmentation → lint flags it.
+- **Deprecation:** never delete a wiki page. Set
+  `status: deprecated`, add `> Superseded by [[new-page]]` at the
+  top, and remove from `index.md`.
 - **Use the template.** Before creating any new wiki page, read
-  `_system/templates/<type>.md` and copy its skeleton. The template
-  carries the universal + L2-required frontmatter and the structural
-  sections expected for that type. Templates are the only mechanism
-  that keeps frontmatter compliance from drifting.
+  `_system/templates/<type>.md` and copy its skeleton.
 
-### 4.1 Obsidian-flavored conventions
+### Obsidian-flavored conventions (adopted selectively)
 
-Adopted selectively from [`kepano/obsidian-skills`](https://github.com/kepano/obsidian-skills);
-limit usage to the cases below to keep wiki pages diff-friendly and
-parser-portable.
-
-- **Callouts** (`> [!type] Title`) for structural emphasis, not
-  decoration. Permitted types and their meaning in this wiki:
-  - `> [!warning]` — red-line reminders (e.g. "raw is immutable").
-  - `> [!important]` — load-bearing claim a reader must not miss.
-  - `> [!quote]` — verbatim excerpt from a raw source. Honour the
-    domain's quote-length cap (e.g. a psychology L2 might cap at ≤3 lines).
-  - `> [!faq]-` (collapsed by default) — FAQs in MANUAL or domain
-    indices. Useful to keep long lists scannable.
-  - `> [!todo]` — actionable item (lint findings, "human-review"
-    queue items).
+- **Callouts** (`> [!type] Title`) for structural emphasis. Permitted
+  types: `warning`, `important`, `quote`, `faq` (collapsed via `-`
+  suffix), `todo`.
 - **Block IDs** (`^id`) for citing a specific moment inside a raw
-  transcript: in `raw/sessions/2025-11-25-session.md` mark a paragraph
-  with `^14:32`, then cite from a wiki page as
-  `[[2025-11-25-session#^14:32]]`. Use timestamps (HH:MM) as IDs when
-  available; fall back to short kebab IDs (e.g. `^door-moment`) for
-  prose without timestamps.
-- **HUMAN comments** (`%%HUMAN: …%%`) for hand-written notes embedded
-  inside an LLM-owned wiki page. The LLM **must preserve** these blocks
-  during ingest / lint and treat them as authoritative even if they
-  contradict surrounding LLM-authored text. Surround multi-line
-  HUMAN blocks with `%%HUMAN%%` … `%%/HUMAN%%`.
-- **Embeds** (`![[page]]` or `![[page#section]]`) only inside
-  `index.md` and `wiki/syntheses/` lint reports — not inside pattern
-  / theme / analysis pages, where they obscure the diff between
-  authored content and transcluded content.
+  transcript. Use timestamps (`^14:32`) when available.
+- **HUMAN comments** (`%%HUMAN: …%%` / `%%HUMAN%%` … `%%/HUMAN%%`)
+  for hand-written notes inside an LLM-owned page. The LLM **must
+  preserve** these blocks and treat them as authoritative.
+- **Embeds** (`![[page]]`) only inside `index.md` and lint reports —
+  not inside pattern/theme/analysis pages.
 
-> **Bases (`.base` files)** are Obsidian's first-party database view
-> format and may eventually replace the Dataview blocks in `index.md`.
-> **Not adopted yet** — Dataview suffices at our current scale (≤500
-> wiki pages). Re-evaluate when an `index.md` Dataview block exceeds
-> ~50 rows or noticeably slows reading view.
+> **Bases (`.base` files)** may eventually replace Dataview blocks.
+> Not adopted yet — Dataview suffices at ≤500 wiki pages.
 
 ## 5. Routing rules (where does a new source go?)
 
-Routing decision tree, in order:
-
-1. If the source path is already under `domains/<X>/raw/`, the domain is `X`.
-2. Else infer from **content signal**. The mapping below is a *template* —
-   each L2 should add its own content-signal hints under its
-   `domains/<X>/AGENTS.md` § "Routing hints":
-   - Identify the dominant working subject the raw is about (self?
-     another person? a project? a measurable behaviour?). Pick the
-     domain whose persona is best-fit for that working subject.
-   - If two domains plausibly fit, prefer the one whose L2 schema
-     captures more of the load-bearing structure in the raw — the one
-     that would generate more wiki side-effects from this ingest.
-3. **Overlap disambiguation**. When two L2s legitimately could host the
-   same raw (e.g. a therapy session that also mentions a project
-   decision):
-   - File the raw under the **dominant** domain (the one that owns the
-     working subject end-to-end). The secondary domain references the
-     raw via wikilink without copying.
-   - When in doubt, file under whichever L2 has the **stricter privacy
-     posture** — the reverse migration (loose → strict) is harder than
-     the forward one (strict → loose).
-4. If a source legitimately spans multiple domains, file the raw under
-   the dominant domain and create cross-domain wiki pages from there.
-   Note the cross-link in `log.md` of both domains.
-5. If unclear, ask the human one short clarifying question. Do **not**
+1. If the source path is already under `domains/<X>/raw/`, the domain
+   is `X`.
+2. Else infer from content signal. Each L2 should add its own
+   content-signal hints under its `Routing hints` section. Pick the
+   domain whose persona best fits the working subject.
+3. When two L2s could legitimately host the same raw, file under the
+   **dominant** domain (the one whose persona owns the working
+   subject end-to-end). The secondary domain references the raw via
+   wikilink without copying. When in doubt, prefer the L2 with the
+   **stricter privacy posture** (reverse migration is harder).
+4. A source spanning multiple domains: file the raw under the
+   dominant domain, create cross-domain wiki pages from there, and
+   note the cross-link in `log.md` of both domains.
+5. If unclear, ask the human one short clarifying question. Do not
    silently guess.
 
 ## 6. Red lines (non-negotiable)
 
-Each red line names what cannot be done and **why** — the rationale is
-load-bearing so future maintainers (LLM or human) understand the failure
-mode each rule prevents.
+One sentence each. Full failure-mode rationale + sanctioned escape
+hatches: [`docs/reference/red-lines.md`](docs/reference/red-lines.md).
 
-- **`raw/` is immutable.** Never edit, rename, move, or delete files under any
-  `raw/` directory.
-  *Why:* every wiki claim's chain of provenance terminates at a raw file.
-  Editing or renaming raw breaks `git log --follow` traces from a wiki
-  page back to its source; the audit promise that "any wiki claim is
-  verifiable years later" collapses. The single permitted exception is a
-  domain-declared transcription-correction sweep (see e.g.
-  `domains/psychology/AGENTS.md` §"Known transcription corrections").
-- **`log.md` is append-only, written reverse-chronologically.** New entries
-  are inserted at the **entry insertion point** so newest is first and the
-  file scans top-to-bottom = recent-to-oldest. The default insertion point is
-  immediately after YAML frontmatter. If the log file has a human-facing H1 /
-  intro prose / entry-format preamble followed by a horizontal rule, the
-  insertion point is **immediately after that preamble separator**, before the
-  first existing `## [YYYY-MM-DD]` entry. Never place entries above the
-  explanatory H1 / preamble. Never rewrite history; correct via a new entry.
-  Frontmatter `updated: YYYY-MM-DD` may be bumped in lockstep with each new
-  entry (paired `-`/`+`); past entries themselves are immutable. The word
-  "append" in older prompts / docs is a legacy synonym for this prepend
-  semantics — the **content** is appended to the wiki's audit trail, but the
-  **position** is always the entry insertion point. A
-  one-shot reorder sweep to repair drift is permitted only via the
-  `WIKI_ALLOW_LOG_REORDER=1` validator BYPASS (see
-  `_system/densa/`), which requires the diff to be a pure
-  permutation (set-equal removed/added lines) plus a new
-  `## [YYYY-MM-DD] maintenance | ` audit entry.
-  *Why:* the log is the *only* artifact that proves the ordering of
-  ingest / lint decisions over time. Rewriting an old entry to "fix" a
-  factual error retroactively hides the moment that error was made,
-  which is exactly the moment a future reader needs to find to
-  understand the wiki's evolution.
-- **No wiki page deletion.** Use deprecation (§4).
-  *Why:* a wiki page may be cited from raw notes the human still
-  reads, from another wiki page that hasn't been updated yet, or from
-  external blog posts. Deletion silently breaks those links;
-  deprecation (`status: deprecated` + redirect line) keeps the slug
-  resolvable while signalling "do not author against this".
-- **No bulk renames without human consent.** Slugs propagate via wikilinks;
-  one rename = many edits = human approval gate.
-  *Why:* slug renames are mechanically simple but semantically
-  load-bearing — a slug is the identifier the human types in chat to
-  pull a page into context. Renaming silently (even with full
-  wikilink-graph fixup) breaks the human's mental index. Always
-  surface the rename for approval.
-- **No silent web fetches during ingest.** If you need to enrich beyond the
-  source, ask first and cite added context separately.
-  *Why:* a wiki page that quietly weaves in web-fetched material
-  defeats the "every claim traces to a source in this repo" invariant.
-  Future readers can't reproduce the LLM's web context (URLs decay,
-  search results drift); the claim becomes unverifiable.
-- **Every claim in a wiki page traces to ≥1 source** via the `sources:`
-  frontmatter or an inline `[[source-link]]`. Pure synthesis pages cite the
-  wiki pages they synthesise.
-  *Why:* this is the compiler-style invariant the whole architecture
-  rests on — if a wiki page can make claims without provenance, the
-  wiki becomes a second LLM hallucination surface rather than a
-  compounding knowledge base.
-- **Bulk re-ingest preserves a `.legacy/` snapshot.** When re-running
-  ingest on a previously-authored wiki page (e.g. analyses authored
-  under a prior schema epoch and awaiting framework-level redo), the
-  LLM MUST first `git mv` the existing file under
-  `domains/<X>/wiki/.legacy/<same-name>.md` before writing the new
-  version. This is non-destructive and lets human comparison happen
-  weeks later. Do not delete or amend in place.
-  *Why:* a re-ingest under a newer framework reasonably rewrites the
-  whole page; the human's safeguard against the LLM silently degrading
-  the prior analysis is that the old version remains diff-able weeks
-  later. In-place amendment removes that safeguard.
+- **`raw/` is immutable.** Never edit, rename, move, or delete files
+  under any `raw/` directory.
+- **`log.md` is append-only, written reverse-chronologically.** New
+  entries go at the entry insertion point (immediately after
+  frontmatter, or after the preamble separator if one exists).
+- **No wiki page deletion.** Use the deprecation pattern (§4).
+- **No bulk renames without human consent.** Slugs propagate via
+  wikilinks — surface every rename for approval.
+- **No silent web fetches during ingest.** Ask first and cite added
+  context separately.
+- **Every claim in a wiki page traces to ≥1 source** via `sources:`
+  frontmatter or an inline `[[source-link]]`.
+- **Bulk re-ingest preserves a `.legacy/` snapshot.** `git mv` the
+  existing file to `domains/<X>/wiki/.legacy/<same-name>.md` before
+  writing the new version.
 - **Multi-modal sources require explicit read-bound declarations.**
-  When a `raw/` file contains images, audio, video, or any non-text
-  payload the LLM cannot fully read in this session, the LLM MUST
-  state in the ingest plan exactly what it can vs. cannot extract
-  (e.g. "I can read the transcript text and 3 of 5 inline screenshots;
-  the audio attachment is not consumed"). Silently skipping a modality
-  produces wiki pages that look comprehensive but have hidden gaps.
-  When in doubt, downgrade the ingest to a partial pass and flag the
-  remainder for a follow-up session.
-  *Why:* a wiki page that *looks* like it summarises a 30-minute
-  recording but actually only ingested the auto-generated transcript
-  (missing the visual whiteboard in the video, missing the audio
-  intonation that reveals sarcasm, etc.) is worse than no page at
-  all — it presents partial coverage as full coverage, and downstream
-  syntheses inherit the gap.
+  State in the ingest plan exactly what you can vs. cannot extract.
 
 ### 6.1 Machine-enforced rule registry
 
-The red lines above are mechanically enforced by the `densa`
-validator under stable IDs. Pin the ID — never the name — in any
-suppression comment or commit message; rule names may be refined,
-IDs are forever.
-
-| ID         | Rule                             | Anchor       | Severity |
-| ---------- | -------------------------------- | ------------ | -------- |
-| AGENTS001  | raw-immutability                 | §6           | error    |
-| AGENTS002  | log-append-only                  | §6           | error    |
-| AGENTS003  | frontmatter-required-keys        | §3           | error    |
-| AGENTS004  | frontmatter-type-allowed         | §3           | error    |
-| AGENTS005  | analysis-sources-cardinality     | §3.1         | error    |
-| AGENTS006  | wikilink-resolvable              | §4           | error / warn |
-| AGENTS007  | operation-writes-within-scope    | §2.0         | error    |
-| AGENTS008  | last-validated-fresh             | §3.3         | warning  |
-| AGENTS009  | compiled-against-current         | §3.2         | warning  |
-
-Run `python -m densa rules` for the live registry (the validator
-is the single source of truth — this table mirrors it for normative
-reference). Two sanctioned bypass env vars accompany the registry:
-
-- `WIKI_ALLOW_LOG_REORDER=1` — narrow exception to AGENTS002 for a
-  one-shot reorder sweep (see §6 log red line).
-- `WIKI_ALLOW_CROSS_SCOPE=1` — narrow exception to AGENTS007 for
-  sanctioned multi-scope maintenance (see §2.0).
-
-Each bypass MUST be paired with a follow-up `## [YYYY-MM-DD]
-maintenance | …` entry in `log.md` explaining the exception.
+Stable IDs `AGENTS001`–`AGENTS012`. Pin the ID (never the name) in
+suppression comments or commit messages. Full table with severity,
+bypass env vars, and rationale:
+[`docs/reference/rules-registry.md`](docs/reference/rules-registry.md);
+`python -m densa rules` prints the live registry.
 
 ## 7. Index files
 
-- Global `index.md` is a **directory of directories**: links to each domain
-  `index.md` and a "recent activity" Dataview block reading the global
-  `log.md`. Do not list individual wiki pages here.
-- Each `domains/<X>/index.md` is the **content map** of that domain: grouped
-  by `type`, with one-line summaries. Use Dataview blocks to keep groupings
-  fresh; do not hand-maintain the lists.
+- Global `index.md` is a **directory of directories**: links to each
+  domain `index.md` plus a "recent activity" Dataview block. Do not
+  list individual wiki pages here.
+- Each `domains/<X>/index.md` is the **content map** of that domain:
+  grouped by `type`, with one-line summaries. Use Dataview blocks;
+  do not hand-maintain the lists.
 
-## 8. Workflow with Cursor Agent
+## 8. Workflow with the agent
 
-The human invokes operations from the Cursor chat. Recognise these patterns:
-
-| User intent (examples)                                     | Action                  |
-| ---------------------------------------------------------- | ----------------------- |
-| "ingest <path>" / "process this source" / drops new file   | Run ingest (§2.1)       |
-| "what does the wiki say about X" / "summarise across …"    | Run query (§2.2)        |
-| "lint" / "health check" / "find contradictions"            | Run lint (§2.3)         |
-| "process-inbox" / "triage inbox" / drops a file in inbox/  | Run process-inbox (§2.4)|
-| "promote outputs/qa/<file>" / "this Q&A is wiki-grade" / "make X a real concept page" | Run promote (§2.5) |
-| Ambiguous request                                          | Ask one question        |
-
-Always reference `_system/prompts/<op>.md` for the detailed procedure rather
-than improvising.
+User requests map to the five operations §2.1–§2.5. The canonical
+"natural language → action" mapping table lives in
+[`GUIDE.md`](GUIDE.md) §"Mapping natural language to operations" —
+do not duplicate it here or in `index.md` (changing one and missing
+the other is the failure mode this consolidation prevents). Always
+reference `_system/prompts/<op>.md` rather than improvising; ask one
+short clarifying question if the intent is ambiguous.
 
 ## 9. Versioning
 
-The vault is a git repo. After any non-trivial wiki edit (≥3 pages changed),
-remind the human to commit with a message like
+The vault is a git repo. After any non-trivial wiki edit (≥3 pages
+changed), remind the human to commit with a message like
 `ingest(<domain>): <YYYY-MM-DD> <slug>` or
 `lint(<domain>): <YYYY-MM-DD> report`. Do not commit autonomously.

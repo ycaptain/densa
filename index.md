@@ -1,58 +1,43 @@
 ---
 type: index
 scope: global
-updated: 2026-05-21
-compiled_against: 1
+updated: 2026-05-25
+compiled_against: 2
 ---
 
 # Vault Index
 
 Global directory for the LLM-maintained wiki.
 
-- **First time?** Read [[_system/MANUAL|the user manual]] end-to-end.
-- **Choosing / removing the example domains** below before your first
-  real ingest: [[docs/EXAMPLE-DOMAINS]].
-- **Day-to-day reference** for concepts, scenarios, FAQ:
-  [[_system/MANUAL]].
+- **First time here?** Start at [`README.md`](README.md) — its
+  "Pick your path" router picks the right entry for you. This
+  `index.md` is the *content map* of the vault, not the onboarding
+  entry.
+- **Day-to-day reference** (scenarios, mental model, FAQ pointers):
+  [[GUIDE]].
+- **Setup beyond Quickstart** (Obsidian plugins, encryption,
+  domain decisions): [[docs/setup]].
 - **Schema source of truth**: [`AGENTS.md`](AGENTS.md) (L1) and `domains/<X>/AGENTS.md` (L2).
-- **Install / plugin setup**: [[_system/SETUP]].
 
-## Domains (example L2s — keep, adapt, or remove per [[docs/EXAMPLE-DOMAINS]])
+## Domains
 
-- [[domains/research-papers/index|Research papers]] — light L2 (6 page
-  types). Reading academic papers / technical articles. Ships with a
-  **5-paper LLM-tutoring evidence arc (2024-2025)**: three real RCTs
-  (Vanzo / Bastani / Kestin), one real review (Kim 2025), and one
-  synthesised stand-in (Anthropic SAE) — plus a cross-paper synthesis,
-  researcher guide, and three-audience navigator.
-- [[domains/workspace/index|Workspace]] — medium L2 covering meetings,
-  decisions, projects, and stakeholder dynamics. Ships with a multi-raw
-  Q2 platform-migration arc and a positive-pattern engineering-decision
-  retrospective.
-- [[domains/psychology/index|Psychology]] — heavy L2 for therapy /
-  inner work. Ships with a **6-week father-grief arc worked example
-  (5 synthesised raws → 25 wiki pages)** demonstrating IFS / EFT /
-  attachment / biopsychosocial 4P / cross-clinical coordination /
-  diagnostic conservatism / meaning-reconstruction. See
-  [[domains/psychology/wiki/syntheses/what-this-domain-demonstrates|the capability list]]
-  for the evaluator entry point; clinical adopters must re-read the
-  L2 AGENTS.md §"Privacy posture" before ingesting real sessions.
+The template ships with one default example L2 — keep, adapt, or
+remove per [[docs/setup]] §"Choosing or replacing the default domain".
 
-> Most users will keep at most one of the above and delete the rest
-> before their first real ingest. See [[docs/EXAMPLE-DOMAINS]] §3 for
-> the mechanics (single bypass commit per removal).
+- [[domains/research-papers/index|Research papers]] — light L2 (6
+  page types). Reading academic papers / technical articles. Ships
+  with a **5-paper LLM-tutoring evidence arc (2024-2025)**: three
+  real RCTs (Vanzo / Bastani / Kestin), one real review (Kim 2025),
+  and one synthesised stand-in (Anthropic SAE) — plus a cross-paper
+  synthesis, researcher guide, and three-audience navigator.
+
+Heavier worked examples (`workspace`, `psychology`) live under
+`examples/showcases/` as opt-in references. Copy one into `domains/`
+if you want to start from its schema; see
+[[docs/setup]] §"Adopting a showcase" for the mechanics.
 
 <!-- Add one bullet per new L2 as you stand them up. -->
-<!-- Remove the bullets above as you delete the example domains. -->
-
-
-## What's actively in motion (curated)
-
-> Hand-curated; the human updates this section roughly weekly. The
-> Dataview blocks below are the machine view; this section is the
-> editor's note.
-
-- (empty — populate once you've ingested a few sources)
+<!-- Remove the bullet above if you delete research-papers. -->
 
 ## Recent global activity
 
@@ -77,11 +62,3 @@ FROM "domains" AND #cross-domain
 WHERE type = "synthesis" AND status = "active"
 SORT updated DESC
 ```
-
-## Operations cheat sheet
-
-- `ingest <path>` — file a new source into the wiki. See `_system/prompts/ingest.md`.
-- `query <question>` — answer from the wiki, optionally file the answer back.
-- `lint [--domain <X>]` — health-check pages, surface gaps and contradictions.
-- `process-inbox` — triage un-routed material in `/inbox/`.
-- `promote <outputs/qa/...>` — lift a Q&A artifact into a first-class wiki page. See `_system/prompts/promote.md`.

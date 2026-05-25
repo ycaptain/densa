@@ -13,7 +13,13 @@ sources: [
 tags: [synthesis, researcher-guide, ai-education, navigation, onboarding, reading-list]
 aliases: ["AI education researcher guide 2024-2025", "reading guide LLM tutoring"]
 status: active
-compiled_against: 1
+compiled_against: 2
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-24
+    mode: in-place
+    notes: 'type stayed synthesis'
 ---
 
 # Researcher's guide — AI in education, 2024-2025
@@ -31,12 +37,12 @@ first **causal** evidence base. Read together they say:
 
 1. **Naive use of ChatGPT during practice can measurably harm
    learning**, even when it improves performance during use
-   ([[2024-bastani-generative-ai-guardrails-analysis|Bastani et al. 2024, PNAS]]
+   ([[2024-bastani-generative-ai-guardrails-summary|Bastani et al. 2024, PNAS]]
    — −17% on the unassisted exam vs. control).
 2. **Pedagogically guardrailed LLM tutors avoid that harm**, and
    well-designed ones can **exceed even best-practice active
    classroom teaching**
-   ([[2025-kestin-ai-tutoring-active-learning-analysis|Kestin et al. 2025, *Scientific Reports*]]
+   ([[2025-kestin-ai-tutoring-active-learning-summary|Kestin et al. 2025, *Scientific Reports*]]
    — higher learning gains in less time).
 3. **Design depth dominates model strength.** All three RCTs use
    GPT-4; the variance in outcomes is driven by **how the tool is
@@ -81,24 +87,24 @@ flowchart TD
 - Start: [[llm-tutoring-causal-evidence-2024-2025]] (the headline
   picture).
 - Then:
-  [[2025-kestin-ai-tutoring-active-learning-analysis|Kestin 2025]]
+  [[2025-kestin-ai-tutoring-active-learning-summary|Kestin 2025]]
   (strongest positive RCT) and
-  [[2024-bastani-generative-ai-guardrails-analysis|Bastani 2024]]
+  [[2024-bastani-generative-ai-guardrails-summary|Bastani 2024]]
   (strongest negative RCT).
 
 ### "Does giving students ChatGPT cause cheating / hurt learning?"
 - Start: [[cognitive-offloading]] (the mechanism).
 - Then:
-  [[2024-bastani-generative-ai-guardrails-analysis|Bastani 2024]]
+  [[2024-bastani-generative-ai-guardrails-summary|Bastani 2024]]
   (the empirical anchor: yes, naive use harms; guardrails fix it).
 
 ### "What's the right way to deploy an LLM tutor in a real classroom?"
 - Start: [[learning-guardrails]] (the design patterns).
 - Then:
-  [[2025-kestin-ai-tutoring-active-learning-analysis|Kestin 2025]]
+  [[2025-kestin-ai-tutoring-active-learning-summary|Kestin 2025]]
   for the positive existence proof.
 - Cost reality check:
-  [[2024-bastani-generative-ai-guardrails-analysis|Bastani 2024]] —
+  [[2024-bastani-generative-ai-guardrails-summary|Bastani 2024]] —
   the guardrails that work require per-problem teacher authoring.
 
 ### "What's the historical context — did people try this before LLMs?"
@@ -128,16 +134,16 @@ flowchart TD
 
 ## Navigate by paper (one-line summaries)
 
-- **[[2024-vanzo-gpt4-homework-tutor-analysis|Vanzo, Pal Chowdhury, Sachan — ETH Zürich, 2024]]**
+- **[[2024-vanzo-gpt4-homework-tutor-summary|Vanzo, Pal Chowdhury, Sachan — ETH Zürich, 2024]]**
   (arXiv:2409.15981) — first in-field RCT of GPT-4 homework
   tutoring in K-12 non-CS subjects. Positive grammar gain, no
   retention test.
-- **[[2024-bastani-generative-ai-guardrails-analysis|Bastani et al. — Wharton + UPenn + Turkey high school, 2024]]**
+- **[[2024-bastani-generative-ai-guardrails-summary|Bastani et al. — Wharton + UPenn + Turkey high school, 2024]]**
   (PNAS, 10.1073/pnas.2422633122) — pre-registered, ~1000 students.
   Naive AI **harms** retention (−17%); pedagogical guardrails
   neutralise the harm. **The single most important paper to read in
   this domain right now.**
-- **[[2025-kestin-ai-tutoring-active-learning-analysis|Kestin, Miller et al. — Harvard physics, 2025]]**
+- **[[2025-kestin-ai-tutoring-active-learning-summary|Kestin, Miller et al. — Harvard physics, 2025]]**
   (Sci Rep, 10.1038/s41598-025-97652-6) — pedagogy-aware GPT-4 tutor
   exceeds active-learning classroom on matched post-tests, with less
   time on task. Current positive-evidence high-water mark.
@@ -213,9 +219,9 @@ weight their findings:
 
 - **Reading priority for newcomers:** this page →
   [[llm-tutoring-causal-evidence-2024-2025]] →
-  [[2024-bastani-generative-ai-guardrails-analysis]] →
-  [[2025-kestin-ai-tutoring-active-learning-analysis]] →
-  [[2024-vanzo-gpt4-homework-tutor-analysis]].
+  [[2024-bastani-generative-ai-guardrails-summary]] →
+  [[2025-kestin-ai-tutoring-active-learning-summary]] →
+  [[2024-vanzo-gpt4-homework-tutor-summary]].
 - **If you want depth on a single concept:**
   [[cognitive-offloading]] for the failure mode,
   [[learning-guardrails]] for the mitigation,

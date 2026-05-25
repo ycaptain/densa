@@ -4,6 +4,24 @@ Use this prompt body when the human says `ingest <path>` or drops a new
 source. The procedure is the canonical realisation of `/AGENTS.md` §2.1; if
 that file changes, this prompt loses authority — re-read the schema.
 
+## What this command will write (schema contract)
+
+| Path                                              | When                       | Why                                                  |
+|---------------------------------------------------|----------------------------|------------------------------------------------------|
+| `domains/<X>/wiki/summaries/<slug>.md`            | always                     | 1:1 with the raw — one summary per ingest            |
+| `domains/<X>/wiki/concepts/<slug>.md`             | when touched               | append Appearances row when the concept is mentioned |
+| `domains/<X>/wiki/entities/<slug>.md`             | when touched               | append Appearances row when the entity is mentioned  |
+| `domains/<X>/wiki/open-questions/<slug>.md`       | when touched               | append evidence row when the source bears on an open question |
+| `domains/<X>/wiki/overview.md`                    | when a new page is created | add the new page to the overview mindmap and Dataview blocks |
+| `domains/<X>/log.md`                              | always                     | audit trail (newest first per AGENTS002)             |
+| `log.md`                                          | only when cross-domain     | global timeline (newest first)                       |
+
+> This table is the **single source of truth** for what `ingest` writes;
+> it mirrors `densa.schema.OPERATIONS['ingest'].writes`. AGENTS011
+> warns when the prompt and schema drift apart. When a user asks the
+> AI to widen the contract ("also write to X/"), update **both** here
+> and in `_system/densa/schema.py` in the same commit.
+
 ## Input
 
 - **Source path**: `<path>` — a file under `domains/<X>/raw/...` (or a path
@@ -16,7 +34,7 @@ that file changes, this prompt loses authority — re-read the schema.
    (Chinese / Japanese / Korean) the conversion is different: each CJK
    character is ~3 UTF-8 bytes and tokenises at ~1 token, so use
    **tokens ≈ characters** (or equivalently `bytes / 3`) — see
-   [`docs/CJK-WORKFLOW.md`](../../docs/CJK-WORKFLOW.md) §1 for the full
+   [`docs/cjk-workflow.md`](../../docs/cjk-workflow.md) §1 for the full
    ratio table. Apply the **token-budget gate**:
    - **≤ 20K tokens** (≤ ~80 KB English prose, or ≤ ~20K CJK characters):
      proceed straight to step 2 (full read + plan + apply in one pass).
@@ -52,20 +70,29 @@ that file changes, this prompt loses authority — re-read the schema.
     decision-record extraction). Skipping them produces analyses that
     look schema-compliant but miss the domain's actual reasoning shape.
     If no sub-prompt matches, proceed with the generic procedure below.
-5. **Read `domains/<X>/index.md`** to understand what wiki pages already
-   exist. Bias heavily toward updating existing pages over creating new ones.
-6. **Plan the touched pages** before writing. Output a short plan:
+5. **Read `domains/<X>/wiki/overview.md`** (the per-domain entry page)
+   then `domains/<X>/index.md` if present, to understand what wiki
+   pages already exist. Bias heavily toward updating existing pages
+   over creating new ones.
+6. **Plan the touched pages** before writing. The plan **must echo the
+   schema's Write contract** (see top-of-file table) — every line maps
+   to one row of `densa.schema.OPERATIONS['ingest'].writes`:
    ```
    Plan:
-   - update: [[entity/...]]
-   - update: [[pattern/...]]
-   - create: [[concept/...]]
-   - create: [[synthesis/...]]
-   - update: [[index]]
-   - prepend: log.md (×2 — domain + global if cross-domain;
-     "prepend" because L1 §6 logs are reverse-chronological — newest
-     first at the entry insertion point. "Append" in older prompts
-     is a legacy synonym for the same write.)
+   - create: domains/<X>/wiki/summaries/<slug>.md         (1:1 with the raw)
+   - update: domains/<X>/wiki/concepts/<concept-slug>.md  (Appearances +1)
+   - update: domains/<X>/wiki/entities/<entity-slug>.md   (Appearances +1)
+   - update: domains/<X>/wiki/open-questions/<q-slug>.md  (evidence row)   ← when applicable
+   - update: domains/<X>/wiki/overview.md                  (mindmap +1 node) ← only when a new page is created
+   - prepend: domains/<X>/log.md                           (newest-first per AGENTS002)
+   - prepend: log.md                                       (only when cross-domain)
+   ```
+   Read-but-not-touched lines (paths the source bears on but the
+   ingest deliberately defers) belong below the Plan list so the
+   human can see them at review time:
+   ```
+   Read-but-not-touched:
+   - domains/<X>/wiki/concepts/<other-slug>.md — concept mentioned but no new instance
    ```
    Wait for the human's go-ahead unless they have already pre-approved
    batch ingest.
@@ -82,19 +109,37 @@ that file changes, this prompt loses authority — re-read the schema.
    - When the plan in step 6.5 declared cross-domain, write the
      `cross-domain` tag into the new/updated pages' frontmatter as
      part of this step. Verify the tag is present before moving on.
+   - **`overview.md` mindmap nodes are plain text and unquoted** —
+     Mermaid's `mindmap` parser breaks on apostrophes, colons, and
+     unbalanced brackets in raw node text. Keep new nodes short and
+     ASCII-friendly (e.g. `birds-eye views`, not `bird's-eye views`);
+     wrap in double quotes only if punctuation is unavoidable
+     (`["X: Y"]`). Same rule applies to any Mermaid diagram you add
+     to other wiki pages.
 8. **Refresh `domains/<X>/index.md`** only if a new wiki page was created
    (Dataview blocks pick up most updates automatically).
 9. **Prepend to `domains/<X>/log.md`** — insert the new entry immediately
    after the YAML frontmatter (and before any `# <Title>` H1 / intro prose),
-   so newest is first per L1 §6:
+   so newest is first per L1 §6. **The Wrote / Read-but-not-touched
+   breakdown is required**: it lets a subsequent `lint` run verify
+   that every claimed write actually landed (mtimes match log date),
+   and it surfaces gaps where the next ingest should pick up:
    ```
    ## [YYYY-MM-DD] ingest | <source title>
    - Source: [[<path>]]
-   - Pages touched: [[…]], [[…]]
+   - Wrote:
+     - domains/<X>/wiki/summaries/<slug>.md (created)
+     - domains/<X>/wiki/concepts/<existing-slug>.md (Appearances +1 row)
+     - domains/<X>/wiki/entities/<new-slug>.md (created)
+     - domains/<X>/wiki/overview.md (mindmap node added)
+   - Read-but-not-touched:
+     - domains/<X>/wiki/open-questions/<slug>.md — source bears on this thread but evidence row deferred (no new probe)
    - One-line synthesis.
    ```
 10. **If cross-domain**, also prepend a one-liner to the global `log.md`
-    using the same top-of-file insertion point.
+    using the same top-of-file insertion point. The cross-domain entry
+    is shorter (just `Source` + one-line synthesis); the detailed
+    `Wrote`/`Read-but-not-touched` lists stay in the per-domain log.
 11. **Suggest a commit message** for the human:
     `ingest(<domain>): <date> <slug>`.
 

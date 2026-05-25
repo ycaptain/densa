@@ -3,14 +3,20 @@ type: concept
 domain: research-papers
 created: 2026-05-19
 updated: 2026-05-21
-sources: ["[[2024-anthropic-sparse-autoencoders-analysis]]"]
+sources: ["[[2024-anthropic-sparse-autoencoders-summary]]"]
 tags: [interpretability, sparse-autoencoders, dictionary-learning, technique]
 aliases: ["SAE", "sparse autoencoder", "dictionary learning"]
 status: active
-compiled_against: 1
+compiled_against: 2
 last_validated: 2026-05-21
 first_appeared: 2023-10-01
 also_known_as: ["dictionary learning (the classical signal-processing precursor)", "L1-sparse coding"]
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-24
+    mode: in-place
+    notes: 'type stayed concept'
 ---
 
 # Sparse autoencoder (SAE)
@@ -54,7 +60,7 @@ per token — the L1 prior aligns the learned dictionary with that
 ground truth. Empirically this produces atoms that activate on
 human-coherent concepts at higher rates than baselines (PCA, raw
 neurons), as quantified in
-[[2024-anthropic-sparse-autoencoders-analysis]].
+[[2024-anthropic-sparse-autoencoders-summary]].
 
 ## Known failure modes
 
@@ -64,12 +70,12 @@ neurons), as quantified in
   add an auxiliary loss that penalises low usage.
 - **Polysemantic atoms.** ~30% of atoms still activate on a mixture
   of unrelated concepts at any tested dictionary size
-  ([[2024-anthropic-sparse-autoencoders-analysis|Anthropic 2024 §4]]).
+  ([[2024-anthropic-sparse-autoencoders-summary|Anthropic 2024 §4]]).
   This is the coverage ceiling that bounds the technique's current
   reach.
 - **Feature splitting.** As dictionary size grows from 4× → 32×,
   ~30% of "compound" atoms split into multiple narrower atoms
-  ([[2024-anthropic-sparse-autoencoders-analysis|§3.3]]). Is this the
+  ([[2024-anthropic-sparse-autoencoders-summary|§3.3]]). Is this the
   true feature inventory emerging, or an artefact of the L1 prior?
   See [[saes-cross-model-transfer]] — a true inventory should
   transfer across model families more than an L1-induced one.
@@ -86,7 +92,7 @@ neurons), as quantified in
   the task."** This conflates correlation with mechanism. SAE
   labelling shows what an atom *activates on*; only **steering or
   ablation** (causal interventions, e.g.
-  [[2024-anthropic-sparse-autoencoders-analysis|§3.2]]) can show the
+  [[2024-anthropic-sparse-autoencoders-summary|§3.2]]) can show the
   atom is at least sufficient for the behaviour. Necessity is a
   further claim that steering alone does not support.
 - **"SAEs solve interpretability."** They give the *alphabet*. The
@@ -105,7 +111,7 @@ neurons), as quantified in
 
 - **PCA** — linear, no sparsity prior. Baseline that SAEs beat by
   ~7× on monosemantic-atom fraction
-  ([[2024-anthropic-sparse-autoencoders-analysis|14% vs 2.1%]]).
+  ([[2024-anthropic-sparse-autoencoders-summary|14% vs 2.1%]]).
 - **Activation patching** — orthogonal: SAEs find features, patching
   tests their causal role. Best results come from combining the two
   (find atoms with SAE, then patch them to verify necessity).
@@ -120,4 +126,4 @@ neurons), as quantified in
 
 | Date       | Page                                                          | Note                                                         |
 | ---------- | ------------------------------------------------------------- | ------------------------------------------------------------ |
-| 2026-05-19 | [[2024-anthropic-sparse-autoencoders-analysis]]               | First demonstration of SAE monosemanticity at frontier scale (~14% atoms, κ = 0.71) |
+| 2026-05-19 | [[2024-anthropic-sparse-autoencoders-summary]]               | First demonstration of SAE monosemanticity at frontier scale (~14% atoms, κ = 0.71) |

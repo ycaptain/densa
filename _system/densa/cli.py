@@ -37,6 +37,7 @@ from pathlib import Path
 
 from densa import __version__
 from densa.commands import init as init_cmd
+from densa.commands import migrate as migrate_cmd
 from densa.commands import upgrade as upgrade_cmd
 from densa.config import RULES, Config, rule_by_id, rule_by_name
 from densa.formatters import FORMATTERS
@@ -122,15 +123,16 @@ def _build_parser() -> argparse.ArgumentParser:
     ``densa --staged``, ``densa --diff <ref>``, ``densa path1 path2``)
     is interpreted as ``densa lint <same args>``. The bare form is
     canonical (see module docstring); the ``lint`` subcommand exists
-    for discoverability via ``densa --help``. This dual entry also
-    keeps the archived ``validate.py --all`` shim
-    (``attic/scripts/validate.py``) working without explicit aliasing.
+    for discoverability via ``densa --help``.
     """
     parser = argparse.ArgumentParser(
         prog="densa",
         description=(
-            "Densa — compile your sources into a queryable markdown wiki. "
-            "Validate a vault against the L1 schema (see AGENTS.md §3, §6)."
+            "densa — the schema validator for a Densa vault. "
+            "Densa (the project) is the markdown template; `densa` (this CLI) "
+            "is the tool that validates it against the L1 schema "
+            "(see AGENTS.md §3, §6). Also exposes `init` / `upgrade` "
+            "for vault bootstrap."
         ),
     )
     parser.add_argument(
@@ -161,6 +163,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
     init_cmd.add_parser(sub)
     upgrade_cmd.add_parser(sub)
+    migrate_cmd.add_parser(sub)
 
     return parser
 
@@ -301,6 +304,7 @@ def main(argv: list[str] | None = None) -> int:
         "version": _cmd_version,
         "init": init_cmd.run,
         "upgrade": upgrade_cmd.run,
+        "migrate": migrate_cmd.run,
     }
     return dispatch[command](args)
 

@@ -108,14 +108,19 @@ def test_hook_no_trailing_blank_line_after_exec() -> None:
     )
 
 
-def test_repo_path_default_skips_for_windows_users() -> None:
-    """Document Windows note exists in SETUP.md (loose check). Smoke
-    test to catch silent removal of the platform note."""
-    setup = (
-        Path(__file__).resolve().parents[2] / "_system" / "SETUP.md"
+def test_hook_disabling_documented() -> None:
+    """Hook bypass / disable instructions are documented in
+    docs/setup.md (extracted from GUIDE.md in the v2 onboarding sweep).
+    Smoke test to catch silent removal of the actionable how-to."""
+    setup_doc = (
+        Path(__file__).resolve().parents[2] / "docs" / "setup.md"
     ).read_text(encoding="utf-8")
-    # We expect either an explicit Disabling section, or a `--no-verify`
-    # mention, both of which we added in the T2 sweep.
-    assert "Disabling the hook" in setup or "--no-verify" in setup
+    # We expect either an explicit "Disabling the … hook" section, or
+    # a `--no-verify` mention, both of which the docs/setup.md
+    # "Disabling the pre-commit hook" section carries.
+    assert (
+        "Disabling the pre-commit hook" in setup_doc
+        or "--no-verify" in setup_doc
+    )
     # Use os.linesep noise to avoid lints on missing usage.
     assert os.linesep in ("\n", "\r\n")

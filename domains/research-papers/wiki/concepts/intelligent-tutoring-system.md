@@ -3,14 +3,20 @@ type: concept
 domain: research-papers
 created: 2026-05-20
 updated: 2026-05-21
-sources: ["[[2024-vanzo-gpt4-homework-tutor-analysis]]", "[[2024-bastani-generative-ai-guardrails-analysis]]", "[[2025-kestin-ai-tutoring-active-learning-analysis]]"]
+sources: ["[[2024-vanzo-gpt4-homework-tutor-summary]]", "[[2024-bastani-generative-ai-guardrails-summary]]", "[[2025-kestin-ai-tutoring-active-learning-summary]]"]
 tags: [education, tutoring, ai-education, history, technique]
 aliases: ["ITS", "intelligent tutoring systems", "intelligent tutor"]
 status: active
-compiled_against: 1
+compiled_against: 2
 last_validated: 2026-05-21
 first_appeared: 1990-01-01
 also_known_as: ["computer-aided instruction (broader umbrella)", "model-tracing tutor (Anderson lineage)", "cognitive tutor (Carnegie Learning lineage)"]
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-24
+    mode: in-place
+    notes: 'type stayed concept'
 ---
 
 # Intelligent Tutoring System (ITS)
@@ -51,9 +57,9 @@ Three of the design moves seen in current LLM-tutoring RCTs are
 **ITS ideas reincarnated** in prompt form:
 
 1. **Hint scaffolding instead of giving the answer** — see GPT Tutor
-   in [[2024-bastani-generative-ai-guardrails-analysis]] and the
+   in [[2024-bastani-generative-ai-guardrails-summary]] and the
    active-learning prompt in
-   [[2025-kestin-ai-tutoring-active-learning-analysis]].
+   [[2025-kestin-ai-tutoring-active-learning-summary]].
 2. **Modelling common student misconceptions** — Bastani's GPT
    Tutor literally bakes a "common mistakes + feedback templates"
    list into the system prompt.
@@ -98,6 +104,6 @@ unclear, for retention under withdrawal**.
 
 | Date       | Page                                                              | Note                                                                                  |
 | ---------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
-| 2026-05-20 | [[2024-vanzo-gpt4-homework-tutor-analysis]]                        | LLM positioned as the *cost-amortisation* successor of ITS                            |
-| 2026-05-20 | [[2024-bastani-generative-ai-guardrails-analysis]]                 | GPT Tutor's guardrail prompt effectively re-instantiates ITS-style hint-design        |
-| 2026-05-20 | [[2025-kestin-ai-tutoring-active-learning-analysis]]               | Pedagogy-aware prompt encodes ITS-style cognitive-load + scaffolding ideas in prose   |
+| 2026-05-20 | [[2024-vanzo-gpt4-homework-tutor-summary]]                        | LLM positioned as the *cost-amortisation* successor of ITS                            |
+| 2026-05-20 | [[2024-bastani-generative-ai-guardrails-summary]]                 | GPT Tutor's guardrail prompt effectively re-instantiates ITS-style hint-design        |
+| 2026-05-20 | [[2025-kestin-ai-tutoring-active-learning-summary]]               | Pedagogy-aware prompt encodes ITS-style cognitive-load + scaffolding ideas in prose   |

@@ -3,14 +3,20 @@ type: concept
 domain: research-papers
 created: 2026-05-19
 updated: 2026-05-21
-sources: ["[[2024-anthropic-sparse-autoencoders-analysis]]"]
+sources: ["[[2024-anthropic-sparse-autoencoders-summary]]"]
 tags: [interpretability, superposition, mechanism]
 aliases: ["feature superposition", "polysemanticity"]
 status: active
-compiled_against: 1
+compiled_against: 2
 last_validated: 2026-05-21
 first_appeared: 2022-09-01
 also_known_as: ["polysemanticity (when discussed at the neuron level)"]
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-24
+    mode: in-place
+    notes: 'type stayed concept'
 ---
 
 # Superposition
@@ -64,7 +70,7 @@ research lines try to undo it:
 1. **Dictionary learning** — train a sparse overcomplete basis (e.g.
    [[sparse-autoencoder]]) so that ground-truth features become axis-
    aligned in the new basis. See
-   [[2024-anthropic-sparse-autoencoders-analysis]] for one instance —
+   [[2024-anthropic-sparse-autoencoders-summary]] for one instance —
    ~14% of dictionary atoms become monosemantic under blind
    labelling, vs. ~3% of raw neurons.
 2. **Circuit-level analysis** — accept polysemantic neurons and
@@ -86,7 +92,7 @@ research lines try to undo it:
 - **"Architectures with wider MLPs solve it."** Width helps but does
   not eliminate the pressure. The empirical question — does a
   K = D regime exist at frontier scale? — is open, and the
-  [[2024-anthropic-sparse-autoencoders-analysis|2024 SAE evidence]]
+  [[2024-anthropic-sparse-autoencoders-summary|2024 SAE evidence]]
   is consistent with K ≫ D at 9B parameters.
 - **"Superposition implies the model is confused."** The opposite.
   Superposition is a *useful trick* the model has learned to expand
@@ -112,4 +118,4 @@ research lines try to undo it:
 
 | Date       | Page                                                          | Note                                                                   |
 | ---------- | ------------------------------------------------------------- | ---------------------------------------------------------------------- |
-| 2026-05-19 | [[2024-anthropic-sparse-autoencoders-analysis]]               | Empirical evidence that ~14% of SAE atoms become monosemantic at scale (vs. ~3% of raw neurons), and that feature splitting under widening is consistent with the K > D model |
+| 2026-05-19 | [[2024-anthropic-sparse-autoencoders-summary]]               | Empirical evidence that ~14% of SAE atoms become monosemantic at scale (vs. ~3% of raw neurons), and that feature splitting under widening is consistent with the K > D model |

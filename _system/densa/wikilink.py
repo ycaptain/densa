@@ -50,7 +50,7 @@ like ``[[concept]]`` cannot silently resolve to a template / prompt /
 artifact under those trees. A second, full-repo path-existence index
 (:data:`SlugIndex` returned by :func:`build_index` carries it under
 the ``__explicit_paths__`` key) lets explicit-path wikilinks like
-``[[_system/MANUAL]]`` continue to resolve.
+``[[_system/templates/concept]]`` continue to resolve.
 """
 
 _EXPLICIT_PATHS_KEY = "__explicit_paths__"
@@ -67,7 +67,8 @@ def _walk_markdown(
     ``inbox/`` / ``outputs/`` hold templates / prompts / artifacts that
     contain ``[[placeholder]]`` examples by design. Set
     ``include_skipped_top_level=True`` to walk the full repo, used to
-    keep explicit-path wikilinks like ``[[_system/MANUAL]]`` resolving.
+    keep explicit-path wikilinks like ``[[_system/templates/concept]]``
+    resolving.
     """
     for p in repo.rglob("*.md"):
         rel = p.relative_to(repo)
@@ -92,8 +93,8 @@ def build_index(repo: Path) -> SlugIndex:
        resolve to ``_system/templates/concept.md`` this way.
     2. Full repo-relative path set under the internal
        ``__explicit_paths__`` key. Lets :func:`resolve` accept explicit
-       paths like ``[[_system/MANUAL]]`` without re-introducing the
-       false-resolution bug.
+       paths like ``[[_system/templates/concept]]`` without re-introducing
+       the false-resolution bug.
     """
     idx: SlugIndex = {}
     for rel in _walk_markdown(repo):
@@ -117,7 +118,7 @@ def resolve(target: str, idx: SlugIndex) -> Resolution:
 
     Strips display labels (``slug|Display``), section anchors
     (``slug#section`` or ``slug#^block-id``), and trailing ``.md``.
-    Explicit paths (``[[_system/MANUAL]]``, ``[[domains/x/wiki/y]]``)
+    Explicit paths (``[[_system/templates/concept]]``, ``[[domains/x/wiki/y]]``)
     are matched against the full repo-relative path set; bare slugs
     are matched against the wiki-graph-relevant suffix index only.
     """

@@ -34,8 +34,11 @@ from densa.checks.frontmatter_required import (
 )
 from densa.checks.last_validated_stale import LastValidatedFresh
 from densa.checks.log_append_only import LogAppendOnly
+from densa.checks.migration_history_hygiene import MigrationHistoryHygiene
 from densa.checks.operation_writes_scope import OperationWritesScope
+from densa.checks.prompt_schema_sync import PromptSchemaSync
 from densa.checks.raw_immutability import RawImmutability
+from densa.checks.schema_version_consistency import SchemaVersionConsistency
 from densa.checks.wikilink_resolvable import WikilinkResolvable
 
 FILE_RULES: tuple[FileRule, ...] = (
@@ -45,6 +48,9 @@ FILE_RULES: tuple[FileRule, ...] = (
     WikilinkResolvable(),
     LastValidatedFresh(),
     CompiledAgainstCurrent(),
+    SchemaVersionConsistency(),
+    PromptSchemaSync(),
+    MigrationHistoryHygiene(),
 )
 
 STAGED_RULES: tuple[StagedRule, ...] = (
@@ -63,8 +69,11 @@ __all__ = [
     "FrontmatterTypeAllowed",
     "LastValidatedFresh",
     "LogAppendOnly",
+    "MigrationHistoryHygiene",
     "OperationWritesScope",
+    "PromptSchemaSync",
     "RawImmutability",
+    "SchemaVersionConsistency",
     "StagedRule",
     "WikilinkResolvable",
 ]

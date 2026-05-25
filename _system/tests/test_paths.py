@@ -98,7 +98,7 @@ class TestWikilinksScoped:
 
     def test_docs_is_scoped(self) -> None:
         # docs/ has no placeholders; remains in the wikilink graph.
-        assert wikilinks_scoped("docs/DESIGN.md") is True
+        assert wikilinks_scoped("docs/setup.md") is True
 
 
 class TestIsOutputs:

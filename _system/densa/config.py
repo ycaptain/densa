@@ -1,9 +1,15 @@
-"""L1 schema constants + stable rule registry.
+"""Runtime view of the contract; raw definitions live in :mod:`densa.schema`.
 
-This file is the **single source of truth** for the schema enforced by
-the validator. The human-readable mirror lives in `AGENTS.md` §3 / §6 of
-the repo; keep the two in sync via the procedure in
-``docs/DESIGN.md`` §"Engineering hooks".
+L1 schema constants + stable rule registry. The data lives in
+:mod:`densa.schema`; this file re-exports the bits each check needs in
+the shape AGENTS007 / AGENTS009 / AGENTS010 expect, plus the rule
+registry.
+
+Why the split? :mod:`densa.schema` is pure data (page types, operations,
+migrations, Karpathy mapping); :mod:`densa.config` is the validator's
+runtime knobs (rule IDs, bypass env vars, the assembled write-scope
+glob table). When the schema changes, you edit ``schema.py``; this file
+follows automatically.
 
 Rule IDs follow a stable convention: ``AGENTS``-prefix + zero-padded
 three-digit number, where the number is monotonically allocated and
@@ -16,38 +22,31 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Final
 
-SCHEMA_VERSION: Final[int] = 1
+from densa.schema import (
+    ALLOWED_TYPES as _SCHEMA_ALLOWED_TYPES,
+)
+from densa.schema import (
+    SCHEMA_VERSION as _SCHEMA_VERSION,
+)
+from densa.schema import (
+    operation_writes_globs as _operation_writes_globs,
+)
+
+SCHEMA_VERSION: Final[int] = _SCHEMA_VERSION
 """Mirrors the ``schema_version`` in /AGENTS.md frontmatter.
 
-Bumping this here without shipping a migration script under
-``_system/scripts/migrate_NN_<slug>.py`` is a contract violation. See
-the L1 §3.2 procedure.
+Bumping this requires shipping a migration script under
+``_system/scripts/migrate_NN_<slug>.py`` and adding a :class:`Migration`
+entry to :data:`densa.schema.MIGRATIONS`. See
+``docs/reference/schema-versioning.md`` for the procedure.
 """
 
 
 # --- Allowed wiki page types ----------------------------------------------
 
-ALLOWED_TYPES: Final[frozenset[str]] = frozenset({
-    "source",
-    "entity",
-    "concept",
-    "pattern",
-    "session",
-    "analysis",
-    "synthesis",
-    "protocol",
-    "experiment",
-    "project",
-    "stakeholder",
-    "decision",
-    "theme",
-    "framework",
-    "question",
-    "fleeting",
-    "correction",
-    "report",
-})
-"""See AGENTS.md §3 frontmatter schema."""
+ALLOWED_TYPES: Final[frozenset[str]] = _SCHEMA_ALLOWED_TYPES
+"""Derived from :data:`densa.schema.PAGE_TYPES`. See AGENTS.md's
+"Frontmatter schema" section."""
 
 
 REQUIRED_FRONTMATTER_KEYS: Final[tuple[str, ...]] = (
@@ -60,9 +59,10 @@ REQUIRED_FRONTMATTER_KEYS: Final[tuple[str, ...]] = (
 )
 """Universal frontmatter keys whose value MUST be present and non-empty.
 
-L1 §3 lists nine universal keys; this tuple covers the six that MUST
-carry a meaningful value. The remaining three (``sources``, ``tags``,
-``aliases``) are also universal but **may be empty lists** — see
+AGENTS.md's "Frontmatter schema" section lists nine universal keys;
+this tuple covers the six that MUST carry a meaningful value. The
+remaining three (``sources``, ``tags``, ``aliases``) are also
+universal but **may be empty lists** — see
 :data:`PRESENCE_ONLY_FRONTMATTER_KEYS`. The split lets AGENTS003 fire
 when a value is missing without inflating false-positives on legitimate
 empty lists (e.g. an evergreen concept with ``sources: []``).
@@ -82,20 +82,23 @@ PRESENCE_ONLY_FRONTMATTER_KEYS: Final[tuple[str, ...]] = (
 
 AGENTS003 errors when these keys are missing entirely; an empty list
 or empty scalar is allowed (e.g. ``sources: []`` for evergreen
-concepts). See L1 §3 / §3.1 for cardinality rules per page type.
+concepts). See ``docs/reference/sources-cardinality.md`` for the
+per-page-type contract.
 """
 
 
 # --- Bypass env vars ------------------------------------------------------
 
 LOG_REORDER_BYPASS_ENV: Final[str] = "WIKI_ALLOW_LOG_REORDER"
-"""Sanctioned narrow exception to log append-only — see L1 §6 and
+"""Sanctioned narrow exception to log append-only — see AGENTS.md's
+"Red lines" section and
 :class:`densa.checks.log_append_only.LogAppendOnly`.
 """
 
 
 CROSS_SCOPE_BYPASS_ENV: Final[str] = "WIKI_ALLOW_CROSS_SCOPE"
-"""Sanctioned narrow exception to AGENTS007 — see L1 §2.0 and
+"""Sanctioned narrow exception to AGENTS007 — see AGENTS.md's
+"Operation writes" section and
 :class:`densa.checks.operation_writes_scope.OperationWritesScope`.
 """
 
@@ -119,6 +122,7 @@ WIKILINK_SKIP_TOP_LEVEL: Final[frozenset[str]] = frozenset({
     "outputs",
     "writing",
     "projects",
+    "examples",
 })
 """Top-level directories whose markdown files contain ``[[placeholder]]``
 examples by design — wikilink resolvability is not enforced there.
@@ -127,51 +131,52 @@ examples by design — wikilink resolvability is not enforced there.
 :func:`densa.paths.is_outputs`; the canonical exclusion happens in
 ``wikilinks_scoped``.
 
-``writing/`` and ``projects/`` are opt-in workspaces (see DESIGN.md
-§"Optional layers"): they may cite wiki pages with ``[[wikilink]]``
-but the reverse is forbidden and their frontmatter is advisory.
+``writing/`` and ``projects/`` are opt-in workspaces (see
+``docs/reference/design-rationale.md`` "Optional layers" section):
+they may cite wiki pages with ``[[wikilink]]`` but the reverse is
+forbidden and their frontmatter is advisory.
+
+``examples/`` holds opt-in showcase domains (e.g.
+``examples/showcases/workspace/``) plus the ``hello-world`` demo.
+These are reference material, not part of the wikilink graph; their
+internal cross-links are pre-validated when shipped and re-validated
+in a dedicated CI job, not the main ``densa --all`` pass.
 """
 
 
 # --- Operation writes (AGENTS007) -----------------------------------------
 
-OPERATION_WRITES: Final[dict[str, frozenset[str]]] = {
-    "ingest": frozenset({
-        "domains/*/wiki/**",
-        "domains/*/log.md",
-        "log.md",
-    }),
-    "query": frozenset({
-        "outputs/qa/**",
-        "domains/*/log.md",
-        "log.md",
-    }),
-    "lint": frozenset({
-        "outputs/**",
-        "domains/*/log.md",
-        "log.md",
-    }),
-    "process-inbox": frozenset({
-        "domains/*/raw/**",
-        "domains/*/log.md",
-        "log.md",
-    }),
-    "promote": frozenset({
-        "outputs/qa/**",
-        "outputs/lint/**",
-        "domains/*/wiki/**",
-        "domains/*/log.md",
-        "log.md",
-    }),
-    "": frozenset({
+def _build_operation_writes() -> dict[str, frozenset[str]]:
+    """Assemble the AGENTS007 write-scope table.
+
+    Per-operation rows come from :data:`densa.schema.OPERATIONS` (so
+    edits to operation contracts live in one place). The ``""``
+    (no-prefix) row stays hand-maintained here — it covers
+    schema/docs/integrations maintenance, which is repo-shaped rather
+    than vault-shaped.
+
+    Each operation row is widened with two universal append-only
+    targets (``domains/<X>/log.md`` and ``log.md``) when its writes
+    already cover narrower paths under those files; without this the
+    glob ``domains/<X>/wiki/<slug>.md`` would force every log
+    bookkeeping write to also live in the operation's narrow paths.
+    """
+    table: dict[str, frozenset[str]] = {}
+    for op_name, globs in _operation_writes_globs().items():
+        # ``op_name`` mirrors the commit-message prefix.
+        table[op_name] = frozenset(globs)
+
+    table[""] = frozenset({
         "_system/**",
         "docs/**",
+        "examples/**",
         "integrations/**",
         "outputs/**",
         "projects/**",
         "writing/**",
         ".github/**",
         "AGENTS.md",
+        "GUIDE.md",
         "README.md",
         "CHANGELOG.md",
         "CONTRIBUTING.md",
@@ -187,8 +192,11 @@ OPERATION_WRITES: Final[dict[str, frozenset[str]]] = {
         "noxfile.py",
         "index.md",
         "*.md",
-    }),
-}
+    })
+    return table
+
+
+OPERATION_WRITES: Final[dict[str, frozenset[str]]] = _build_operation_writes()
 """Per-operation write-scope whitelist enforced by AGENTS007.
 
 Keys mirror commit-message prefixes (``ingest``, ``query``, ``lint``,
@@ -196,7 +204,13 @@ Keys mirror commit-message prefixes (``ingest``, ``query``, ``lint``,
 ``(no prefix)`` fallback: schema/docs/integrations maintenance. Each
 value is a frozenset of *glob patterns* relative to the repo root.
 
-L1 §2.0 is the human-readable mirror of this table.
+The per-operation rows are derived from
+:data:`densa.schema.OPERATIONS`; edit there to change a contract. The
+no-prefix row is maintained inline because it is repo-maintenance
+boilerplate, not part of the vault's wiki contract.
+
+AGENTS.md's "Operation writes" section is the human-readable mirror
+of this table.
 """
 
 
@@ -236,37 +250,37 @@ RULES: Final[tuple[RuleSpec, ...]] = (
         id="AGENTS001",
         name="raw-immutability",
         summary="raw/ files cannot be modified, deleted, or renamed",
-        agents_anchor="AGENTS.md §6",
+        agents_anchor='AGENTS.md §"Red lines"',
     ),
     RuleSpec(
         id="AGENTS002",
         name="log-append-only",
         summary="log.md is append-only; past entries cannot be rewritten",
-        agents_anchor="AGENTS.md §6",
+        agents_anchor='AGENTS.md §"Red lines"',
     ),
     RuleSpec(
         id="AGENTS003",
         name="frontmatter-required-keys",
         summary="wiki pages must declare type/domain/created/updated/status",
-        agents_anchor="AGENTS.md §3",
+        agents_anchor='AGENTS.md §"Frontmatter schema"',
     ),
     RuleSpec(
         id="AGENTS004",
         name="frontmatter-type-allowed",
         summary="frontmatter `type` must be in the allowed set",
-        agents_anchor="AGENTS.md §3",
+        agents_anchor='AGENTS.md §"Frontmatter schema"',
     ),
     RuleSpec(
         id="AGENTS005",
         name="analysis-sources-cardinality",
         summary="`type: analysis` pages must list exactly one source wikilink",
-        agents_anchor="AGENTS.md §3.1",
+        agents_anchor="docs/reference/sources-cardinality.md",
     ),
     RuleSpec(
         id="AGENTS006",
         name="wikilink-resolvable",
         summary="every `[[wikilink]]` must resolve to some file in the repo",
-        agents_anchor="AGENTS.md §4",
+        agents_anchor='AGENTS.md §"Naming and linking conventions"',
     ),
     RuleSpec(
         id="AGENTS007",
@@ -275,7 +289,7 @@ RULES: Final[tuple[RuleSpec, ...]] = (
             "each commit's staged paths must lie within the write scope "
             "declared for its commit-message prefix"
         ),
-        agents_anchor="AGENTS.md §2.0",
+        agents_anchor='AGENTS.md §"Operation writes"',
     ),
     RuleSpec(
         id="AGENTS008",
@@ -284,7 +298,7 @@ RULES: Final[tuple[RuleSpec, ...]] = (
             "warn when `last_validated` on concept/framework/protocol/entity "
             "is older than 180 days"
         ),
-        agents_anchor="AGENTS.md §3.3",
+        agents_anchor="docs/reference/schema-versioning.md",
     ),
     RuleSpec(
         id="AGENTS009",
@@ -293,7 +307,34 @@ RULES: Final[tuple[RuleSpec, ...]] = (
             "warn when a page's `compiled_against` lags the current "
             "schema_version"
         ),
-        agents_anchor="AGENTS.md §3.2",
+        agents_anchor="docs/reference/schema-versioning.md",
+    ),
+    RuleSpec(
+        id="AGENTS010",
+        name="schema-version-consistency",
+        summary=(
+            "error when wiki pages outside .legacy/ still declare an "
+            "older compiled_against — run `densa migrate` to fix"
+        ),
+        agents_anchor="docs/reference/schema-versioning.md",
+    ),
+    RuleSpec(
+        id="AGENTS011",
+        name="prompt-schema-sync",
+        summary=(
+            "warn when a prompt's Write-contract table drifts from "
+            "densa.schema.OPERATIONS"
+        ),
+        agents_anchor='AGENTS.md §"Operation writes"',
+    ),
+    RuleSpec(
+        id="AGENTS012",
+        name="migration-history-hygiene",
+        summary=(
+            "warn when `migration_history` frontmatter is malformed or "
+            "contradicts `compiled_against`"
+        ),
+        agents_anchor='AGENTS.md §"Upgrading an existing vault"',
     ),
 )
 

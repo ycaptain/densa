@@ -3,14 +3,20 @@ type: concept
 domain: research-papers
 created: 2026-05-20
 updated: 2026-05-23
-sources: ["[[2024-bastani-generative-ai-guardrails-analysis]]", "[[2025-kestin-ai-tutoring-active-learning-analysis]]", "[[2024-vanzo-gpt4-homework-tutor-analysis]]", "[[2025-kim-chatgpt-education-review-tkl-analysis]]"]
+sources: ["[[2024-bastani-generative-ai-guardrails-summary]]", "[[2025-kestin-ai-tutoring-active-learning-summary]]", "[[2024-vanzo-gpt4-homework-tutor-summary]]", "[[2025-kim-chatgpt-education-review-tkl-summary]]"]
 tags: [cognition, learning-science, failure-mode, ai-education, metacognition]
 aliases: ["cognitive offloading", "skill displacement", "crutch usage", "AI dependency"]
 status: active
-compiled_against: 1
+compiled_against: 2
 last_validated: 2026-05-23
 first_appeared: 2016-01-01
 also_known_as: ["the calculator effect", "automation complacency (aviation lineage)", "the crutch effect (Bastani et al. 2024)"]
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-24
+    mode: in-place
+    notes: 'type stayed concept'
 ---
 
 # Cognitive Offloading
@@ -25,7 +31,7 @@ on closed-form assessments after the tool is withdrawn.
 
 The empirical anchor in this domain is the −17% exam-performance
 penalty in
-[[2024-bastani-generative-ai-guardrails-analysis|Bastani et al. 2024]],
+[[2024-bastani-generative-ai-guardrails-summary|Bastani et al. 2024]],
 which the authors describe in mechanism-language as students
 "using GPT-4 as a *crutch*".
 
@@ -68,7 +74,7 @@ The **awareness gap** (step 5) is what makes this mode insidious:
 the metric the student naturally watches (with-tool performance) is
 the metric that *rises*, while the metric they cannot directly see
 (unaided skill) is the metric that *falls*. The
-[[2024-bastani-generative-ai-guardrails-analysis|Bastani-style withdrawal exam]]
+[[2024-bastani-generative-ai-guardrails-summary|Bastani-style withdrawal exam]]
 is the only known way to make the falling metric visible.
 
 ## Why it matters in LLM tutoring
@@ -92,15 +98,15 @@ era.
 
 ## Evidence in this domain
 
-- **[[2024-bastani-generative-ai-guardrails-analysis|Bastani 2024]]
+- **[[2024-bastani-generative-ai-guardrails-summary|Bastani 2024]]
   (math, K-12):** the primary anchor. GPT Base → +48% during
   practice, **−17% on the unassisted exam vs. control**, p < 0.05.
   Interaction logs confirm the crutch pattern (paste, copy).
-- **[[2024-vanzo-gpt4-homework-tutor-analysis|Vanzo 2024]] (ESL,
+- **[[2024-vanzo-gpt4-homework-tutor-summary|Vanzo 2024]] (ESL,
   K-12):** positive short-term gain, **no retention test** — so
   offloading cannot be ruled in or out from this study. This is the
   single most important limit of that paper.
-- **[[2025-kestin-ai-tutoring-active-learning-analysis|Kestin 2025]]
+- **[[2025-kestin-ai-tutoring-active-learning-summary|Kestin 2025]]
   (physics, undergraduate):** positive short-term gain with a
   pedagogy-aware prompt; again no retention test, so the offloading
   question is open at the undergraduate level. The deeper
@@ -156,7 +162,7 @@ In rough order of empirical support:
 
 | Date       | Page                                                              | Note                                                                                       |
 | ---------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| 2026-05-20 | [[2024-bastani-generative-ai-guardrails-analysis]]                 | Primary empirical anchor: −17% exam penalty under GPT Base; "crutch" pattern in logs        |
-| 2026-05-20 | [[2024-vanzo-gpt4-homework-tutor-analysis]]                        | Untested-but-relevant; positive short-term gain without a retention probe                   |
-| 2026-05-20 | [[2025-kestin-ai-tutoring-active-learning-analysis]]               | Pedagogy-aware design *should* mitigate; retention probe still missing                      |
-| 2026-05-23 | [[2025-kim-chatgpt-education-review-tkl-analysis]]                 | Systematic review of 52 empirical studies (Jan 2023–Dec 2024): the *concern* surfaces under "inaccurate / biased information" (n=13) and "undermining critical thinking", but **no study in the corpus uses a withdrawal-exam design** — confirms field-wide gap |
+| 2026-05-20 | [[2024-bastani-generative-ai-guardrails-summary]]                 | Primary empirical anchor: −17% exam penalty under GPT Base; "crutch" pattern in logs        |
+| 2026-05-20 | [[2024-vanzo-gpt4-homework-tutor-summary]]                        | Untested-but-relevant; positive short-term gain without a retention probe                   |
+| 2026-05-20 | [[2025-kestin-ai-tutoring-active-learning-summary]]               | Pedagogy-aware design *should* mitigate; retention probe still missing                      |
+| 2026-05-23 | [[2025-kim-chatgpt-education-review-tkl-summary]]                 | Systematic review of 52 empirical studies (Jan 2023–Dec 2024): the *concern* surfaces under "inaccurate / biased information" (n=13) and "undermining critical thinking", but **no study in the corpus uses a withdrawal-exam design** — confirms field-wide gap |

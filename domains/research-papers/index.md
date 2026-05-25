@@ -2,8 +2,8 @@
 type: index
 scope: research-papers
 domain: research-papers
-updated: 2026-05-21
-compiled_against: 1
+updated: 2026-05-25
+compiled_against: 2
 example_status: worked-example
 ---
 <!-- updated 2026-05-21: raw upgraded from paraphrase to full articles + PhD-onboarding navigator added -->
@@ -43,7 +43,7 @@ wiki page in this domain.
 > **For first-time readers** — three reading paths give a fast
 > grok of the depth this produces:
 > 1. **Skim a single analysis end-to-end** —
->    [[2024-bastani-generative-ai-guardrails-analysis]] is the most
+>    [[2024-bastani-generative-ai-guardrails-summary]] is the most
 >    fully-worked example. Each section corresponds to a
 >    schema-required field (`Claim` / `Method` / `Evidence` /
 >    `Limits` / `Open questions` / `Wiki cross-references`).

@@ -3,14 +3,20 @@ type: concept
 domain: research-papers
 created: 2026-05-20
 updated: 2026-05-21
-sources: ["[[2024-bastani-generative-ai-guardrails-analysis]]", "[[2025-kestin-ai-tutoring-active-learning-analysis]]"]
+sources: ["[[2024-bastani-generative-ai-guardrails-summary]]", "[[2025-kestin-ai-tutoring-active-learning-summary]]"]
 tags: [llm-tutoring, prompt-engineering, pedagogy, design-pattern, mitigation]
 aliases: ["pedagogical guardrails", "tutor prompt guardrails", "AI tutoring guardrails"]
 status: active
-compiled_against: 1
+compiled_against: 2
 last_validated: 2026-05-21
 first_appeared: 2023-01-01
 also_known_as: ["pedagogical prompt", "withhold-answer prompt", "Socratic prompt", "pedagogy-aware prompt (Kestin et al. 2025)"]
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-24
+    mode: in-place
+    notes: 'type stayed concept'
 ---
 
 # Learning guardrails
@@ -43,14 +49,14 @@ Two design clusters appear in the current RCT literature.
 
 1. **Withhold the direct answer.** Ask the model to provide hints,
    ask Socratic questions, or summarise what's been tried — instead
-   of revealing the solution. ([[2024-bastani-generative-ai-guardrails-analysis|Bastani 2024 — GPT Tutor]])
+   of revealing the solution. ([[2024-bastani-generative-ai-guardrails-summary|Bastani 2024 — GPT Tutor]])
 2. **Embed teacher-verified solutions in the system prompt.** The
    model can *check* the student's answer against the canonical
    solution rather than confabulate. This is what lets GPT Tutor
-   *both* hint and not hallucinate. ([[2024-bastani-generative-ai-guardrails-analysis|Bastani 2024]])
+   *both* hint and not hallucinate. ([[2024-bastani-generative-ai-guardrails-summary|Bastani 2024]])
 3. **Embed a misconception catalogue.** When the student errs in a
    common way, the prompt routes the model toward the matching
-   pedagogical response. ([[2024-bastani-generative-ai-guardrails-analysis|Bastani 2024]])
+   pedagogical response. ([[2024-bastani-generative-ai-guardrails-summary|Bastani 2024]])
 
 Empirically, this cluster **erases** Bastani's −17% naive-AI
 retention penalty but delivers no positive uplift over a no-AI
@@ -101,13 +107,13 @@ failure mode at [[cognitive-offloading]].
 
 ## Evidence that guardrails work
 
-- [[2024-bastani-generative-ai-guardrails-analysis|Bastani 2024]]
+- [[2024-bastani-generative-ai-guardrails-summary|Bastani 2024]]
   (pre-registered, ~1,000 students):
   - GPT Base (no guardrails): **−17%** on unassisted exam, p<0.05.
   - GPT Tutor (verification + hint guardrails): **−0.4%** on
     unassisted exam, not significant.
   - **Guardrails eliminate the negative effect.**
-- [[2025-kestin-ai-tutoring-active-learning-analysis|Kestin 2025]]
+- [[2025-kestin-ai-tutoring-active-learning-summary|Kestin 2025]]
   (within-subject crossover, N=194):
   - Pedagogy-aware AI tutor *exceeds* active-learning classroom on
     matched post-tests, with less time on task.
@@ -159,5 +165,5 @@ failure mode at [[cognitive-offloading]].
 
 | Date       | Page                                                              | Note                                                                                          |
 | ---------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| 2026-05-20 | [[2024-bastani-generative-ai-guardrails-analysis]]                 | Primary anchor: GPT Tutor guardrails eliminate the −17% GPT Base penalty                       |
-| 2026-05-20 | [[2025-kestin-ai-tutoring-active-learning-analysis]]               | Extends guardrails from harm-avoidance to positive uplift via pedagogy-aware prompt design     |
+| 2026-05-20 | [[2024-bastani-generative-ai-guardrails-summary]]                 | Primary anchor: GPT Tutor guardrails eliminate the −17% GPT Base penalty                       |
+| 2026-05-20 | [[2025-kestin-ai-tutoring-active-learning-summary]]               | Extends guardrails from harm-avoidance to positive uplift via pedagogy-aware prompt design     |

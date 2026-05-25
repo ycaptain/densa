@@ -3,14 +3,20 @@ type: concept
 domain: research-papers
 created: 2026-05-20
 updated: 2026-05-21
-sources: ["[[2024-vanzo-gpt4-homework-tutor-analysis]]", "[[2025-kestin-ai-tutoring-active-learning-analysis]]", "[[2024-bastani-generative-ai-guardrails-analysis]]"]
+sources: ["[[2024-vanzo-gpt4-homework-tutor-summary]]", "[[2025-kestin-ai-tutoring-active-learning-summary]]", "[[2024-bastani-generative-ai-guardrails-summary]]"]
 tags: [education, learning-science, history, effect-size, motivating-problem]
 aliases: ["2-sigma problem", "Bloom's 2 sigma", "Bloom 2-sigma", "two sigma problem"]
 status: active
-compiled_against: 1
+compiled_against: 2
 last_validated: 2026-05-21
 first_appeared: 1984-06-01
 also_known_as: ["Bloom's two-sigma problem (Educational Researcher, 1984)"]
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-24
+    mode: in-place
+    notes: 'type stayed concept'
 ---
 
 # Two-Sigma Problem (Bloom 1984)
@@ -49,13 +55,13 @@ tutoring-level cost.
 
 Every paper in this domain's evidence arc gestures at Bloom:
 
-- [[2024-vanzo-gpt4-homework-tutor-analysis|Vanzo 2024]] opens with
+- [[2024-vanzo-gpt4-homework-tutor-summary|Vanzo 2024]] opens with
   Bloom 1984 and explicitly positions the work as a partial attack
   on the homework-feedback end of the curve (the 0.3σ → 0.8σ gap).
-- [[2025-kestin-ai-tutoring-active-learning-analysis|Kestin 2025]]
+- [[2025-kestin-ai-tutoring-active-learning-summary|Kestin 2025]]
   frames its physics-course RCT as the closest empirical move
   toward 2σ-style uplift via a pedagogy-aware AI tutor.
-- [[2024-bastani-generative-ai-guardrails-analysis|Bastani 2024]]
+- [[2024-bastani-generative-ai-guardrails-summary|Bastani 2024]]
   is a counter-anchor: GPT Tutor only *matches* control on the exam.
   An LLM tutor that merely matches a no-AI baseline is **not** the
   2σ uplift Bloom was after.
@@ -99,6 +105,6 @@ open.** This tension is unpacked in
 
 | Date       | Page                                                              | Note                                                                                            |
 | ---------- | ----------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| 2026-05-20 | [[2024-vanzo-gpt4-homework-tutor-analysis]]                        | Opens with Bloom 1984; positions GPT-4 homework tutoring as attacking the 0.3σ-feedback gap     |
-| 2026-05-20 | [[2025-kestin-ai-tutoring-active-learning-analysis]]               | Frames Harvard physics RCT as the closest 2σ-style move with an AI tutor to date                 |
-| 2026-05-20 | [[2024-bastani-generative-ai-guardrails-analysis]]                 | Counter-anchor: GPT Tutor matches control, not 2σ — clarifies what "skill acquisition" requires |
+| 2026-05-20 | [[2024-vanzo-gpt4-homework-tutor-summary]]                        | Opens with Bloom 1984; positions GPT-4 homework tutoring as attacking the 0.3σ-feedback gap     |
+| 2026-05-20 | [[2025-kestin-ai-tutoring-active-learning-summary]]               | Frames Harvard physics RCT as the closest 2σ-style move with an AI tutor to date                 |
+| 2026-05-20 | [[2024-bastani-generative-ai-guardrails-summary]]                 | Counter-anchor: GPT Tutor matches control, not 2σ — clarifies what "skill acquisition" requires |

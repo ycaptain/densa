@@ -51,12 +51,21 @@ def make_wiki_page(
     type_: str = "concept",
     sources: str | list[str] | None = None,
     extra: str = "",
+    compiled_against: int | None = None,
 ) -> str:
     """Produce a minimally-valid wiki page body for a given page type.
 
     Carries all nine universal frontmatter keys per AGENTS.md §3 so
-    AGENTS003 does not fire spuriously on fixtures.
+    AGENTS003 does not fire spuriously on fixtures. ``compiled_against``
+    defaults to :data:`densa.schema.SCHEMA_VERSION` so AGENTS010
+    ("schema-version-consistency") does not flag the fixture; pass an
+    explicit value when a test specifically wants to exercise the
+    drift behaviour.
     """
+    from densa.schema import SCHEMA_VERSION  # noqa: PLC0415 (lazy import)
+
+    if compiled_against is None:
+        compiled_against = SCHEMA_VERSION
     if sources is None:
         src_block = "sources: []\n"
     elif isinstance(sources, list):
@@ -77,7 +86,7 @@ def make_wiki_page(
         "aliases: []\n"
         "tags: []\n"
         "status: active\n"
-        "compiled_against: 1\n"
+        f"compiled_against: {compiled_against}\n"
         "---\n"
         "# Test page\n"
         f"{extra}"
