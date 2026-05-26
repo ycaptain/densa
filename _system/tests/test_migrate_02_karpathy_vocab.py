@@ -17,11 +17,9 @@ post-migration state produces no diff (and the script reports
 
 from __future__ import annotations
 
-import subprocess
+import os
 import sys
 from pathlib import Path
-
-import pytest
 
 # Make the migration script importable as a module so we can unit-test
 # its helpers without spawning subprocesses.
@@ -30,7 +28,6 @@ if str(_SCRIPTS) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS))
 
 import migrate_02_karpathy_vocab as mig  # noqa: E402
-
 
 # --- Helpers --------------------------------------------------------------
 
@@ -110,14 +107,12 @@ def _has_migration_history(page: Path) -> bool:
 
 
 def _run_script(repo: Path, *args: str) -> int:
-    script = repo.parents[0] / "share" / "_system" / "scripts" / "migrate_02_karpathy_vocab.py"
     # In tests the vault root is the tmp_path, not the upstream repo, so
     # we run the migration script via the in-process ``main`` instead of
     # spawning a fresh interpreter. That keeps the test hermetic and
     # avoids needing the actual upstream files on disk.
     cwd_was = Path.cwd()
     try:
-        import os
         os.chdir(repo)
         return mig.main(list(args))
     finally:

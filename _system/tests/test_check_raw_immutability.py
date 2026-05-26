@@ -82,7 +82,8 @@ class TestRenameSourceAware:
     """A `R` (rename) is only forbidden when the SOURCE was in raw/.
 
     `git mv inbox/x.md domains/<X>/raw/<bucket>/<dated>-x.md` is the
-    canonical `process-inbox` action (L1 §2.4) and MUST be allowed.
+    canonical `process-inbox` action (AGENTS.md §"process-inbox")
+    and MUST be allowed.
     Renames inside raw/ are still forbidden — they break
     `git log --follow` traces from wiki claims to their source.
     """

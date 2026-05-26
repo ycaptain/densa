@@ -73,10 +73,10 @@ class MigrationHistoryHygiene:
                 path=path,
                 line=1,
                 message=(
-                    f"AGENTS012 migration-history-hygiene: "
-                    f"`migration_history:` is present but empty. "
-                    f"Either remove the key or populate at least one "
-                    f"entry per the migration script's output."
+                    "AGENTS012 migration-history-hygiene: "
+                    "`migration_history:` is present but empty. "
+                    "Either remove the key or populate at least one "
+                    "entry per the migration script's output."
                 ),
             ))
             return

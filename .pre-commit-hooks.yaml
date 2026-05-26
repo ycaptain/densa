@@ -14,7 +14,7 @@
 
 - id: densa
   name: densa (schema + wikilink check)
-  description: Validate a Densa vault against AGENTS.md §3 / §6.
+  description: Validate a Densa vault against AGENTS.md's "Frontmatter schema" + "Red lines" sections.
   entry: python -m densa --staged
   language: python
   pass_filenames: false

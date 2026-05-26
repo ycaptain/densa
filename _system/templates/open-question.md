@@ -15,7 +15,7 @@ first_asked: <% tp.date.now("YYYY-MM-DD") %>
 # <% tp.file.title %>
 
 <!-- Long-arc empirical question that accumulates evidence over time.
-Per L1 §3 the page is a *ledger*: each new [[summary]] that bears on
+Per AGENTS.md §"Frontmatter schema" the page is a *ledger*: each new [[summary]] that bears on
 the question appends an evidence row, never re-states the underlying
 fact. The page itself stays declarative about the *question*, not the
 answer. -->

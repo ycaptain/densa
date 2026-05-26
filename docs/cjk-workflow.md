@@ -16,7 +16,7 @@ inconsistencies (e.g. some slugs romanised, others CJK characters).
 
 ## 1. Token-budget arithmetic
 
-[`_system/prompts/ingest.md`](../_system/prompts/ingest.md) §1
+[`_system/prompts/ingest.md`](../_system/prompts/ingest.md) section 1
 estimates tokens from byte count using a `bytes / 4` heuristic that
 is calibrated for **English prose**. For CJK content the heuristic
 mis-estimates in a predictable direction.
@@ -53,7 +53,8 @@ includes this CJK-specific note.
 
 ## 2. Slugs, aliases, and wikilinks
 
-[`AGENTS.md`](../AGENTS.md) §4 says filenames must be
+[`AGENTS.md` §"Naming and linking conventions"](../AGENTS.md#4-naming-and-linking-conventions)
+says filenames must be
 `lowercase-kebab-case`. It does **not** ban CJK characters in
 filenames — Obsidian resolves `wiki/concepts/失语.md` natively, and
 the validator's `AGENTS006 wikilink-resolvable` rule treats

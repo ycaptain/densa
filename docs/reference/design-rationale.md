@@ -1,7 +1,7 @@
 # Design rationale — why the LLM wiki looks this way
 
 > Companion to [`README.md`](../../README.md). The README shows you how
-> to use the template; this file explains *why* each load-bearing
+> to use this skill pack; this file explains *why* each load-bearing
 > decision exists and how to extend the schema to your own domains.
 > Long page (~680 lines); meant for *evaluating the design*, not for
 > first-time onboarding. Skim the ToC and jump to the section you need.
@@ -70,7 +70,7 @@ search gives you fuzzy fallback. Both, not either.
 
 ## Who this is not for
 
-**This template is not designed for narrative long-form writers,
+**This skill pack is not designed for narrative long-form writers,
 journalists, or memoirists.** If you write essays, articles, or books
 that need to preserve voice, branch drafts, and stay in dialogue with
 editors — this tool's compiler-style "raw → wiki" structure will work
@@ -486,7 +486,7 @@ hottest spot of glue code in the predecessor.
 
 The pre-commit hook (`_system/hooks/pre-commit`) is the path that runs
 on every `git commit`, and so is **pure stdlib**: no `pip install`
-required before adopting the template. The hook just sets
+required before adopting this skill pack. The hook just sets
 `PYTHONPATH` and invokes `python -m densa --staged` from the in-repo
 package.
 
@@ -636,7 +636,7 @@ the AGENTS003-006 scope. The shipped draft/publication templates carry
 historical `type: fleeting` placeholders; rewrite them however suits
 your publishing workflow (the validator never visits these paths).
 If you want post-publication immutability, add a per-L2 lint rule for
-it; the template ships none.
+it; this skill pack ships none.
 
 Enable when: you actively publish externally and want your drafts in
 the same repo as the wiki they cite. Skip when: you compose in a
@@ -677,7 +677,7 @@ separate tool (Notion, Bear, Drafts.app, etc.).
 
 - Try the
   [bootstrap prompt](../bootstrap.md) flow once
-  you've instantiated the template into a new directory (via GitHub
+  you've instantiated this skill pack into a new directory (via GitHub
   fork or `degit`).
 - Read the L1 schema in full: [`AGENTS.md`](../../AGENTS.md).
 - Read the active default L2 (v2 schema) to see how the contract

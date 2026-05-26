@@ -40,14 +40,14 @@ strict = [
     "pyyaml>=6.0",
 ]
 # Everything needed to develop densa itself. Contributors install
-# this once (`pip install -e ".[dev]"`) and then use ``nox`` as the
-# task runner (see ``noxfile.py`` and CONTRIBUTING.md).
+# this once (`pip install -e ".[dev]"`) and then invoke the canonical
+# `python -m X` commands directly (see CONTRIBUTING.md
+# §"Before submitting a PR"). No task runner is required.
 dev = [
     "pyyaml>=6.0",
     "pytest>=8.0",
     "ruff>=0.6",
     "mypy>=1.10",
-    "nox>=2024.4.15",
     "types-pyyaml",
 ]
 

@@ -16,7 +16,9 @@ Lint regenerates `index-snapshot.md` here on every run — a static
 mirror of every Dataview / dataviewjs block in `index.md` and
 `domains/<X>/index.md`, since LLM sessions can't execute Dataview.
 
-The template ships a pre-populated snapshot so the L1 §1.1 step-4
+The template ships a pre-populated snapshot so the
+[L1 §"Minimal onboarding set"](../../AGENTS.md#11-minimal-onboarding-set-for-a-fresh-llm-session)
+step-4
 onboarding pointer always resolves to something readable on a fresh
 clone. Re-run `lint` whenever:
 

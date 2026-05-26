@@ -1,7 +1,8 @@
 # Prompt: promote
 
 Use this prompt body when the human says `promote <qa-path>` (with an
-optional `--as <type>`). Canonical procedure for `/AGENTS.md` §2.5.
+optional `--as <type>`). Canonical procedure for
+[`/AGENTS.md` §"promote"](../../AGENTS.md#25-promote-qa-path-qa--wiki-page).
 The operation upgrades a `query`-produced Q&A artifact under
 `outputs/qa/` into a first-class wiki page, performing a controlled
 information-shape transform rather than a bare `git mv`.
@@ -44,7 +45,7 @@ suggest a remediation; do not modify any file.
 | Source has `type: report`                | Frontmatter `type` is anything else                        | The file isn't a Q&A artifact — abort.                                       |
 | Target type is in the L2's allowed set   | L2 `AGENTS.md` doesn't allow that page type                | Show the L2's allowed types; ask user to rechoose.                           |
 | Slug + aliases dedup                     | Same slug exists, or any wiki page declares the slug as an alias | Suggest merging into the existing page, or pick a fresh slug.                |
-| `sources:` cardinality per §3.1          | < 2 distinct `[[wikilinks]]` in body for `synthesis`; etc. | Ask user to enrich the Q&A with more inline citations before re-running.    |
+| `sources:` cardinality per [`sources-cardinality.md`](../../docs/reference/sources-cardinality.md) | < 2 distinct `[[wikilinks]]` in body for `synthesis`; etc. | Ask user to enrich the Q&A with more inline citations before re-running.    |
 | Required L2-specific fields are derivable | E.g. `concept` needs `first_appeared`, can't infer         | List missing fields; ask user to supply or to switch target type.            |
 
 ### 2. Information-shape transform (4 stages, applied to the moved file)
@@ -68,7 +69,9 @@ prose:
 
 **Stage 2 — Citation hoist.** Scan the body for every distinct
 `[[wikilink]]` and `[[raw-source]]`; deduplicate; write the list
-into frontmatter `sources:` per §3.1's cardinality table for the
+into frontmatter `sources:` per the
+[`sources-cardinality.md`](../../docs/reference/sources-cardinality.md)
+contract for the
 target type. Keep the inline citations intact (double-link by
 design).
 
@@ -108,7 +111,7 @@ The `git mv` is load-bearing: `git log --follow
 domains/<X>/wiki/<folder>/<new-slug>.md` then traces the full Q&A
 history. Replacing the move with a new write + delete loses history.
 
-### 4. Prepend to logs (per L1 §6 — newest first)
+### 4. Prepend to logs (per [AGENTS.md §"Red lines"](../../AGENTS.md#6-red-lines-non-negotiable) — newest first)
 
 Both `domains/<X>/log.md` and the global `log.md` get an entry:
 
@@ -149,7 +152,8 @@ A good promote produces a wiki page that:
 
 - Reads as declarative knowledge, not as a logged conversation.
 - Carries `sources:` frontmatter populated from real wiki/raw links.
-- Honours the target type's `sources` cardinality (§3.1).
+- Honours the target type's `sources` cardinality (see
+  [`sources-cardinality.md`](../../docs/reference/sources-cardinality.md)).
 - Has its `Issues to surface` content already queued in the day's
   lint report, so the next `lint` finds and acts on it.
 - Shows the source Q&A via `git log --follow`, giving the audit

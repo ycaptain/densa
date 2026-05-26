@@ -33,7 +33,7 @@ class StagedEntry:
 
     Keeping ``src`` matters for rules that must distinguish "rename
     into protected scope" (allowed, e.g. ``git mv inbox/x raw/y`` per
-    L1 §2.4) from "rename within protected scope" (forbidden).
+    AGENTS.md §"process-inbox") from "rename within protected scope" (forbidden).
     """
 
     letter: str

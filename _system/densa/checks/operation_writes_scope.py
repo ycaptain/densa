@@ -64,7 +64,7 @@ class OperationWritesScope:
             else:
                 hint = (
                     " No prefix's scope covers this path; review the "
-                    "OPERATION_WRITES table in AGENTS.md §2.0."
+                    "OPERATION_WRITES table in AGENTS.md §\"Operation writes\"."
                 )
             report.add(Diagnostic(
                 rule_id=self.id,

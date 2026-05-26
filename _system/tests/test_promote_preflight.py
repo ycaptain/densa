@@ -4,7 +4,8 @@
 Python function. These tests pin the **prompt contract** so a careless
 edit doesn't silently drop a pre-flight check the wider design depends
 on. Every assertion here corresponds to a row in the pre-flight table
-in [`/AGENTS.md`](../../AGENTS.md) §2.5 / step 1 of the prompt.
+in [`/AGENTS.md` §"promote"](../../AGENTS.md#25-promote-qa-path-qa--wiki-page) /
+step 1 of the prompt.
 
 If you intentionally restructure the prompt body, update both files
 together — they are the canonical statement of the contract.
@@ -71,7 +72,7 @@ class TestPreFlightChecks:
         )
 
     def test_synthesis_min_sources_rule(self, promote_prompt: str) -> None:
-        """Plan v3.2: ≥2 sources for synthesis (§3.1)."""
+        """Plan v3.2: ≥2 sources for synthesis (see sources-cardinality.md)."""
         assert "2" in promote_prompt and "synthesis" in promote_prompt
 
 
@@ -111,7 +112,7 @@ class TestHardRules:
 
 
 class TestAgentsMdAlignment:
-    """AGENTS.md §2.5 must reference the prompt and describe the operation."""
+    """AGENTS.md's "promote" section must reference the prompt and describe the operation."""
 
     def test_agents_md_mentions_promote(self, agents_md: str) -> None:
         assert "promote" in agents_md.lower()
@@ -120,20 +121,20 @@ class TestAgentsMdAlignment:
         self, guide_md: str,
     ) -> None:
         """The natural-language → operation mapping table picks up the
-        new trigger pattern. The table lived in AGENTS.md §8 in v0.2.0
-        and earlier; it moved to GUIDE.md §"Mapping natural language to
-        operations" in the post-0.2.0 onboarding cleanup so AGENTS.md
-        stays contract-only.
+        new trigger pattern. The table lived in AGENTS.md's "Workflow"
+        section in v0.2.0 and earlier; it moved to GUIDE.md's "Mapping
+        natural language to operations" section in the post-0.2.0
+        onboarding cleanup so AGENTS.md stays contract-only.
         """
-        assert "promote (§2.5)" in guide_md
+        assert "[promote](AGENTS.md#25-promote-qa-path" in guide_md
 
     def test_operation_scopes_lists_promote(
         self, operation_scopes_md: str,
     ) -> None:
         """The per-prefix write-scope reference table includes promote.
 
-        AGENTS.md §2.0 keeps the headline; the full table moved to
-        docs/reference/operation-scopes.md when AGENTS.md was trimmed
-        to a contract-only file.
+        AGENTS.md's "Operation writes" section keeps the headline;
+        the full table moved to docs/reference/operation-scopes.md
+        when AGENTS.md was trimmed to a contract-only file.
         """
         assert "promote" in operation_scopes_md.lower()

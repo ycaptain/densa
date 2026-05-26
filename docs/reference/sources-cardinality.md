@@ -1,7 +1,8 @@
 # `sources` cardinality by page type
 
-Reference companion to [`AGENTS.md`](../../AGENTS.md) §3.1. The
-`sources` frontmatter field is universal across wiki pages; what
+Reference companion to
+[`AGENTS.md` §"Frontmatter schema"](../../AGENTS.md#3-frontmatter-schema-universal).
+The `sources` frontmatter field is universal across wiki pages; what
 counts as a "source" — and how many are required — depends on the
 page type. Treat this as a **strict schema contract**; AGENTS005
 enforces the most load-bearing row (`analysis` = exactly 1 raw).
@@ -27,10 +28,11 @@ enforces the most load-bearing row (`analysis` = exactly 1 raw).
 
 1. **Wiki-to-wiki citations are first-class** for second-order pages
    (`pattern`, `theme`, `synthesis`, `entity`). They are *not* a
-   violation of the "every claim traces to ≥1 source" rule
-   ([`AGENTS.md`](../../AGENTS.md) §6) — those second-order pages
-   cite the analyses they generalise, and each analysis cites the raw
-   file directly. The chain still terminates at raw.
+   violation of the "every claim traces to ≥1 source" rule (see
+   [`AGENTS.md` §"Red lines"](../../AGENTS.md#6-red-lines-non-negotiable))
+   — those second-order pages cite the analyses they generalise, and
+   each analysis cites the raw file directly. The chain still
+   terminates at raw.
 
 2. **`analysis.sources` MUST contain exactly one raw wikilink**, never
    a wiki page. If you find yourself wanting to cite a second raw

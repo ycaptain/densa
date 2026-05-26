@@ -64,6 +64,7 @@ Usage::
 from __future__ import annotations
 
 import argparse
+import contextlib
 import re
 import shutil
 import subprocess
@@ -86,7 +87,6 @@ from densa.schema import (  # noqa: E402
     MIGRATION_MODE_ARCHIVE,
     MIGRATION_MODE_IN_PLACE,
     MIGRATION_MODE_RECOVER,
-    SCHEMA_VERSION,
     SLUG_SUFFIX_RENAMES_V1_TO_V2,
     TYPE_RENAMES_V1_TO_V2,
     TYPE_SUB_KIND_V1_TO_V2,
@@ -497,7 +497,7 @@ def _plan_in_place(
                 kind="mv-and-rewrite",
                 src=md,
                 dst=new_md,
-                note=f"v1 page → v2 layout",
+                note="v1 page → v2 layout",
             ))
             # Record slug rename for wikilink rewriting.
             old_slug = md.stem
@@ -681,9 +681,7 @@ def _print_plan(actions: list[Action], dry_run: bool) -> None:
             print(f"  rewrite wikilinks: {len(a.renames)} slug(s)")
         elif a.kind == "cleanup-empty-folder":
             print(f"  rmdir if empty  {a.src}")
-        elif a.kind == "warn-removed-folder":
-            print(f"  ! WARNING  {a.note}: {a.src}")
-        elif a.kind == "warn-unknown-folder":
+        elif a.kind == "warn-removed-folder" or a.kind == "warn-unknown-folder":
             print(f"  ! WARNING  {a.note}: {a.src}")
     print()
 
@@ -812,14 +810,10 @@ def _do_cleanup_empty_folder(folder: Path) -> None:
     # Walk bottom-up.
     for sub in sorted(folder.rglob("*"), reverse=True):
         if sub.is_dir():
-            try:
+            with contextlib.suppress(OSError):
                 sub.rmdir()
-            except OSError:
-                pass
-    try:
+    with contextlib.suppress(OSError):
         folder.rmdir()
-    except OSError:
-        pass
 
 
 # ---------------------------------------------------------------------------

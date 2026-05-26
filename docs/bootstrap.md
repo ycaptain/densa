@@ -1,28 +1,41 @@
 # Bootstrap prompt — set up my LLM wiki
 
-> Paste the body of this file (everything below the `---` line) into
-> Cursor / Claude Code / Codex / a similar IDE-bound coding agent
-> *after* you've forked the Densa upstream into your own vault:
->
-> ```bash
-> # Fork ycaptain/densa on GitHub (one click), then:
-> git clone git@github.com:<you>/densa.git ~/your-vault
-> cd ~/your-vault
-> git remote add upstream https://github.com/ycaptain/densa.git
->
-> # Open ~/your-vault in your AI-pair coding IDE and paste the prompt below.
-> ```
->
-> Forking (not template-cloning) keeps your vault on the upgrade
-> train: `git fetch upstream && git merge upstream/main` brings in
-> new lint rules and schema versions. Upstream never touches
-> `domains/**`, so merges stay clean.
->
-> The prompt below is what the AI should read. It's deliberately
-> step-by-step, with a hard "no edits until I confirm" gate at each
-> step, so you stay in control.
+This file is split into three visually-marked phases. The first you
+*do*; the second you *paste*; the third you *trigger only after the
+first ingest succeeds*. The three phases together are still one
+prompt — paste them as one block — the banners exist so you can find
+your place at a glance.
 
 ---
+
+> [!important] **Phase 1/3 (human only — run these *before* pasting the prompt below).**
+
+Paste the body of this file (everything between the next two
+horizontal rules) into Cursor / Claude Code / Codex / a similar
+IDE-bound coding agent — *after* you've forked the Densa upstream
+into your own vault:
+
+```bash
+# Fork ycaptain/densa on GitHub (one click), then:
+git clone git@github.com:<you>/densa.git ~/your-vault
+cd ~/your-vault
+git remote add upstream https://github.com/ycaptain/densa.git
+
+# Open ~/your-vault in your AI-pair coding IDE and paste the prompt below.
+```
+
+Forking (not template-cloning) keeps your vault on the upgrade train:
+`git fetch upstream && git merge upstream/main` brings in new lint
+rules and schema versions. Upstream never touches `domains/**`, so
+merges stay clean.
+
+The prompt below is what the AI reads. It's deliberately step-by-step,
+with a hard "no edits until I confirm" gate at each step, so you stay
+in control.
+
+---
+
+> [!important] **Phase 2/3 (paste everything from this banner through the Phase 3 banner into your IDE chat — this is the prompt the AI runs through Step 6).**
 
 You are setting up a personal LLM-maintained wiki for me — a
 Densa vault, based on Andrej Karpathy's `llm-wiki` pattern adapted
@@ -122,7 +135,7 @@ lint rule is better than a 200-line spec we'll edit five times.
 
 ## Step 4 — decide what to do with the example L2s
 
-The template ships **one active default + two opt-in showcases**:
+This skill pack ships **one active default + two opt-in showcases**:
 
 - `domains/research-papers/` — **default active**, **v2 schema**. A
   light-weight L2 with a 5-paper LLM-tutoring evidence arc (3 real
@@ -215,9 +228,13 @@ article, a transcript, a meeting note). Then:
 This is the "hello world" of the wiki. Don't skip the plan-first step
 even if I'm impatient — the muscle memory matters.
 
+---
+
+> [!important] **Phase 3/3 (cleanup — trigger only *after* your first successful ingest in Step 6 lands cleanly; this step is also part of the prompt the AI runs).**
+
 ## Step 7 — clean up project-only files (optional)
 
-The template ships a number of files that exist for the open-source
+This skill pack ships a number of files that exist for the open-source
 project itself, not for any user's vault. Once Step 6 succeeds, ask
 me whether to remove them. The default recommendation is **yes,
 remove**, because they only confuse the LLM in future sessions:
@@ -235,7 +252,7 @@ remove**, because they only confuse the LLM in future sessions:
   the tour of the shipped worked examples.
 - `docs/cjk-workflow.md` — keep only if you work in Chinese /
   Japanese / Korean; otherwise remove.
-- `.github/` — issue / PR templates and CI for the template repo;
+- `.github/` — issue / PR templates and CI for the upstream repo;
   not useful in a personal vault.
 - `.editorconfig` — keep this; it's harmless and useful.
 - `_system/templates/vault-readme.md` — see below; remove **after**
@@ -258,7 +275,7 @@ cp _system/templates/vault-readme.md README.md
 # (Now edit README.md and replace `_my-vault_` with my vault name.)
 
 # Preserve the upstream MIT LICENSE alongside the densa code that
-# travels with the template. Deleting LICENSE outright would strip
+# travels with this skill pack. Deleting LICENSE outright would strip
 # the copyright/attribution that MIT requires you keep on any
 # redistribution of the code under `_system/densa/`.
 git mv LICENSE LICENSE-upstream

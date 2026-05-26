@@ -35,7 +35,7 @@ reporting see [`../SECURITY.md`](../SECURITY.md).
 
 No. The wiki is plain markdown with YAML frontmatter and
 `[[wikilink]]` syntax — any editor works. Obsidian adds three things
-this template benefits from: **Dataview** (powers the dynamic blocks
+this skill pack benefits from: **Dataview** (powers the dynamic blocks
 in every `index.md`; without it, indices fall back to static markdown
 — still readable, just no auto-refresh), **Templater** (drops the
 right frontmatter for each page type), and **Graph view** (makes the
@@ -64,7 +64,7 @@ are needed.
 
 ### Can I run this with a non-Cursor agent?
 
-Yes. The prompts and schema are agent-agnostic. The template is
+Yes. The prompts and schema are agent-agnostic. The skill pack is
 tested with Cursor and Claude Code, but anything that can read
 `AGENTS.md`, follow markdown templates, and run shell commands works.
 The required file-system tools per operation are read / write /
@@ -83,7 +83,7 @@ CJK-first vault stays internally consistent.
 
 ## Privacy — sensitive material
 
-Yes, this template works with private / sensitive material, with
+Yes, this skill pack works with private / sensitive material, with
 care. **Treat encryption as part of setup — do not push to any
 remote until git-crypt is verified working.** Outline:
 
@@ -148,7 +148,7 @@ A single workflow at `.github/workflows/ci.yml` with two jobs:
 
 ## Choosing or replacing the default domain
 
-The template ships **one active default L2 + two opt-in showcases**:
+This skill pack ships **one active default L2 + two opt-in showcases**:
 
 | L2 | Where | Schema | Weight | Reach for it if you... |
 |---|---|---|---|---|

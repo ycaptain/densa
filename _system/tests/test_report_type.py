@@ -5,7 +5,7 @@ and:
 
 - Must declare the universal frontmatter keys (AGENTS003).
 - Must use ``type: report`` (AGENTS004 rejects unknown types).
-- May leave ``sources`` empty (§3.1).
+- May leave ``sources`` empty (see ``docs/reference/sources-cardinality.md``).
 - The bare ``outputs/README.md`` is exempt from both rules — it is
   human explanatory content, not an operation artifact.
 """

@@ -16,7 +16,8 @@ Fix path:
      unmigrated v1 contents to ``wiki/.legacy/``.
   2. Or, for a single page, manually re-ingest it under the current
      schema (drop the file under ``wiki/.legacy/<bucket>/<slug>.md``
-     first to preserve the snapshot, per L1 §6 ``.legacy/`` rule).
+     first to preserve the snapshot, per AGENTS.md §"Red lines"
+     ``.legacy/`` rule).
 
 Missing ``compiled_against`` is left to AGENTS003 (required-keys).
 This rule treats missing as silent so it doesn't double-report.
@@ -82,6 +83,7 @@ class SchemaVersionConsistency:
                 f"`python -m densa migrate` to fold v{version} "
                 f"contents under wiki/.legacy/, or move this page "
                 f"there by hand and re-ingest its source under "
-                f"the v{SCHEMA_VERSION} schema. See L1 §3.2."
+                f"the v{SCHEMA_VERSION} schema. "
+                f"See docs/reference/schema-versioning.md."
             ),
         ))

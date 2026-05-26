@@ -2,7 +2,8 @@
 
 Every file under ``_system/templates/*.md`` is the seed for a future
 wiki page; if the template ships without a universal-required field,
-Templater-created pages start life violating L1 §3. This suite is
+Templater-created pages start life violating AGENTS.md's "Frontmatter
+schema" universal contract. This suite is
 the mechanical gate that keeps that from happening — when adding a
 new template, the gate fires once and the contributor adds the
 missing fields before merge.
@@ -22,9 +23,9 @@ from densa.frontmatter import parse_stdlib
 
 TEMPLATES_DIR = Path(__file__).resolve().parents[1] / "templates"
 
-# Mirrors AGENTS.md §3 universal frontmatter (minus `sources`, which
+# Mirrors AGENTS.md's "Frontmatter schema" universal contract (minus `sources`, which
 # does not apply to `fleeting` etc. and is enforced by AGENTS005 only
-# where the L1 §3.1 table requires it).
+# where docs/reference/sources-cardinality.md requires it).
 REQUIRED_UNIVERSAL: frozenset[str] = frozenset({
     "type",
     "domain",
@@ -36,9 +37,10 @@ REQUIRED_UNIVERSAL: frozenset[str] = frozenset({
     "compiled_against",
 })
 
-# AGENTS.md §3.3 — these v2 `type` values MUST also carry `last_validated`
-# (pages with no built-in raw anchor). Schema v1's `framework` / `protocol`
-# collapsed into `concept` and `overview` during the v2 migration.
+# Per AGENTS.md's "Frontmatter schema" — these v2 `type` values MUST also
+# carry `last_validated` (pages with no built-in raw anchor). Schema v1's
+# `framework` / `protocol` collapsed into `concept` and `overview` during
+# the v2 migration.
 REQUIRES_LAST_VALIDATED: frozenset[str] = frozenset({
     "concept",
     "entity",
@@ -71,7 +73,7 @@ def test_universal_frontmatter(template: Path) -> None:
     missing = REQUIRED_UNIVERSAL - fm.keys()
     assert not missing, (
         f"{template.name}: missing universal keys {sorted(missing)} "
-        f"(see AGENTS.md §3)"
+        f'(see AGENTS.md §"Frontmatter schema")'
     )
 
 
@@ -87,7 +89,7 @@ def test_last_validated_where_required(template: Path) -> None:
     if page_type in REQUIRES_LAST_VALIDATED:
         assert "last_validated" in fm, (
             f"{template.name} (type={page_type}): missing `last_validated` "
-            f"(see AGENTS.md §3.3)"
+            f'(see AGENTS.md §"Frontmatter schema")'
         )
 
 
@@ -113,8 +115,8 @@ def test_domain_is_placeholder_or_psychology_l2_specific(
         )
     elif name.startswith("writing-"):
         # writing/ is an opt-in workspace outside the L2 schema (see
-        # docs/reference/design-rationale.md §"Optional layers"); its
-        # templates hard-code `domain: writing` for symmetry, but the
+        # docs/reference/design-rationale.md "Optional layers" section);
+        # its templates hard-code `domain: writing` for symmetry, but the
         # tree is excluded from AGENTS003/006 enforcement via
         # WIKILINK_SKIP_TOP_LEVEL.
         assert domain == "writing", (

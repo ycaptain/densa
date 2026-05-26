@@ -81,8 +81,10 @@ Lint reports and Q&A archives are *operation artifacts*, not compiled
 knowledge. Three concrete problems with dropping them in
 `wiki/syntheses/`:
 
-- Reports accumulate as noise but L1 §4 forbids deleting wiki pages,
-  so old reports can't be cleaned up cleanly.
+- Reports accumulate as noise but
+  [L1 §"Naming and linking conventions"](../AGENTS.md#4-naming-and-linking-conventions)
+  forbids deleting wiki pages, so old reports can't be cleaned up
+  cleanly.
 - `type: synthesis` requires `sources: ≥ 2`; a lint report doesn't
   fit that contract.
 - `query` would occasionally cite a lint report as if it were
@@ -101,4 +103,5 @@ under `outputs/qa/<YYYY-MM-DD>-<slug>.md` — alongside `outputs/lint/`
 and `outputs/snapshots/`, not inside `wiki/`. Same reasoning as above.
 If a particular answer turns out to be evergreen and worth
 wikilink-graph membership, the path forward is `promote` (see
-[`../GUIDE.md`](../GUIDE.md) §"The seams" *"Q&A that recurs"*).
+[`../GUIDE.md` §"The seams"](../GUIDE.md#the-seams-when-to-use-which-operation)
+*"Q&A that recurs"*).

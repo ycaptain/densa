@@ -1,6 +1,8 @@
 # Densa
 
-> **Compile your sources into a queryable markdown wiki — the opposite of RAG.**
+> **An [AGENTS.md](https://agents.md)-native agent skill pack that
+> compiles your sources into a queryable markdown wiki — the opposite
+> of RAG.**
 > Drop new material into `raw/`. An AI agent in your IDE reads it,
 > drafts which `wiki/` pages to touch, waits for your OK, then writes
 > the edits. Every ingest *densifies* your second brain instead of
@@ -9,6 +11,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![CI](https://github.com/ycaptain/densa/actions/workflows/ci.yml/badge.svg)](https://github.com/ycaptain/densa/actions/workflows/ci.yml)
 [![Schema version](https://img.shields.io/badge/schema-v2-informational)](AGENTS.md)
+[![Skill: Cursor / Claude Code / Codex](https://img.shields.io/badge/skill-cursor%20%7C%20claude%20%7C%20codex-blueviolet)](AGENTS.md)
 
 ## Pick your path
 
@@ -52,9 +55,17 @@ major coding-agent IDE. Manual validation any time:
 PYTHONPATH=_system python -m densa --all
 ```
 
-Claude Code users: the optional slash-command plugin lives at
-[`integrations/claude-code/`](integrations/claude-code/). The 12
-enforced rules (`AGENTS001`–`AGENTS012`) are documented at
+**Optional IDE plugins** (slash commands + auto-triggered skills) live
+under [`integrations/`](integrations/) — currently
+[`claude-code/`](integrations/claude-code/) (Claude Code marketplace
+manifest + slash commands) and
+[`cursor/densa-plugin/`](integrations/cursor/densa-plugin/) (Cursor
+plugin manifest + IDE-agnostic `SKILL.md` files installable into
+`~/.cursor/skills/` or `~/.claude/skills/` standalone). Both are
+**experimental**; the vault works identically without them — the
+plugins are just UX shortcuts that load the same operation prompts.
+
+The 12 enforced rules (`AGENTS001`–`AGENTS012`) are documented at
 [`docs/reference/rules-registry.md`](docs/reference/rules-registry.md);
 `python -m densa rules` prints the live registry. Obsidian plugin
 setup, encryption, disabling the hook, and the domain decision tree
@@ -108,7 +119,11 @@ that idempotently brings your existing wiki pages forward.
 
 ## What this is
 
-This repo is a **full, executable implementation of** Andrej Karpathy's
+Densa is an **AGENTS.md-native agent skill pack** — a complete L1/L2
+schema, five-operation contract, and stdlib-only machine validator
+that any AGENTS.md-aware IDE (Cursor, Claude Code, Codex, Cline) can
+read natively to maintain a personal markdown wiki. It is a
+**full, executable implementation of** Andrej Karpathy's
 [llm-wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) —
 his ~1500-word sketch where an LLM compiles your sources into a
 structured wiki that compounds, rather than retrieving raw chunks on
@@ -178,20 +193,91 @@ red lines on every commit and in CI:
 
 ## Why not just RAG?
 
-RAG retrieves chunks every query. Densa compiles your sources into
-structured prose once, incrementally — then queries the prose.
+Classic RAG (`documents → parser → chunks → vector DB → retrieve →
+answer`) **never structurally crystallises** — every question
+reassembles fragments at query time, leaving the LLM as a permanent
+hallucination surface above the haystack. Densa compiles your
+sources into structured prose **once, incrementally**, then queries
+the prose. The hallucination surface is a one-time write-time event
+(audited by `AGENTS001`–`AGENTS012`), not a per-query risk.
 
 | Tool | Storage | Compounds? | Cites sources? | Local-first? |
 | ---- | ------- | ---------- | -------------- | ------------ |
 | **Densa** (this repo) | plain markdown + git | yes | enforced by validator | yes |
 | Vector RAG (LlamaIndex / LangChain) | vector DB | no | optional | varies |
+| Enterprise RAG ([RAGFlow](https://github.com/infiniflow/ragflow)) | ES + MySQL + chunk records | no (chunks re-rank per query) | read-time visual citations | yes (self-host) |
 | Notion AI / mem.ai | proprietary DB | partially | sometimes | no |
-| Obsidian + Smart Connections | markdown + index | retrieve-only | no | yes |
+| [Obsidian + Smart Connections](https://github.com/brianpetro/obsidian-smart-connections) | markdown + index | retrieve-only | no | yes |
+
+**The fault line.** Two architectural families both call themselves
+"AI knowledge bases":
+
+- **RAG-classic** ([RAGFlow](https://github.com/infiniflow/ragflow),
+  vector stacks, Notion AI) — documents → chunks → retrieve at query
+  time. Fast onboarding; never structurally consolidates; the
+  hallucination surface is the answer text on every query.
+- **Wiki-compiler** (Karpathy pattern; Densa;
+  [Tolaria](https://github.com/refactoringhq/tolaria);
+  [nashsu/llm_wiki](https://github.com/nashsu/llm_wiki);
+  [`kytmanov/obsidian-llm-wiki-local`](https://github.com/kytmanov/obsidian-llm-wiki-local))
+  — raw sources → LLM compiles structured prose → query the prose.
+  Slower onboarding; structure compounds; the hallucination surface
+  is a write-time event under human review.
+
+A 2026-05 review of the wiki-compiler space (six upstream projects
+at four artifact layers) sediments Densa's specific differentiation:
+**MIT + stdlib-only Python validator**, **L2 per-domain schema**
+layering, **public `AGENTS001`–`AGENTS012` rule registry**,
+**`.legacy/` schema-migration snapshot** red line, and
+**AGENTS.md-native** posture across Cursor / Claude Code / Codex /
+Cline. Maintainer-only details:
+[`docs/maintainers/prior-art/`](docs/maintainers/prior-art/).
 
 Past ~500 pages, layer embedding search on top of the wiki as fuzzy
 fallback. The wiki gives you compounded structure; embedding search
 gives you fuzzy recall. **Both, not either.** Detailed comparison
 lives in [`docs/reference/design-rationale.md`](docs/reference/design-rationale.md).
+
+---
+
+## Where this sits in the ecosystem
+
+A 2026-05-25 maintainer-only review (n=7 upstream projects read at
+the README + architecture-docs level; see
+[`docs/maintainers/prior-art/`](docs/maintainers/prior-art/) for the
+full study set) anchors Densa's position relative to adjacent OSS
+projects. Every row below cites a specific study file so the diff is
+verifiable.
+
+| Project | Pattern | What it does well | Where Densa differs |
+| --- | --- | --- | --- |
+| [Tolaria](https://github.com/refactoringhq/tolaria) | Wiki-compiler desktop app + MCP-everywhere | 15-tool MCP server auto-registers across Claude Code / Cursor / Gemini CLI / OpenCode / generic clients; per-vault `AGENTS.md` + `CLAUDE.md` + `GEMINI.md` triple ([study](docs/maintainers/prior-art/2026-05-25-tolaria-study.md)) | Tolaria's "types as lenses, not schemas" stance refuses any enum + validator; Densa's closed 9-type enum + `AGENTS001`–`AGENTS012` is the diametric philosophy |
+| [`nashsu/llm_wiki`](https://github.com/nashsu/llm_wiki) | Wiki-compiler desktop app + SKILL.md | Two-step CoT ingest (analysis → generation); SHA-256 incremental cache; SKILL.md trigger discipline ([study](docs/maintainers/prior-art/2026-05-25-nashsu-llm-wiki-study.md)) | No `.legacy/` snapshot; no `type:` enum; no L2 per-domain schema layering; lint rule set not publicly documented |
+| [`kytmanov/obsidian-llm-wiki-local`](https://github.com/kytmanov/obsidian-llm-wiki-local) | Wiki-compiler Python CLI (MIT) | Closest architectural sibling to Densa; Knowledge Item Candidates ledger (literal-match source-grounding); rejection-feedback loop; hash-mismatch hand-edit guard ([study](docs/maintainers/prior-art/2026-05-25-obsidian-llm-wiki-local-study.md)) | Single flat vault, no L2 domain layering; no `AGENTS.md` (`vault-schema.md` instead); no MCP / SKILL.md / plugin exposure; upstream in maintenance mode (succeeded by [Synto](https://github.com/kytmanov/synto)) |
+| [Smart Composer](https://github.com/glowingjade/obsidian-smart-composer) + [Smart Connections](https://github.com/brianpetro/obsidian-smart-connections) | Obsidian assistant (out-of-pattern complement) | Cursor-flavoured `@`-mention UX; one-click Apply Edit; Smart Environment shared substrate across plugins ([paired study](docs/maintainers/prior-art/2026-05-25-smart-composer-connections-study.md)) | Not wiki-compilers — they solve "AI assists in-place editing", not "AI compiles a wiki". Co-installable with Densa; source-grounding posture is the weakest in the surveyed set |
+| [RAGFlow](https://github.com/infiniflow/ragflow) | Enterprise RAG (Category E anchor) | DeepDoc multimodal parsing (PDF / DOCX / PPT / scanned); visual chunk inspection + read-time citation traceability ([study](docs/maintainers/prior-art/2026-05-25-ragflow-study.md)) | Architectural inverse — read-time grounding vs Densa's write-time grounding; heavy server stack (Docker + ES + MySQL + 16 GB RAM); not a per-vault tool. Pair-with, not substitute |
+| [Graphiti](https://github.com/getzep/graphiti) + [Cognee](https://github.com/topoteretes/cognee) | Temporal graph memory (Category F; informational only) | Bi-temporal validity windows on facts; episodes-as-provenance; both ship MCP integration ([paired study](docs/maintainers/prior-art/2026-05-25-graphiti-cognee-study.md)) | Different layer entirely (graph DB vs markdown wiki); v0.8 watch-list anchor only. Densa stays at the markdown layer; pair downstream if fact-level temporal queries ever need it |
+
+**Empirical findings the table sediments** (n=7):
+
+- **No upstream covers more than two agent-exposure surfaces.** Densa's
+  planned AGENTS.md + MCP server + plugin / SKILL.md triple is
+  empirically unoccupied — a defensible-by-superset bet, not a
+  validated-by-precedent one.
+- **`.legacy/` schema-migration snapshot is uniquely Densa's red line.**
+  Of the seven upstreams, none ships an equivalent mechanism — they
+  use SHA-256 cache + cascade delete (nashsu), git history alone
+  (Tolaria), hash-mismatch refusal (olw), or no equivalent (the rest).
+- **MIT + stdlib-only Python is uniquely Densa's combo.** Tolaria is
+  AGPL-3.0-or-later; nashsu is GPL-3.0; RAGFlow + Graphiti + Cognee
+  are Apache 2.0 but drag heavy transitive deps; olw is MIT but ships
+  SQLite + embedding runtime. Only Densa's `_system/densa/` can be
+  `cp -R`'d into a downstream fork with zero runtime deps.
+- **Public `AGENTS001`–`AGENTS012` rule registry is uniquely Densa's.**
+  nashsu and olw ship lint surfaces but neither publishes the rule
+  set; Densa's
+  [`docs/reference/rules-registry.md`](docs/reference/rules-registry.md)
+  + `python -m densa rules` is the only public stable-ID registry.
 
 ---
 

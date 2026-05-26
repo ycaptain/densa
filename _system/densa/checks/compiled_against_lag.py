@@ -1,6 +1,6 @@
 """AGENTS009 — compiled_against vs current SCHEMA_VERSION.
 
-Per L1 §3.2, every wiki page declares ``compiled_against: <N>``
+Per ``docs/reference/schema-versioning.md``, every wiki page declares ``compiled_against: <N>``
 recording the L1 schema version it was authored under. When L1 bumps
 to v2 (and so on), every existing page sits at ``compiled_against:
 1`` until an explicit re-ingest migrates it forward.
@@ -71,6 +71,7 @@ class CompiledAgainstCurrent:
                     f"AGENTS009 compiled-against-current: page is "
                     f"compiled_against={version} but current "
                     f"SCHEMA_VERSION={SCHEMA_VERSION}; a re-ingest may "
-                    f"be needed (see L1 §3.2 migration procedure)"
+                    f"be needed (see docs/reference/schema-versioning.md "
+                    f"for the migration procedure)"
                 ),
             ))

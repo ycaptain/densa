@@ -1,11 +1,11 @@
 """AGENTS001 — raw/ is immutable.
 
 Staged modify/delete of any path under a ``raw/`` directory, or rename
-*from* a ``raw/`` path, is rejected. See L1 §6.
+*from* a ``raw/`` path, is rejected. See AGENTS.md §"Red lines".
 
 Adds and rename-*into* ``raw/`` from outside (e.g. the
 ``git mv inbox/x domains/<X>/raw/<bucket>/y`` move that
-``process-inbox`` performs per L1 §2.4) are permitted: that's how
+``process-inbox`` performs per AGENTS.md §"process-inbox") are permitted: that's how
 users intentionally file new sources. The bypass for this rule is
 intentionally absent — the red line has no sanctioned exception in
 user vaults. (Template maintenance can use ``git commit --no-verify``
@@ -57,7 +57,7 @@ class RawImmutability:
                     message=(
                         f"AGENTS001 raw-immutability: staged status="
                         f"{entry.letter} against raw/. raw/ is the immutable "
-                        f"evidence layer (L1 §6); this rule has no sanctioned "
+                        f"evidence layer (AGENTS.md §\"Red lines\"); this rule has no sanctioned "
                         f"bypass env var. If you found a transcription error, "
                         f"document a one-shot sweep in your L2's "
                         f"'Known transcription corrections' section, then "

@@ -7,6 +7,36 @@ updated: 2026-05-24
 
 # AGENTS.md — Densa L1 schema
 
+> [!important] Reference implementation of the
+> [AGENTS.md](https://agents.md) standard for personal knowledge.
+> Densa uses the AGENTS.md cross-tool agent contract to define a
+> complete L1/L2 schema + five operations + machine validator
+> (`AGENTS001`–`AGENTS012`). The same contract powers full-repo
+> forks and lightweight skill-plugin installs alike.
+>
+> **Empirical backing (2026-05-25 n=7 prior-art review).** Of seven
+> Karpathy-pattern / wiki-compiler / agent-memory upstreams surveyed
+> at the [`docs/maintainers/prior-art/`](docs/maintainers/prior-art/)
+> level, only Tolaria
+> ([study](docs/maintainers/prior-art/2026-05-25-tolaria-study.md))
+> independently adopts `AGENTS.md` as the per-vault contract
+> filename; the rest use `purpose.md` + `schema.md`
+> ([nashsu](docs/maintainers/prior-art/2026-05-25-nashsu-llm-wiki-study.md)),
+> `vault-schema.md`
+> ([olw](docs/maintainers/prior-art/2026-05-25-obsidian-llm-wiki-local-study.md)),
+> or no per-vault contract at all
+> ([Smart Composer+Connections](docs/maintainers/prior-art/2026-05-25-smart-composer-connections-study.md);
+> [RAGFlow](docs/maintainers/prior-art/2026-05-25-ragflow-study.md);
+> [Graphiti+Cognee](docs/maintainers/prior-art/2026-05-25-graphiti-cognee-study.md)).
+> Adopting the cross-tool standard early is the bet.
+
+> [!faq]- Humans: start at [`README.md`](README.md).
+> This file is the contract the LLM reads on every operation. You
+> don't need to read it linearly. The four-file onboarding set in
+> [§"Minimal onboarding set"](#11-minimal-onboarding-set-for-a-fresh-llm-session)
+> is for *the LLM*, not for human readers — humans enter at the
+> README's "Pick your path" router.
+
 You are the maintainer of an Obsidian-based personal knowledge base
 built on Andrej Karpathy's
 [llm-wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f).
@@ -63,7 +93,8 @@ Three responsibilities per domain:
 > artifacts* (lint reports, index snapshots, Q&A archives). They live
 > in git but the wikilink resolver ignores them. Wiki pages never
 > cite outputs. When a Q&A in `outputs/qa/` earns wiki-grade status,
-> run `promote <qa-path>` (§2.5) — never copy by hand.
+> run `promote <qa-path>` (see [the promote operation](#25-promote-qa-path-qa--wiki-page))
+> — never copy by hand.
 
 > **Authority.** `AGENTS.md` files (L1 + L2) are the **normative**
 > schema. `GUIDE.md` is **explanatory** (day-in-the-life, FAQ); when
@@ -71,10 +102,13 @@ Three responsibilities per domain:
 
 ### 1.1 Minimal onboarding set (for a fresh LLM session)
 
-> **This section is the onboarding contract for the LLM, not for a
-> human reader.** Humans enter at [`README.md`](README.md) §"Pick
-> your path"; the four-file set below is what a fresh agent session
-> loads before doing any work.
+> [!faq]- Who reads this subsection?
+> **Humans: skip by default.** Enter the vault at
+> [`README.md` §"Pick your path"](README.md#pick-your-path) instead.
+> The four-file set below is the LLM onboarding contract — what a
+> fresh agent session loads before doing any work.
+>
+> **LLM: required pre-load on every fresh session.** Don't skim.
 
 A new Cursor / Claude Code / Codex session operates this vault after
 reading **exactly four** files:
@@ -82,7 +116,9 @@ reading **exactly four** files:
 1. `/AGENTS.md` (this file) — L1 contract.
 2. `domains/<active-X>/AGENTS.md` — L2 contract for the domain in
    scope. Cross-domain requests read all relevant L2s; if no domain
-   is implied, defer reading L2 until §5 routing resolves it.
+   is implied, defer reading L2 until the
+   [routing rules](#5-routing-rules-where-does-a-new-source-go)
+   resolve it.
 3. `_system/prompts/<op>.md` — the prompt for the operation being
    run. For `ingest`, also glob
    `_system/prompts/domains/<domain>-*-analysis.md` and read any
@@ -94,8 +130,10 @@ reading **exactly four** files:
 
 Anything beyond these four files is loaded **on demand** — specific
 wiki pages via wikilinks, raw files for spot-checks, the GUIDE for
-explanatory purposes, reference docs under `docs/reference/` when you
-need the long table.
+explanatory purposes. The `docs/reference/` folder is the long-table
+overflow for this contract (sources cardinality, rule registry, etc.)
+— pre-loading it is wasteful; load a single reference page only when
+this contract or the operation prompt explicitly points at it.
 
 ### 1.2 Upgrading an existing vault
 
@@ -115,12 +153,19 @@ archive). Each migration script under
 jumps walk the chain step by step. `raw/` is never touched.
 
 Full runbook + the three-mode comparison table:
-[`docs/reference/schema-versioning.md`](docs/reference/schema-versioning.md)
-§"Migration runbook".
+[`docs/reference/schema-versioning.md` §"Migration runbook"](docs/reference/schema-versioning.md#migration-runbook).
 
 ## 2. The five operations
 
 ### 2.0 Operation writes (machine-enforced via AGENTS007)
+
+> [!faq]- Who reads this subsection?
+> **Humans: skim only when you're about to commit something that
+> crosses operation scopes** (e.g. a cross-cutting maintenance fix).
+> Otherwise the pre-commit hook catches the bad cases for you.
+>
+> **LLM: this is the contract every staged commit is judged against.**
+> Pin the per-operation `scope_globs`; AGENTS007 enforces them.
 
 Each operation declares which paths its commit may touch. The
 validator classifies a staged commit by its leading commit-message
@@ -144,8 +189,9 @@ AGENTS007. Pair with a `## [YYYY-MM-DD] maintenance | …` log entry.
 
 ### 2.1 `ingest <path>`
 
-1. Resolve the target domain via the routing rules (§5). If the file
-   is under `domains/<X>/raw/`, the domain is implicit.
+1. Resolve the target domain via the
+   [routing rules](#5-routing-rules-where-does-a-new-source-go).
+   If the file is under `domains/<X>/raw/`, the domain is implicit.
 2. Read the full source.
 3. Create **one** summary page at `domains/<X>/wiki/summaries/<slug>.md`
    (1:1 with the raw). Update existing `concepts/`, `entities/`, and
@@ -155,14 +201,16 @@ AGENTS007. Pair with a `## [YYYY-MM-DD] maintenance | …` log entry.
 4. Page-count tier per L2 information density: **light**
    (`research-papers`) 3–6 pages; **medium** 5–10; **heavy** (e.g.
    `psychology` session) 8–15. Under-editing here loses the compounding
-   benefit. Wiki pages live under the 7 buckets defined in §3 (no
+   benefit. Wiki pages live under the 7 buckets defined in
+   [the frontmatter schema](#3-frontmatter-schema-universal) (no
    ad-hoc folders).
 5. Update `domains/<X>/wiki/overview.md` only when the ingest creates
    a *new* wiki page (existing-page updates flow into Dataview blocks
    automatically). The overview is the per-domain reader entry point;
    keep its mindmap current.
 6. Prepend a new entry to `domains/<X>/log.md` and, when cross-domain,
-   the global `log.md` (entry insertion point per §6). The entry MUST
+   the global `log.md` (entry insertion point per the
+   [red lines](#6-red-lines-non-negotiable)). The entry MUST
    list the actual writes so subsequent `lint` runs can verify them:
    ```
    ## [YYYY-MM-DD] ingest | <source title>
@@ -191,7 +239,7 @@ Full procedure: [`_system/prompts/ingest.md`](_system/prompts/ingest.md).
    `outputs/qa/<YYYY-MM-DD>-<slug>.md` (`type: report`). Do this by
    default for substantial answers. Never edit `wiki/syntheses/` from
    inside a `query` commit; if a Q&A later proves wiki-grade, run
-   `promote` (§2.5).
+   [`promote`](#25-promote-qa-path-qa--wiki-page).
 5. Prepend a `query` entry to `log.md`.
 
 Full procedure: [`_system/prompts/query.md`](_system/prompts/query.md).
@@ -212,12 +260,14 @@ Full procedure: [`_system/prompts/lint.md`](_system/prompts/lint.md).
 ### 2.4 `process-inbox` (optional, opt-in)
 
 Triage `/inbox/` into `domains/<X>/raw/<bucket>/` via `git mv`. Does
-**not** ingest — that remains a separate decision per §2.1. Inbox is
-**off by default**; most material can be dropped directly into the
-correct raw bucket.
+**not** ingest — that remains a separate decision per the
+[`ingest`](#21-ingest-path) procedure. Inbox is **off by default**;
+most material can be dropped directly into the correct raw bucket.
 
-Files in `inbox/` are not subject to §5 routing until `process-inbox`
-moves them; this prevents the LLM silently guessing a domain.
+Files in `inbox/` are not subject to the
+[routing rules](#5-routing-rules-where-does-a-new-source-go) until
+`process-inbox` moves them; this prevents the LLM silently guessing
+a domain.
 
 Full procedure:
 [`_system/prompts/process-inbox.md`](_system/prompts/process-inbox.md).
@@ -293,8 +343,10 @@ modify it.
 
 > **`status` is strictly `active | deprecated`.** It encodes whether
 > a page is the current best model or has been replaced via the
-> deprecation pattern (§4). Domain-specific lifecycle state belongs
-> in a type-specific `<type>_status` field — e.g.
+> deprecation pattern (see
+> [§"Naming and linking conventions"](#4-naming-and-linking-conventions)).
+> Domain-specific lifecycle state belongs in a type-specific
+> `<type>_status` field — e.g.
 > `project_status: discovery|active|paused|shipped` on an entity
 > page representing a project. Conflating the two breaks the
 > deprecation contract.
@@ -303,8 +355,8 @@ The **canonical-fact rule** (numbers / dates / verbatim quotes live
 ONLY in `summaries/<slug>.md`; second-order pages cite via wikilink)
 is what makes a v2 vault compoundable rather than self-replicating.
 Full list and rationale:
-[`docs/reference/karpathy-mapping.md`](docs/reference/karpathy-mapping.md)
-§"Canonical-fact rules" (registry: `densa.schema.CANONICAL_FACTS`).
+[`docs/reference/karpathy-mapping.md` §"Canonical-fact rules"](docs/reference/karpathy-mapping.md#canonical-fact-rules-dont-duplicate-the-underlying-claim)
+(registry: `densa.schema.CANONICAL_FACTS`).
 
 ### Reference details
 
@@ -385,7 +437,8 @@ hatches: [`docs/reference/red-lines.md`](docs/reference/red-lines.md).
 - **`log.md` is append-only, written reverse-chronologically.** New
   entries go at the entry insertion point (immediately after
   frontmatter, or after the preamble separator if one exists).
-- **No wiki page deletion.** Use the deprecation pattern (§4).
+- **No wiki page deletion.** Use the deprecation pattern (see
+  [§"Naming and linking conventions"](#4-naming-and-linking-conventions)).
 - **No bulk renames without human consent.** Slugs propagate via
   wikilinks — surface every rename for approval.
 - **No silent web fetches during ingest.** Ask first and cite added
@@ -399,6 +452,14 @@ hatches: [`docs/reference/red-lines.md`](docs/reference/red-lines.md).
   State in the ingest plan exactly what you can vs. cannot extract.
 
 ### 6.1 Machine-enforced rule registry
+
+> [!faq]- Who reads this subsection?
+> **Humans: skim only when a pre-commit hook rejects your commit and
+> you want to know which rule fired.** The error message already names
+> the rule ID; this subsection only points at the long table.
+>
+> **LLM: pin the AGENTS001–012 ID list; resolve user-visible
+> suppression comments (`# noqa: AGENTS00N`) against the same IDs.**
 
 Stable IDs `AGENTS001`–`AGENTS012`. Pin the ID (never the name) in
 suppression comments or commit messages. Full table with severity,
@@ -417,13 +478,15 @@ bypass env vars, and rationale:
 
 ## 8. Workflow with the agent
 
-User requests map to the five operations §2.1–§2.5. The canonical
+User requests map to the five operations
+([`ingest`](#21-ingest-path) through
+[`promote`](#25-promote-qa-path-qa--wiki-page)). The canonical
 "natural language → action" mapping table lives in
-[`GUIDE.md`](GUIDE.md) §"Mapping natural language to operations" —
-do not duplicate it here or in `index.md` (changing one and missing
-the other is the failure mode this consolidation prevents). Always
-reference `_system/prompts/<op>.md` rather than improvising; ask one
-short clarifying question if the intent is ambiguous.
+[`GUIDE.md` §"Mapping natural language to operations"](GUIDE.md#mapping-natural-language-to-operations)
+— do not duplicate it here or in `index.md` (changing one and
+missing the other is the failure mode this consolidation prevents).
+Always reference `_system/prompts/<op>.md` rather than improvising;
+ask one short clarifying question if the intent is ambiguous.
 
 ## 9. Versioning
 

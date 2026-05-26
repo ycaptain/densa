@@ -176,8 +176,8 @@ def run(args: argparse.Namespace) -> int:
 
     print()
     print("All migrations applied. Next steps:")
-    print(f"  1. PYTHONPATH=_system python -m densa --all   (verify)")
-    print(f"  2. git status                                 (review the diff)")
+    print("  1. PYTHONPATH=_system python -m densa --all   (verify)")
+    print("  2. git status                                 (review the diff)")
     if requested_mode == "archive":
         print(
             f"  3. Re-ingest the sources you still care about under "
@@ -191,8 +191,8 @@ def run(args: argparse.Namespace) -> int:
             f"reflect the v{SCHEMA_VERSION - 1} narrative shape."
         )
         print(
-            f"     Pick any of them up later with `ingest` (re-process "
-            f"the source) when the prose becomes load-bearing."
+            "     Pick any of them up later with `ingest` (re-process "
+            "the source) when the prose becomes load-bearing."
         )
     return 0
 

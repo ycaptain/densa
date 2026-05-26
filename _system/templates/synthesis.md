@@ -20,7 +20,7 @@ One paragraph distilling the answer or thesis.
 
 <!-- The main argument. Cite [[wiki-page]] and [[raw-source]] inline;
 do NOT re-derive facts already canonicalised in a linked [[summary]]
-page — link in instead. Per L1 §3.1 a `synthesis` MUST braid ≥2
+page — link in instead. Per docs/reference/sources-cardinality.md a `synthesis` MUST braid ≥2
 sources (raw files, summaries, or other wiki pages). -->
 
 ## Open questions / next ingests

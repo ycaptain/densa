@@ -45,14 +45,14 @@ through them.
 
 When in doubt about which verb a user request maps to:
 
-| User intent (examples) | Op | Command | Procedure |
-| --- | --- | --- | --- |
-| "ingest \<path\>" / "process this source" / drops new file | 📥 ingest | `ingest <path>` | [`ingest.md`](_system/prompts/ingest.md) |
-| "what does the wiki say about X" / "summarise across …" | 🔍 query | `query <question>` | [`query.md`](_system/prompts/query.md) |
-| "lint" / "health check" / "find contradictions" | 🩺 lint | `lint [--domain <X>]` | [`lint.md`](_system/prompts/lint.md) |
-| "process-inbox" / "triage inbox" / drops a file in inbox/ | 📨 process-inbox | `process-inbox` | [`process-inbox.md`](_system/prompts/process-inbox.md) |
-| "promote outputs/qa/\<file\>" / "this Q&A is wiki-grade" | ⬆️ promote | `promote outputs/qa/<file>` | [`promote.md`](_system/prompts/promote.md) |
-| Ambiguous request | — | — | Ask one short clarifying question |
+| User intent (examples) | Op | Command | Contract | Procedure |
+| --- | --- | --- | --- | --- |
+| "ingest \<path\>" / "process this source" / drops new file | 📥 [ingest](AGENTS.md#21-ingest-path) | `ingest <path>` | [AGENTS.md §2.1](AGENTS.md#21-ingest-path) | [`ingest.md`](_system/prompts/ingest.md) |
+| "what does the wiki say about X" / "summarise across …" | 🔍 [query](AGENTS.md#22-query-question) | `query <question>` | [AGENTS.md §2.2](AGENTS.md#22-query-question) | [`query.md`](_system/prompts/query.md) |
+| "lint" / "health check" / "find contradictions" | 🩺 [lint](AGENTS.md#23-lint---domain-x) | `lint [--domain <X>]` | [AGENTS.md §2.3](AGENTS.md#23-lint---domain-x) | [`lint.md`](_system/prompts/lint.md) |
+| "process-inbox" / "triage inbox" / drops a file in inbox/ | 📨 [process-inbox](AGENTS.md#24-process-inbox-optional-opt-in) | `process-inbox` | [AGENTS.md §2.4](AGENTS.md#24-process-inbox-optional-opt-in) | [`process-inbox.md`](_system/prompts/process-inbox.md) |
+| "promote outputs/qa/\<file\>" / "this Q&A is wiki-grade" | ⬆️ [promote](AGENTS.md#25-promote-qa-path-qa--wiki-page) | `promote outputs/qa/<file>` | [AGENTS.md §2.5](AGENTS.md#25-promote-qa-path-qa--wiki-page) | [`promote.md`](_system/prompts/promote.md) |
+| Ambiguous request | — | — | — | Ask one short clarifying question |
 
 Always reference `_system/prompts/<op>.md` rather than improvising.
 

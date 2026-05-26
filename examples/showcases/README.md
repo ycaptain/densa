@@ -195,7 +195,9 @@ Two signals:
 1. Your domain has stabilised on 3+ page types beyond what any single
    shipped example uses (e.g. you now also track `experiment` and
    `decision` pages alongside concepts and analyses). Time to read
-   the full L1 schema at [`AGENTS.md`](../../AGENTS.md) §3 and pick
+   the full L1 schema at
+   [`AGENTS.md` §"Frontmatter schema"](../../AGENTS.md#3-frontmatter-schema-universal)
+   and pick
    the types you need.
 2. You're hand-editing more than ~10% of what the LLM produces.
    That's a signal the L2 persona or schema is misaligned with the
@@ -217,7 +219,7 @@ WIKI_ALLOW_CROSS_SCOPE=1 git commit -m "chore(domains): adopt workspace L2 from 
 ```
 
 Paired `## [YYYY-MM-DD] maintenance | …` entry in `log.md` per
-[`AGENTS.md`](../../AGENTS.md) §2.0.
+[`AGENTS.md` §"Operation writes"](../../AGENTS.md#20-operation-writes-machine-enforced-via-agents007).
 
 Full procedure with context:
 [`docs/setup.md`](../../docs/setup.md) §"Choosing or replacing the

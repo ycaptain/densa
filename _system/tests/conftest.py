@@ -55,7 +55,8 @@ def make_wiki_page(
 ) -> str:
     """Produce a minimally-valid wiki page body for a given page type.
 
-    Carries all nine universal frontmatter keys per AGENTS.md §3 so
+    Carries all nine universal frontmatter keys per AGENTS.md's
+    "Frontmatter schema" so
     AGENTS003 does not fire spuriously on fixtures. ``compiled_against``
     defaults to :data:`densa.schema.SCHEMA_VERSION` so AGENTS010
     ("schema-version-consistency") does not flag the fixture; pass an

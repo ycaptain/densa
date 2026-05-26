@@ -12,7 +12,7 @@ compiled_against: 2
 
 # <% tp.file.title %>
 
-<!-- Reader-facing distillation of exactly ONE raw source. Per L1 §3.1
+<!-- Reader-facing distillation of exactly ONE raw source. Per docs/reference/sources-cardinality.md
 a `summary` page MUST cite exactly one raw file in `sources`. If you
 find yourself wanting to cite a second raw or a prior summary, you are
 writing a `synthesis` — change `type:` and move under `wiki/syntheses/`.

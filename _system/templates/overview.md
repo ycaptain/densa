@@ -12,7 +12,7 @@ compiled_against: 2
 
 # <% tp.file.title %>
 
-<!-- A bird's-eye view of a sub-area inside this domain. Per L1 §3
+<!-- A bird's-eye view of a sub-area inside this domain. Per AGENTS.md §"Frontmatter schema"
 this is the page a newcomer reads *first* to orient before drilling
 into any individual [[summary]] or [[concept]].
 

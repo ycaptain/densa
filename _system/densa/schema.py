@@ -18,7 +18,7 @@ Schema_version 2 collapses the three into one Python module — this one.
 Everything below is treated as data, not code-with-side-effects. Sister
 modules (``config``, ``checks.prompt_schema_sync``, ``commands.migrate``)
 read from here; markdown documentation (``docs/reference/karpathy-mapping.md``,
-``AGENTS.md`` §3) mirrors it for humans and is checked for drift by
+``AGENTS.md`` §"Frontmatter schema") mirrors it for humans and is checked for drift by
 AGENTS011.
 
 This file is **stdlib-only** at import time so it can be loaded by the
@@ -36,7 +36,6 @@ The ``karpathy_term`` field records the original phrase verbatim; see
 from __future__ import annotations
 
 from typing import Final, NamedTuple
-
 
 # --- Schema version -------------------------------------------------------
 

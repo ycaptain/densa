@@ -131,7 +131,7 @@ class TestFrontmatterTypeAllowedEdgeCases:
     path = "domains/x/wiki/concepts/foo.md"
 
     def test_all_l1_types_allowed(self, mini_vault: MiniVault) -> None:
-        """Every type listed in AGENTS.md §3 must pass AGENTS004."""
+        """Every type listed in AGENTS.md's "Frontmatter schema" must pass AGENTS004."""
         for t in ALLOWED_TYPES:
             text = make_wiki_page(type_=t)
             report = Report()

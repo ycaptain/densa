@@ -10,10 +10,12 @@
 
 > This table mirrors `densa.schema.OPERATIONS['query'].writes`.
 > AGENTS011 warns on drift. `query` never writes to `wiki/**` — if a
-> Q&A earns wiki-grade status, the human runs `promote` (§2.5).
+> Q&A earns wiki-grade status, the human runs
+> [`promote`](../../AGENTS.md#25-promote-qa-path-qa--wiki-page).
 
 Use this prompt body when the human asks a question that should be answered
-from the wiki. Canonical procedure for `/AGENTS.md` §2.2.
+from the wiki. Canonical procedure for
+[`/AGENTS.md` §"query"](../../AGENTS.md#22-query-question).
 
 ## Input
 
@@ -64,7 +66,8 @@ from the wiki. Canonical procedure for `/AGENTS.md` §2.2.
      [`_system/prompts/promote.md`](promote.md)) — but **do not promote
      inside the same commit**: promotion is a separate operation with
      its own pre-flight checks and commit prefix.
-7. **Prepend to log.md** (top-of-file under frontmatter, per L1 §6):
+7. **Prepend to log.md** (top-of-file under frontmatter, per
+   [AGENTS.md §"Red lines"](../../AGENTS.md#6-red-lines-non-negotiable)):
    ```
    ## [YYYY-MM-DD] query | <one-line question>
    - Filed as: outputs/qa/<YYYY-MM-DD>-<slug>.md (or "not filed — trivial lookup")

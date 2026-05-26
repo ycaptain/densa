@@ -39,7 +39,7 @@ _AGENT_LAUNCHERS: Final[dict[str, tuple[str, list[str]]]] = {
 
 _AUTO_PRIORITY: Final[tuple[str, ...]] = ("cursor", "claude-code", "codex")
 
-_BOOTSTRAP_REL: Final[str] = "_system/prompts/bootstrap.md"
+_BOOTSTRAP_REL: Final[str] = "docs/bootstrap.md"
 
 
 def inject(vault: Path, choice: str) -> int:

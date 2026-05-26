@@ -238,5 +238,5 @@ weight their findings:
 
 This guide cites three raw papers and two synthesis-tier wiki pages
 in its `sources` list, satisfying the `synthesis` cardinality (≥2)
-in the L1 schema (§3.1). Updates should bump `updated:` and rerun
+in the L1 schema (see [`sources-cardinality.md`](../../../../docs/reference/sources-cardinality.md)). Updates should bump `updated:` and rerun
 lint to refresh the index snapshot.

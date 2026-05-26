@@ -113,7 +113,7 @@ def test_inject_missing_bootstrap_prompt(
     tmp_path: Path,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    """Without _system/prompts/bootstrap.md the function fails cleanly."""
+    """Without docs/bootstrap.md the function fails cleanly."""
     rc = agent_inject.inject(tmp_path, choice="auto")
     assert rc == 1
     err = capsys.readouterr().err
@@ -127,7 +127,7 @@ def test_inject_clipboard_fallback_when_no_agent(
 ) -> None:
     """When no agent CLI is on PATH, we fall back to clipboard +
     instructions, and return 0 (the user can still proceed)."""
-    bootstrap = tmp_path / "_system" / "prompts"
+    bootstrap = tmp_path / "docs"
     bootstrap.mkdir(parents=True)
     (bootstrap / "bootstrap.md").write_text("hello world prompt")
 
@@ -160,7 +160,7 @@ def test_inject_explicit_agent_missing(
 ) -> None:
     """``--auto-inject=cursor`` with no `agent` on PATH falls back to
     clipboard and tells the user *which* agent was missing."""
-    bootstrap = tmp_path / "_system" / "prompts"
+    bootstrap = tmp_path / "docs"
     bootstrap.mkdir(parents=True)
     (bootstrap / "bootstrap.md").write_text("prompt body")
 

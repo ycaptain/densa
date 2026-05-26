@@ -12,7 +12,7 @@ compiled_against: 2
 
 # <% tp.file.title %>
 
-<!-- Per L1 §3.1 a `comparison` page MUST cite ≥2 sources (raw files,
+<!-- Per docs/reference/sources-cardinality.md a `comparison` page MUST cite ≥2 sources (raw files,
 summaries, or other wiki pages). The comparison itself is a
 second-order page: it does not re-derive facts from raw, it points at
 the [[summary]] pages that already canonicalised them. -->

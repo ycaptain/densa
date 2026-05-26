@@ -24,7 +24,7 @@ canonical_length_words: <final>
 ## Published version
 
 <!-- Paste the canonical text that went out. Keep this section
-identical to the publication; corrections go in §Errata below
+identical to the publication; corrections go in the "Errata" section below
 rather than rewriting the body. -->
 
 ## Wiki dependencies

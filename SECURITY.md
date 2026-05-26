@@ -2,9 +2,10 @@
 
 ## Scope
 
-This project is a **template** for personal LLM-maintained knowledge
-bases. It does not run a service and stores no user data of its own.
-However, vaults built from this template routinely hold material that
+This project is an **agent skill pack** for personal LLM-maintained
+knowledge bases. It does not run a service and stores no user data
+of its own. However, vaults built from this skill pack routinely
+hold material that
 is highly sensitive — therapy transcripts, medical notes, NDA-bound
 meeting records, private journals. The guidance below treats *your
 vault* as the primary asset to protect.
@@ -35,7 +36,7 @@ normal [bug report issue](.github/ISSUE_TEMPLATE/bug_report.md).
 
 ## Hardening checklist for your vault
 
-If you instantiate this template for sensitive material:
+If you instantiate this skill pack for sensitive material:
 
 - [ ] Wire the pre-commit hook per [`README.md` §"Quickstart"](README.md#quickstart).
 - [ ] Configure encryption for any sensitive L2 before the first push:

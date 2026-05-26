@@ -1,6 +1,8 @@
 # Red lines — full rationale
 
-Reference companion to [`AGENTS.md`](../../AGENTS.md) §6. The
+Reference companion to
+[`AGENTS.md` §"Red lines"](../../AGENTS.md#6-red-lines-non-negotiable).
+The
 contract file lists each red line in a single sentence; this page
 gives the failure-mode rationale a future maintainer (LLM or human)
 needs to understand *why* each rule cannot be relaxed.
@@ -21,8 +23,9 @@ wiki page back to its source; the audit promise that "any wiki claim
 is verifiable years later" collapses.
 
 **Sanctioned exception.** A domain-declared transcription-correction
-sweep (see e.g. `examples/showcases/psychology/AGENTS.md` §"Known transcription
-corrections"). The L2 declares the exception, lists the patterns, and
+sweep (see e.g. the
+[psychology L2's "Known transcription corrections"](../../examples/showcases/psychology/AGENTS.md#known-transcription-corrections)
+section). The L2 declares the exception, lists the patterns, and
 the sweep edits raw only in the narrow correction window. Without
 that L2 declaration, no raw edit is allowed.
 

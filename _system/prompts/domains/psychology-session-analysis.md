@@ -50,7 +50,8 @@ The three stages compose; do NOT shortcut to a single pass.
    - Just-in-time: the full raw transcript.
    - Target ≤40K tokens before drafting.
 3. **Read the full raw**. State explicitly which modalities you can/cannot
-   process if the raw includes images, audio, or non-text data (per L1 §6
+   process if the raw includes images, audio, or non-text data (per
+   [AGENTS.md §"Red lines"](../../../AGENTS.md#6-red-lines-non-negotiable)
    multi-modal red line).
 4. **Draft** the appropriate template:
    - therapy → [`attic/templates-v1/psychology-analysis.md`](../../../attic/templates-v1/psychology-analysis.md) (legacy v1 template; under v2 these become `type: summary` pages — see [`_system/templates/summary.md`](../../templates/summary.md))
@@ -99,7 +100,10 @@ Stage 3.
    - **Append** instances to `wiki/concepts/<slug>.md`'s "在我的材料里如何出现"
    - For psychiatry: **append** a row to `wiki/protocols/medication-arc.md`'s
      timeline (always, even when nothing changed).
-6. Prepend to `domains/psychology/log.md` (top-of-file under frontmatter, per L1 §6) using the L1 §2.1 entry format.
+6. Prepend to `domains/psychology/log.md` (top-of-file under frontmatter, per
+   [AGENTS.md §"Red lines"](../../../AGENTS.md#6-red-lines-non-negotiable))
+   using the [AGENTS.md §"ingest"](../../../AGENTS.md#21-ingest-path)
+   entry format.
 7. Output the **"Pages NOT touched but should be (carry-over)"** section in
    the analysis file with anything you discovered but didn't update.
 
@@ -249,7 +253,7 @@ A correct ingest produces:
 5. `frontmatter.sources` is a list of length **exactly 1**, the raw wikilink
 6. **Bidirectional wikilinks**: every entity / pattern / theme / concept named in the analysis body has been updated in its own page (Appearances / Instances / timeline)
 7. For psychiatry: `[[medication-arc]]` has a new timeline entry **(non-negotiable)**
-8. `log.md` appended per L1 §2.1
+8. `log.md` appended per [AGENTS.md §"ingest"](../../../AGENTS.md#21-ingest-path)
 9. `Pages NOT touched but should be` section is non-empty if Stage 2 surfaced any carry-over (or explicitly states "none")
 
 If any of (1)-(8) is missing, the ingest is incomplete — do not output a "done" message.

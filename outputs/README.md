@@ -17,11 +17,12 @@ Layout:
 > fork — the agent creates them the first time it writes a report or
 > Q&A artifact. `snapshots/` ships pre-populated (it carries the
 > bootstrap `index-snapshot.md` that the LLM onboarding set in
-> [AGENTS.md §1.1](../AGENTS.md) points at).
+> [AGENTS.md §"Minimal onboarding set"](../AGENTS.md#11-minimal-onboarding-set-for-a-fresh-llm-session)
+> points at).
 
 The canonical onboarding entry for fresh LLM sessions is
 [`outputs/snapshots/index-snapshot.md`](snapshots/) (see
-[AGENTS.md §1.1](../AGENTS.md)).
+[AGENTS.md §"Minimal onboarding set"](../AGENTS.md#11-minimal-onboarding-set-for-a-fresh-llm-session)).
 
 **Promotion path.** If a Q&A under `qa/` proves to be evergreen knowledge
 worth wikilink-graph membership, run

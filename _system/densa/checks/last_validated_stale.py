@@ -1,6 +1,7 @@
 """AGENTS008 — last_validated freshness.
 
-Per L1 §3.3, every page with ``type`` in {concept, framework,
+Per ``docs/reference/schema-versioning.md``, every page with
+``type`` in {concept, framework,
 protocol, entity} declares a ``last_validated: YYYY-MM-DD`` timestamp
 recording the last time the LLM (or human) re-read the cited sources
 and confirmed the page still reflects them.
@@ -9,7 +10,8 @@ This rule warns (does **not** block commits) when ``last_validated``
 is older than 180 days on those types. The warning surfaces drift
 candidates so the human can re-validate; auto-bumping the timestamp
 without re-reading sources would be a closed-epistemic-loop
-violation (the LLM MUST NOT do that — see L1 §3.3).
+violation (the LLM MUST NOT do that — see
+``docs/reference/schema-versioning.md``).
 
 Missing ``last_validated`` on the four types triggers AGENTS003
 (``frontmatter-required-keys``) once the field is added to the

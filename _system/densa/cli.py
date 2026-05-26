@@ -21,7 +21,7 @@ ergonomic discoverability — ``densa --help`` lists both.
 
 **No ``--fix`` flag by design.** Every red-line violation the
 validator surfaces is something the human MUST consciously decide to
-fix or bypass (per L1 §6). Auto-fix would let the LLM silently mutate
+fix or bypass (per AGENTS.md §"Red lines"). Auto-fix would let the LLM silently mutate
 load-bearing material on behalf of a decision the user hasn't taken.
 The sanctioned escape hatches are ``git commit --no-verify`` and the
 ``WIKI_ALLOW_*`` bypass env vars; they require explicit intent.
@@ -131,7 +131,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "densa — the schema validator for a Densa vault. "
             "Densa (the project) is the markdown template; `densa` (this CLI) "
             "is the tool that validates it against the L1 schema "
-            "(see AGENTS.md §3, §6). Also exposes `init` / `upgrade` "
+            "(see AGENTS.md §\"Frontmatter schema\" and §\"Red lines\"). Also exposes `init` / `upgrade` "
             "for vault bootstrap."
         ),
     )
@@ -143,7 +143,7 @@ def _build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command")
 
     # Explicit `lint` subcommand. Mirrors the top-level lint flags so both
-    # `densa --all` (canonical; used by hook, CI, nox) and
+    # `densa --all` (canonical; used by the pre-commit hook and CI) and
     # `densa lint --all` (explicit; helpful for discoverability) work.
     lint_sub = sub.add_parser(
         "lint",

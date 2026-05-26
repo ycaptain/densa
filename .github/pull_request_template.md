@@ -18,7 +18,7 @@
 - [ ] Ran `python -m densa --all` locally; it reports `OK: ... 0 error(s) ...`.
 - [ ] For validator changes (`_system/densa/`): `pytest`, `ruff`, and `mypy` all pass.
 - [ ] Wired the pre-commit hook (`git config core.hooksPath _system/hooks`) so future commits stay clean.
-- [ ] Commit messages follow the `<op>(<scope>): <summary>` convention from `AGENTS.md` §9.
+- [ ] Commit messages follow the `<op>(<scope>): <summary>` convention from [`AGENTS.md` §"Versioning"](../AGENTS.md#9-versioning).
 - [ ] No `raw/` files were edited, renamed, moved, or deleted.
 - [ ] No past entries in any `log.md` were rewritten.
 - [ ] If this is a breaking schema change, included a migration script under `_system/scripts/migrate_NN_<slug>.py` and bumped `schema_version` in `AGENTS.md` frontmatter.

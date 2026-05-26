@@ -105,7 +105,7 @@ class LogAppendOnly:
                     message=(
                         "AGENTS002 log-append-only: staged deletion of "
                         f"{content.rstrip()!r}. Logs are append-only and "
-                        "reverse-chronological (L1 §6); new entries go above "
+                        "reverse-chronological (AGENTS.md §\"Red lines\"); new entries go above "
                         "older ones. For a one-shot reorder sweep, set "
                         f"`{LOG_REORDER_BYPASS_ENV}=1` and include a "
                         "`## [YYYY-MM-DD] maintenance | ...` audit entry."

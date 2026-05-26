@@ -1,7 +1,8 @@
 # Prompt: lint
 
 Use this prompt body when the human says `lint` or `lint --domain <X>`.
-Canonical procedure for `/AGENTS.md` §2.3.
+Canonical procedure for
+[`/AGENTS.md` §"lint"](../../AGENTS.md#23-lint---domain-x).
 
 ## What this command will write (schema contract)
 
@@ -52,7 +53,8 @@ Canonical procedure for `/AGENTS.md` §2.3.
      non-existent files.
    - **Frontmatter compliance** *(primarily enforced by pre-commit;
      lint re-runs only when pre-commit was bypassed)*: every page has
-     the universal fields (§3 of L1 schema) and the L2-required
+     the universal fields ([AGENTS.md §"Frontmatter schema"](../../AGENTS.md#3-frontmatter-schema-universal))
+     and the L2-required
      fields.
    - **Index drift**: pages on disk not surfaced by any Dataview block in
      `index.md`, or vice versa.
@@ -77,7 +79,9 @@ Canonical procedure for `/AGENTS.md` §2.3.
      contain wiki pages whose own `sources` reach raw. Flag any claim
      whose only path to raw is ≥3 hops as `human-review` — citation
      drift makes claims unverifiable.
-   - **Quote integrity**: every `> [!quote]` block (per L1 §4.1) in
+   - **Quote integrity**: every `> [!quote]` block (per
+     [AGENTS.md §"Obsidian-flavored conventions"](../../AGENTS.md#obsidian-flavored-conventions-adopted-selectively))
+     in
      any wiki page MUST be locatable verbatim (whitespace-tolerant)
      in at least one raw file referenced by the page's `sources`
      chain. Use `git grep -F` or equivalent on the cited raw paths.
@@ -107,7 +111,8 @@ Canonical procedure for `/AGENTS.md` §2.3.
    - **GUIDE ↔ AGENTS drift**: read `GUIDE.md` §"Cheat sheet" table;
      for each row, locate the corresponding canonical statement in
      `AGENTS.md` (or `domains/<X>/AGENTS.md`). If the two disagree,
-     flag as `human-review`. AGENTS wins per L1 §1 authority rule,
+     flag as `human-review`. AGENTS wins per the
+     [L1 "Layered architecture" authority rule](../../AGENTS.md#1-layered-architecture),
      but the LLM should suggest the textual delta to bring GUIDE back
      in line.
 6. **Domain-specific checks**: read the `Domain-specific lint rules`
@@ -196,7 +201,8 @@ Canonical procedure for `/AGENTS.md` §2.3.
    ## Promotion candidates
    <!-- One row per outputs/qa/<file> meeting the heuristics in step
    6.6: filename, suggested type, suggested slug, brief reason.
-   The human runs `promote` (§2.5) — lint never executes it. -->
+   The human runs [`promote`](../../AGENTS.md#25-promote-qa-path-qa--wiki-page)
+   — lint never executes it. -->
 
    ## Human-review queue
    <!-- Catch-all for items routed here from step 6.5 (Q&A "Issues to
@@ -212,7 +218,7 @@ Canonical procedure for `/AGENTS.md` §2.3.
 
    The **Delta** section is mandatory whenever a prior lint exists; its
    purpose is to make subsequent runs cheap to read (the "boring lint"
-   ideal in §Quality bar). For each backlog item carried over, cite the
+   ideal in the "Quality bar" section). For each backlog item carried over, cite the
    prior report with a wikilink so the human can trace history. New
    items that did not appear last time go under "New since last lint".
 
@@ -228,8 +234,9 @@ Canonical procedure for `/AGENTS.md` §2.3.
    - **Refresh the Dataview snapshot**: lint runs MUST regenerate
      [`outputs/snapshots/index-snapshot.md`](../../outputs/snapshots/index-snapshot.md)
      in full on every run (overwrite, not append). The file is the
-     machine-readable mirror referenced by `/AGENTS.md` §1.1 step 4;
-     fresh LLM sessions read it instead of executing Dataview.
+     machine-readable mirror referenced by
+     [`/AGENTS.md` §"Minimal onboarding set"](../../AGENTS.md#11-minimal-onboarding-set-for-a-fresh-llm-session)
+     step 4; fresh LLM sessions read it instead of executing Dataview.
 
      **The file's shape is pinned**, not reverse-engineered. The
      template ships at the path above with three fixed table sections
@@ -277,7 +284,8 @@ Canonical procedure for `/AGENTS.md` §2.3.
 
    Everything else (deletes, renames, status flips, large rewrites)
    stays as `human-review`.
-9. **Prepend to log.md** (top-of-file under frontmatter, per L1 §6).
+9. **Prepend to log.md** (top-of-file under frontmatter, per
+   [AGENTS.md §"Red lines"](../../AGENTS.md#6-red-lines-non-negotiable)).
    Use plain paths (not wikilinks) for `outputs/` artifacts because
    `outputs/` is deliberately outside the wikilink graph:
    ```

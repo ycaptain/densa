@@ -98,7 +98,7 @@ class TestFrontmatterRequiredKeys:
         self, mini_vault: MiniVault,
     ) -> None:
         """`sources: []` (key declared, list empty) MUST pass — see L1
-        §3.1's `≥ 0` cardinality for concept-type pages."""
+        sources-cardinality.md's `≥ 0` cardinality for concept-type pages."""
         path = "domains/psychology/wiki/concepts/x.md"
         report = Report()
         FrontmatterRequiredKeys().visit(
@@ -174,7 +174,7 @@ class TestAnalysisSourcesCardinality:
         """Regression: AGENTS005 must reject analysis whose sole source
         wikilink resolves to a wiki page (not a raw file).
 
-        L1 §3.1 says `analysis.sources` MUST point to a raw file.
+        sources-cardinality.md says `analysis.sources` MUST point to a raw file.
         Before the fix the rule only checked wikilink syntax, so an
         analysis citing another wiki page passed silently.
         """

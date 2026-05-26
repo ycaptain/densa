@@ -220,5 +220,6 @@ compiler toolchain:
 
 When you ask "can I trust this wiki claim?", the answer is "follow
 the wikilink chain to a `raw/` file and read the source." That
-chain is finite (≤2 hops per L1 §6) and machine-checkable
+chain is finite (≤2 hops per [L1 §"Red lines"](../../AGENTS.md#6-red-lines-non-negotiable))
+and machine-checkable
 (AGENTS006 + lint's citation-depth pass).

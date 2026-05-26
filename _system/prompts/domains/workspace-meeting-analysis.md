@@ -81,7 +81,8 @@ raw does this one continue, which later raw does it forecast).
 3. **Draft frontmatter** per L2 §"Required frontmatter additions":
    - `raw_type: meeting | decision | thread`
    - `meeting_date: YYYY-MM-DD` (when `raw_type: meeting`)
-   - `sources: ["[[<raw-slug>]]"]` — exactly one element, per L1 §3.1
+   - `sources: ["[[<raw-slug>]]"]` — exactly one element, per
+     [`sources-cardinality.md`](../../../docs/reference/sources-cardinality.md)
    - `tags:` — include the dominant project slug, the meeting type
      (`planning`, `postmortem`, `sync`, `review`, `decision-doc`), and
      any cross-cutting topical tag (`api-design`, `sla-exposure`,
@@ -126,7 +127,8 @@ raw does this one continue, which later raw does it forecast).
    table and bump `instances_count`.
 3. Update `domains/workspace/index.md` **only** if a new wiki page was
    created (Dataview blocks pick up updated frontmatter automatically).
-4. Prepend to `domains/workspace/log.md` per L1 §6 entry insertion
+4. Prepend to `domains/workspace/log.md` per
+   [AGENTS.md §"Red lines"](../../../AGENTS.md#6-red-lines-non-negotiable) entry insertion
    point (immediately after preamble separator):
    ```
    ## [YYYY-MM-DD] ingest | <one-line meeting title>
@@ -488,7 +490,7 @@ A correct workspace ingest produces:
 
 1. **Exactly one** `analysis` file per raw, named
    `<raw-stem>-analysis.md`, with `sources: ["[[<raw-slug>]]"]` of
-   length 1 (L1 §3.1 hard constraint).
+   length 1 (sources-cardinality.md hard constraint).
 2. The **four readability elements** (TL;DR + at-a-glance table +
    Mermaid + cast-and-stake table) are present, in order, before
    `## Context`.
@@ -517,7 +519,9 @@ A correct workspace ingest produces:
 10. A synthesis is created **only** when the §"Synthesis trigger"
     criteria are met.
 11. `index.md` is refreshed only if a new wiki page was created.
-12. `log.md` prepended per L1 §6 with a one-line synthesis that names
+12. `log.md` prepended per
+    [AGENTS.md §"Red lines"](../../../AGENTS.md#6-red-lines-non-negotiable)
+    with a one-line synthesis that names
     the **decision produced + the load-bearing trade-off**, not just
     the title.
 13. No verbatim quoting >3 lines from the raw transcript in any wiki

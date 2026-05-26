@@ -15,7 +15,7 @@ The flow:
 This command **never touches** ``domains/**``; if the merge surfaces
 a conflict there, that's a vault-content conflict and the user owns
 it. The upstream contract is that ``domains/**`` belongs to the user
-(per AGENTS.md §2.0), so genuine conflicts in that namespace should
+(per AGENTS.md §"Operation writes"), so genuine conflicts in that namespace should
 be rare.
 """
 

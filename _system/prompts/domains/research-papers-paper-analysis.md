@@ -52,7 +52,8 @@ budget on **mechanism extraction** instead.
 
 1. **Read the full source.** Identify title, authors, venue / year /
    DOI or arXiv id. For PDF-extracted markdown, also state which
-   figures / tables your extraction includes vs. omits (per L1 §6
+   figures / tables your extraction includes vs. omits (per
+   [AGENTS.md §"Red lines"](../../../AGENTS.md#6-red-lines-non-negotiable)
    multi-modal red line).
 2. **Load conditional context** (token budget):
    - Always: this sub-prompt + L1 + L2 + the snapshot at
@@ -106,7 +107,8 @@ budget on **mechanism extraction** instead.
 3. Update `domains/research-papers/index.md` **only** if a new wiki
    page was created (Dataview blocks pick up updated frontmatter
    automatically).
-4. Prepend to `domains/research-papers/log.md` per L1 §6 entry
+4. Prepend to `domains/research-papers/log.md` per
+   [AGENTS.md §"Red lines"](../../../AGENTS.md#6-red-lines-non-negotiable) entry
    insertion point (immediately after preamble separator):
    ```
    ## [YYYY-MM-DD] ingest | <author> <year>, <one-line title>
@@ -347,7 +349,7 @@ Synthesis pages are not created speculatively. Trigger them when:
    Synthesis records the reframe; the analyses themselves are
    unchanged.
 3. **The human asks for a comparison.** Then synthesis is the
-   filing-back artifact (per L1 §2.2 query flow).
+   filing-back artifact (per [AGENTS.md §"query"](../../../AGENTS.md#22-query-question) flow).
 
 Synthesis structure follows the same TL;DR-first principle as
 analysis (see the [[llm-tutoring-causal-evidence-2024-2025]] worked
@@ -395,7 +397,8 @@ A correct paper ingest produces:
 6. `wiki/questions/` is *not* touched on first ingest unless a
    pre-existing stub justifies it (see §"Question-page deferral").
 7. `index.md` is refreshed only if a new wiki page was created.
-8. `log.md` appended per L1 §2.1 with a one-line synthesis that
+8. `log.md` appended per [AGENTS.md §"ingest"](../../../AGENTS.md#21-ingest-path)
+   with a one-line synthesis that
    names the **headline mechanism + the load-bearing limit** — not
    just the title.
 9. No verbatim **prose** quoting from the paper body in any wiki

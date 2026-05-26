@@ -1,7 +1,7 @@
 ---
 type: log
 scope: global
-updated: 2026-05-25
+updated: 2026-05-26
 compiled_against: 2
 ---
 
@@ -21,6 +21,15 @@ Entry format:
 ```
 
 ---
+
+## [2026-05-26] maintenance | newcomer-friendliness sweep · stages 2 + 3 + cluster-T full removal
+- Bypass used: WIKI_ALLOW_CROSS_SCOPE=1 (single sweep touches `_system/**`, `docs/**`, `integrations/**`, `domains/**` minor cross-link polish, root docs, `.github/**`, `pyproject.toml`).
+- Stage 2 (prior-art research, per the maintainers' research brief queue): closes the queue at 6/6 by filing studies #5 (RAGFlow) and #6 (Graphiti/Cognee); files a mid-checkpoint action plan (replacing the 2026-05-21 plan; 10 sections sediment 9 n=4 decision-grade findings + 4 brief corrigenda + 3 new watch-list candidates Synto / lucasastorian/llmwiki / ussumant/llm-wiki-compiler); n=7 §3.5 exposure-axis table now formal — no upstream covers >2 surfaces, Densa's planned triple (AGENTS.md + MCP server + plugin/SKILL.md) is empirically unoccupied.
+- Stage 3 (clusters M / N / O / P / Q / R, plus cluster-S follow-up materials): "template" → "skill pack" project-self-reference replacement across SECURITY / CONTRIBUTING / bootstrap / setup / design-rationale (12 hits; technical `_system/templates/*` etc. preserved); README rewrites subtitle + adds skill badge + adds AGENTS.md-native framing + rewrites "Why not just RAG?" with n=7 fault-line + adds "Where this sits in the ecosystem" 6-row evidence table (each row anchored to a maintainers' prior-art study); AGENTS.md adds top callout positioning Densa as reference implementation of the AGENTS.md cross-tool standard (1/5 upstream adoption rate cited); new `integrations/cursor/densa-plugin/` parallel package to `claude-code/` — `.cursor-plugin/plugin.json` + 5 IDE-agnostic `skills/<op>/SKILL.md` (thin shims back to `_system/prompts/<op>.md`) + 5 slash commands + plugin README; `integrations/README.md` updated to dual-plugin matrix; cluster-S submission toolkit shipped — `integrations/cursor/densa-plugin/scripts/build-skill-zips.sh` (smoke-tested: 5 zips × ~4 KB) + a maintainers' four-target submission checklist (skills.sh + agentskills.io + Cursor marketplace + Claude Code Skills).
+- Cluster-T full removal (Phases A and B executed in the same session): `noxfile.py` deleted; `pyproject.toml` `[project.optional-dependencies] dev` drops `nox>=2024.4.15`; `.github/workflows/ci.yml` replaces `nox -s check` with four atomic CI steps (`densa --all` / `pytest` / `ruff check .` / `mypy`); CONTRIBUTING.md drops "nox is still around" appendix; CLI comment in `_system/densa/cli.py` drops nox reference. Net effect: contributor on-ramp is now `pip install -e ".[dev]"` + four direct `python -m X` commands — no task-runner layer.
+- Side-band fixes surfaced by Phase B (canonical CI gate stricter than the prior nox-wrapped one): `_system/scripts/migrate_02_karpathy_vocab.py` 16 × F541 (f-string-without-placeholders) auto-fix + 2 × SIM105 → `contextlib.suppress(OSError)`; `_system/tests/test_migrate_02_karpathy_vocab.py` F841 (unused var) + PLC0415 (non-top-level import) fix; `GUIDE.md` operation-mapping table adds `AGENTS.md §2.x` anchor links (unblocks pre-existing `test_promote_preflight.py::test_workflow_table_lists_promote`).
+- Carry-forward residue from prior session: clusters I-L of the same internal review plan (CONTRIBUTING audience router, bootstrap three-section split, AGENTS §§1.1/2.0/6.1 `humans: skip` callouts, `inbox/.gitkeep` + `outputs/{lint,qa}/.gitkeep` removal with on-demand README wording); doc polish to `_system/prompts/*`, `_system/templates/*`, `_system/densa/checks/*`, `docs/reference/*`, `examples/showcases/*/AGENTS.md`, `domains/research-papers/AGENTS.md`, etc. (~60 files); these were staged at the close of the previous session and ride along with this commit rather than churning a separate one.
+- Validator self-check: `python -m densa --all` is green (210 files, 0 error, 0 warning); `python -m pytest` 296 passed; `python -m ruff check .` clean; `python -m mypy` clean across 30 source files.
 
 ## [2026-05-25] maintenance | schema v2 (Karpathy vocab) + newcomer-friendliness sweep
 - Bypass used: WIKI_ALLOW_CROSS_SCOPE=1 (single sweep touches `_system/**`, `domains/**`, `examples/**`, `docs/**`, root docs, `integrations/**`, `.github/**`).

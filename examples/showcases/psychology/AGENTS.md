@@ -150,7 +150,8 @@ When ingesting a raw under `raw/sessions/<file>`:
 7. For `session_kind: psychiatry` ingests, also append a row to `wiki/protocols/medication-arc.md` timeline (even when no medication change — record "no change" for continuity).
 8. Update `wiki/concepts/` only when the session introduces a genuinely new psychological concept (not just a new instance of an existing one). DSM-5 phenomenology pages (depression / anxiety / adhd / asd / possible-asd-features) live in `wiki/concepts/`.
 9. Update `domains/psychology/index.md` (Dataview blocks usually auto-refresh; only manual when a new theme/framework/concept arrives).
-10. Append to `domains/psychology/log.md` per L1 §2.1.
+10. Append to `domains/psychology/log.md` per
+    [L1 §"ingest"](../../../AGENTS.md#21-ingest-path).
 
 The full per-page body structure (single-file v3 with `session_kind` branches) lives in [`_system/prompts/domains/psychology-session-analysis.md`](../../_system/prompts/domains/psychology-session-analysis.md). The three-stage pipeline (draft → critique → revise) is non-optional.
 
@@ -195,8 +196,9 @@ or fast-clip speaker pronouns. Maintain a project-local correction table
 here, **append-only**. During ingest, silently correct the listed
 patterns in the wiki output (analyses, entities, patterns, themes,
 etc.); when you (the human) authorise a sweep, the LLM may also edit
-`raw/` — this is the **only** category of raw-edit permitted under L1
-§6's red line, and only because the raw is a transcription artifact
+`raw/` — this is the **only** category of raw-edit permitted under
+the [L1 "Red lines"](../../../AGENTS.md#6-red-lines-non-negotiable),
+and only because the raw is a transcription artifact
 rather than authored text.
 
 | Wrong (transcript) | Correct | Refers to | Notes |
@@ -262,7 +264,8 @@ Override locally:
 
 If you accumulate a backlog of analyses authored under an earlier
 schema or earlier framework set (flag them with `legacy: true` in
-frontmatter), the redo procedure is governed by L1 §6's `.legacy/`
+frontmatter), the redo procedure is governed by the
+[L1 "Red lines"](../../../AGENTS.md#6-red-lines-non-negotiable) `.legacy/`
 red line:
 
 1. Compute the todo set: `rg -l 'legacy: true' wiki/analyses/`. The frontmatter flag itself is the checkpoint — no external lock file is needed; killed mid-batch is safe to resume.
@@ -278,7 +281,7 @@ therapy modalities you've tried, a lint report), write a
 analyses or other wiki pages it integrates — **never** a raw source
 directly.
 
-## Domain-specific lint rules (in addition to L1 §2.3)
+## Domain-specific lint rules (in addition to [L1 §"lint"](../../../AGENTS.md#23-lint---domain-x))
 
 - Every `session` raw file must have a corresponding `analysis` page; if
   missing, list under "uningested sessions".
@@ -312,14 +315,16 @@ this schema. Pick **one** of the two postures below and document the
 choice in this section before ingesting any session.
 
 > **This worked example uses the private-repo (relaxed) posture** —
-> see §3.2 below. Clinical adopters should **re-evaluate per their
-> own storage / sharing reality** before ingesting any real
-> material; the wrong-posture failure mode (relaxed posture with a
-> repo that is or becomes pushed) is the single highest-cost
-> mistake possible in this L2. Switch to the conservative posture
-> (§3.1) by editing this paragraph and the analyses' quote
-> handling; the schema, validator, and prompt support both
-> postures without code change.
+> see [§"Private-repo posture"](#private-repo-posture-only-if-the-repo-will-never-leave-your-own)
+> below. Clinical adopters should **re-evaluate per their own
+> storage / sharing reality** before ingesting any real material;
+> the wrong-posture failure mode (relaxed posture with a repo that
+> is or becomes pushed) is the single highest-cost mistake possible
+> in this L2. Switch to the
+> [§"Conservative posture"](#conservative-posture-when-you-plan-to-push)
+> by editing this paragraph and the analyses' quote handling; the
+> schema, validator, and prompt support both postures without code
+> change.
 
 ### Conservative posture (when you plan to push)
 

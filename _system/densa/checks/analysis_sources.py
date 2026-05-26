@@ -2,7 +2,8 @@
 
 A wiki page with ``type: analysis`` must list **exactly one** wikilink
 under ``sources``, and that wikilink must resolve to a file under some
-``raw/`` directory. The schema rationale (L1 §3.1): an analysis is a
+``raw/`` directory. The schema rationale (see
+``docs/reference/sources-cardinality.md``): an analysis is a
 1:1 contract between a raw source and its first-order LLM reading.
 Anything multi-source is a synthesis and lives in ``wiki/syntheses/``;
 anything that cites another wiki page (not raw) is also not an
@@ -75,7 +76,8 @@ class AnalysisSourcesCardinality:
             ))
             return
 
-        # L1 §3.1: analysis.sources MUST point at a raw/ file.
+        # Per docs/reference/sources-cardinality.md: analysis.sources
+        # MUST point at a raw/ file.
         target = match.group(1)
         resolution = resolve(target, idx)
         if resolution.status != ResolutionStatus.OK:

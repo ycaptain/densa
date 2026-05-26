@@ -4,7 +4,7 @@ Use this prompt body when the human says `process-inbox` or `inbox`.
 This is **one of the five canonical operations** alongside
 `ingest / query / lint / promote`, introduced for routing
 un-classified material that has been parked in `/inbox/`. See
-[`/AGENTS.md`](../../AGENTS.md) §2.4.
+[`/AGENTS.md` §"process-inbox"](../../AGENTS.md#24-process-inbox-optional-opt-in).
 
 > **`inbox/` is created on demand.** A fresh fork has no `inbox/`
 > directory; it materialises the first time the human drops an
@@ -23,7 +23,8 @@ un-classified material that has been parked in `/inbox/`. See
 
 > This table mirrors `densa.schema.OPERATIONS['process-inbox'].writes`.
 > AGENTS011 warns on drift. `process-inbox` never touches `wiki/**` —
-> it only files raw material; ingest (§2.1) is the next, separate step.
+> it only files raw material;
+> [ingest](../../AGENTS.md#21-ingest-path) is the next, separate step.
 
 
 ## Input
@@ -59,7 +60,8 @@ un-classified material that has been parked in `/inbox/`. See
    from ingest. After process-inbox completes, the human invokes
    `ingest` on each newly-routed source individually (or in batch, via
    pre-approved batch ingest mode).
-5. **Prepend to the global `log.md`** (top-of-file under frontmatter, per L1 §6):
+5. **Prepend to the global `log.md`** (top-of-file under frontmatter, per
+   [AGENTS.md §"Red lines"](../../AGENTS.md#6-red-lines-non-negotiable)):
    ```
    ## [YYYY-MM-DD] process-inbox | <count> files routed
    - Routed to psychology: <n>

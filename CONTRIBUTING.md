@@ -1,10 +1,17 @@
 # Contributing to Densa
 
-This is a schema-first template. The interesting contributions are
-markdown contracts (`AGENTS.md`, prompts, templates) and a small
+This is a schema-first agent skill pack. The interesting
+contributions are markdown contracts (`AGENTS.md`, prompts,
+templates) and a small
 validator (`_system/densa/`) — not application code. By
 participating you agree to follow our
 [Code of Conduct](CODE_OF_CONDUCT.md).
+
+| Your contribution kind | Jump to |
+| --- | --- |
+| Typo / 1-line doc fix | just open a PR |
+| Validator / check authoring | [§"Before submitting a PR"](#-before-submitting-a-pr) |
+| Schema / red-line change | [§"Changing the L1 schema"](#-changing-the-l1-schema) |
 
 ## 🚀 Where to start
 
@@ -27,15 +34,16 @@ If you want to contribute but don't have an itch yet:
 
 ## 🛠 Before submitting a PR
 
-This project uses [**nox**](https://nox.thea.codes) as its task
-runner — the Scientific Python Development Guide's PY007
-recommendation. Cross-platform, Python-coded, explicit about what each
-session runs.
+Canonical local commands are `python -m X` invocations matching the
+pre-commit hook and CI verbatim — no task runner required. The
+shipped Python validator is stdlib-only by design; the contributor
+on-ramp is the same one-line `pip install -e ".[dev]"` plus four
+direct `python -m X` invocations below.
 
 ### One-time setup
 
 ```bash
-pip install -e ".[dev]"               # installs pytest + ruff + mypy + nox + pyyaml
+pip install -e ".[dev]"               # installs pytest + ruff + mypy + pyyaml
 ```
 
 Wire the pre-commit hook per
@@ -47,33 +55,24 @@ for the validator's own dev suite.
 ### Run every gate CI runs
 
 ```bash
-nox -s check                          # = lint + test + ruff + mypy
+PYTHONPATH=_system python -m densa --all   # the full validator pass
+python -m pytest                           # the test suite
+python -m ruff check .                     # lint the validator code
+python -m mypy                             # type-check the validator
 ```
 
-Or invoke them individually (these mirror `noxfile.py` verbatim;
-the bare `densa --all` form is canonical because the pre-commit
-hook and CI use it too):
+Each command mirrors what the pre-commit hook (`_system/hooks/pre-
+commit`) or CI runs verbatim. The `PYTHONPATH=_system` prefix on the
+first command lets `densa` run before `pip install -e .` completes;
+once installed, the bare `python -m densa --all` also works.
 
-| Session              | What it runs                                                                   |
-| -------------------- | ------------------------------------------------------------------------------ |
-| `nox -s lint`        | `python -m densa --all` (PYTHONPATH-set so it works pre-install)               |
-| `nox -s lint-strict` | `DENSA_STRICT=1 python -m densa --all` (pyyaml backend)                        |
-| `nox -s lint-diff`   | `python -m densa --diff origin/main` (PR-range staged-rule pass; override base via `nox -s lint-diff -- <ref>`) |
-| `nox -s test`        | `python -m pytest`                                                             |
-| `nox -s ruff`        | `python -m ruff check .`                                                       |
-| `nox -s ruff-fix`    | `python -m ruff check --fix .`                                                 |
-| `nox -s mypy`        | `python -m mypy`                                                               |
-| `nox -s hook`        | `git config core.hooksPath _system/hooks` + verify                             |
-
-Sessions reuse your current Python env (`venv_backend = "none"`) so
-they run instantly — no per-session venv churn. CI runs the same
-sessions over a Python 3.10 / 3.11 / 3.12 matrix.
-
-### Iterate on a single check
+### Variants and PR-range checks
 
 ```bash
-nox -s test -- -k <check-name> -v   # args after `--` reach pytest
-nox -s ruff-fix                     # auto-apply ruff fixes
+DENSA_STRICT=1 PYTHONPATH=_system python -m densa --all   # pyyaml backend
+PYTHONPATH=_system python -m densa --diff origin/main     # PR-range staged-rule pass
+python -m ruff check --fix .                              # auto-apply safe ruff fixes
+python -m pytest -k <check-name> -v                       # iterate on a single check
 ```
 
 ### Commit message convention
@@ -180,7 +179,7 @@ New seed L2s are welcome — open a
 [`domain-design-help`](.github/ISSUE_TEMPLATE/domain-design-help.md)
 issue first to discuss persona / page-types / required frontmatter,
 then PR a directory under `domains/`. Bar for inclusion: *would a
-plausible adopter of this template ship this exact L2 unmodified?*
+plausible adopter of this skill pack ship this exact L2 unmodified?*
 Worked examples need a real-looking persona and a synthesised raw set
 that ingests cleanly.
 

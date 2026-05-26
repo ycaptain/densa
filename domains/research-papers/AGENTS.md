@@ -52,7 +52,9 @@ domains/research-papers/
     └── .legacy/        ← v1 snapshots from the previous schema (read-only archive)
 ```
 
-Page-type semantics inherit from L1 §3. Two paper-domain hints:
+Page-type semantics inherit from
+[L1 §"Frontmatter schema"](../../AGENTS.md#3-frontmatter-schema-universal).
+Two paper-domain hints:
 
 - `overview` pages serve dual duty: `overview.md` is the per-domain
   reader entry; pages under `overviews/` survey a research
@@ -144,12 +146,13 @@ When ingesting a paper under `raw/papers/<slug>.md`:
    a thread is premature.
 7. Update `wiki/overview.md` (the per-domain entry page) if a new
    wiki page was created — add it to the mindmap.
-8. Prepend to `domains/research-papers/log.md` per L1 §6 with the
+8. Prepend to `domains/research-papers/log.md` per
+   [L1 §"Red lines"](../../AGENTS.md#6-red-lines-non-negotiable) with the
    Wrote / Read-but-not-touched breakdown from the ingest prompt's
    step 9. Also prepend to the global `log.md` if the ingest is
    cross-domain.
 
-## Domain-specific lint rules (in addition to L1 §2.3)
+## Domain-specific lint rules (in addition to [L1 §"lint"](../../AGENTS.md#23-lint---domain-x))
 
 Most v1 rules folded into L1's AGENTS010 / AGENTS011 in v2; only
 paper-specific checks remain:

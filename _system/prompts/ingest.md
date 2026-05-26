@@ -1,7 +1,8 @@
 # Prompt: ingest
 
 Use this prompt body when the human says `ingest <path>` or drops a new
-source. The procedure is the canonical realisation of `/AGENTS.md` §2.1; if
+source. The procedure is the canonical realisation of
+[`/AGENTS.md` §"ingest"](../../AGENTS.md#21-ingest-path); if
 that file changes, this prompt loses authority — re-read the schema.
 
 ## What this command will write (schema contract)
@@ -34,7 +35,8 @@ that file changes, this prompt loses authority — re-read the schema.
    (Chinese / Japanese / Korean) the conversion is different: each CJK
    character is ~3 UTF-8 bytes and tokenises at ~1 token, so use
    **tokens ≈ characters** (or equivalently `bytes / 3`) — see
-   [`docs/cjk-workflow.md`](../../docs/cjk-workflow.md) §1 for the full
+   [`docs/cjk-workflow.md` §"Token-budget arithmetic"](../../docs/cjk-workflow.md#1-token-budget-arithmetic)
+   for the full
    ratio table. Apply the **token-budget gate**:
    - **≤ 20K tokens** (≤ ~80 KB English prose, or ≤ ~20K CJK characters):
      proceed straight to step 2 (full read + plan + apply in one pass).
@@ -52,7 +54,9 @@ that file changes, this prompt loses authority — re-read the schema.
 2. **Read** the full source (or, in two-step mode, anchor on the
    pre-summary). If it is non-text (image, PDF, audio transcript), state
    explicitly what you can vs. cannot read.
-3. **Identify domain** by the routing rules in `/AGENTS.md` §5. Confirm with
+3. **Identify domain** by the routing rules in
+   [`/AGENTS.md` §"Routing rules"](../../AGENTS.md#5-routing-rules-where-does-a-new-source-go).
+   Confirm with
    the human only if ambiguous.
 4. **Read the corresponding `domains/<X>/AGENTS.md`** for the domain-specific
    ingest flow. Follow it.
@@ -120,7 +124,8 @@ that file changes, this prompt loses authority — re-read the schema.
    (Dataview blocks pick up most updates automatically).
 9. **Prepend to `domains/<X>/log.md`** — insert the new entry immediately
    after the YAML frontmatter (and before any `# <Title>` H1 / intro prose),
-   so newest is first per L1 §6. **The Wrote / Read-but-not-touched
+   so newest is first per [AGENTS.md §"Red lines"](../../AGENTS.md#6-red-lines-non-negotiable).
+   **The Wrote / Read-but-not-touched
    breakdown is required**: it lets a subsequent `lint` run verify
    that every claimed write actually landed (mtimes match log date),
    and it surfaces gaps where the next ingest should pick up:
@@ -146,7 +151,8 @@ that file changes, this prompt loses authority — re-read the schema.
 ## Hard rules
 
 - Do NOT modify the source file at `<path>`.
-- Do NOT delete any wiki pages. Use deprecation per `/AGENTS.md` §4.
+- Do NOT delete any wiki pages. Use deprecation per
+  [`/AGENTS.md` §"Naming and linking conventions"](../../AGENTS.md#4-naming-and-linking-conventions).
 - Do NOT fetch the web mid-ingest unless the human explicitly asks.
 - Do NOT inflate. Prefer precision over comprehensiveness; a 5-page edit is
   better than a 15-page edit padded with restatements.

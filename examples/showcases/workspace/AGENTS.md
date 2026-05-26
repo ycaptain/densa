@@ -34,7 +34,8 @@ Inherits from `/AGENTS.md`. Overrides apply only inside
 This is the **medium-weight reference L2** — eight effective page
 types (`source` and `session` are alias rows of the same raw bucket,
 so the Allowed-types table below has 9 rows but counts as 8 toward
-L1 §3.1), a session-centric ingest flow, and lint rules tuned for the
+[L1 sources-cardinality](../../../docs/reference/sources-cardinality.md)),
+a session-centric ingest flow, and lint rules tuned for the
 narrative-arc of work. It sits between
 [`research-papers`](../research-papers/AGENTS.md) (light: paper-in,
 analysis-out, six page types) and
@@ -111,7 +112,7 @@ whether it's actually a `decision`, `pattern`, or `question`.
 
 In addition to L1 universal frontmatter (`type / domain / created /
 updated / sources / tags / aliases / status / compiled_against` plus
-`last_validated` per L1 §3.3):
+`last_validated` per [L1 schema-versioning](../../../docs/reference/schema-versioning.md)):
 
 - `session` (raw meetings, when frontmatter is added at all — L1
   allows raw to be frontmatter-free): `meeting_type:
@@ -147,9 +148,10 @@ updated / sources / tags / aliases / status / compiled_against` plus
 - `analysis` pages: `raw_type: meeting|decision|thread`,
   `meeting_date: YYYY-MM-DD` (when `raw_type: meeting`).
 
-`session` is treated as a synonym for `source` for L1 §3.1
-`sources` cardinality purposes (the file *is* the source, so `sources`
-is empty). Lint enforces this.
+`session` is treated as a synonym for `source` for
+[`sources-cardinality.md`](../../../docs/reference/sources-cardinality.md)
+purposes (the file *is* the source, so `sources` is empty). Lint
+enforces this.
 
 ## Ingest flow (workspace-specific)
 
@@ -209,10 +211,10 @@ When ingesting a raw file under `raw/meetings/<slug>.md`,
 8. If the raw, together with prior raws, closes a multi-week arc
    (e.g. planning → decision → outcome), draft a
    `wiki/syntheses/<arc-slug>.md` that braids them.
-9. Append to `domains/workspace/log.md` and global `log.md` per L1
-   §2.1 entry format.
+9. Append to `domains/workspace/log.md` and global `log.md` per
+   [L1 §"ingest"](../../../AGENTS.md#21-ingest-path) entry format.
 
-## Routing hints (L1 §5 supplement)
+## Routing hints (supplement to [L1 §"Routing rules"](../../../AGENTS.md#5-routing-rules-where-does-a-new-source-go))
 
 - **Meeting transcript** with named attendees, agenda, or chat-log
   format → `raw/meetings/`.
@@ -228,7 +230,7 @@ When ingesting a raw file under `raw/meetings/<slug>.md`,
   always per-raw (1:1); cross-link to all stakeholders and projects
   the raw touches.
 
-## Domain-specific lint rules (in addition to L1 §2.3)
+## Domain-specific lint rules (in addition to [L1 §"lint"](../../../AGENTS.md#23-lint---domain-x))
 
 - Every raw under `raw/meetings/` or `raw/decisions/` must have an
   `analysis` page. If absent, surface under "un-analysed raws".

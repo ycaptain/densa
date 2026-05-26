@@ -48,13 +48,14 @@ jobs:
       - name: Install densa (strict extras)
         run: pip install -e ".[strict]"
       - name: Run densa over the full repo (file rules)
-        # Local equivalent: `nox -s lint-strict`. The CI step adds
-        # `--format=github` for PR annotations; otherwise identical.
+        # Local equivalent: `DENSA_STRICT=1 PYTHONPATH=_system python -m densa --all`.
+        # The CI step adds `--format=github` for PR annotations; otherwise
+        # identical.
         run: DENSA_STRICT=1 densa --all --format=github
       - name: Run densa over the PR range (staged rules)
-        # Local equivalent: `nox -s lint-diff` (with the base ref as
-        # the posarg). CI hard-codes the PR base ref via the event
-        # payload and adds GitHub-Actions PR annotations.
+        # Local equivalent: `DENSA_STRICT=1 PYTHONPATH=_system python -m densa --diff <base-ref>`.
+        # CI hard-codes the PR base ref via the event payload and adds
+        # GitHub-Actions PR annotations.
         if: github.event_name == 'pull_request'
         run: |
           DENSA_STRICT=1 densa --diff \
@@ -77,9 +78,16 @@ jobs:
           cache-dependency-path: pyproject.toml
       - name: Install dev deps
         run: pip install -e ".[dev]"
-      # `nox -s check` runs the same lint + test + ruff + mypy gate
-      # contributors run locally. If `nox -s check` is green locally
-      # this job is green, modulo Python-version-specific issues
-      # caught by the matrix.
-      - name: Run developer gate (lint + test + ruff + mypy)
-        run: nox -s check
+      # The four canonical local commands (see CONTRIBUTING.md
+      # §"Before submitting a PR") run as four explicit CI steps so each
+      # gate's failure surfaces in its own annotation; the local
+      # contributor flow is `python -m X` verbatim with no task runner
+      # in between.
+      - name: lint — densa --all (schema + wikilink)
+        run: PYTHONPATH=_system python -m densa --all
+      - name: test — pytest
+        run: python -m pytest
+      - name: ruff — lint validator code
+        run: python -m ruff check .
+      - name: mypy — strict type check
+        run: python -m mypy

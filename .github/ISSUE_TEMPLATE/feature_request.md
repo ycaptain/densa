@@ -36,7 +36,7 @@ assignees: ""
 
 ## Affected red lines
 
-<!-- Does this touch any of the L1 red lines in AGENTS.md §6?
+<!-- Does this touch any of the L1 red lines in AGENTS.md §"Red lines"?
      If so, explain why the change is safe. If not, write "none". -->
 
 ## Additional context
