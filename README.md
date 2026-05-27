@@ -13,11 +13,35 @@
 [![Schema version](https://img.shields.io/badge/schema-v2-informational)](AGENTS.md)
 [![Skill: Cursor / Claude Code / Codex](https://img.shields.io/badge/skill-cursor%20%7C%20claude%20%7C%20codex-blueviolet)](AGENTS.md)
 
+One ingest cycle, end-to-end (cite:
+[`examples/hello-world/`](examples/hello-world/) for the literal
+files):
+
+```mermaid
+sequenceDiagram
+    autonumber
+    participant You
+    participant Agent as AI agent (Cursor / Claude Code / Codex)
+    participant Vault as Densa vault (raw / wiki / log)
+    You->>Vault: drop source.md into raw/
+    You->>Agent: "ingest raw/source.md"
+    Agent->>Vault: read source + relevant wiki pages
+    Agent->>You: planned edits (4 pages, ~60 lines diff)
+    You->>Agent: approve / edit / reject
+    Agent->>Vault: write summary + concept pages + log entry
+    Vault->>Vault: pre-commit hook validates (AGENTS001-012)
+    Vault->>You: green commit; wiki densifies
+```
+
+Image of: 1 source → 1 `summary` + 2 `concept` pages + 1 log entry.
+That's the loop. Now scale it.
+
 ## Pick your path
 
 | You want to... | Open | Time |
 |---|---|---|
 | **Glance** — see what one ingest produces, no install | [`examples/hello-world/`](examples/hello-world/) (source + expected wiki output + log entry) | 3 min |
+| **Try the slash commands** — sideload the plugin into Cursor without committing to a vault | [`integrations/cursor/densa-plugin/` §Install Option B](integrations/cursor/densa-plugin/#option-b--local-sideload-works-today) (symlink + restart Cursor) | ~5 min |
 | **Set up your own vault** | [Quickstart](#quickstart) below → [`docs/setup.md`](docs/setup.md) | ~30 min to first ingest |
 | **Evaluate the design** | [`docs/reference/design-rationale.md`](docs/reference/design-rationale.md) | ~1 hr deep read |
 
@@ -60,10 +84,12 @@ under [`integrations/`](integrations/) — currently
 [`claude-code/`](integrations/claude-code/) (Claude Code marketplace
 manifest + slash commands) and
 [`cursor/densa-plugin/`](integrations/cursor/densa-plugin/) (Cursor
-plugin manifest + IDE-agnostic `SKILL.md` files installable into
-`~/.cursor/skills/` or `~/.claude/skills/` standalone). Both are
-**experimental**; the vault works identically without them — the
-plugins are just UX shortcuts that load the same operation prompts.
+plugin manifest + IDE-agnostic `SKILL.md` files). New users who want
+to feel the operations before standing up a vault can take the "Try
+the slash commands" path in the table above (~5 min sideload).
+Both plugins are **experimental** — they're convenience surfaces on
+the same operation prompts; the vault works identically without
+them.
 
 The 12 enforced rules (`AGENTS001`–`AGENTS012`) are documented at
 [`docs/reference/rules-registry.md`](docs/reference/rules-registry.md);
@@ -156,15 +182,7 @@ If you read Karpathy's gist and thought "ok but where do I start"
 — this is where. Vocabulary glossary:
 [`docs/reference/karpathy-mapping.md`](docs/reference/karpathy-mapping.md).
 
-```mermaid
-flowchart LR
-    SRC([drop source]) --> RAW[(raw/)]
-    RAW --> PLAN[agent plans edits]
-    PLAN --> REV{review?}
-    REV -- yes --> WIKI[(wiki/)]
-    WIKI --> ANS[answer your query]
-    ASK([your question]) --> ANS
-```
+![Storyboard: one Densa ingest cycle — drop source, agent plans, human approves, agent writes summary + concepts + log entry](assets/hello-world-ingest.svg)
 
 The plan-first-then-apply gate is the same for every operation; you
 never see edits land without consent. For a worked example of one

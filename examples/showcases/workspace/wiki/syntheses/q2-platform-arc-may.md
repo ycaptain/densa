@@ -7,7 +7,13 @@ sources: ["[[2026-04-08-meeting-q2-planning]]", "[[2026-04-22-decision-microserv
 tags: [synthesis, q2-platform-migration, narrative-arc, residual-risk]
 aliases: ["Q2 platform arc — May 2026 view"]
 status: active
-compiled_against: 1
+compiled_against: 2
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-26
+    mode: in-place
+    notes: 'type stayed synthesis'
 ---
 
 # Q2 platform migration — arc through May 2026
@@ -33,7 +39,7 @@ of these as constraints from outside the team without pushback.
 If the arc had ended here, this would be a worked example of
 cross-functional planning done right.
 
-See [[2026-04-08-meeting-q2-planning-analysis]] for the per-raw
+See [[2026-04-08-meeting-q2-planning-summary]] for the per-raw
 detail.
 
 ## Weeks 2–3: a textbook-good ADR
@@ -61,7 +67,7 @@ acknowledged in Alex's partial sign-off, and then filed as
 "phase-2 follow-up monitoring work" without any of those three
 attachments.
 
-See [[2026-04-22-decision-microservices-split-analysis]].
+See [[2026-04-22-decision-microservices-split-summary]].
 
 ## Weeks 4–5: shadow mode, then phase 2
 
@@ -104,7 +110,7 @@ reconciliation in place. Tom and Devon take the action item to
 draft a "blocking risks vs deferrable risks" one-pager before
 the next ADR cycle.
 
-See [[2026-05-06-meeting-incident-postmortem-analysis]].
+See [[2026-05-06-meeting-incident-postmortem-summary]].
 
 ## What this arc demonstrates
 

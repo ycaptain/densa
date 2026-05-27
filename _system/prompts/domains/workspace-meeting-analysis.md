@@ -539,27 +539,27 @@ output a "done" message.
 When in doubt about depth or voice, open one of these analyses and
 copy the structural shape:
 
-- [[2026-04-08-meeting-q2-planning-analysis]] — **planning meeting**
+- [[2026-04-08-meeting-q2-planning-summary]] — **planning meeting**
   with one load-bearing stakeholder concern. Demonstrates the
   cast-and-stake table's "Outcome" column when a stakeholder's
   position partially reshapes the proposal.
-- [[2026-04-22-decision-microservices-split-analysis]] — **ADR /
+- [[2026-04-22-decision-microservices-split-summary]] — **ADR /
   decision doc**. Demonstrates how the analysis names what the ADR
   decided AND what the ADR deferred without owner / date, with the
   deferral surfaced both in the at-a-glance "Residual risks
   accepted" row and in the "Decisions deferred" body section.
-- [[2026-05-06-meeting-incident-postmortem-analysis]] — **postmortem**.
+- [[2026-05-06-meeting-incident-postmortem-summary]] — **postmortem**.
   Demonstrates the causal-chain timeline diagram and the way the
   analysis links the failure back to the prior raws that forecast
   it. Also demonstrates the "Notes" section as the place where
   pattern-promotion observations land.
-- [[2026-05-13-meeting-api-style-decision-analysis]] — **clean
+- [[2026-05-13-meeting-api-style-decision-summary]] — **clean
   decision meeting**. Demonstrates the positive
   `engineering-decision-style` pattern: problem statement →
   constraints → options matrix → trade-off → decision → exit
   criteria. Use this when your raw exhibits a healthy decision
   workflow you want to reproduce.
-- [[2026-05-19-meeting-vector-db-selection-analysis]] — **vendor
+- [[2026-05-19-meeting-vector-db-selection-summary]] — **vendor
   selection**. Demonstrates a tighter at-a-glance table for a
   "pick one of N" decision, and the entity bookkeeping for a
   cross-team meeting (Platform + ML + API + Product).

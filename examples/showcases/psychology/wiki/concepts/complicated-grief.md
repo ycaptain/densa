@@ -11,8 +11,14 @@ sources: [
 tags: [grief, dsm-5-tr, prolonged-grief-disorder, bereavement, phenomenology]
 aliases: ["prolonged grief disorder", "PGD", "persistent complex bereavement", "complicated grief"]
 status: active
-compiled_against: 1
+compiled_against: 2
 last_validated: 2026-05-21
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-26
+    mode: in-place
+    notes: 'type stayed concept'
 ---
 
 # Complicated grief / Prolonged Grief Disorder (PGD)

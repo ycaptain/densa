@@ -2,8 +2,8 @@
 type: index
 scope: psychology
 domain: psychology
-updated: 2026-05-21
-compiled_against: 1
+updated: 2026-05-26
+compiled_against: 2
 example_status: worked-example
 ---
 <!-- updated 2026-05-21: schema-only → worked-example (six-week father-grief arc, 4 raws → ~25 wiki pages, English-language for open-source showcase) -->
@@ -97,21 +97,21 @@ TABLE WITHOUT ID
     date AS "Date",
     participants AS "Participants",
     mode AS "Mode"
-FROM "domains/psychology/raw/sessions"
+FROM "examples/showcases/psychology/raw/sessions"
 WHERE file.name != "session"
 SORT date DESC
 ```
 
-## Analyses
+## Summaries (1:1 per session/source)
 
 ```dataview
 TABLE WITHOUT ID
-    file.link AS "Analysis",
+    file.link AS "Summary",
     session_kind AS "Kind",
     analysis_lens AS "Lenses",
     updated AS "Updated"
-FROM "domains/psychology/wiki/analyses"
-WHERE type = "analysis" AND status = "active"
+FROM "examples/showcases/psychology/wiki/summaries"
+WHERE type = "summary" AND status = "active"
 SORT updated DESC
 ```
 
@@ -122,71 +122,35 @@ TABLE WITHOUT ID
     file.link AS "Entity",
     role AS "Role",
     first_seen AS "First seen"
-FROM "domains/psychology/wiki/entities"
+FROM "examples/showcases/psychology/wiki/entities"
 WHERE type = "entity" AND status = "active"
 SORT first_seen DESC
 ```
 
-## Concepts
+## Concepts (incl. v1 patterns / protocols via `kind:`)
 
 ```dataview
 TABLE WITHOUT ID
     file.link AS "Concept",
+    kind AS "Kind",
     last_validated AS "Last validated",
     updated AS "Updated"
-FROM "domains/psychology/wiki/concepts"
+FROM "examples/showcases/psychology/wiki/concepts"
 WHERE type = "concept" AND status = "active"
 SORT updated DESC
 ```
 
-## Patterns
+## Sub-area overviews (incl. v1 themes / frameworks via `kind:`)
 
 ```dataview
 TABLE WITHOUT ID
-    file.link AS "Pattern",
-    triggers AS "Triggers",
-    severity AS "Severity",
-    last_observed AS "Last observed"
-FROM "domains/psychology/wiki/patterns"
-WHERE type = "pattern" AND status = "active"
-SORT last_observed DESC
-```
-
-## Themes
-
-```dataview
-TABLE WITHOUT ID
-    file.link AS "Theme",
-    arc_start AS "Started",
+    file.link AS "Overview",
+    kind AS "Kind",
     arc_status AS "Arc status",
     updated AS "Updated"
-FROM "domains/psychology/wiki/themes"
-WHERE type = "theme" AND status = "active"
+FROM "examples/showcases/psychology/wiki/overviews"
+WHERE type = "overview" AND status = "active"
 SORT updated DESC
-```
-
-## Frameworks
-
-```dataview
-TABLE WITHOUT ID
-    file.link AS "Framework",
-    last_validated AS "Last validated"
-FROM "domains/psychology/wiki/frameworks"
-WHERE type = "framework" AND status = "active"
-SORT file.name ASC
-```
-
-## Protocols
-
-```dataview
-TABLE WITHOUT ID
-    file.link AS "Protocol",
-    area AS "Area",
-    status AS "Status",
-    last_revised AS "Last revised"
-FROM "domains/psychology/wiki/protocols"
-WHERE type = "protocol" AND status = "active"
-SORT last_revised DESC
 ```
 
 ## Syntheses
@@ -196,7 +160,7 @@ TABLE WITHOUT ID
     file.link AS "Synthesis",
     scope AS "Scope",
     updated AS "Updated"
-FROM "domains/psychology/wiki/syntheses"
+FROM "examples/showcases/psychology/wiki/syntheses"
 WHERE type = "synthesis" AND status = "active"
 SORT updated DESC
 ```
@@ -209,8 +173,8 @@ TABLE WITHOUT ID
     arc_status AS "Status",
     first_asked AS "First asked",
     updated AS "Last update"
-FROM "domains/psychology/wiki/questions"
-WHERE type = "question" AND arc_status != "answered"
+FROM "examples/showcases/psychology/wiki/open-questions"
+WHERE type = "open-question" AND arc_status != "answered"
 SORT updated DESC
 ```
 

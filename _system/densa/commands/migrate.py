@@ -86,6 +86,20 @@ def add_parser(subparsers: argparse._SubParsersAction) -> None:  # type: ignore[
             "currently that is `in-place`."
         ),
     )
+    p.add_argument(
+        "--extra-roots",
+        action="append",
+        default=[],
+        metavar="PATH",
+        help=(
+            "additional root to scan for domain dirs (relative to the "
+            "repo root). Each PATH is treated like `domains/`: its "
+            "immediate children whose `wiki/` subdirectory exists are "
+            "migrated. Can be passed multiple times. Forwarded "
+            "verbatim to the underlying migration script. Example: "
+            "`--extra-roots examples/showcases`."
+        ),
+    )
 
 
 def run(args: argparse.Namespace) -> int:
@@ -107,7 +121,7 @@ def run(args: argparse.Namespace) -> int:
         # immediately below the latest one so the chain is non-empty.
         current = max((m.from_version for m in MIGRATIONS), default=SCHEMA_VERSION - 1)
     else:
-        current = _detect_vault_version(repo)
+        current = _detect_vault_version(repo, args.extra_roots)
 
     chain = _migration_chain(current, SCHEMA_VERSION)
     if not chain and not is_recover_run:
@@ -165,7 +179,10 @@ def run(args: argparse.Namespace) -> int:
     print()
     for m in chain:
         mode_for_step = requested_mode or m.default_mode
-        rc = _run_migration(repo, m, dry_run=False, mode=mode_for_step)
+        rc = _run_migration(
+            repo, m, dry_run=False, mode=mode_for_step,
+            extra_roots=args.extra_roots,
+        )
         if rc != 0:
             _err(
                 f"migration v{m.from_version}->v{m.to_version} failed "
@@ -216,19 +233,31 @@ def _resolve_repo() -> Path | None:
     return None
 
 
-def _detect_vault_version(repo: Path) -> int:
+def _detect_vault_version(
+    repo: Path, extra_roots: list[str] | None = None,
+) -> int:
     """Scan wiki pages and return the lowest ``compiled_against`` seen.
 
     ``.legacy/`` subtrees are skipped — those are intentionally frozen
     at an older version and should not drag the vault floor down.
+
+    By default only ``domains/<X>/wiki/`` pages are considered (each
+    must have at least four path parts: ``domains/<X>/wiki/<file>``).
+    When ``extra_roots`` is provided (e.g. ``["examples/showcases"]``),
+    pages under ``<root>/<X>/wiki/`` are also scanned. This keeps the
+    migration symmetric with ``_iter_domain_dirs``: roots that are
+    eligible for migration also contribute to version detection.
     """
     lowest: int | None = None
+    accepted_roots = ["domains", *(extra_roots or [])]
     for md in repo.rglob("*.md"):
         rel_parts = parts(str(md.relative_to(repo)))
         if ".legacy" in rel_parts:
             continue
-        # Only wiki pages declare compiled_against.
-        if not (len(rel_parts) >= 4 and rel_parts[0] == "domains" and rel_parts[2] == "wiki"):
+        # Only wiki pages declare compiled_against. The page must sit
+        # under one of the accepted roots and at the
+        # ``<root>/<domain>/wiki/...`` shape.
+        if not _is_wiki_page(rel_parts, accepted_roots):
             continue
         try:
             text = md.read_text(encoding="utf-8")
@@ -247,6 +276,30 @@ def _detect_vault_version(repo: Path) -> int:
         if lowest is None or version < lowest:
             lowest = version
     return lowest if lowest is not None else SCHEMA_VERSION
+
+
+def _is_wiki_page(
+    rel_parts: list[str] | tuple[str, ...],
+    accepted_roots: list[str],
+) -> bool:
+    """Return True iff ``rel_parts`` matches ``<root>/<domain>/wiki/...``.
+
+    ``root`` is a path string that may itself contain a separator
+    (e.g. ``"examples/showcases"``). We compare the leading parts to
+    the root's parts and then require a ``wiki`` segment.
+    """
+    rel_tuple = tuple(rel_parts)
+    for root in accepted_roots:
+        root_parts = tuple(part for part in root.split("/") if part)
+        wiki_idx = len(root_parts) + 1  # skip root_parts + the <domain> segment
+        # Minimum shape: <root>/<domain>/wiki/<file>
+        if len(rel_tuple) < wiki_idx + 2:
+            continue
+        if rel_tuple[: len(root_parts)] != root_parts:
+            continue
+        if rel_tuple[wiki_idx] == "wiki":
+            return True
+    return False
 
 
 def _migration_chain(
@@ -285,6 +338,7 @@ def _run_migration(
     *,
     dry_run: bool,
     mode: str = MIGRATION_MODE_IN_PLACE,
+    extra_roots: list[str] | None = None,
 ) -> int:
     """Invoke ``python <migration.script> --apply --mode <mode>`` as a
     subprocess.
@@ -303,7 +357,10 @@ def _run_migration(
 
     flag = "--dry-run" if dry_run else "--apply"
     argv = [sys.executable, str(script_path), flag, "--mode", mode]
-    print(f"--- running {migration.script} {flag} --mode {mode} ---")
+    for root in extra_roots or []:
+        argv.extend(["--extra-roots", root])
+    extra_label = f" --extra-roots {','.join(extra_roots)}" if extra_roots else ""
+    print(f"--- running {migration.script} {flag} --mode {mode}{extra_label} ---")
     rc = subprocess.run(argv, cwd=repo, check=False).returncode
     print(f"--- {migration.script} exit {rc} ---")
     return rc

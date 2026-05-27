@@ -11,8 +11,14 @@ sources: [
 tags: [ifs, parts-work, managers, exiles, firefighters, internal-family-systems]
 aliases: ["IFS parts", "managers and exiles", "parts terminology"]
 status: active
-compiled_against: 1
+compiled_against: 2
 last_validated: 2026-05-21
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-26
+    mode: in-place
+    notes: 'type stayed concept'
 ---
 
 # IFS parts terminology — Managers, Exiles, Firefighters

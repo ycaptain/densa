@@ -65,19 +65,28 @@ agent.
 /plugin install densa
 ```
 
-### Option B — Local symlink (works today)
+### Option B — Local sideload (works today)
 
 ```bash
-# Symlink the skills directory into Cursor's user-level skills folder.
-mkdir -p ~/.cursor/skills
-for op in ingest query lint process-inbox promote; do
-  ln -sf "$(pwd)/integrations/cursor/densa-plugin/skills/$op" \
-         "$HOME/.cursor/skills/densa-$op"
-done
+# Symlink the WHOLE plugin directory (manifest + skills + commands)
+# into Cursor's user-level plugins folder. Run from the densa clone:
+mkdir -p ~/.cursor/plugins
+ln -sf "$(pwd)/integrations/cursor/densa-plugin" "$HOME/.cursor/plugins/densa"
 
-# Restart Cursor. The 5 skills become discoverable; type `/help` to
-# confirm `densa-ingest`, `densa-query`, ..., `densa-promote` appear.
+# Restart Cursor. The 5 skills (`densa-ingest`, ..., `densa-promote`)
+# and 5 slash commands (`/ingest`, `/query`, `/lint`,
+# `/process-inbox`, `/promote`) become discoverable. Type `/help` to
+# confirm the slash commands appear.
 ```
+
+> [!important] Workspace must be a Densa vault clone
+> The skill bodies reference paths relative to the **vault root**
+> (e.g. `_system/prompts/ingest.md`). They only resolve when the
+> current Cursor workspace IS a Densa vault clone. If you invoke a
+> `densa-*` skill in an unrelated workspace, the agent will ask you
+> to open a vault first. This is by design — the plugin is a
+> trigger surface, not a self-contained operation runner; the
+> canonical contract lives at `AGENTS.md` inside the vault.
 
 ### Option C — Claude Code zip upload (for the SKILL.md files only)
 

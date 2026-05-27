@@ -2,8 +2,8 @@
 type: log
 scope: workspace
 domain: workspace
-updated: 2026-05-21
-compiled_against: 1
+updated: 2026-05-26
+compiled_against: 2
 ---
 
 # Workspace — Log
@@ -27,7 +27,7 @@ Entry format:
 ## [2026-05-21] ingest | 2026-05-19 vector DB selection (pgvector v1 for semantic search)
 - Source: [[2026-05-19-meeting-vector-db-selection]]
 - Pages touched:
-  [[2026-05-19-meeting-vector-db-selection-analysis]],
+  [[2026-05-19-meeting-vector-db-selection-summary]],
   [[stakeholder-hiro-ml]], [[team-ml-platform]],
   [[data-platform-vector-search]],
   [[engineering-decision-style]] (+1 confirmed instance, N=1→N=2 provisional),
@@ -45,7 +45,7 @@ Entry format:
 ## [2026-05-21] ingest | 2026-05-13 API style decision (gRPC + REST gateway hybrid)
 - Source: [[2026-05-13-meeting-api-style-decision]]
 - Pages touched:
-  [[2026-05-13-meeting-api-style-decision-analysis]],
+  [[2026-05-13-meeting-api-style-decision-summary]],
   [[stakeholder-marcus-api]], [[stakeholder-inez-dx]],
   [[stakeholder-bram-partner]], [[team-api-platform]],
   [[api-platform-evolution]],
@@ -87,9 +87,9 @@ Entry format:
   [[2026-04-22-decision-microservices-split]],
   [[2026-05-06-meeting-incident-postmortem]]
 - Pages touched:
-  [[2026-04-08-meeting-q2-planning-analysis]],
-  [[2026-04-22-decision-microservices-split-analysis]],
-  [[2026-05-06-meeting-incident-postmortem-analysis]],
+  [[2026-04-08-meeting-q2-planning-summary]],
+  [[2026-04-22-decision-microservices-split-summary]],
+  [[2026-05-06-meeting-incident-postmortem-summary]],
   [[team-platform]], [[stakeholder-alex-cs]],
   [[q2-platform-migration]], [[microservices-split]],
   [[decision-delay-from-skipped-stakeholder]],

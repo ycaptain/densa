@@ -14,7 +14,13 @@ last_validated: 2026-05-21
 tags: [therapist, clinician, integrative, eft, ifs, attachment]
 aliases: ["Reyes", "Dr. Elena Reyes", "therapist-reyes", "Dr. Reyes"]
 status: active
-compiled_against: 1
+compiled_against: 2
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-26
+    mode: in-place
+    notes: 'type stayed entity'
 ---
 
 # Dr. Elena Reyes, LCSW (therapist)

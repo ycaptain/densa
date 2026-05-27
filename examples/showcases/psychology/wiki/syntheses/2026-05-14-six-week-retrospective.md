@@ -4,10 +4,10 @@ domain: psychology
 created: 2026-05-21
 updated: 2026-05-21
 sources: [
-  "[[2026-04-02-session-reyes-analysis]]",
-  "[[2026-04-16-session-reyes-analysis]]",
-  "[[2026-04-23-psychiatry-han-analysis]]",
-  "[[2026-05-14-session-reyes-analysis]]",
+  "[[2026-04-02-session-reyes-summary]]",
+  "[[2026-04-16-session-reyes-summary]]",
+  "[[2026-04-23-psychiatry-han-summary]]",
+  "[[2026-05-14-session-reyes-summary]]",
   "[[father-grief-arc]]",
   "[[medication-decision-arc]]"
 ]
@@ -15,7 +15,13 @@ scope: retro
 tags: [retrospective, six-week-arc, clinical-narrative, turning-point, integrative-grief-therapy, cross-clinical]
 aliases: ["six-week retrospective", "father-grief arc retro", "Eldridge arc retrospective"]
 status: active
-compiled_against: 1
+compiled_against: 2
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-26
+    mode: in-place
+    notes: 'type stayed synthesis'
 ---
 
 # Six-week retrospective — the father-grief arc (2026-04-02 → 2026-05-14)
@@ -284,13 +290,13 @@ prediction.
 
 ## Sources
 
-- [[2026-04-02-session-reyes-analysis]] — intake formulation.
-- [[2026-04-16-session-reyes-analysis]] — IFS frame
+- [[2026-04-02-session-reyes-summary]] — intake formulation.
+- [[2026-04-16-session-reyes-summary]] — IFS frame
   introduction; first Exile contact.
-- [[2026-04-23-psychiatry-han-analysis]] — scales baseline,
+- [[2026-04-23-psychiatry-han-summary]] — scales baseline,
   conservative-prescribing rationale, cross-clinical boundary
   statement.
-- [[2026-05-14-session-reyes-analysis]] — turning point;
+- [[2026-05-14-session-reyes-summary]] — turning point;
   partial unburdening; meaning-reconstruction.
 - [[father-grief-arc]] — theme-level arc page.
 - [[medication-decision-arc]] — the parallel medication arc.

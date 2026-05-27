@@ -2,6 +2,9 @@
   "name": "densa",
   "displayName": "Densa",
   "summary": "Slash commands for a Densa vault — the agent-neutral LLM-maintained wiki.",
+  "author": {
+    "name": "ycaptain"
+  },
   "homepage": "https://github.com/ycaptain/densa",
   "repository": "https://github.com/ycaptain/densa",
   "license": "MIT",

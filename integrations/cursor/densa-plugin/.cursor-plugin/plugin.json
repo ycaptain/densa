@@ -2,10 +2,11 @@
   "name": "densa",
   "version": "0.5.0",
   "description": "Skill pack + slash commands (ingest / query / lint / process-inbox / promote) for a Densa vault. The canonical contract lives in the vault's AGENTS.md; this plugin only exposes the prompts.",
+  "author": {
+    "name": "ycaptain"
+  },
   "homepage": "https://github.com/ycaptain/densa",
   "repository": "https://github.com/ycaptain/densa",
   "license": "MIT",
-  "skills": "skills",
-  "commands": "commands",
-  "tags": ["densa", "agents-md", "pkm", "obsidian", "wiki-compiler"]
+  "keywords": ["densa", "agents-md", "pkm", "obsidian", "wiki-compiler"]
 }

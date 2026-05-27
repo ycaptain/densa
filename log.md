@@ -45,7 +45,7 @@ Entry format:
 
 ## [2026-05-21] ingest(psychology) | session 3 retrofit (2026-04-30 — chair-work with the foreman)
 - Source: [[2026-04-30-session-reyes]] (synthesised raw — fills the partial-coverage gap that the original ingest deliberately left open).
-- Pages touched: [[2026-04-30-session-reyes-analysis]] (new), [[therapist-reyes]], [[avoidant-mother-contact]], [[somatic-grief-containment]], [[automaton-work-mode]], [[inner-protector-stoic]], [[father-grief-arc]], [[2026-05-14-six-week-retrospective]], [[2026-05-14-session-reyes-analysis]].
+- Pages touched: [[2026-04-30-session-reyes-summary]] (new), [[therapist-reyes]], [[avoidant-mother-contact]], [[somatic-grief-containment]], [[automaton-work-mode]], [[inner-protector-stoic]], [[father-grief-arc]], [[2026-05-14-six-week-retrospective]], [[2026-05-14-session-reyes-summary]].
 - The chair-work session is the IFS unblending hinge of the six-week arc; subsequent session-4 release is partly attributable to the protector's "by who?" challenge surfaced at [14:45] and Mark's direct address at [20:00].
 
 ## [2026-05-21] maintenance | cross-scope sweep — validator bugs, doc drift, example L2 cleanup

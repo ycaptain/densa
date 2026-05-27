@@ -273,3 +273,136 @@ class TestRecoverMode:
         summary = wiki / "summaries" / "2024-foo-summary.md"
         assert _frontmatter_value(summary, "status") == "active"
         assert _has_migration_history(summary)
+
+
+# --- _iter_domain_dirs --extra-roots --------------------------------------
+
+
+def _build_showcase_v1(root: Path, name: str = "psychology") -> Path:
+    """Seed an ``examples/showcases/<name>/`` directory with the same v1
+    shape ``_build_v1_vault`` uses inside ``domains/<X>/``. Returns the
+    showcase directory.
+    """
+    showcase = root / "examples" / "showcases" / name
+    _write(
+        showcase / "wiki" / "analyses" / "2024-session.md",
+        _v1_page("analysis", "Refers to [[2024-session]]\n"),
+    )
+    _write(
+        showcase / "wiki" / "patterns" / "automaton-mode.md",
+        _v1_page("pattern"),
+    )
+    return showcase
+
+
+class TestIterDomainDirsExtraRoots:
+    def test_default_only_yields_domains(self, tmp_path: Path) -> None:
+        _build_v1_vault(tmp_path)
+        _build_showcase_v1(tmp_path)
+        yielded = list(mig._iter_domain_dirs(tmp_path))
+        names = [d.name for d in yielded]
+        # examples/showcases/ MUST NOT be yielded without --extra-roots.
+        assert names == ["research-papers"]
+
+    def test_extra_roots_yields_showcase_dirs(self, tmp_path: Path) -> None:
+        _build_v1_vault(tmp_path)
+        _build_showcase_v1(tmp_path, name="psychology")
+        _build_showcase_v1(tmp_path, name="workspace")
+        yielded = list(
+            mig._iter_domain_dirs(tmp_path, ["examples/showcases"])
+        )
+        names = [d.name for d in yielded]
+        # Sorted by enumerate order: domains/ first (research-papers),
+        # then examples/showcases/ children in alphabetical order.
+        assert names == ["research-papers", "psychology", "workspace"]
+
+    def test_extra_roots_nonexistent_path_is_silently_skipped(
+        self, tmp_path: Path,
+    ) -> None:
+        _build_v1_vault(tmp_path)
+        # Pointing extra-roots at a non-existent path should not raise;
+        # it should just be a no-op.
+        yielded = list(
+            mig._iter_domain_dirs(tmp_path, ["examples/nope"])
+        )
+        names = [d.name for d in yielded]
+        assert names == ["research-papers"]
+
+    def test_extra_roots_migrates_showcase_in_place(
+        self, tmp_path: Path,
+    ) -> None:
+        _build_v1_vault(tmp_path)
+        showcase = _build_showcase_v1(tmp_path, name="psychology")
+        rc = _run_script(
+            tmp_path,
+            "--apply", "--mode", "in-place",
+            "--extra-roots", "examples/showcases",
+        )
+        assert rc == 0
+
+        # The showcase wiki was migrated: analyses/ -> summaries/ +
+        # *-analysis -> *-summary rename + compiled_against bumped.
+        sc_wiki = showcase / "wiki"
+        assert not (sc_wiki / "analyses").exists()
+        assert (sc_wiki / "summaries" / "2024-session.md").is_file()
+
+        page = sc_wiki / "summaries" / "2024-session.md"
+        assert _frontmatter_value(page, "type") == "summary"
+        assert _frontmatter_value(page, "compiled_against") == "2"
+        assert _has_migration_history(page)
+
+    def test_extra_roots_records_distinct_log_marker(
+        self, tmp_path: Path,
+    ) -> None:
+        _build_v1_vault(tmp_path)
+        _build_showcase_v1(tmp_path, name="psychology")
+        _run_script(
+            tmp_path,
+            "--apply", "--mode", "in-place",
+            "--extra-roots", "examples/showcases",
+        )
+        log = tmp_path / "_system" / "migrations.log"
+        assert log.is_file()
+        body = log.read_text(encoding="utf-8")
+        # The marker for an extra-roots run must include the roots so a
+        # subsequent default run is not falsely short-circuited.
+        assert "mode=in-place  extra-roots=examples/showcases" in body
+
+    def test_extra_roots_overview_dataview_from_uses_correct_root(
+        self, tmp_path: Path,
+    ) -> None:
+        """Regression: when a showcase domain is migrated via
+        ``--extra-roots``, the seeded ``overview.md`` must reference
+        the showcase root (``examples/showcases/<x>/...``), not the
+        default ``domains/<x>/...``. Without this fix Obsidian
+        Dataview blocks would silently render empty in showcase
+        domains.
+        """
+        _build_v1_vault(tmp_path)
+        _build_showcase_v1(tmp_path, name="psychology")
+        _run_script(
+            tmp_path,
+            "--apply", "--mode", "in-place",
+            "--extra-roots", "examples/showcases",
+        )
+
+        # The domains/ overview should still point at domains/<x>/...
+        domains_overview = (
+            tmp_path / "domains" / "research-papers" / "wiki" / "overview.md"
+        )
+        assert domains_overview.is_file()
+        domains_body = domains_overview.read_text(encoding="utf-8")
+        assert 'FROM "domains/research-papers/wiki' in domains_body
+        assert 'FROM "examples/showcases/research-papers' not in domains_body
+
+        # The showcase overview must point at examples/showcases/<x>/...
+        showcase_overview = (
+            tmp_path / "examples" / "showcases" / "psychology"
+            / "wiki" / "overview.md"
+        )
+        assert showcase_overview.is_file()
+        body = showcase_overview.read_text(encoding="utf-8")
+        assert 'FROM "examples/showcases/psychology/wiki' in body
+        assert 'FROM "domains/psychology' not in body
+        # dataviewjs log.md load should also use the showcase root.
+        assert 'dv.io.load("examples/showcases/psychology/log.md"' in body

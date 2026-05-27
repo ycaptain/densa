@@ -7,10 +7,16 @@ sources: ["[[2026-04-08-meeting-q2-planning]]", "[[2026-04-22-decision-microserv
 tags: [team, platform, engineering]
 aliases: ["Platform team", "Platform engineering"]
 status: active
-compiled_against: 1
+compiled_against: 2
 last_validated: 2026-05-21
 role: team
 lead: "Maya Chen"
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-26
+    mode: in-place
+    notes: 'type stayed entity'
 ---
 
 # Platform team

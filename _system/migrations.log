@@ -1,2 +1,3 @@
 2026-05-24  02_karpathy_vocab  v1 → v2: Karpathy vocabulary
 2026-05-24  02_karpathy_vocab  mode=recover  v1 → v2: Karpathy vocabulary
+2026-05-26  02_karpathy_vocab  mode=in-place  extra-roots=examples/showcases  v1 → v2: Karpathy vocabulary

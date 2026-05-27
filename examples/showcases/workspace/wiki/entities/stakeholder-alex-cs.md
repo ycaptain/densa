@@ -7,11 +7,17 @@ sources: ["[[2026-04-08-meeting-q2-planning]]", "[[2026-04-22-decision-microserv
 tags: [stakeholder, customer-success, enterprise-accounts, sla-exposure]
 aliases: ["Alex Rivera", "Alex from CS"]
 status: active
-compiled_against: 1
+compiled_against: 2
 last_validated: 2026-05-20
 role: stakeholder
 team: "Customer Success"
 title: "Customer Success Manager, enterprise accounts >$500k ARR"
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-26
+    mode: in-place
+    notes: 'type stayed entity'
 ---
 
 # Alex Rivera (Customer Success)
@@ -32,7 +38,7 @@ that carried contractual webhook delivery SLAs during the
 
 - **Reviewer authority**: named on ADR-001 (webhook section);
   exercised a partial sign-off (see
-  [[2026-04-22-decision-microservices-split-analysis]]).
+  [[2026-04-22-decision-microservices-split-summary]]).
 - **Veto authority**: not formally defined as of 2026-05-06.
   The question of whether CS should hold blocking veto on
   phase-progression for SLA-exposing decisions is currently

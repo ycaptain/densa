@@ -1,0 +1,98 @@
+# Roadmap
+
+> Lightweight project roadmap — what's shipped, queued, and on the
+> watch-list. Maintained by the upstream maintainer; updated alongside
+> [`CHANGELOG.md`](CHANGELOG.md) release markers.
+>
+> Last updated: 2026-05-26.
+
+## Current state (2026-05-26)
+
+- **Schema version:** v2 (Karpathy vocab) — see
+  [`AGENTS.md`](AGENTS.md) frontmatter.
+- **Release marker:** v0.5.0 (Karpathy vocab + onboarding clarity
+  sweep) — see [`CHANGELOG.md`](CHANGELOG.md).
+- **Validator:** 210+ files tracked, AGENTS001–AGENTS012 enforced;
+  CI parity via direct `python -m X` commands
+  (`densa --all` / `pytest` / `ruff check .` / `mypy`).
+- **Integrations:** Cursor plugin + Claude Code plugin under
+  [`integrations/`](integrations/); manifests align with each host's
+  official plugin schema; submission to public registries pending
+  (see Short term below).
+
+## Short term (0–3 months)
+
+- **Cursor plugin marketplace submission** — manifest is schema-aligned
+  as of 2026-05-26; logo + submission via
+  [`cursor.com/marketplace/publish`](https://cursor.com/marketplace/publish);
+  procedural checklist in
+  [`docs/maintainers/skill-pack-submission.md` §C](docs/maintainers/skill-pack-submission.md#c-cursor-plugin-marketplace-live-as-of-2026-05).
+- **`examples/showcases/` v1 → v2 migration** — the two heavier
+  showcases (`psychology/`, `workspace/`) ship on v1 frontmatter
+  per the v2-bump CHANGELOG; migration is parametric and will run
+  via the existing `_system/scripts/migrate_02_karpathy_vocab.py`
+  with an `--extra-roots` flag.
+- **agentskills.io reference-impl listing** — apply once it accepts
+  curated entries; reference-impl rationale anchored at the n=7
+  prior-art mid-checkpoint
+  ([`docs/maintainers/prior-art/2026-05-25-research-action-plan.md`](docs/maintainers/prior-art/2026-05-25-research-action-plan.md)).
+- **PyPI publication** — so `pipx install densa` works without a
+  prior clone (tracked in CHANGELOG `[Unreleased]`).
+
+## Medium term (3–6 months)
+
+- **Obsidian `.base` evaluation** — adopt only if Dataview drift
+  (any block exceeding ~50 rendered rows, or `index.md` rendering
+  becoming noticeably slow) crosses the trigger described in
+  [`docs/faq.md` §"Scale & drift"](docs/faq.md#scale--drift).
+- **`domains/<X>/wiki/.legacy/` re-ingest flow** — operational
+  prompt for re-ingesting a previously-authored wiki page in the
+  newer schema, while preserving the `.legacy/` snapshot
+  (the contract is in [`AGENTS.md` §6](AGENTS.md#6-red-lines-non-negotiable);
+  the operational prompt isn't shipped yet).
+- **Structured "promotion candidates" output from `lint`** —
+  currently surfaced only as free-text in the report.
+
+## Watch-list (informational only)
+
+Projects in the wiki-compiler / agent-memory neighbourhood that we
+re-evaluate each release cycle; full studies under
+[`docs/maintainers/prior-art/`](docs/maintainers/prior-art/):
+
+- [Synto](https://github.com/kytmanov/synto) — successor to
+  `obsidian-llm-wiki-local`; re-read at v0.7 to see whether its
+  Knowledge Item Candidates ledger pattern is portable.
+- [`lucasastorian/llmwiki`](https://github.com/lucasastorian/llmwiki) /
+  [`ussumant/llm-wiki-compiler`](https://github.com/ussumant/llm-wiki-compiler) —
+  two additional Karpathy-pattern implementations queued for the
+  next prior-art sweep.
+- [Graphiti](https://github.com/getzep/graphiti) + [Cognee](https://github.com/topoteretes/cognee) —
+  temporal graph memory; v0.8 watch-list anchor if Densa ever needs
+  fact-level temporal queries (pair downstream, do not replace the
+  markdown layer).
+
+## Non-goals
+
+- A managed hosting / SaaS offering. Densa stays a local-first
+  markdown + git substrate; vendor lock-in is the failure mode the
+  red lines prevent.
+- An in-vault embedding-search runtime. Past ~500 pages, layer
+  Smart Connections (Obsidian) or any embedding tool *on top* of the
+  wiki as fuzzy fallback; embeddings don't belong in the validator.
+- A non-stdlib validator. The "MIT + stdlib-only Python" combination
+  is one of Densa's four uniquely-occupied positions in the prior-art
+  n=7 study; we will not introduce runtime dependencies into
+  `_system/densa/`.
+
+## How this roadmap evolves
+
+- Each release marker in `CHANGELOG.md` may add / strike items
+  here; the file's `updated:` line at the top is bumped in lockstep.
+- Watch-list items that get an action plan move from "Watch-list" up
+  to "Short term" or "Medium term".
+- Strikes use [GitHub-flavoured ~~strikethrough~~](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/organizing-information-with-tables)
+  with a short rationale and the release that shipped or rejected
+  the item.
+
+Feedback / requests / "you should also build X" via
+[GitHub Discussions](https://github.com/ycaptain/densa/discussions).

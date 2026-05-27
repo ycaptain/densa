@@ -7,11 +7,17 @@ sources: ["[[2026-05-13-meeting-api-style-decision]]"]
 tags: [stakeholder, developer-experience, sdk-ownership]
 aliases: ["Inez Park", "Inez from DX"]
 status: active
-compiled_against: 1
+compiled_against: 2
 last_validated: 2026-05-21
 role: stakeholder
 team: "Developer Experience"
 title: "Developer Experience lead (SDK ownership)"
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-26
+    mode: in-place
+    notes: 'type stayed entity'
 ---
 
 # Inez Park (Developer Experience)

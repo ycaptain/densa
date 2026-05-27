@@ -169,7 +169,7 @@ mindmap
 
 ```dataview
 TABLE WITHOUT ID file.link AS "Page", type AS "Type", updated AS "Updated"
-FROM "domains/{domain}/wiki"
+FROM "{domain_root}/wiki"
 WHERE migration_history AND status = "active"
 SORT updated DESC
 ```
@@ -178,7 +178,7 @@ SORT updated DESC
 
 ```dataview
 TABLE WITHOUT ID file.link AS "Page", updated AS "Updated"
-FROM "domains/{domain}/wiki/summaries"
+FROM "{domain_root}/wiki/summaries"
 WHERE type = "summary" AND status = "active"
 SORT updated DESC
 ```
@@ -187,7 +187,7 @@ SORT updated DESC
 
 ```dataview
 TABLE WITHOUT ID file.link AS "Page", last_validated AS "Validated"
-FROM "domains/{domain}/wiki/concepts"
+FROM "{domain_root}/wiki/concepts"
 WHERE type = "concept" AND status = "active"
 SORT last_validated DESC
 ```
@@ -196,7 +196,7 @@ SORT last_validated DESC
 
 ```dataview
 TABLE WITHOUT ID file.link AS "Page", updated AS "Updated"
-FROM "domains/{domain}/wiki/entities"
+FROM "{domain_root}/wiki/entities"
 WHERE type = "entity" AND status = "active"
 SORT updated DESC
 ```
@@ -205,7 +205,7 @@ SORT updated DESC
 
 ```dataview
 TABLE WITHOUT ID file.link AS "Page", updated AS "Updated"
-FROM "domains/{domain}/wiki/comparisons"
+FROM "{domain_root}/wiki/comparisons"
 WHERE type = "comparison" AND status = "active"
 SORT updated DESC
 ```
@@ -214,7 +214,7 @@ SORT updated DESC
 
 ```dataview
 TABLE WITHOUT ID file.link AS "Page", updated AS "Updated"
-FROM "domains/{domain}/wiki/overviews"
+FROM "{domain_root}/wiki/overviews"
 WHERE type = "overview" AND status = "active"
 SORT updated DESC
 ```
@@ -223,7 +223,7 @@ SORT updated DESC
 
 ```dataview
 TABLE WITHOUT ID file.link AS "Page", updated AS "Updated"
-FROM "domains/{domain}/wiki/syntheses"
+FROM "{domain_root}/wiki/syntheses"
 WHERE type = "synthesis" AND status = "active"
 SORT updated DESC
 ```
@@ -232,7 +232,7 @@ SORT updated DESC
 
 ```dataview
 TABLE WITHOUT ID file.link AS "Page", arc_status AS "Status", updated AS "Updated"
-FROM "domains/{domain}/wiki/open-questions"
+FROM "{domain_root}/wiki/open-questions"
 WHERE type = "open-question"
 SORT updated DESC
 ```
@@ -240,7 +240,7 @@ SORT updated DESC
 ## Recent activity
 
 ```dataviewjs
-const log = await dv.io.load("domains/{domain}/log.md");
+const log = await dv.io.load("{domain_root}/log.md");
 if (!log) {{
     dv.paragraph("_log.md not yet populated._");
 }} else {{
@@ -267,19 +267,23 @@ def main(argv: list[str] | None = None) -> int:
     # (recover is meant to be re-applied after the initial archive).
     if (
         args.mode != MIGRATION_MODE_RECOVER
-        and _already_applied(repo, args.mode)
+        and _already_applied(repo, args.mode, args.extra_roots)
         and not args.force
     ):
+        roots_label = (
+            f", extra-roots={sorted(args.extra_roots)}"
+            if args.extra_roots else ""
+        )
         print(
-            f"{MIGRATION_ID} (mode={args.mode}) already recorded in "
-            f"_system/migrations.log; nothing to do. Use --force to "
-            f"re-run anyway."
+            f"{MIGRATION_ID} (mode={args.mode}{roots_label}) already "
+            f"recorded in _system/migrations.log; nothing to do. Use "
+            f"--force to re-run anyway."
         )
         return 0
 
     actions: list[Action] = []
     rename_map: dict[str, str] = {}  # slug → new slug; for wikilink rewrite
-    for domain_dir in _iter_domain_dirs(repo):
+    for domain_dir in _iter_domain_dirs(repo, args.extra_roots):
         sub_actions, sub_renames = _plan_domain(domain_dir, mode=args.mode)
         actions.extend(sub_actions)
         rename_map.update(sub_renames)
@@ -300,7 +304,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Vault is already v{TO_VERSION}-shaped (mode={args.mode}). "
               f"Nothing to do.")
         if not args.dry_run:
-            _record_migration(repo, args.mode)
+            _record_migration(repo, args.mode, args.extra_roots)
         return 0
 
     _print_plan(actions, dry_run=args.dry_run)
@@ -311,7 +315,7 @@ def main(argv: list[str] | None = None) -> int:
     git_available = _git_available()
     for a in actions:
         _apply(repo, a, use_git=git_available)
-    _record_migration(repo, args.mode)
+    _record_migration(repo, args.mode, args.extra_roots)
     print()
     print(f"✓ {MIGRATION_LABEL} applied (mode={args.mode}).")
     return 0
@@ -357,6 +361,19 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
             "run of this migration in this mode"
         ),
     )
+    p.add_argument(
+        "--extra-roots",
+        action="append",
+        default=[],
+        metavar="PATH",
+        help=(
+            "additional root to scan for domain dirs (relative to the "
+            "repo root). Each PATH is treated like `domains/`: its "
+            "immediate children whose `wiki/` subdirectory exists are "
+            "migrated. Can be passed multiple times. Example: "
+            "`--extra-roots examples/showcases`."
+        ),
+    )
     return p.parse_args(argv)
 
 
@@ -398,13 +415,28 @@ class Action:
     note: str = ""
 
 
-def _iter_domain_dirs(repo: Path):
-    domains = repo / "domains"
-    if not domains.is_dir():
-        return
-    for child in sorted(domains.iterdir()):
-        if child.is_dir() and (child / "wiki").is_dir():
-            yield child
+def _iter_domain_dirs(repo: Path, extra_roots: list[str] | None = None):
+    """Yield directories that look like Densa domain dirs.
+
+    Searches ``repo/domains/<X>/`` by default. When ``extra_roots``
+    is provided (each element is a path relative to the repo root,
+    e.g. ``"examples/showcases"``), each such root is scanned the
+    same way: its immediate children whose ``wiki/`` subdirectory
+    exists are yielded as additional domain dirs.
+
+    Used by the migration to extend coverage to non-``domains/``
+    showcases (e.g. ``examples/showcases/{psychology,workspace}/``)
+    without disturbing the default behaviour for plain Densa vaults.
+    """
+    roots: list[Path] = [repo / "domains"]
+    if extra_roots:
+        roots.extend(repo / root for root in extra_roots)
+    for root in roots:
+        if not root.is_dir():
+            continue
+        for child in sorted(root.iterdir()):
+            if child.is_dir() and (child / "wiki").is_dir():
+                yield child
 
 
 def _plan_domain(
@@ -696,7 +728,7 @@ def _apply(repo: Path, action: Action, use_git: bool) -> None:
     elif action.kind == "create-folder":
         _do_create_folder(action.src)
     elif action.kind == "create-overview":
-        _do_create_overview(action.src)
+        _do_create_overview(repo, action.src)
     elif action.kind == "annotate-legacy":
         _do_annotate_legacy(action.src)
     elif action.kind == "rewrite-wikilinks":
@@ -760,10 +792,25 @@ def _do_create_folder(folder: Path) -> None:
         gitkeep.write_text("", encoding="utf-8")
 
 
-def _do_create_overview(overview: Path) -> None:
-    domain = overview.parent.parent.name
+def _do_create_overview(repo: Path, overview: Path) -> None:
+    """Seed a domain's ``wiki/overview.md`` with the v2 template.
+
+    ``overview`` is the absolute path of the ``overview.md`` file to
+    create; it sits at ``<root>/<domain>/wiki/overview.md`` for some
+    ``<root>`` (``domains/`` by default; ``examples/showcases/`` and
+    similar under ``--extra-roots``). We compute ``domain_root`` as
+    the path **from the repo root to the domain dir** (e.g.
+    ``domains/research-papers`` or ``examples/showcases/psychology``)
+    so the templated Dataview ``FROM`` clauses point at the right
+    place no matter which root the domain lives in.
+    """
+    domain_dir = overview.parent.parent
+    domain = domain_dir.name
+    domain_root = domain_dir.relative_to(repo).as_posix()
     today = date.today().isoformat()
-    body = _OVERVIEW_TEMPLATE.format(domain=domain, today=today)
+    body = _OVERVIEW_TEMPLATE.format(
+        domain=domain, domain_root=domain_root, today=today,
+    )
     overview.parent.mkdir(parents=True, exist_ok=True)
     overview.write_text(body, encoding="utf-8")
 
@@ -1129,24 +1176,38 @@ def _migrations_log_path(repo: Path) -> Path:
     return repo / "_system" / "migrations.log"
 
 
-def _already_applied(repo: Path, mode: str) -> bool:
+def _run_marker(mode: str, extra_roots: list[str] | None) -> str:
+    """Return the migrations.log marker substring identifying one run.
+
+    Pure idempotency key: ``MIGRATION_ID`` + mode + sorted extra
+    roots. A run without ``--extra-roots`` produces the historic
+    marker shape (``mode=<x>``) for backwards compatibility with
+    existing log lines.
+    """
+    marker = f"{MIGRATION_ID}  mode={mode}"
+    if extra_roots:
+        marker += f"  extra-roots={','.join(sorted(extra_roots))}"
+    return marker
+
+
+def _already_applied(
+    repo: Path, mode: str, extra_roots: list[str] | None = None,
+) -> bool:
     log = _migrations_log_path(repo)
     if not log.is_file():
         return False
-    marker = f"{MIGRATION_ID}  mode={mode}"
-    return marker in log.read_text(encoding="utf-8")
+    return _run_marker(mode, extra_roots) in log.read_text(encoding="utf-8")
 
 
-def _record_migration(repo: Path, mode: str) -> None:
+def _record_migration(
+    repo: Path, mode: str, extra_roots: list[str] | None = None,
+) -> None:
     log = _migrations_log_path(repo)
     log.parent.mkdir(parents=True, exist_ok=True)
-    line = (
-        f"{date.today().isoformat()}  {MIGRATION_ID}  "
-        f"mode={mode}  {MIGRATION_LABEL}\n"
-    )
+    marker = _run_marker(mode, extra_roots)
+    line = f"{date.today().isoformat()}  {marker}  {MIGRATION_LABEL}\n"
     if log.is_file():
         existing = log.read_text(encoding="utf-8")
-        marker = f"{MIGRATION_ID}  mode={mode}"
         if marker in existing:
             return
         new = existing.rstrip("\n") + "\n" + line if existing.strip() else line

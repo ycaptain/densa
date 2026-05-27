@@ -7,11 +7,17 @@ sources: ["[[2026-05-13-meeting-api-style-decision]]", "[[2026-05-19-meeting-vec
 tags: [stakeholder, api-platform, engineering]
 aliases: ["Marcus Chen", "Marcus from API"]
 status: active
-compiled_against: 1
+compiled_against: 2
 last_validated: 2026-05-21
 role: stakeholder
 team: "[[team-api-platform]]"
 title: "API Platform lead"
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-26
+    mode: in-place
+    notes: 'type stayed entity'
 ---
 
 # Marcus Chen (API Platform)

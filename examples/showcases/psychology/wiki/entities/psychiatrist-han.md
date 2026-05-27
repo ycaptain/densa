@@ -10,7 +10,13 @@ last_validated: 2026-05-21
 tags: [psychiatrist, clinician, biological-psychiatry, conservative-prescribing]
 aliases: ["Han", "Dr. David Han", "psychiatrist-han", "Dr. Han"]
 status: active
-compiled_against: 1
+compiled_against: 2
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-26
+    mode: in-place
+    notes: 'type stayed entity'
 ---
 
 # Dr. David Han, MD (psychiatrist)

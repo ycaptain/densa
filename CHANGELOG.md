@@ -6,7 +6,11 @@ this project adheres to [Semantic Versioning](https://semver.org/) for
 the L1 schema version recorded in [`AGENTS.md`](AGENTS.md) frontmatter
 (`schema_version`).
 
-## [Unreleased] — schema v2 (Karpathy vocab) + onboarding clarity sweep
+## [Unreleased]
+
+_No changes since the v0.5.0 release; new entries land here as they ship._
+
+## [0.5.0] - 2026-05-26 — schema v2 (Karpathy vocab) + onboarding clarity sweep
 
 ### Template changes (affects forks)
 

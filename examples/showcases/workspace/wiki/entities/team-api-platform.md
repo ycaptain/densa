@@ -7,10 +7,16 @@ sources: ["[[2026-05-13-meeting-api-style-decision]]", "[[2026-05-19-meeting-vec
 tags: [team, api-platform, engineering]
 aliases: ["API Platform team", "API Platform engineering"]
 status: active
-compiled_against: 1
+compiled_against: 2
 last_validated: 2026-05-21
 role: team
 lead: "[[stakeholder-marcus-api]]"
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-26
+    mode: in-place
+    notes: 'type stayed entity'
 ---
 
 # API Platform team

@@ -7,6 +7,20 @@ validator (`_system/densa/`) — not application code. By
 participating you agree to follow our
 [Code of Conduct](CODE_OF_CONDUCT.md).
 
+> [!faq]- I just want to use Densa in my own vault — do I need this page?
+> **No.** This page targets contributors to the upstream
+> [`ycaptain/densa`](https://github.com/ycaptain/densa) repo — PRs
+> against the schema, validator, prompts, or templates. If you
+> forked Densa and only edit your own vault content (your `raw/`
+> sources and the `domains/<X>/wiki/` pages the agent compiles
+> from them), your workflow is:
+> [`README.md` §Quickstart](README.md#quickstart) → daily use
+> guided by [`GUIDE.md`](GUIDE.md). The pre-commit hook installed
+> via `git config core.hooksPath _system/hooks` is **pure stdlib**
+> and needs no `pip install` for self-use. The dev extras (ruff /
+> mypy / pytest, see below) only matter when you change validator
+> code or open a PR against this repo.
+
 | Your contribution kind | Jump to |
 | --- | --- |
 | Typo / 1-line doc fix | just open a PR |

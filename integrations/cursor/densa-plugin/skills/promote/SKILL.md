@@ -1,7 +1,6 @@
 ---
 name: densa-promote
-description: This skill should be used when the user invokes "promote `<qa-path>`" or asks to lift an evergreen Q&A from `outputs/qa/` into a first-class wiki page. The skill is NOT a bare `git mv` — it performs a controlled information-shape transform (voice transform, citation hoist, L2 fill-in, section restructure), wrapped in a `git mv` so `git log --follow` traces the new wiki page back to the source Q&A. One Q&A becomes one wiki page (1:1 only).
-license: MIT
+description: Promote an evergreen Q&A from a Densa vault's `outputs/qa/` into a first-class wiki page — perform a controlled information-shape transform (voice transform, citation hoist, L2 fill-in, section restructure) wrapped in a `git mv` so `git log --follow` traces the new wiki page back to the source Q&A. One Q&A becomes one wiki page (1:1 only). Use when the user says "promote <qa-path>", "wikify this Q&A", or asks to lift an evergreen answer into the wiki. Operates in any AGENTS.md-aware IDE; assumes the current workspace is a Densa vault clone.
 ---
 
 # Densa · promote
@@ -29,10 +28,14 @@ Anti-triggers:
 
 ## Procedure
 
-Canonical procedure:
+Canonical procedure (paths relative to the Densa vault root — the
+workspace must be a Densa vault clone):
 
-- [`_system/prompts/promote.md`](../../../../../_system/prompts/promote.md)
-- [`AGENTS.md` §2.5](../../../../../AGENTS.md#25-promote-qa-path-qa--wiki-page)
+- `_system/prompts/promote.md`
+- `AGENTS.md` §2.5
+
+If the workspace is not a Densa vault, stop and ask the user to
+open one.
 
 Contract:
 
@@ -48,7 +51,7 @@ Contract:
      "canonical-statement" voice.
    - Citation hoist: lift inline citations into the page's
      `sources:` frontmatter, observing the per-type cardinality
-     contract ([`docs/reference/sources-cardinality.md`](../../../../../docs/reference/sources-cardinality.md)).
+     contract (`docs/reference/sources-cardinality.md`).
    - L2 fill-in: add any required L2-specific fields the target
      domain declares.
    - Section restructure: reshape the body to match the target

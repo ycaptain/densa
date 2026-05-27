@@ -7,7 +7,13 @@ sources: ["[[2026-04-22-decision-microservices-split]]", "[[2026-05-13-meeting-a
 tags: [synthesis, decision-process, cross-team, retrospective, may-2026, intern-onboarding]
 aliases: ["May 2026 engineering decisions retrospective", "How this team makes engineering decisions"]
 status: active
-compiled_against: 1
+compiled_against: 2
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-26
+    mode: in-place
+    notes: 'type stayed synthesis'
 ---
 
 # Engineering decisions retrospective — May 2026
@@ -186,7 +192,7 @@ narrative-arc orientation is built to surface.
    detail to see the negative case.
 3. **[[engineering-decision-style]]** — read the positive pattern
    page to internalise the six-step shape.
-4. **[[2026-05-13-meeting-api-style-decision-analysis]]** —
+4. **[[2026-05-13-meeting-api-style-decision-summary]]** —
    open a worked example of the positive pattern and study the
    "Cast and stakes" + "Tensions surfaced" sections in particular.
 5. **[[decision-delay-from-skipped-stakeholder]]** — read the
@@ -210,6 +216,6 @@ narrative-arc orientation is built to surface.
   question that May's decisions sidestepped without closing.
 - [[q2-platform-migration]], [[api-platform-evolution]],
   [[data-platform-vector-search]] — the three projects covered.
-- All three analyses: [[2026-04-22-decision-microservices-split-analysis]],
-  [[2026-05-13-meeting-api-style-decision-analysis]],
-  [[2026-05-19-meeting-vector-db-selection-analysis]].
+- All three analyses: [[2026-04-22-decision-microservices-split-summary]],
+  [[2026-05-13-meeting-api-style-decision-summary]],
+  [[2026-05-19-meeting-vector-db-selection-summary]].

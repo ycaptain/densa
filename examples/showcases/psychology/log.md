@@ -2,8 +2,8 @@
 type: log
 scope: psychology
 domain: psychology
-updated: 2026-05-21
-compiled_against: 1
+updated: 2026-05-26
+compiled_against: 2
 ---
 
 # Psychology — Log
@@ -20,7 +20,7 @@ for entry format.
   gap previously documented as "raw not in this ingest" across six
   wiki pages).
 - Pages touched:
-  [[2026-04-30-session-reyes-analysis]] (new),
+  [[2026-04-30-session-reyes-summary]] (new),
   [[therapist-reyes]] (Appearances table + session-3 note),
   [[avoidant-mother-contact]] (chair-work citation upgraded),
   [[somatic-grief-containment]], [[automaton-work-mode]],
@@ -28,7 +28,7 @@ for entry format.
   [[father-grief-arc]] (theme timeline),
   [[2026-05-14-six-week-retrospective]] (cross-clinical coordination
   section corrected — four therapy sessions, not three),
-  [[2026-05-14-session-reyes-analysis]] (session-3 citation
+  [[2026-05-14-session-reyes-summary]] (session-3 citation
   upgraded).
 - Closes the partial-coverage gap the original ingest deliberately
   left open. The chair-work session is the IFS unblending hinge of
@@ -41,10 +41,10 @@ for entry format.
   [[2026-04-23-psychiatry-han]], [[2026-05-14-session-reyes]]
   (3 therapy + 1 psychiatry, synthesised raws).
 - Pages touched:
-  [[2026-04-02-session-reyes-analysis]],
-  [[2026-04-16-session-reyes-analysis]],
-  [[2026-04-23-psychiatry-han-analysis]],
-  [[2026-05-14-session-reyes-analysis]],
+  [[2026-04-02-session-reyes-summary]],
+  [[2026-04-16-session-reyes-summary]],
+  [[2026-04-23-psychiatry-han-summary]],
+  [[2026-05-14-session-reyes-summary]],
   [[therapist-reyes]], [[psychiatrist-han]],
   [[inner-protector-stoic]],
   [[avoidant-mother-contact]], [[automaton-work-mode]],

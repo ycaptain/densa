@@ -13,7 +13,13 @@ last_validated: 2026-05-21
 tags: [self-aspect, ifs-part, manager, protector, stoic, foreman]
 aliases: ["the foreman", "stoic protector", "inner foreman", "the Manager"]
 status: active
-compiled_against: 1
+compiled_against: 2
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-26
+    mode: in-place
+    notes: 'type stayed entity'
 ---
 
 # Inner stoic protector ("the foreman")

@@ -1,7 +1,6 @@
 ---
 name: densa-lint
-description: This skill should be used when the user asks for a wiki health check — phrasings like "lint", "find contradictions", "what's stale", "orphan pages", "concepts mentioned in multiple pages but not yet authored". The skill surveys the wiki against the rule registry, produces a markdown report at `outputs/lint/<YYYY-MM-DD>.md`, and auto-applies only additive fixes (missing index entries, obvious cross-references). Destructive fixes wait for human approval. Operates inside any AGENTS.md-aware IDE.
-license: MIT
+description: Health-check a Densa wiki — survey against the rule registry, surface contradictions, stale claims, orphan pages, and missing cross-references; write a report to `outputs/lint/<date>.md`; auto-apply only additive fixes (missing index entries, obvious cross-references). Destructive fixes wait for human approval. Use when the user says "lint", "find contradictions", "what's stale", "orphan pages", or similar wiki-quality checks. Operates in any AGENTS.md-aware IDE; assumes the current workspace is a Densa vault clone.
 ---
 
 # Densa · lint
@@ -29,18 +28,21 @@ Anti-triggers:
 
 ## Procedure
 
-Canonical procedure:
+Canonical procedure (paths relative to the Densa vault root — the
+workspace must be a Densa vault clone):
 
-- [`_system/prompts/lint.md`](../../../../../_system/prompts/lint.md)
-- [`AGENTS.md` §2.3](../../../../../AGENTS.md#23-lint---domain-x)
-- Rule registry:
-  [`docs/reference/rules-registry.md`](../../../../../docs/reference/rules-registry.md)
+- `_system/prompts/lint.md`
+- `AGENTS.md` §2.3
+- Rule registry: `docs/reference/rules-registry.md`
   (live mirror: `python -m densa rules`)
+
+If the workspace is not a Densa vault, stop and ask the user to
+open one.
 
 Contract:
 
-1. Run [`PYTHONPATH=_system python -m densa --all`](../../../../../_system/densa/cli.py)
-   first; surface every reported issue.
+1. Run `PYTHONPATH=_system python -m densa --all` first; surface
+   every reported issue.
 2. Survey for soft signals the validator can't catch: stale
    claims, orphan pages, concepts mentioned in ≥2 pages but lacking
    their own page, missing cross-references, stub pages older than

@@ -1,7 +1,6 @@
 ---
 name: densa-query
-description: This skill should be used when the user asks a question of the wiki — phrasings like "what does the wiki say about X", "summarise across pages on Y", "compare A vs B as I've written them up", "I need a thesis on Z from existing material". The skill reads the global and per-domain `index.md`, follows wikilinks, synthesises an inline-cited answer, and files substantive Q&As back to `outputs/qa/`. Operates inside any AGENTS.md-aware IDE (Cursor / Claude Code / Codex / Cline).
-license: MIT
+description: Answer a question against a Densa vault — read the global and per-domain `index.md`, follow wikilinks, compose an inline-cited answer, and file substantive Q&As to `outputs/qa/<date>-<slug>.md`. Use when the user asks "what does the wiki say about X", "summarise across pages on Y", "compare A vs B", or similar synthesis questions. Operates in any AGENTS.md-aware IDE; assumes the current workspace is a Densa vault clone.
 ---
 
 # Densa · query
@@ -27,10 +26,14 @@ Anti-triggers:
 
 ## Procedure
 
-Canonical procedure:
+Canonical procedure (paths relative to the Densa vault root — the
+workspace must be a Densa vault clone):
 
-- [`_system/prompts/query.md`](../../../../../_system/prompts/query.md)
-- [`AGENTS.md` §2.2](../../../../../AGENTS.md#22-query-question)
+- `_system/prompts/query.md`
+- `AGENTS.md` §2.2
+
+If the workspace is not a Densa vault, stop and ask the user to
+open one.
 
 Contract: **read `index.md` → drill into relevant domain index →
 follow wikilinks → synthesise an answer with inline citations to

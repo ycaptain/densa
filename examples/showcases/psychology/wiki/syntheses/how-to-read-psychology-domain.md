@@ -4,10 +4,10 @@ domain: psychology
 created: 2026-05-21
 updated: 2026-05-21
 sources: [
-  "[[2026-04-02-session-reyes-analysis]]",
-  "[[2026-04-16-session-reyes-analysis]]",
-  "[[2026-04-23-psychiatry-han-analysis]]",
-  "[[2026-05-14-session-reyes-analysis]]",
+  "[[2026-04-02-session-reyes-summary]]",
+  "[[2026-04-16-session-reyes-summary]]",
+  "[[2026-04-23-psychiatry-han-summary]]",
+  "[[2026-05-14-session-reyes-summary]]",
   "[[2026-05-14-six-week-retrospective]]",
   "[[what-this-domain-demonstrates]]"
 ]
@@ -15,7 +15,13 @@ scope: theme
 tags: [onboarding, navigator, reading-pathway, three-audience, demo, clinician-client-evaluator]
 aliases: ["how to read this domain", "psychology onboarding navigator", "psychology reading map"]
 status: active
-compiled_against: 1
+compiled_against: 2
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-26
+    mode: in-place
+    notes: 'type stayed synthesis'
 ---
 
 # How to read this domain — a navigator for three audiences
@@ -48,18 +54,18 @@ flowchart LR
         R3["2026-04-23<br/>psychiatry (Han)"]
         R4["2026-05-14<br/>session 4 (Reyes)"]
     end
-    subgraph Analyses["wiki/analyses/ (1:1 with raw)"]
-        A1["session 1 analysis"]
-        A2["session 2 analysis"]
-        A3["psychiatry analysis"]
-        A4["session 4 analysis"]
+    subgraph Summaries["wiki/summaries/ (1:1 with raw)"]
+        A1["session 1 summary"]
+        A2["session 2 summary"]
+        A3["psychiatry summary"]
+        A4["session 4 summary"]
     end
-    subgraph Patterns["wiki/patterns/"]
+    subgraph Concepts_Pat["wiki/concepts/ (kind: pattern)"]
         P1["somatic-grief-<br/>containment"]
         P2["avoidant-mother-<br/>contact"]
         P3["automaton-work-<br/>mode"]
     end
-    subgraph Themes["wiki/themes/"]
+    subgraph Overviews_Th["wiki/overviews/ (kind: theme)"]
         T1["father-grief-arc"]
         T2["medication-<br/>decision-arc"]
     end
@@ -69,7 +75,7 @@ flowchart LR
         C3["exiles-and-<br/>firefighters"]
         C4["grief-as-love-<br/>transformed"]
     end
-    subgraph Frameworks["wiki/frameworks/"]
+    subgraph Overviews_Fw["wiki/overviews/ (framework)"]
         F1["integrative-grief-<br/>therapy"]
         F2["ifs"]
     end
@@ -78,10 +84,10 @@ flowchart LR
         E2["psychiatrist-han"]
         E3["inner-protector-<br/>stoic"]
     end
-    subgraph Protocols["wiki/protocols/"]
+    subgraph Concepts_Pr["wiki/concepts/ (kind: protocol)"]
         Pr1["medication-arc"]
     end
-    subgraph Questions["wiki/questions/"]
+    subgraph OpenQuestions["wiki/open-questions/"]
         Q1["can-grief-be-<br/>spoken-with-mother"]
         Q2["medication-vs-<br/>process-tradeoff"]
     end
@@ -128,7 +134,7 @@ clinical signal a single session note cannot.
 >    but "the trajectory is away from PGD consolidation"
 >    with the per-week marker named).
 > 2. **Open one analysis end-to-end** —
->    [[2026-05-14-session-reyes-analysis]] is the densest
+>    [[2026-05-14-session-reyes-summary]] is the densest
 >    worked example (turning-point session, four lenses,
 >    visible Stage-2 critique applied at end of file)
 >    (~8 min). Notice that the body's lens-labelled
@@ -140,7 +146,7 @@ clinical signal a single session note cannot.
 >    Appearances / Instances rows on the linked entity /
 >    pattern / theme / concept pages.
 > 3. **Spot-check the cross-clinical boundary** —
->    [[2026-04-23-psychiatry-han-analysis]] (~4 min). The
+>    [[2026-04-23-psychiatry-han-summary]] (~4 min). The
 >    psychiatry analysis does *not* update pattern / theme /
 >    IFS-Manager-part pages; only [[medication-arc]] +1 row
 >    (mandatory), [[psychiatrist-han]] Appearances +1,
@@ -164,7 +170,7 @@ clinical signal a single session note cannot.
 > wiki of their own arc?*
 >
 > 1. **Open one analysis at a time, slowly** — start with
->    [[2026-04-02-session-reyes-analysis]] (~3 min). The
+>    [[2026-04-02-session-reyes-summary]] (~3 min). The
 >    three callouts at the top of each analysis (clinician /
 >    client / evaluator) are designed so the client callout
 >    is the natural entry point. Read it first. Then read
@@ -239,7 +245,7 @@ clinical signal a single session note cannot.
 
 This worked example uses the **private-repo (relaxed)
 privacy posture** — verbatim quotes from raw allowed in
-`wiki/analyses/` without strict line cap; first names + role
+`wiki/summaries/` without strict line cap; first names + role
 allowed; user's real name treated as `self`. **Before
 ingesting real session material, re-read
 [`domains/psychology/AGENTS.md`](../../AGENTS.md) §"Privacy

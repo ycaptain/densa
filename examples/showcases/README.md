@@ -125,12 +125,14 @@ Three properties of this graph that RAG-style storage can't give you:
 [`workspace/`](workspace/) — Q2 platform-migration arc with a
 planning meeting (2026-04-08), a microservices-split ADR
 (2026-04-22), and an incident postmortem (2026-05-06). The
-load-bearing demo is the *cross-raw `pattern` page*
-([`decision-delay-from-skipped-stakeholder`](workspace/wiki/patterns/decision-delay-from-skipped-stakeholder.md))
+load-bearing demo is the *cross-raw `concept` page (v1 `pattern`,
+preserved via `kind: pattern`)*
+([`decision-delay-from-skipped-stakeholder`](workspace/wiki/concepts/decision-delay-from-skipped-stakeholder.md))
 that surfaces only because the synthesis spans 3 raws — a single ADR
-ingest would never catch it. The canonical `wiki/decisions/` page
-([`microservices-split`](workspace/wiki/decisions/microservices-split.md))
-sits distinct from both the raw ADR and the analysis-of-ADR — it's
+ingest would never catch it. The canonical `wiki/entities/` page for
+the decision (v1 `decision`, preserved via `kind: decision`)
+([`microservices-split`](workspace/wiki/entities/microservices-split.md))
+sits distinct from both the raw ADR and the summary-of-ADR — it's
 what the rest of the wiki cites when referring to "the microservices
 split decision".
 
@@ -142,9 +144,9 @@ A **heavy L2** showing what the template can do once pushed. The
 shipped example is a synthesised 6-week father-grief arc: **4 therapy
 sessions with Dr. Reyes + 1 psychiatry consult with Dr. Han** between
 2026-04-02 and 2026-05-14, ingested into **25 wiki pages**
-(5 analyses, 3 patterns, 2 themes, 4 concepts, 3 entities, 2
-frameworks, 1 medication protocol, 2 long-running questions, 3
-syntheses). **All five raws and every clinician are fictional**; each
+(5 summaries, 8 concepts — including 3 v1 patterns and 1 v1 protocol
+preserved via `kind:` — 4 overviews — including 2 v1 themes and 2 v1
+frameworks — 3 entities, 2 open-questions, 3 syntheses). **All five raws and every clinician are fictional**; each
 raw file opens with an explicit `<!-- SYNTHESISED worked-example raw —
 not a real session -->` banner.
 
@@ -160,7 +162,7 @@ coordination (therapist + psychiatrist), and two privacy postures
 | [`wiki/syntheses/how-to-read-psychology-domain.md`](psychology/wiki/syntheses/how-to-read-psychology-domain.md) | Three-audience navigator (clinician / client / evaluator). **Read this first** to evaluate the domain. |
 | [`wiki/syntheses/2026-05-14-six-week-retrospective.md`](psychology/wiki/syntheses/2026-05-14-six-week-retrospective.md) | Clinician-grade retrospective braiding all 4 analyses into one arc. |
 | [`wiki/syntheses/what-this-domain-demonstrates.md`](psychology/wiki/syntheses/what-this-domain-demonstrates.md) | Capability-demo: 10 schema features, each with anchor-style proof pointing into specific wiki / raw locations. |
-| [`wiki/themes/father-grief-arc.md`](psychology/wiki/themes/father-grief-arc.md) | A `type: theme` page tracking arc evolution across 4 raws. |
+| [`wiki/overviews/father-grief-arc.md`](psychology/wiki/overviews/father-grief-arc.md) | A `type: overview, kind: theme` page tracking arc evolution across 4 raws. |
 | [`_system/prompts/domains/psychology-session-analysis.md`](../../_system/prompts/domains/psychology-session-analysis.md) | The custom sub-prompt powering psychology analyses. |
 
 > **If you adopt this domain for real therapy material,** read the

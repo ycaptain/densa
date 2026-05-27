@@ -6,6 +6,81 @@
 > (install, plugins, encryption) live in [`setup.md`](setup.md); a
 > day-in-the-life narrative lives in [`../GUIDE.md`](../GUIDE.md).
 
+## First-3-minute questions
+
+If you arrived from the README and haven't ingested anything yet,
+these three answers usually unblock the "should I bother" decision.
+
+### Is this project alive?
+
+Yes — see [`../CHANGELOG.md`](../CHANGELOG.md) for the most recent
+release marker and the [`../ROADMAP.md`](../ROADMAP.md) for what's
+queued next. Activity signals:
+
+- [CI badge](https://github.com/ycaptain/densa/actions/workflows/ci.yml) in the README is green.
+- 210+ validator-tracked files, 296+ pytest cases, the four-tool
+  parity command (`densa --all` / `pytest` / `ruff` / `mypy`) is
+  enforced in CI on every PR.
+- The v2 (Karpathy vocab) schema bump landed 2026-05; the next
+  watch-list items (plugin marketplace listings,
+  `examples/showcases/` v2 migration) are tracked in
+  [`../ROADMAP.md`](../ROADMAP.md).
+
+Solo maintainer project (`ycaptain`); contributions welcome via
+[GitHub Discussions](https://github.com/ycaptain/densa/discussions)
+and PRs against the
+[upstream repo](https://github.com/ycaptain/densa).
+
+### Fork-and-self-host vs upstream contribution — which path is the default?
+
+**Fork-and-self-host is the default.** Densa is a personal-knowledge
+substrate; you fork once, then your `domains/<X>/` is yours forever
+(upstream never touches that namespace). The
+[`../README.md` §Quickstart](../README.md#quickstart) flow assumes
+you fork. No `pip install` is required for self-use — the pre-commit
+hook is pure stdlib.
+
+Upstream PR contributions (against the schema, validator, prompts,
+templates) are the secondary path and live under
+[`../CONTRIBUTING.md`](../CONTRIBUTING.md). The fork-self-use vs
+upstream-contributor split is the first callout on CONTRIBUTING so
+self-users don't accidentally read 200 lines of dev-extras
+instructions they don't need.
+
+### How is Densa different from RAG and from Obsidian-AI plugins?
+
+Three architectural families currently call themselves "AI knowledge
+bases"; Densa sits in family C:
+
+- **A · Retrieval-time (RAG-classic)** — [RAGFlow](https://github.com/infiniflow/ragflow),
+  LlamaIndex / LangChain vector stacks. Documents → chunks →
+  retrieve at query time. Fast onboarding; never structurally
+  consolidates; the hallucination surface is the answer text on
+  *every* query.
+- **B · In-place assist** — [Smart Composer](https://github.com/glowingjade/obsidian-smart-composer),
+  [Smart Connections](https://github.com/brianpetro/obsidian-smart-connections),
+  Notion AI. Cursor-flavoured `@`-mention UX; the AI is a typing
+  partner that edits your existing notes. Co-installable with
+  Densa; doesn't try to compile a wiki.
+- **C · Compile-time (wiki-compiler)** — Densa, Karpathy's pattern,
+  [Tolaria](https://github.com/refactoringhq/tolaria),
+  [nashsu/llm_wiki](https://github.com/nashsu/llm_wiki),
+  [olw](https://github.com/kytmanov/obsidian-llm-wiki-local). Raw
+  sources → LLM compiles structured prose once → query the
+  structured prose. Slower onboarding; structure compounds; the
+  hallucination surface is a write-time event under human review.
+
+Densa's specific position within family C — MIT + stdlib-only Python
+validator, L2 per-domain schema layering, public AGENTS001–AGENTS012
+rule registry, `.legacy/` schema-migration snapshot — is sedimented
+by a 2026-05 review of seven adjacent OSS projects at the README +
+architecture-docs level
+([`../README.md` §"Where this sits in the ecosystem"](../README.md#where-this-sits-in-the-ecosystem)
+has the comparison table; maintainer-only study files live under
+[`./maintainers/prior-art/`](maintainers/prior-art/)).
+
+---
+
 ## The red lines
 
 ### Why is `raw/` immutable?

@@ -1,7 +1,6 @@
 ---
 name: densa-process-inbox
-description: This skill should be used when the user invokes "process-inbox", "triage the inbox", or has dropped un-routed files into `/inbox/` that need classifying. The skill classifies each inbox file by domain + bucket, proposes a canonical slug, and uses `git mv` to move it into `domains/<X>/raw/<bucket>/`. It does NOT ingest — that is a deliberate separate step (use `densa-ingest` after).
-license: MIT
+description: Triage un-routed files in a Densa vault's `/inbox/` directory — classify each file by domain and bucket, propose a canonical slug, and `git mv` it into `domains/<X>/raw/<bucket>/` after the user approves. Does NOT ingest — that is a deliberate separate step (use `densa-ingest` after). Use when the user says "process-inbox", "triage the inbox", or has dropped un-routed files into `/inbox/`. Operates in any AGENTS.md-aware IDE; assumes the current workspace is a Densa vault clone.
 ---
 
 # Densa · process-inbox
@@ -27,19 +26,22 @@ Anti-triggers:
 
 ## Procedure
 
-Canonical procedure:
+Canonical procedure (paths relative to the Densa vault root — the
+workspace must be a Densa vault clone):
 
-- [`_system/prompts/process-inbox.md`](../../../../../_system/prompts/process-inbox.md)
-- [`AGENTS.md` §2.4](../../../../../AGENTS.md#24-process-inbox-optional-opt-in)
-- Routing rules: [`AGENTS.md` §5](../../../../../AGENTS.md#5-routing-rules-where-does-a-new-source-go)
+- `_system/prompts/process-inbox.md`
+- `AGENTS.md` §2.4
+- Routing rules: `AGENTS.md` §5
+
+If the workspace is not a Densa vault, stop and ask the user to
+open one.
 
 Contract:
 
 1. List every file under `inbox/` (recurse).
 2. For each, propose `<domain> / <bucket> / <slug>`. Use the routing
-   rules from [`AGENTS.md` §5](../../../../../AGENTS.md#5-routing-rules-where-does-a-new-source-go);
-   if any file is genuinely ambiguous, ask one short question rather
-   than guess silently.
+   rules from `AGENTS.md` §5; if any file is genuinely ambiguous,
+   ask one short question rather than guess silently.
 3. Show the full move plan to the human as a unified diff (a list of
    `git mv` operations).
 4. **Wait for approval** before running `git mv`.

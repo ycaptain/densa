@@ -7,11 +7,17 @@ sources: ["[[2026-05-19-meeting-vector-db-selection]]"]
 tags: [stakeholder, ml-platform, vector-search]
 aliases: ["Hiro Tanaka", "Hiro from ML"]
 status: active
-compiled_against: 1
+compiled_against: 2
 last_validated: 2026-05-21
 role: stakeholder
 team: "[[team-ml-platform]]"
 title: "ML Platform lead"
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-26
+    mode: in-place
+    notes: 'type stayed entity'
 ---
 
 # Hiro Tanaka (ML Platform)

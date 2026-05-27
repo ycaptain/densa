@@ -9,8 +9,14 @@ sources: [
 tags: [grief, meaning-reconstruction, existential, continuing-bonds, neimeyer, anderson]
 aliases: ["love with no place to go", "meaning-reconstruction", "continuing bonds", "Anderson reframe"]
 status: active
-compiled_against: 1
+compiled_against: 2
 last_validated: 2026-05-21
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-26
+    mode: in-place
+    notes: 'type stayed concept'
 ---
 
 # Grief as love transformed (meaning-reconstruction)

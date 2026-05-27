@@ -4,10 +4,10 @@ domain: psychology
 created: 2026-05-21
 updated: 2026-05-21
 sources: [
-  "[[2026-04-02-session-reyes-analysis]]",
-  "[[2026-04-16-session-reyes-analysis]]",
-  "[[2026-04-23-psychiatry-han-analysis]]",
-  "[[2026-05-14-session-reyes-analysis]]",
+  "[[2026-04-02-session-reyes-summary]]",
+  "[[2026-04-16-session-reyes-summary]]",
+  "[[2026-04-23-psychiatry-han-summary]]",
+  "[[2026-05-14-session-reyes-summary]]",
   "[[2026-05-14-six-week-retrospective]]",
   "[[how-to-read-psychology-domain]]"
 ]
@@ -15,7 +15,13 @@ scope: capability-demo
 tags: [meta, capability-demo, evaluator, schema-demonstration, ten-capabilities, demo-claims]
 aliases: ["what this domain demonstrates", "psychology capability demo", "ten capabilities"]
 status: active
-compiled_against: 1
+compiled_against: 2
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-26
+    mode: in-place
+    notes: 'type stayed synthesis'
 ---
 
 # What this domain demonstrates — ten capabilities, with proof anchors
@@ -82,7 +88,7 @@ distinct sessions, 4 distinct raw [HH:MM] anchors).
 
 ### 3. Cross-clinical boundary (therapy ↔ psychiatry separation)
 
-The psychiatry analysis ([[2026-04-23-psychiatry-han-analysis]])
+The psychiatry analysis ([[2026-04-23-psychiatry-han-summary]])
 uses the **psychiatry-analysis template** with sections
 specific to psychiatry (`症状评估`, `量表`, `用药记录`,
 `医生 plan`) and **does not update** pattern / theme /
@@ -98,9 +104,9 @@ diverge by session_kind, and the v3 prompt
 psychiatry ingests.
 
 **Anchor**: compare §"Wiki side-effects" lists in
-[[2026-04-23-psychiatry-han-analysis#wiki-side-effects]] (4
+[[2026-04-23-psychiatry-han-summary#wiki-side-effects]] (4
 items: protocol +1 row, 2 concept instances, 1 entity
-created) vs [[2026-04-16-session-reyes-analysis#wiki-side-effects]]
+created) vs [[2026-04-16-session-reyes-summary#wiki-side-effects]]
 (11 items including pattern, theme, framework, entity,
 concept). The psychiatry analysis's side-effect set is
 deliberately smaller and contains no pattern-page edits.
@@ -125,7 +131,7 @@ evaluation, not formally diagnosed) is exercised in the
 schema even though this specific case does not surface ASD
 features.
 
-**Anchor**: [[2026-04-23-psychiatry-han-analysis#stage-2-critique-applied]]
+**Anchor**: [[2026-04-23-psychiatry-han-summary#stage-2-critique-applied]]
 item (f) — the explicit critique-and-fix where Stage 1 draft
 included `anxiety` based on GAD-7 = 9 and Stage 2 removed
 it as over-claiming.
@@ -179,10 +185,10 @@ predetermined modality.
 
 | Analysis | Lenses declared |
 | --- | --- |
-| [[2026-04-02-session-reyes-analysis]] | `biopsychosocial-4P, attachment-theory, existential` |
-| [[2026-04-16-session-reyes-analysis]] | `ifs, somatic, eft, biopsychosocial-4P` |
-| [[2026-04-23-psychiatry-han-analysis]] | `biopsychosocial-4P, diagnostic-differential, cbt` |
-| [[2026-05-14-session-reyes-analysis]] | `narrative, attachment-theory, eft, biopsychosocial-4P` |
+| [[2026-04-02-session-reyes-summary]] | `biopsychosocial-4P, attachment-theory, existential` |
+| [[2026-04-16-session-reyes-summary]] | `ifs, somatic, eft, biopsychosocial-4P` |
+| [[2026-04-23-psychiatry-han-summary]] | `biopsychosocial-4P, diagnostic-differential, cbt` |
+| [[2026-05-14-session-reyes-summary]] | `narrative, attachment-theory, eft, biopsychosocial-4P` |
 
 The lens set evolves with the in-room material: IFS is
 absent from session 1 (no parts-language yet); IFS dominates
@@ -207,10 +213,10 @@ unevenly** across sessions — session 1 populates predisposing
 + precipitating densely; session 4 documents *which 4P layer
 has changed* (a delta-view rather than a re-statement).
 
-**Anchor**: [[2026-04-02-session-reyes-analysis#working-formulation]]
+**Anchor**: [[2026-04-02-session-reyes-summary#working-formulation]]
 *(biopsychosocial-4P lens)* paragraph;
-[[2026-04-23-psychiatry-han-analysis#biopsychosocial-4p-psychiatry-framing]]
-4P table; [[2026-05-14-session-reyes-analysis#working-formulation]]
+[[2026-04-23-psychiatry-han-summary#biopsychosocial-4p-psychiatry-framing]]
+4P table; [[2026-05-14-session-reyes-summary#working-formulation]]
 *(biopsychosocial-4P lens)* with delta language ("structurally
 unchanged but now *consciously transmissible*" — capturing
 the intergenerational modification at the predisposing layer).
@@ -228,7 +234,7 @@ alone-tested: avoidance is context-bound, not present in
 solitary tasks → attachment/schema attribution → ASD/ADHD
 **not** flagged in `diagnostic_signals`.
 
-**Anchor**: [[2026-04-02-session-reyes-analysis#working-formulation]]
+**Anchor**: [[2026-04-02-session-reyes-summary#working-formulation]]
 *(biopsychosocial-4P lens)* paragraph: *"Mark's avoidance is
 specifically context-bound — it does not appear when he is
 alone doing solitary tasks, only when interpersonal contact
@@ -252,16 +258,16 @@ a reader can confirm that the Stage 2 critique categories
 §"Stage 2 — Critique") were actually applied.
 
 **Anchor**: each analysis's terminal section:
-- [[2026-04-02-session-reyes-analysis#stage-2-critique-applied]]
+- [[2026-04-02-session-reyes-summary#stage-2-critique-applied]]
   — 3 items: lens-declaration mismatch (b), wikilink discipline
   (c), diagnostic boundary (f).
-- [[2026-04-16-session-reyes-analysis#stage-2-critique-applied]]
+- [[2026-04-16-session-reyes-summary#stage-2-critique-applied]]
   — 3 items: hallucinated content (a), alone-test omission (g),
   side-effects ↔ body consistency (i).
-- [[2026-04-23-psychiatry-han-analysis#stage-2-critique-applied]]
+- [[2026-04-23-psychiatry-han-summary#stage-2-critique-applied]]
   — 3 items: diagnostic boundary (f), cross-clinical boundary
   (h), framework theory repetition (e).
-- [[2026-05-14-session-reyes-analysis#stage-2-critique-applied]]
+- [[2026-05-14-session-reyes-summary#stage-2-critique-applied]]
   — 3 items: verbatim quote handling (d), framework theory
   expansion (e), side-effects ↔ body consistency (i).
 

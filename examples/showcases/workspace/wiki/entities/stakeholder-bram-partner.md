@@ -7,11 +7,17 @@ sources: ["[[2026-05-13-meeting-api-style-decision]]"]
 tags: [stakeholder, partner-engineering, external-integrations, backward-compat]
 aliases: ["Bram Müller", "Bram from Partner Eng"]
 status: active
-compiled_against: 1
+compiled_against: 2
 last_validated: 2026-05-21
 role: stakeholder
 team: "Partner Engineering"
 title: "Partner Engineering lead (external integrations)"
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-26
+    mode: in-place
+    notes: 'type stayed entity'
 ---
 
 # Bram Müller (Partner Engineering)

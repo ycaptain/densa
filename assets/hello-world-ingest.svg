@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 380" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="11">
+  <title>Densa hello-world ingest - 4-step storyboard</title>
+  <desc>Static storyboard of one ingest cycle: drop raw source, agent plans edits, human approves, agent writes wiki pages + log entry.</desc>
+
+  <style>
+    .panel { fill: #1e1e1e; stroke: #444; stroke-width: 1; rx: 6; ry: 6; }
+    .title { fill: #569cd6; font-size: 11px; font-weight: bold; }
+    .prompt { fill: #4ec9b0; }
+    .text { fill: #d4d4d4; }
+    .added { fill: #6a9955; }
+    .file { fill: #ce9178; }
+    .step-num { fill: #dcdcaa; font-weight: bold; font-size: 13px; }
+    .caption { fill: #555; font-size: 10px; }
+    .arrow { fill: none; stroke: #777; stroke-width: 1.5; marker-end: url(#arrowhead); }
+  </style>
+
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#777"/>
+    </marker>
+  </defs>
+
+  <!-- Panel 1: Drop source -->
+  <rect class="panel" x="10" y="40" width="170" height="140"/>
+  <text class="step-num" x="20" y="30">1</text>
+  <text class="caption" x="40" y="30">Drop source</text>
+  <text class="prompt" x="20" y="62">$</text>
+  <text class="text" x="35" y="62">cp paper.md \</text>
+  <text class="text" x="35" y="78">  raw/notes/</text>
+  <text class="text" x="20" y="100">raw/notes/</text>
+  <text class="file" x="35" y="116">|- paper.md  (new)</text>
+  <text class="text" x="20" y="148">~60 lines</text>
+  <text class="text" x="20" y="162">of evergreen</text>
+  <text class="text" x="20" y="176">prose</text>
+
+  <!-- arrow 1->2 -->
+  <line class="arrow" x1="184" y1="110" x2="196" y2="110"/>
+
+  <!-- Panel 2: Plan -->
+  <rect class="panel" x="200" y="40" width="170" height="140"/>
+  <text class="step-num" x="210" y="30">2</text>
+  <text class="caption" x="230" y="30">Agent plans</text>
+  <text class="prompt" x="210" y="62">you&gt;</text>
+  <text class="text" x="240" y="62">ingest paper.md</text>
+  <text class="prompt" x="210" y="80">ai&gt;</text>
+  <text class="text" x="232" y="80">touch 4 pages:</text>
+  <text class="added" x="222" y="96">+ summary  (new)</text>
+  <text class="added" x="222" y="110">+ concept  (x2)</text>
+  <text class="added" x="222" y="124">+ log entry</text>
+  <text class="text" x="210" y="146">~60 lines diff.</text>
+  <text class="text" x="210" y="162">Approve, edit,</text>
+  <text class="text" x="210" y="176">or drop any?</text>
+
+  <!-- arrow 2->3 -->
+  <line class="arrow" x1="374" y1="110" x2="386" y2="110"/>
+
+  <!-- Panel 3: Approve -->
+  <rect class="panel" x="390" y="40" width="170" height="140"/>
+  <text class="step-num" x="400" y="30">3</text>
+  <text class="caption" x="425" y="30">Human approves</text>
+  <text class="prompt" x="400" y="62">you&gt;</text>
+  <text class="text" x="430" y="62">go</text>
+  <text class="text" x="400" y="86">No edits land</text>
+  <text class="text" x="400" y="100">without your OK.</text>
+  <text class="text" x="400" y="124">You stay the</text>
+  <text class="text" x="400" y="138">reviewer; the</text>
+  <text class="text" x="400" y="152">agent does the</text>
+  <text class="text" x="400" y="166">typing.</text>
+
+  <!-- arrow 3->4 -->
+  <line class="arrow" x1="564" y1="110" x2="576" y2="110"/>
+
+  <!-- Panel 4: Apply -->
+  <rect class="panel" x="580" y="40" width="130" height="140"/>
+  <text class="step-num" x="590" y="30">4</text>
+  <text class="caption" x="605" y="30">Apply + log</text>
+  <text class="prompt" x="590" y="62">ai&gt;</text>
+  <text class="text" x="612" y="62">writing...</text>
+  <text class="added" x="590" y="80">+ summary.md</text>
+  <text class="added" x="590" y="94">+ concept-A.md</text>
+  <text class="added" x="590" y="108">+ concept-B.md</text>
+  <text class="added" x="590" y="122">+ log entry</text>
+  <text class="text" x="590" y="146">pre-commit hook:</text>
+  <text class="added" x="590" y="160">ok AGENTS001-012</text>
+  <text class="added" x="590" y="174">ok green commit</text>
+
+  <!-- Footer: cycle hint -->
+  <text class="caption" x="360" y="220" text-anchor="middle">repeat for each new source - the wiki densifies, doesn't grow.</text>
+
+  <!-- Output diagram -->
+  <text class="title" x="10" y="250">What landed in the vault:</text>
+
+  <rect class="panel" x="10" y="260" width="700" height="110"/>
+  <text class="text" x="20" y="280">domains/&lt;your-domain&gt;/</text>
+  <text class="text" x="20" y="294">|-- raw/notes/</text>
+  <text class="file" x="40" y="308">|   `-- paper.md                                        (your source, immutable)</text>
+  <text class="text" x="20" y="322">`-- wiki/</text>
+  <text class="added" x="40" y="336">    |-- summaries/paper-summary.md                      (NEW - 1:1 distillation)</text>
+  <text class="added" x="40" y="350">    |-- concepts/concept-A.md                           (NEW - first appearance)</text>
+  <text class="added" x="40" y="364">    `-- concepts/concept-B.md                           (NEW - first appearance)</text>
+</svg>

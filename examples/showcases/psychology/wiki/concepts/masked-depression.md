@@ -10,8 +10,14 @@ sources: [
 tags: [depression, somatisation, anhedonia, alexithymia, presentation]
 aliases: ["somatised depression", "masked depression", "depression-equivalent"]
 status: active
-compiled_against: 1
+compiled_against: 2
 last_validated: 2026-05-21
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-26
+    mode: in-place
+    notes: 'type stayed concept'
 ---
 
 # Masked / somatised depression

@@ -11,7 +11,13 @@ scope: theme
 tags: [deprecated, redirect]
 aliases: ["how to read this domain"]
 status: deprecated
-compiled_against: 1
+compiled_against: 2
+migration_history:
+  - from: 1
+    to: 2
+    on: 2026-05-26
+    mode: in-place
+    notes: 'type stayed synthesis'
 ---
 
 > Superseded by [[how-to-read-psychology-domain]].
