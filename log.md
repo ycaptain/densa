@@ -23,6 +23,17 @@ Entry format:
 
 ---
 
+## [2026-05-28] maintenance | workspace showcase gains how-to-read-this-domain navigator
+- Pages touched:
+  [[examples/showcases/workspace/wiki/syntheses/how-to-read-this-domain]] (new),
+  [[examples/showcases/workspace/wiki/overview]],
+  [[examples/showcases/workspace/AGENTS.md]],
+  [[examples/showcases/workspace/log.md]],
+  [[examples/showcases/workspace/index.md]],
+  [[CHANGELOG]].
+- Reasoning: research-papers and psychology each shipped a time-budgeted `how-to-read-this-domain.md` navigator; workspace was the asymmetric third showcase without one — the L2 "Onboarding reading order" list was the closest thing but had no time budgets, no Mermaid map, and no separation between "5 min skim" and "I'm going to do work here". This commit lands the missing navigator (four Path A/B/C/D callouts, graph mermaid, headline-decisions table) and updates the overview + L2 to defer to it as the canonical entry. CHANGELOG `[Unreleased]` Planned item retired.
+- One-line synthesis: all three reference domains now have parity on intern-onboarding affordance; the next showcase (or fork's first domain) can `cp` any of the three navigators as a starting template.
+
 ## [2026-05-28] maintenance | structured Promotion candidates in lint prompt
 - Pages touched: [[_system/prompts/lint.md]], [[ROADMAP]], [[CHANGELOG]].
 - Reasoning: `lint` step 6.6 already scored Q&A candidates against three heuristics but the report skeleton at `## Promotion candidates` was a free-text comment, so `promote` (and any downstream tooling) couldn't consume the list mechanically. Step 6.6 now mandates one fenced YAML record per candidate (`qa / suggested_type / suggested_slug / criteria_met / reason`) and the report skeleton shows that record explicitly; zero-candidate runs MUST emit `_No candidates this run._` so "section absent" (LLM forgot) is distinguishable from "section present, nothing qualified" (clean run). No code change in `_system/densa/`; AGENTS011's prompt-schema contract is unchanged (`OPERATIONS['lint'].writes` paths still match).

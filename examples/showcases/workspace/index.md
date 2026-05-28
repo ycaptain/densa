@@ -2,7 +2,7 @@
 type: index
 scope: workspace
 domain: workspace
-updated: 2026-05-26
+updated: 2026-05-28
 compiled_against: 2
 example_status: worked-example
 ---

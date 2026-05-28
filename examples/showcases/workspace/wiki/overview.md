@@ -2,7 +2,7 @@
 type: overview
 domain: workspace
 created: 2026-05-26
-updated: 2026-05-26
+updated: 2026-05-28
 sources: []
 tags: []
 aliases: ["workspace home", "workspace overview"]
@@ -16,11 +16,20 @@ compiled_against: 2
 > start. Run `ingest` against any source under `raw/` and the agent
 > will populate the buckets below.
 
+> [!faq]- New teammate? Read the navigator first.
+> [[how-to-read-this-domain]] gives you four time-budgeted reading
+> paths (5 min / 30 min / 2 h / half-day) over the worked example
+> below. Use it before drilling into any specific summary or
+> pattern — the graph structure is what makes the wiki repay
+> reading, and the navigator is the cheapest way to internalise it.
+
 ## What this domain has (mindmap)
 
 ```mermaid
 mindmap
   root((workspace))
+    Navigator
+      how-to-read-this-domain
     Summaries
       one per ingested source
     Entities

@@ -2,7 +2,7 @@
 type: log
 scope: workspace
 domain: workspace
-updated: 2026-05-26
+updated: 2026-05-28
 compiled_against: 2
 ---
 
@@ -23,6 +23,14 @@ Entry format:
 ```
 
 ---
+
+## [2026-05-28] maintenance | add how-to-read-this-domain navigator
+- Pages touched:
+  [[how-to-read-this-domain]] (new),
+  [[overview]] (mindmap node + new-teammate callout),
+  [[examples/showcases/workspace/AGENTS.md]] (Onboarding section now points at navigator first).
+- Reasoning: workspace was the only one of the three reference domains (research-papers / psychology / workspace) without its own `how-to-read-this-domain.md` time-budgeted navigator. The L2 AGENTS.md already had a 6-item "Onboarding reading order" list but no Mermaid map, no time budgets, and no separation between "I have 5 min" and "I'm going to do work here". The new page mirrors the research-papers / psychology pattern (Path A 5 min / B 30 min / C 2 h / D half-day, with a graph mermaid + headline table) so interns can hit the wiki cold and land somewhere productive.
+- One-line synthesis: workspace showcase now has the same intern-onboarding affordance as research-papers / psychology; the L2 list survives as a one-glance summary, but the navigator is the canonical entry.
 
 ## [2026-05-21] ingest | 2026-05-19 vector DB selection (pgvector v1 for semantic search)
 - Source: [[2026-05-19-meeting-vector-db-selection]]

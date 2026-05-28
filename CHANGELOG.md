@@ -37,6 +37,20 @@ the L1 schema version recorded in [`AGENTS.md`](AGENTS.md) frontmatter
 
 ### Added
 
+- **`examples/showcases/workspace/wiki/syntheses/how-to-read-this-domain.md`**
+  — four time-budgeted reading paths (5 min / 30 min / 2 h /
+  half-day) over the workspace showcase, mirroring the
+  `domains/research-papers/wiki/syntheses/how-to-read-this-domain.md`
+  and `examples/showcases/psychology/wiki/syntheses/how-to-read-psychology-domain.md`
+  navigators. Includes a Mermaid map of the five raws → five
+  summaries → two patterns → two syntheses graph, the three-decision
+  headline table, and a "How to extend this wiki with your own
+  meetings" hand-off to the workspace sub-prompt. Linked from
+  `examples/showcases/workspace/wiki/overview.md` (new-teammate
+  callout + mindmap node) and the L2
+  `examples/showcases/workspace/AGENTS.md`'s "Onboarding reading
+  order" section, which now defers to the navigator as the
+  canonical entry.
 - **`docs/reference/harness-memory-vs-llm-wiki.md`** — distinguishes
   Densa from the six other "knowledge-base-shaped" layers in the
   agent stack (AGENTS.md / Cline Memory Bank / Skills / session
@@ -189,8 +203,6 @@ No `compiled_against` bump, no migration script needed.
   today is `git clone` + `git config core.hooksPath _system/hooks`
   (pure stdlib, no `pip install` needed), or `densa init` from an
   existing Densa install (see Added above).*
-- `how-to-read-this-domain.md` synthesis page for `workspace` (matching
-  the `research-papers` and `psychology` pattern).
 
 ## [0.2.0] - 2026-05-24 — onboarding refactor (BREAKING repository layout)
 

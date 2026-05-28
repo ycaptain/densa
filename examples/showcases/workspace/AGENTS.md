@@ -236,6 +236,13 @@ When ingesting a raw file under `raw/meetings/<slug>.md`,
 
 ## Onboarding reading order (for new ingesters and interns)
 
+> The canonical entry is
+> [`wiki/syntheses/how-to-read-this-domain.md`](wiki/syntheses/how-to-read-this-domain.md)
+> — four time-budgeted reading paths (5 min / 30 min / 2 h /
+> half-day) over the worked example. The list below is preserved
+> as a one-glance summary; the navigator is what an intern should
+> open first.
+
 A teammate (or onboarding intern) landing on this domain cold
 should read these pages in order to come up to speed in ~30
 minutes:
