@@ -23,6 +23,11 @@ Entry format:
 
 ---
 
+## [2026-05-28] maintenance | structured Promotion candidates in lint prompt
+- Pages touched: [[_system/prompts/lint.md]], [[ROADMAP]], [[CHANGELOG]].
+- Reasoning: `lint` step 6.6 already scored Q&A candidates against three heuristics but the report skeleton at `## Promotion candidates` was a free-text comment, so `promote` (and any downstream tooling) couldn't consume the list mechanically. Step 6.6 now mandates one fenced YAML record per candidate (`qa / suggested_type / suggested_slug / criteria_met / reason`) and the report skeleton shows that record explicitly; zero-candidate runs MUST emit `_No candidates this run._` so "section absent" (LLM forgot) is distinguishable from "section present, nothing qualified" (clean run). No code change in `_system/densa/`; AGENTS011's prompt-schema contract is unchanged (`OPERATIONS['lint'].writes` paths still match).
+- One-line synthesis: ROADMAP medium-term "structured promotion candidates" item retired; the `query → promote → lint` machine-readable loop now has its final missing piece on the prompt side.
+
 ## [2026-05-28] maintenance | finalize examples/showcases v1->v2 banners
 - Pages touched: [[examples/showcases/psychology/AGENTS.md]], [[examples/showcases/workspace/AGENTS.md]], [[ROADMAP]], [[CHANGELOG]].
 - Reasoning: the mechanical v1→v2 migration ran on 2026-05-26 (in-place, `--extra-roots examples/showcases`, see [[_system/migrations.log]]) but both showcase AGENTS.md banners still framed themselves as "v1 schema example, run migration to upgrade". This commit lands the banner-text catch-up that has been sitting in the working tree, strikes the matching ROADMAP Short-term item, and records the shipped change under `[Unreleased] ### Changed`. No wiki-page schema or wikilink changes — purely metadata reconciliation.

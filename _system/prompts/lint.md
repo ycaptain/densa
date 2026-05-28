@@ -137,13 +137,38 @@ Canonical procedure for
     items (AGENTS007 forbids `query` writing to `outputs/lint/`
     directly).
 6.6. **Promotion candidates surfacer**. Scan `outputs/qa/*.md` and
-    score each by lightweight heuristics: (a) Q&A referenced by other
-    Q&A files ≥ 3 times, (b) `sources:`/inline citations cover ≥ 3
-    distinct raw files, (c) `created` is > 30 days ago and the file
-    hasn't been modified since. Files meeting ≥ 2 criteria get listed
-    under a new report section `## Promotion candidates`, each with a
-    suggested target `type` and `slug`. The human decides whether to
-    invoke `promote`; lint NEVER promotes autonomously.
+    score each by lightweight heuristics — emit the results as a
+    **machine-readable YAML block** under `## Promotion candidates`
+    (skeleton in step 7 below), not as free-text rows; downstream
+    tooling (and the human invoking `promote`) consumes the block:
+    - **Criteria** (Q&A file qualifies when **≥ 2** are met):
+      - `inbound_refs` — Q&A referenced by other Q&A files ≥ 3 times.
+      - `citation_breadth` — `sources:` / inline citations cover ≥ 3
+        distinct raw files.
+      - `age` — `created` is > 30 days ago and the file hasn't been
+        modified since.
+    - **Per-candidate fields** (every key required; omit keys never):
+      - `qa` — path relative to repo root (e.g.
+        `outputs/qa/2026-05-20-vector-db-tradeoffs.md`).
+      - `suggested_type` — one of `summary | entity | concept |
+        comparison | overview | synthesis | open-question` (i.e. the
+        seven `wiki/` page types in
+        [`densa.schema.PAGE_TYPES`](../../_system/densa/schema.py));
+        `source` and `report` are never promotion targets.
+      - `suggested_slug` — lowercase-kebab-case stem (no extension,
+        no folder prefix), conforming to
+        [`AGENTS.md` §4](../../AGENTS.md#4-naming-and-linking-conventions).
+      - `criteria_met` — YAML list of the criterion ID(s) above that
+        fired (subset of `[inbound_refs, citation_breadth, age]`).
+      - `reason` — one-sentence rationale referencing the criteria
+        actually met (no other Q&A speculation).
+    - **Zero candidates** is not the same as "no Promotion candidates
+      section"; emit the section header with the body
+      `_No candidates this run._` so downstream tooling can
+      distinguish "section absent" (LLM forgot) from "section
+      present but empty" (run executed, nothing qualified).
+    - The human decides whether to invoke `promote`; **lint NEVER
+      promotes autonomously**.
 7. **Compose the report** at `outputs/lint/<YYYY-MM-DD>.md`. Use
    frontmatter:
 
@@ -199,10 +224,24 @@ Canonical procedure for
    ### Missing cross-references
 
    ## Promotion candidates
-   <!-- One row per outputs/qa/<file> meeting the heuristics in step
-   6.6: filename, suggested type, suggested slug, brief reason.
-   The human runs [`promote`](../../AGENTS.md#25-promote-qa-path-qa--wiki-page)
-   — lint never executes it. -->
+   <!-- One fenced YAML block listing every outputs/qa/<file>
+   meeting ≥2 of the heuristics in step 6.6. Schema (every key
+   required, omit none):
+
+   ```yaml
+   - qa: outputs/qa/<YYYY-MM-DD>-<slug>.md
+     suggested_type: summary | entity | concept | comparison | overview | synthesis | open-question
+     suggested_slug: <lowercase-kebab-case>
+     criteria_met: [inbound_refs, citation_breadth, age]   # subset; ≥2 entries
+     reason: <one sentence anchored to the criteria above>
+   ```
+
+   Emit the YAML block (never free-text rows) so `promote` and
+   downstream tooling can consume it. Zero candidates? Emit the
+   section heading with the body `_No candidates this run._` —
+   never omit the section. The human invokes
+   [`promote`](../../AGENTS.md#25-promote-qa-path-qa--wiki-page);
+   lint never executes it. -->
 
    ## Human-review queue
    <!-- Catch-all for items routed here from step 6.5 (Q&A "Issues to

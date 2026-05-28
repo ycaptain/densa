@@ -4,7 +4,8 @@
 > watch-list. Maintained by the upstream maintainer; updated alongside
 > [`CHANGELOG.md`](CHANGELOG.md) release markers.
 >
-> Last updated: 2026-05-28 (showcase v1→v2 migration struck — shipped 2026-05-26).
+> Last updated: 2026-05-28 (showcase v1→v2 migration + structured
+> lint promotion-candidates struck — both shipped).
 
 ## Current state (2026-05-26)
 
@@ -57,8 +58,15 @@
   newer schema, while preserving the `.legacy/` snapshot
   (the contract is in [`AGENTS.md` §6](AGENTS.md#6-red-lines-non-negotiable);
   the operational prompt isn't shipped yet).
-- **Structured "promotion candidates" output from `lint`** —
-  currently surfaced only as free-text in the report.
+- ~~**Structured "promotion candidates" output from `lint`** —
+  currently surfaced only as free-text in the report.~~ *Shipped
+  2026-05-28 via [`_system/prompts/lint.md`](_system/prompts/lint.md)
+  §6.6 + the `## Promotion candidates` report skeleton; each
+  candidate is now emitted as a fenced YAML record with `qa /
+  suggested_type / suggested_slug / criteria_met / reason`, and
+  zero-candidate runs explicitly emit `_No candidates this run._`
+  so downstream tooling can distinguish a clean run from a forgotten
+  section.*
 - **`overview.md` sub-section template** — evaluate borrowing the
   Cline Memory Bank "multi-section project state" pattern as
   *optional* anchored sub-sections inside the existing single

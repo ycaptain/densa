@@ -10,6 +10,18 @@ the L1 schema version recorded in [`AGENTS.md`](AGENTS.md) frontmatter
 
 ### Changed
 
+- **`lint` now emits structured `## Promotion candidates`**
+  ([`_system/prompts/lint.md`](_system/prompts/lint.md) §6.6 + the
+  report skeleton). Each Q&A meeting ≥2 of the existing heuristics
+  (`inbound_refs` / `citation_breadth` / `age`) is now written as a
+  fenced YAML record with `qa / suggested_type / suggested_slug /
+  criteria_met / reason`, replacing the prior free-text rows.
+  Zero-candidate runs MUST emit `_No candidates this run._` so
+  `promote` and other downstream tooling can distinguish "section
+  absent" (LLM forgot) from "section present, nothing qualified"
+  (clean run). No code change in `_system/densa/`; the schema
+  contract (`densa.schema.OPERATIONS['lint'].writes`) is unchanged.
+  ROADMAP medium-term entry struck in lockstep.
 - **`examples/showcases/{psychology,workspace}/AGENTS.md` banners
   rewritten to match the actual on-disk shape.** The two showcases
   were mechanically migrated to v2 frontmatter / folder layout on
@@ -179,8 +191,6 @@ No `compiled_against` bump, no migration script needed.
   existing Densa install (see Added above).*
 - `how-to-read-this-domain.md` synthesis page for `workspace` (matching
   the `research-papers` and `psychology` pattern).
-- Structured "promotion candidates" output from `lint` (currently
-  surfaced only as free-text in the report).
 
 ## [0.2.0] - 2026-05-24 — onboarding refactor (BREAKING repository layout)
 
