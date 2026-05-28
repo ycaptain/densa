@@ -4,7 +4,7 @@
 > watch-list. Maintained by the upstream maintainer; updated alongside
 > [`CHANGELOG.md`](CHANGELOG.md) release markers.
 >
-> Last updated: 2026-05-26.
+> Last updated: 2026-05-28.
 
 ## Current state (2026-05-26)
 
@@ -52,6 +52,37 @@
   the operational prompt isn't shipped yet).
 - **Structured "promotion candidates" output from `lint`** —
   currently surfaced only as free-text in the report.
+- **`overview.md` sub-section template** — evaluate borrowing the
+  Cline Memory Bank "multi-section project state" pattern as
+  *optional* anchored sub-sections inside the existing single
+  `overview.md` (no schema change). Trigger: when a domain's
+  overview exceeds ~200 lines or its mindmap stops being scannable.
+  Rationale anchor:
+  [`docs/reference/harness-memory-vs-llm-wiki.md` §2](docs/reference/harness-memory-vs-llm-wiki.md#2-cline-memory-bank--project-state-docs).
+- **`query` → `outputs/notes/<date>-<wiki-page>.md` micro-artifact** —
+  evaluate giving `query` a way to file *fine-grained fact
+  candidates* (one fact per file) that the next `lint` proposes for
+  merge into an existing wiki page. The schema-friendly equivalent
+  of Letta's `/remember`. Validate on a small sample (≥10 query
+  sessions) before deciding; do **not** add a sixth operation —
+  this stays inside `query`'s existing write scope. Rationale
+  anchor:
+  [`docs/reference/harness-memory-vs-llm-wiki.md` §6](docs/reference/harness-memory-vs-llm-wiki.md#6-letta-personal-memory--agent-identity-memory).
+- **Prompt progressive-disclosure benchmark** — measure the
+  onboarding four-file token cost (L1 + active L2 + op prompt +
+  index snapshot) under a typical ingest. If it exceeds ~30% of the
+  4-tool consensus context budget (Cursor / Claude Code / Codex /
+  Cline), split each `_system/prompts/<op>.md` into a `header +
+  on-demand body` per the Codex Skills progressive-disclosure
+  pattern. Skip if under budget — `AGENTS.md` already mandates
+  on-demand loading.
+- **MCP server path — RFC** — Tolaria's "MCP everywhere" posture
+  (15 tools auto-registered across Claude Code / Cursor / Gemini
+  CLI / OpenCode) is the highest-leverage cross-tool reach we
+  haven't taken. Decision needed: build (write `_system/densa/mcp/`
+  + Tolaria-style auto-registration installer) vs. publish a stable
+  CLI surface (`densa query`, `densa ingest`) and let users wire
+  MCP themselves. Source: [`docs/maintainers/prior-art/2026-05-25-tolaria-study.md`](docs/maintainers/prior-art/2026-05-25-tolaria-study.md).
 
 ## Watch-list (informational only)
 
@@ -70,6 +101,14 @@ re-evaluate each release cycle; full studies under
   temporal graph memory; v0.8 watch-list anchor if Densa ever needs
   fact-level temporal queries (pair downstream, do not replace the
   markdown layer).
+- **Harness ↔ memory boundary** — LangChain's
+  ["Your harness, your memory"](https://www.langchain.com/blog/your-harness-your-memory)
+  thesis is the public framing of the lock-in problem Densa's
+  schema-side approach answers structurally. Distilled positioning
+  in [`docs/reference/harness-memory-vs-llm-wiki.md`](docs/reference/harness-memory-vs-llm-wiki.md);
+  re-read each release cycle to confirm the harness landscape
+  hasn't moved the goal posts (e.g. a vendor shipping a true
+  markdown-export contract).
 
 ## Non-goals
 
