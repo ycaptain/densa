@@ -1,7 +1,7 @@
 ---
 type: log
 scope: global
-updated: 2026-05-26
+updated: 2026-05-28
 compiled_against: 2
 ---
 
@@ -22,6 +22,11 @@ Entry format:
 ```
 
 ---
+
+## [2026-05-28] maintenance | finalize examples/showcases v1->v2 banners
+- Pages touched: [[examples/showcases/psychology/AGENTS.md]], [[examples/showcases/workspace/AGENTS.md]], [[ROADMAP]], [[CHANGELOG]].
+- Reasoning: the mechanical v1→v2 migration ran on 2026-05-26 (in-place, `--extra-roots examples/showcases`, see [[_system/migrations.log]]) but both showcase AGENTS.md banners still framed themselves as "v1 schema example, run migration to upgrade". This commit lands the banner-text catch-up that has been sitting in the working tree, strikes the matching ROADMAP Short-term item, and records the shipped change under `[Unreleased] ### Changed`. No wiki-page schema or wikilink changes — purely metadata reconciliation.
+- One-line synthesis: ROADMAP's only on-disk Short-term item (showcase migration) is now retired; remaining Short-term items (Cursor marketplace / agentskills.io / PyPI) are external-action-only.
 
 ## [2026-05-26] maintenance | newcomer-friendliness sweep · stages 2 + 3 + cluster-T full removal
 - Bypass used: WIKI_ALLOW_CROSS_SCOPE=1 (single sweep touches `_system/**`, `docs/**`, `integrations/**`, `domains/**` minor cross-link polish, root docs, `.github/**`, `pyproject.toml`).

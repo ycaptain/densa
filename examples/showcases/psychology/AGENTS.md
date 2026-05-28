@@ -1,35 +1,30 @@
 # AGENTS.md — Psychology (L2)
 
-> [!warning] v1 schema example — DO NOT use as your active L2 template
-> This showcase predates `schema_version: 2`. It is the **heaviest**
-> shipped L2 (~280 lines, 10 v1 page types) and exists primarily for
-> **design inspiration**, not as a template to drop unchanged into a
-> live vault.
+> [!warning] v1 design — v2 schema (DO NOT use as your active L2 template)
+> This showcase started life under `schema_version: 1` and was
+> mechanically migrated to v2 by
+> [`migrate_02_karpathy_vocab.py`](../../../_system/scripts/migrate_02_karpathy_vocab.py)
+> on 2026-05-26. The page-type, folder, and frontmatter sections
+> below describe the v2 shape the wiki actually has; the persona,
+> ingest flow, and lint apparatus preserve the original heavy
+> psychology design intent.
 >
-> - **LLM agents**: do not treat this file as an L2 template during
->   bootstrap or design sessions. Read
+> - **LLM agents**: do not treat this file as the active L2 template
+>   during bootstrap or design sessions. Read
 >   [`domains/research-papers/AGENTS.md`](../../../domains/research-papers/AGENTS.md)
->   instead — that is the active default L2 on v2 vocabulary, six
->   page types, the cleanest reference shape. If the human explicitly
+>   instead — that is the clean v2 reference. If the human explicitly
 >   references the psychology persona / clinical apparatus (privacy
 >   postures, ASR correction, biopsychosocial-4P framing), copy that
->   prose into the new L2 you draft, but write the page-type /
->   folder / frontmatter sections against the v2 nine-type schema
->   from scratch.
-> - **Humans**: the wiki layout below (`analyses/`, `patterns/`,
->   `themes/`, `frameworks/`, `protocols/`, `fleeting/`, `questions/`)
->   reflects v1 vocabulary. v2 collapses these onto `summaries/`,
->   `concepts/` (absorbing `patterns/` and `protocols/`), `overviews/`
->   (replacing `frameworks/` and `themes/`), `open-questions/`.
->   `fleeting/` is removed — those notes go to `inbox/` or
->   `outputs/qa/`. The clinical apparatus migrates verbatim across
->   the schema rename.
+>   prose into the new L2 you draft, but start from the v2 page-type /
+>   folder / frontmatter shape.
+> - **Humans**: use this as a migration-aware design reference, not a
+>   drop-in starter L2. Migration provenance lives in each migrated
+>   wiki page's `migration_history:` block, where the former v1
+>   category is preserved as `kind:` when it still matters.
 >
 > When you actually adopt this showcase, `cp -r` it into
-> `domains/<X>/` then run
-> `python _system/scripts/migrate_02_karpathy_vocab.py --apply` to
-> reshape it (your raw material is untouched; the v1 wiki contents
-> move to `wiki/.legacy/`). See
+> `domains/<X>/`, then keep the v2 layout below and replace the
+> synthetic raws / wiki pages with your own material. See
 > [`docs/reference/karpathy-mapping.md`](../../../docs/reference/karpathy-mapping.md)
 > for the type rename table.
 
@@ -66,7 +61,7 @@ You hold whatever other-domain context the human has configured (work
 projects, self-optimisation routines, important ongoing relationships,
 etc.). When you spot bridges between domains (e.g. a relational pattern
 that recurs in a non-therapy setting), surface a cross-domain link
-rather than collapsing the analysis into psychology alone.
+rather than collapsing the summary into psychology alone.
 
 ## Folder layout
 
@@ -80,62 +75,63 @@ domains/psychology/
 │   ├── articles/        ← clipped articles, papers
 │   └── assets/          ← images, audio, attachments
 └── wiki/
-    ├── entities/        ← people (therapists, psychiatrist, partners, friends, family, self-aspects)
-    ├── concepts/        ← evergreen psychological concepts (e.g. attachment, catastrophising) + DSM-5 phenomenology (depression, anxiety, adhd, possible-asd-features)
-    ├── patterns/        ← recurring personal patterns observed across sessions
-    ├── themes/          ← multi-session arcs (e.g. "deciding under uncertainty")
-    ├── frameworks/      ← therapy frameworks summarised (CBT, IFS, EFT, schema, ACT, CFT, ...)
-    ├── analyses/        ← per-session AI analyses (1:1 with a raw source)
-    ├── syntheses/       ← cross-session essays, comparisons, lint reports
-    ├── protocols/       ← clinical protocols (e.g. medication-arc); often `cross-domain` tagged when overlapping with a self-optimisation L2
-    ├── fleeting/        ← raw thoughts captured between sessions; ≤30d TTL, lint升格 / 删除
-    └── questions/       ← long-lived therapeutic questions you're chasing
+    ├── summaries/       ← per-session/per-source summaries (1:1 with raw)
+    ├── entities/        ← people (clinicians) and recurring self-aspects
+    ├── concepts/        ← evergreen concepts plus `kind: pattern|protocol`
+    ├── comparisons/     ← explicit X vs Y comparisons (created on demand)
+    ├── overviews/       ← sub-area maps plus `kind: theme|framework`
+    ├── syntheses/       ← cross-session essays and retrospectives
+    └── open-questions/  ← long-lived therapeutic questions
 ```
 
 ## Allowed page types (extends L1)
 
-| `type`    | Folder                | Purpose                                                                |
-| --------- | --------------------- | ---------------------------------------------------------------------- |
-| session   | `raw/sessions/`       | Verbatim transcript or session notes. Raw, never edited by LLM. Includes both therapy and psychiatry sessions. |
-| entity    | `wiki/entities/`      | A clinician (therapist / psychiatrist) or a recurring "voice" you carry inside (inner critic, anxious child, idealised parent). |
-| concept   | `wiki/concepts/`      | Generic psychological idea or DSM-5 phenomenology, framework-agnostic. |
-| pattern   | `wiki/patterns/`      | Repeated personal behaviour/emotion/belief loop. Observed, not theory. |
-| theme     | `wiki/themes/`        | Multi-session storyline; tracks evolution over time.                   |
-| framework | `wiki/frameworks/`    | Compressed model of a therapeutic modality (e.g. CBT, IFS, schema therapy). |
-| analysis  | `wiki/analyses/`      | Per-session AI analysis. **Bound 1:1 to one raw source.** Differentiated by `session_kind: therapy \| psychiatry` frontmatter. |
-| synthesis | `wiki/syntheses/`     | Cross-source essays, comparisons, lint reports. **Many → 1.**          |
-| protocol  | `wiki/protocols/`     | Clinical protocol (e.g. `medication-arc`); add `cross-domain` tag if you also maintain a self-optimisation L2 it overlaps with. |
-| fleeting  | `wiki/fleeting/`      | Raw between-session thought, prompt, hypothesis. ≤30d shelf life; lint flags older for upgrade or deletion. |
-| question  | `wiki/questions/`     | A long-running therapeutic question you keep returning to (e.g. "what is my pattern around endings?"). Updated as new sessions add evidence. |
+| `type` | Folder | Kind / local role | Purpose |
+| --- | --- | --- | --- |
+| source | `raw/sessions/`, `raw/articles/` | `session` raw files may add `session_kind` | Verbatim transcript, session note, article, or attachment metadata. Raw is never edited by LLM except an authorised transcription-correction sweep. |
+| summary | `wiki/summaries/` | `session_kind: therapy|psychiatry` | One page per raw session/source. Preserves the former session-summary apparatus: participants, lenses, diagnostic signals, timestamped evidence, and write-time human review. |
+| entity | `wiki/entities/` | `role: therapist|psychiatrist|self-aspect|other` | A clinician or recurring internal voice / self-aspect. |
+| concept | `wiki/concepts/` | optional `kind: pattern|protocol` | Generic psychological concept, DSM-5 phenomenology, recurring behavioural pattern, or clinical protocol. Former patterns/protocols keep their nuance in `kind:`. |
+| overview | `wiki/overviews/` | optional `kind: theme|framework` | Multi-session arc, sub-area map, or compressed modality reference. Former themes/frameworks keep their nuance in `kind:`. |
+| synthesis | `wiki/syntheses/` | `scope: theme|comparison|retro|lint` | Cross-source essays, comparisons, and retrospective narratives. |
+| open-question | `wiki/open-questions/` | `arc_status: open|paused|answered` | A long-running therapeutic question updated as sessions add evidence. |
 
-> The `analysis` vs `synthesis` distinction is critical. An analysis page
-> looks at exactly one transcript and unpacks it through several lenses;
-> a synthesis page weaves a thread across multiple analyses, sessions, or
-> external sources. The legacy `*-a` / `*-b` / `*-analysis` files are all
-> analyses, not syntheses.
+> The `summary` vs `synthesis` distinction is critical. A summary page
+> is bound 1:1 to exactly one raw and may unpack it through several
+> lenses; a synthesis page weaves a thread across multiple summaries,
+> sessions, or external sources. Legacy `*-a` / `*-b` / `*-analysis`
+> pages were mechanically folded into summaries.
 
 ## Required frontmatter additions
 
 In addition to the L1 universal frontmatter:
 
-- `session` pages: `date: YYYY-MM-DD`, `participants: [self, <clinician-slug>]`,
-  `duration_min: 60` (optional), `mode: in-person|online|phone`.
-- `entity` pages: `role: therapist|psychiatrist|self-aspect|other`,
-  `first_seen: YYYY-MM-DD` (date the entity first appears in raw).
-- `pattern` pages: `triggers: [...]`, `first_observed: YYYY-MM-DD`,
-  `last_observed: YYYY-MM-DD`, `severity: low|medium|high`.
-- `theme` pages: `arc_start: YYYY-MM-DD`, `arc_status: active|resolved|dormant`.
-- `analysis` pages:
+- `source` / raw session files, when frontmatter is present: `date:
+  YYYY-MM-DD`, `participants: [self, <clinician-slug>]`,
+  `duration_min: 60` (optional), `mode: in-person|online|phone`,
+  `session_kind: therapy|psychiatry`.
+- `summary` pages:
   - `session_kind: therapy|psychiatry` — required, two-way enum
   - `participants: [self, <clinician-slug>]` — counterpart is a therapist or psychiatrist slug
   - `analysis_lens: [psychodynamic, cbt, ifs, schema, act, cft, biopsychosocial-4P, diagnostic-differential, ...]` listing the frameworks/lenses actually applied
   - `diagnostic_signals: []` — optional; list DSM-5 dimensions the session surfaced (e.g. `[depression, adhd]`); each entry must have a raw anchor in body
   - `sources` MUST contain exactly one wikilink (the raw)
+- `entity` pages: `role: therapist|psychiatrist|self-aspect|other`,
+  `first_seen: YYYY-MM-DD` (date the entity first appears in raw).
+- `concept` pages with `kind: pattern`: `triggers: [...]`,
+  `first_observed: YYYY-MM-DD`, `last_observed: YYYY-MM-DD`,
+  `severity: low|medium|high`.
+- `concept` pages with `kind: protocol` (e.g. `medication-arc`):
+  `area`, `evidence`, `started`, `last_revised`; when crossing into
+  self-optimisation concerns, add `cross-domain` tag.
+- `overview` pages with `kind: theme`: `arc_start: YYYY-MM-DD`,
+  `arc_status: active|resolved|dormant`.
 - `synthesis` pages: `scope: theme|comparison|retro|lint`, plus the wiki
-  pages or analyses it weaves together in `sources`.
-- `protocol` pages (e.g. `medication-arc`): inherits L1 protocol frontmatter (`area`, `evidence`, `started`, `last_revised`, `status`); when crossing into self-optimisation concerns, add `cross-domain` tag.
-- `fleeting` pages: `created: YYYY-MM-DD` is the capture date. No `sources:` required (it's a thought, not a synthesis). When upgraded to a `pattern` or `analysis`, fold the original text into the upgrade target and `git mv` the fleeting file under `wiki/.legacy/`.
-- `question` pages: `arc_status: open|paused|answered`, `first_asked: YYYY-MM-DD`. `sources` lists the analyses / sessions that have most recently bear on the question. Update the question page (not just create syntheses) when a session shifts your stance.
+  pages or summaries it weaves together in `sources`.
+- `open-question` pages: `arc_status: open|paused|answered`,
+  `first_asked: YYYY-MM-DD`. `sources` lists the summaries / sessions
+  that most recently bear on the question. Update the open-question
+  page (not just create syntheses) when a session shifts your stance.
 
 ## Ingest flow (psychology-specific)
 
@@ -145,9 +141,9 @@ When ingesting a raw under `raw/sessions/<file>`:
 2. **Resolve the clinician slug** (see §"Slug recognition rules" below) before doing anything else. If unsure, ask once.
 3. For every person mentioned, ensure an `entity` page exists in `wiki/entities/` with role and `first_seen`. Append the session date and one-line context to that entity's "Appearances" section.
 4. Identify recurring **patterns** (anxiety loops, relational dynamics, defence mechanisms) and either update an existing `pattern` page or create one. Add an entry under that pattern's "Instances" section linking back to the session with timestamp.
-5. Identify **themes** (multi-session arcs). If this session continues a theme, append to the theme's timeline; if it opens a new arc, create a new theme page.
-6. Generate **one** `analysis` page per raw under `wiki/analyses/` using the sub-prompt at `_system/prompts/domains/psychology-session-analysis.md`. Filename: `<raw-stem>-analysis.md` (single-file v3 layout). Set `session_kind`, `analysis_lens`, `diagnostic_signals`. The `sources` field MUST contain exactly the one raw source wikilink.
-7. For `session_kind: psychiatry` ingests, also append a row to `wiki/protocols/medication-arc.md` timeline (even when no medication change — record "no change" for continuity).
+5. Identify multi-session **theme arcs**. If this session continues an arc, append to an `overview` page with `kind: theme`; if it opens a new arc, create one.
+6. Generate **one** `summary` page per raw under `wiki/summaries/` using the sub-prompt at `_system/prompts/domains/psychology-session-analysis.md`. Filename: `<raw-stem>-summary.md`. Set `session_kind`, `analysis_lens`, `diagnostic_signals`. The `sources` field MUST contain exactly the one raw source wikilink.
+7. For `session_kind: psychiatry` ingests, also append a row to `wiki/concepts/medication-arc.md` timeline (even when no medication change — record "no change" for continuity).
 8. Update `wiki/concepts/` only when the session introduces a genuinely new psychological concept (not just a new instance of an existing one). DSM-5 phenomenology pages (depression / anxiety / adhd / asd / possible-asd-features) live in `wiki/concepts/`.
 9. Update `domains/psychology/index.md` (Dataview blocks usually auto-refresh; only manual when a new theme/framework/concept arrives).
 10. Append to `domains/psychology/log.md` per
@@ -186,7 +182,7 @@ counterpart calls you by name.
 > the client; the client *is* the wiki's subject. Family members
 > referenced by first name in raw (`Robert (father)`,
 > `Margaret (mother)`, `Sarah (wife)`, `Theo (son)`) are
-> referenced by *first-name + role bracket* inline in analyses
+> referenced by *first-name + role bracket* inline in summaries
 > per the privacy posture; per the L2 privacy convention they
 > do **not** get their own entity pages.
 
@@ -194,7 +190,7 @@ counterpart calls you by name.
 consistently mis-render certain homophones, code-switched English words,
 or fast-clip speaker pronouns. Maintain a project-local correction table
 here, **append-only**. During ingest, silently correct the listed
-patterns in the wiki output (analyses, entities, patterns, themes,
+patterns in the wiki output (summaries, entities, concepts, overviews,
 etc.); when you (the human) authorise a sweep, the LLM may also edit
 `raw/` — this is the **only** category of raw-edit permitted under
 the [L1 "Red lines"](../../../AGENTS.md#6-red-lines-non-negotiable),
@@ -221,16 +217,16 @@ which speaker is self by content patterns:
   summaries, uses second person ("you...").
 - When ambiguous, ask once before drafting.
 
-**Filename convention for analyses**: `<raw-stem>-analysis.md`. Examples:
-- raw `2026-01-14-session-<therapist>.md` → analysis `2026-01-14-session-<therapist>-analysis.md`
-- raw `2025-11-25-session.md` (default therapist) → analysis `2025-11-25-session-analysis.md`
-- raw `2025-11-15-psychiatry-<dr>.md` → analysis `2025-11-15-psychiatry-<dr>-analysis.md`
+**Filename convention for summaries**: `<raw-stem>-summary.md`. Examples:
+- raw `2026-01-14-session-<therapist>.md` → summary `2026-01-14-session-<therapist>-summary.md`
+- raw `2025-11-25-session.md` (default therapist) → summary `2025-11-25-session-summary.md`
+- raw `2025-11-15-psychiatry-<dr>.md` → summary `2025-11-15-psychiatry-<dr>-summary.md`
 
-Old `*-a.md` / `*-b.md` files only live in `wiki/.legacy/` after re-ingest (per §"Re-ingesting legacy analyses").
+Old `*-a.md` / `*-b.md` files only live in `wiki/.legacy/` after re-ingest (per §"Re-ingesting legacy summaries").
 
 ## Biopsychosocial 4P framing
 
-Every `analysis` page (regardless of `session_kind`) MUST consider whether the session surfaces material from each of the four causal layers, and label `analysis_lens: [..., biopsychosocial-4P]` when used:
+Every `summary` page (regardless of `session_kind`) MUST consider whether the session surfaces material from each of the four causal layers, and label `analysis_lens: [..., biopsychosocial-4P]` when used:
 
 - **Predisposing**: trait-level factors present long before the trigger (attachment style, ADHD/ASD neurodevelopmental profile, family-of-origin schemas)
 - **Precipitating**: the proximal trigger (specific event, recent change)
@@ -260,53 +256,53 @@ Override locally:
   chunk by topic before ingest; the global 60K is too aggressive for
   Chinese-language session material.
 
-### Re-ingesting legacy analyses
+### Re-ingesting legacy summaries
 
-If you accumulate a backlog of analyses authored under an earlier
+If you accumulate a backlog of summaries authored under an earlier
 schema or earlier framework set (flag them with `legacy: true` in
 frontmatter), the redo procedure is governed by the
 [L1 "Red lines"](../../../AGENTS.md#6-red-lines-non-negotiable) `.legacy/`
 red line:
 
-1. Compute the todo set: `rg -l 'legacy: true' wiki/analyses/`. The frontmatter flag itself is the checkpoint — no external lock file is needed; killed mid-batch is safe to resume.
-2. For each file picked off the todo list: `git mv wiki/analyses/<file>.md wiki/.legacy/<file>.md` **before** touching the new version. Skipping this step violates the red line. Note that legacy `-a.md` / `-b.md` pairs **collapse to a single new analysis** under v3 single-file design — `git mv` both old files first.
-3. Run the standard ingest flow (steps 1–10 above) on the corresponding raw session, producing one new `wiki/analyses/<raw-stem>-analysis.md` from the `attic/templates-v1/psychology-analysis.md` template (or `attic/templates-v1/psychiatry-analysis.md` for `session_kind: psychiatry`); set `session_kind`, `analysis_lens`, `diagnostic_signals`, drop the `legacy: true` flag. (The v1 templates remain in `attic/templates-v1/` for showcase-level work; if you've adopted this L2 into `domains/` and migrated to v2, see [`_system/templates/summary.md`](../../../_system/templates/summary.md) instead.)
-4. The new analysis MUST back-link to any `pattern` / `theme` / `concept` / `entity` page whose evidence it contributes to (lint's citation-depth check will flag chains that fail to reach raw in ≤2 hops).
-5. For `session_kind: psychiatry` legacy redo, also seed `wiki/protocols/medication-arc.md` retroactively per step 7 of the ingest flow (one row per session, even when no medication change).
+1. Compute the todo set: `rg -l 'legacy: true' wiki/summaries/`. The frontmatter flag itself is the checkpoint — no external lock file is needed; killed mid-batch is safe to resume.
+2. For each file picked off the todo list: `git mv wiki/summaries/<file>.md wiki/.legacy/<file>.md` **before** touching the new version. Skipping this step violates the red line. Note that legacy `-a.md` / `-b.md` pairs **collapse to a single new summary** under the v2 single-file shape — `git mv` both old files first.
+3. Run the standard ingest flow (steps 1–10 above) on the corresponding raw session, producing one new `wiki/summaries/<raw-stem>-summary.md` from [`_system/templates/summary.md`](../../../_system/templates/summary.md); set `session_kind`, `analysis_lens`, `diagnostic_signals`, drop the `legacy: true` flag.
+4. The new summary MUST back-link to any `concept` / `overview` / `entity` page whose evidence it contributes to (lint's citation-depth check will flag chains that fail to reach raw in ≤2 hops).
+5. For `session_kind: psychiatry` legacy redo, also seed `wiki/concepts/medication-arc.md` retroactively per step 7 of the ingest flow (one row per session, even when no medication change).
 
-If reading several analyses surfaces a cross-cutting thread (e.g. a
+If reading several summaries surfaces a cross-cutting thread (e.g. a
 recurring pattern across sessions, a comparison between two
 therapy modalities you've tried, a lint report), write a
 **synthesis** under `wiki/syntheses/`. Its `sources` field lists the
-analyses or other wiki pages it integrates — **never** a raw source
+summaries or other wiki pages it integrates — **never** a raw source
 directly.
 
 ## Domain-specific lint rules (in addition to [L1 §"lint"](../../../AGENTS.md#23-lint---domain-x))
 
-- Every `session` raw file must have a corresponding `analysis` page; if
+- Every `session` raw file must have a corresponding `summary` page; if
   missing, list under "uningested sessions".
-- Every `analysis` page must reference exactly one raw source in `sources`.
+- Every `summary` page must reference exactly one raw source in `sources`.
   If it cites more than one, flag for promotion to `synthesis`.
-- Every `pattern` page must cite ≥2 distinct analyses or sessions (else
+- Every `concept` page with `kind: pattern` must cite ≥2 distinct summaries or sessions (else
   it's premature abstraction → flag for downgrade to a session-level note).
-- Every `entity` page with `role: therapist|psychiatrist` must link to ≥1 theme.
-- `theme` pages with no update in 90 days while `arc_status: active` →
+- Every `entity` page with `role: therapist|psychiatrist` must link to ≥1 `overview` with `kind: theme`.
+- `overview` pages with `kind: theme` and no update in 90 days while `arc_status: active` →
   flag for status review.
-- `analyses/` files older than 14 days and never linked from any
-  pattern/theme/synthesis → flag as orphan-analysis (likely the source was
+- `summaries/` files older than 14 days and never linked from any
+  concept/overview/synthesis → flag as orphan-summary (likely the source was
   ingested but no second-order pages were authored).
-- Cross-domain leak: if an analysis or synthesis references a project name
+- Cross-domain leak: if a summary or synthesis references a project name
   or a self-optimisation protocol, suggest creating a cross-domain link.
-- `fleeting/` files older than 30 days → flag for upgrade-or-delete (human-review).
-- `question/` files with `arc_status: open` and no `updated` for 90 days → flag for revisit.
+- Inbox notes or Q&A artifacts older than 30 days → flag for upgrade-or-archive (human-review).
+- `open-question` pages with `arc_status: open` and no `updated` for 90 days → flag for revisit.
 
 ## Sub-prompts
 
 - `_system/prompts/domains/psychology-session-analysis.md` — long-form session
   reflection template (multi-perspective: psychodynamic, CBT, IFS, EFT,
   attachment, narrative, existential, developmental, transference, somatic).
-  Used by the ingest flow when generating per-session **analyses** (one
-  raw → one analysis; cross-source narratives live in `wiki/syntheses/`).
+  Used by the ingest flow when generating per-session **summaries** (one
+  raw → one summary; cross-source narratives live in `wiki/syntheses/`).
 
 ## Privacy posture
 
@@ -322,7 +318,7 @@ choice in this section before ingesting any session.
 > is or becomes pushed) is the single highest-cost mistake possible
 > in this L2. Switch to the
 > [§"Conservative posture"](#conservative-posture-when-you-plan-to-push)
-> by editing this paragraph and the analyses' quote handling; the
+> by editing this paragraph and the summaries' quote handling; the
 > schema, validator, and prompt support both postures without code
 > change.
 
@@ -343,9 +339,9 @@ explicitly decided otherwise and recorded the decision below**:
 ### Private-repo posture (only if the repo will never leave your own
 machines + a single encrypted backup remote)
 
-The conservative defaults above can be **relaxed in `wiki/analyses/`**:
+The conservative defaults above can be **relaxed in `wiki/summaries/`**:
 
-- Verbatim quotes from raw allowed in `analyses/` without a strict line
+- Verbatim quotes from raw allowed in `summaries/` without a strict line
   cap (still keep proportional — no whole-paragraph dumps where a single
   sentence anchors the same point).
 - First names and full personal context allowed across all wiki pages.
@@ -355,11 +351,11 @@ The conservative defaults above can be **relaxed in `wiki/analyses/`**:
 **`syntheses/` retains the soft cap** of ≤3 lines per quoted excerpt
 regardless of posture, because syntheses tend to braid material together
 and long verbatim sections defeat the synthesis purpose (if you need
-long quotes, point readers at the analysis where they were already
+long quotes, point readers at the summary where they were already
 anchored).
 
 **Third parties remain protected** under both postures: anyone other
 than the user — chosen clinicians, plus any family members the user
 references in session — should be referenced by first-name + role
 (or fully pseudonymised if their identity is non-essential to the
-analysis).
+summary).

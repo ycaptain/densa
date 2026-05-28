@@ -8,6 +8,21 @@ the L1 schema version recorded in [`AGENTS.md`](AGENTS.md) frontmatter
 
 ## [Unreleased]
 
+### Changed
+
+- **`examples/showcases/{psychology,workspace}/AGENTS.md` banners
+  rewritten to match the actual on-disk shape.** The two showcases
+  were mechanically migrated to v2 frontmatter / folder layout on
+  2026-05-26 via
+  `python -m densa migrate --mode in-place --extra-roots examples/showcases`
+  (recorded in [`_system/migrations.log`](_system/migrations.log)),
+  but the AGENTS.md prose still described them as "v1 schema
+  example, run the migration to upgrade". Both banners now read
+  "v1 design — v2 schema" and point readers at
+  [`docs/reference/karpathy-mapping.md`](docs/reference/karpathy-mapping.md)
+  + the active default L2. ROADMAP "Short term: examples/showcases
+  v1→v2 migration" struck in lockstep.
+
 ### Added
 
 - **`docs/reference/harness-memory-vs-llm-wiki.md`** — distinguishes

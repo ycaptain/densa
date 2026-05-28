@@ -4,7 +4,7 @@
 > watch-list. Maintained by the upstream maintainer; updated alongside
 > [`CHANGELOG.md`](CHANGELOG.md) release markers.
 >
-> Last updated: 2026-05-28.
+> Last updated: 2026-05-28 (showcase v1→v2 migration struck — shipped 2026-05-26).
 
 ## Current state (2026-05-26)
 
@@ -27,11 +27,18 @@
   [`cursor.com/marketplace/publish`](https://cursor.com/marketplace/publish);
   procedural checklist in
   [`docs/maintainers/skill-pack-submission.md` §C](docs/maintainers/skill-pack-submission.md#c-cursor-plugin-marketplace-live-as-of-2026-05).
-- **`examples/showcases/` v1 → v2 migration** — the two heavier
+- ~~**`examples/showcases/` v1 → v2 migration** — the two heavier
   showcases (`psychology/`, `workspace/`) ship on v1 frontmatter
   per the v2-bump CHANGELOG; migration is parametric and will run
   via the existing `_system/scripts/migrate_02_karpathy_vocab.py`
-  with an `--extra-roots` flag.
+  with an `--extra-roots` flag.~~ *Shipped 2026-05-26: the
+  migration ran with `--mode in-place --extra-roots
+  examples/showcases` (logged in
+  [`_system/migrations.log`](_system/migrations.log)); both
+  showcase `AGENTS.md` files now carry a "v1 design — v2 schema"
+  banner pointing readers at
+  [`docs/reference/karpathy-mapping.md`](docs/reference/karpathy-mapping.md)
+  and the active default L2.*
 - **agentskills.io reference-impl listing** — apply once it accepts
   curated entries; reference-impl rationale anchored at the n=7
   prior-art mid-checkpoint
