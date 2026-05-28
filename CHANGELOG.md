@@ -8,7 +8,28 @@ the L1 schema version recorded in [`AGENTS.md`](AGENTS.md) frontmatter
 
 ## [Unreleased]
 
-_No changes since the v0.5.0 release; new entries land here as they ship._
+### Added
+
+- **`docs/reference/harness-memory-vs-llm-wiki.md`** — distinguishes
+  Densa from the six other "knowledge-base-shaped" layers in the
+  agent stack (AGENTS.md / Cline Memory Bank / Skills / session
+  memory / RAG-MCP retrieval / Letta personal memory). Distilled from
+  the 2026-05-27 ecosystem snapshot survey filed under
+  `docs/maintainers/prior-art/`. Linked from `README.md` (new
+  "Why not just `CLAUDE.md` / Memory Bank / Letta?" section) and
+  `docs/reference/README.md`.
+- **Optional `CLAUDE.md` / `GEMINI.md` shim guidance** in
+  [`_system/templates/vault-readme.md`](_system/templates/vault-readme.md).
+  Convenience aliases (one line each, pointing back at `AGENTS.md`)
+  for users whose agent defaults to a non-AGENTS filename. Pattern
+  borrowed from Tolaria; never copy the contract into the shim.
+- **`Reasoning:` field** in the `ingest` log-entry template
+  ([`_system/prompts/ingest.md`](_system/prompts/ingest.md);
+  mirrored in [`AGENTS.md` §2.1](AGENTS.md#21-ingest-path) and the
+  global [`log.md`](log.md) preamble). Encouraged, not required —
+  the schema-friendly substitute for a runtime session trace (Densa
+  stays at the schema layer; the explanation lives in the new
+  reference doc above).
 
 ## [0.5.0] - 2026-05-26 — schema v2 (Karpathy vocab) + onboarding clarity sweep
 

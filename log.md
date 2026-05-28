@@ -17,6 +17,7 @@ Entry format:
 ## [YYYY-MM-DD] <operation> | <one-line summary>
 - Source: [[<path>]]
 - Pages touched: [[…]], [[…]]
+- Reasoning: <one or two sentences: why this page set, what was considered but rejected> (optional)
 - One-line synthesis.
 ```
 

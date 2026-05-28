@@ -26,6 +26,7 @@ contract file stays short.
 | [`repository-layout.md`](repository-layout.md) | Full annotated vault tree (broken out of [AGENTS.md §"Layered architecture"](../../AGENTS.md#1-layered-architecture)) |
 | [`red-lines.md`](red-lines.md) | Full failure-mode rationale for each red line |
 | [`design-rationale.md`](design-rationale.md) | The long-form design essay — every load-bearing decision, the L1/L2 split, the `outputs/` / `promote` design choices, how to design your own L2, anti-patterns |
+| [`harness-memory-vs-llm-wiki.md`](harness-memory-vs-llm-wiki.md) | Where Densa sits relative to AGENTS.md / Cline Memory Bank / Skills / session memory / RAG / Letta personal memory — the six "knowledge-base-shaped" layers in the agent stack |
 
 The Python source of truth is
 [`../../_system/densa/schema.py`](../../_system/densa/schema.py) —

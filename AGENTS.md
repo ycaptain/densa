@@ -221,6 +221,7 @@ AGENTS007. Pair with a `## [YYYY-MM-DD] maintenance | …` log entry.
      - domains/<X>/wiki/overview.md (mindmap node added)
    - Read-but-not-touched:
      - domains/<X>/wiki/open-questions/<slug>.md — bears on thread but no new evidence
+   - Reasoning: <one or two sentences: why this page set, what was considered but rejected, any unresolved uncertainty> (encouraged, not required)
    - One-line synthesis.
    ```
 7. Never modify the source under `raw/`.

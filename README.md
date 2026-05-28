@@ -258,6 +258,34 @@ lives in [`docs/reference/design-rationale.md`](docs/reference/design-rationale.
 
 ---
 
+## Why not just `CLAUDE.md` / Memory Bank / Letta?
+
+Densa is a **schema, not a harness**. Your coding agent (Cursor /
+Claude Code / Codex / Cline / Pi / OpenCode) is replaceable; the
+markdown wiki it maintains is not. Six other layers in the agent stack
+look like "knowledge bases" but bind their data to one runtime:
+
+- **`AGENTS.md` / `CLAUDE.md` / Rules** — static instructions, not
+  accumulated knowledge.
+- **[Cline Memory Bank](https://docs.cline.bot/best-practices/memory-bank)** —
+  project state continuity, no source-grounding.
+- **[Codex / Pi Skills](https://developers.openai.com/codex/skills)** —
+  reusable procedures, not facts.
+- **Session memory / compaction** — runtime checkpoints; transient by
+  design.
+- **RAG / MCP / VFS retrieval** — synthesises at query time, doesn't
+  file the answer back. The Karpathy critique applies.
+- **[Letta-style personal memory](https://docs.letta.com/letta-code/memory/)** —
+  agent self-edits memory blocks, but the artifact is bound to one
+  vendor harness ([LangChain's framing](https://www.langchain.com/blog/your-harness-your-memory)).
+
+Densa is the seventh layer: markdown + git, validated by
+`AGENTS001`–`AGENTS012`, browsable in any markdown reader, survives
+swapping your agent. Full taxonomy with per-layer decision tree:
+[`docs/reference/harness-memory-vs-llm-wiki.md`](docs/reference/harness-memory-vs-llm-wiki.md).
+
+---
+
 ## Where this sits in the ecosystem
 
 A 2026-05-25 maintainer-only review (n=7 upstream projects read at

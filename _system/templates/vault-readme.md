@@ -59,3 +59,21 @@ Per-op write scopes + canonical procedures live in
 
 See [`AGENTS.md` §"Layered architecture"](AGENTS.md#1-layered-architecture)
 for the full annotated tree.
+
+## 🔌 Cross-tool agent shims (optional)
+
+`AGENTS.md` is the canonical contract — every major coding agent IDE
+(Cursor / Claude Code / Codex / Cline) reads it natively. If you
+primarily use a tool that defaults to a different filename (older
+Claude Code installs, Gemini CLI, etc.), drop a one-line shim at the
+vault root pointing back at `AGENTS.md`:
+
+```bash
+echo "See [AGENTS.md](AGENTS.md)." > CLAUDE.md
+echo "See [AGENTS.md](AGENTS.md)." > GEMINI.md
+```
+
+These are **convenience aliases**, not duplicates. Never copy the
+contract into the shim file — that creates a drift point. The pattern
+is borrowed from [Tolaria](https://github.com/refactoringhq/tolaria),
+which ships the same triple in every vault.

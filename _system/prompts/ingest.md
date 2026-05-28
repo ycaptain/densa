@@ -139,8 +139,15 @@ that file changes, this prompt loses authority — re-read the schema.
      - domains/<X>/wiki/overview.md (mindmap node added)
    - Read-but-not-touched:
      - domains/<X>/wiki/open-questions/<slug>.md — source bears on this thread but evidence row deferred (no new probe)
+   - Reasoning: <one or two sentences: why this page set, what was considered but rejected, any unresolved uncertainty the next ingest should pick up>
    - One-line synthesis.
    ```
+   The `Reasoning` field is **encouraged, not required**: it's the
+   schema-friendly replacement for a runtime session trace (Densa has no
+   trace layer by design — see
+   [`docs/reference/harness-memory-vs-llm-wiki.md`](../../docs/reference/harness-memory-vs-llm-wiki.md)).
+   Skip it only when the ingest was mechanical (e.g. a single
+   Appearances row append with one obvious target).
 10. **If cross-domain**, also prepend a one-liner to the global `log.md`
     using the same top-of-file insertion point. The cross-domain entry
     is shorter (just `Source` + one-line synthesis); the detailed
