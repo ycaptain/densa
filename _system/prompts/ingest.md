@@ -40,13 +40,16 @@ that file changes, this prompt loses authority — re-read the schema.
    ratio table. Apply the **token-budget gate**:
    - **≤ 20K tokens** (≤ ~80 KB English prose, or ≤ ~20K CJK characters):
      proceed straight to step 2 (full read + plan + apply in one pass).
-   - **> 20K tokens** (large transcripts, long PDFs): switch to **two-step
-     ingest**.
+   - **> 20K tokens** (large transcripts, long PDFs): switch to
+     **anchor-read mode** — prepend an extra confirm gate before Pass 1
+     so the human can sanity-check your read of a huge source before
+     you commit to a page plan.
      - Step A: read the full source, output a "key takeaways + entity
        list" pre-summary (≤ 500 words). Do not draft any wiki edits yet.
        Wait for the human to confirm the takeaways match their reading.
-     - Step B: only after confirmation, run steps 2–11 below using the
-       pre-summary as your working memory anchor; you may re-read
+     - Step B: only after confirmation, run steps 2–11 below — including
+       Pass 1's analysis sub-blocks (6a/6b/6c) and Pass 2's write — using
+       the pre-summary as your working-memory anchor; you may re-read
        targeted portions of the source as needed.
    - **> 60K tokens**: ask the human to chunk the source manually before
      ingest (e.g. split a 4-hour meeting transcript by topic). The wiki
@@ -82,9 +85,33 @@ that file changes, this prompt loses authority — re-read the schema.
    then `domains/<X>/index.md` if present, to understand what wiki
    pages already exist. Bias heavily toward updating existing pages
    over creating new ones.
-6. **Plan the touched pages** before writing. The plan **must echo the
-   schema's Write contract** (see top-of-file table) — every line maps
-   to one row of `densa.schema.OPERATIONS['ingest'].writes`:
+6. **Pass 1 — Analysis** (no writes yet; this pass produces a
+   structured read of the source plus the touched-page plan, for the
+   human to approve before Pass 2 runs). Output the three sub-blocks
+   below in order. Empty blocks are allowed but stay labelled (so the
+   human can tell *"no contradictions"* from *"I forgot to check"*).
+
+   **6a. Source analysis.** Extract from the fenced source:
+   ```
+   Entities (people / orgs / objects referenced):
+   - <name>: <one-line role> → existing [[entity-slug]] | NEW
+
+   Concepts (recurring terms worth defining once):
+   - <term>: <one-line gloss> → existing [[concept-slug]] | NEW
+
+   Contradictions or tensions with existing wiki:
+   - <existing wiki claim> [[wiki-page]] vs <source claim>
+     → surface in the summary's Issues section; do NOT silently
+       overwrite the wiki claim in Pass 2.
+
+   Connections to existing wiki:
+   - bears on [[open-question-slug]] — adds evidence row
+   - extends [[concept-slug]] — new Appearances row
+   ```
+
+   **6b. Touched-page plan** — must echo the schema's Write contract
+   (see top-of-file table); every line maps to one row of
+   `densa.schema.OPERATIONS['ingest'].writes`:
    ```
    Plan:
    - create: domains/<X>/wiki/summaries/<slug>.md         (1:1 with the raw)
@@ -95,15 +122,20 @@ that file changes, this prompt loses authority — re-read the schema.
    - prepend: domains/<X>/log.md                           (newest-first per AGENTS002)
    - prepend: log.md                                       (only when cross-domain)
    ```
-   Read-but-not-touched lines (paths the source bears on but the
-   ingest deliberately defers) belong below the Plan list so the
-   human can see them at review time:
+
+   **6c. Read-but-not-touched** — paths the source bears on but the
+   ingest deliberately defers:
    ```
    Read-but-not-touched:
    - domains/<X>/wiki/concepts/<other-slug>.md — concept mentioned but no new instance
    ```
+
    Wait for the human's go-ahead unless they have already pre-approved
-   batch ingest.
+   batch ingest. The analysis is the **contract Pass 2 writes against**:
+   if the human says "skip concept X," Pass 2 must not create or update
+   concept X's page. The split (analysis first, generation second) is
+   nashsu/llm_wiki's and obsidian-llm-wiki-local's independently-
+   converged pattern for reducing hallucination at write time.
 6.5. **Cross-domain detection**. Inspect the plan: do the touched
     pages span ≥2 domains, or do their `sources:` / inline wikilinks
     resolve into ≥2 domains? If yes, every newly-created or substantially-updated
@@ -112,8 +144,10 @@ that file changes, this prompt loses authority — re-read the schema.
     run — the global `index.md` MOC's cross-domain Dataview block
     depends on the tag being present immediately so the human can see
     the cross-pollination as soon as it happens.
-7. **Apply edits**. For every page touched, update `updated:` frontmatter to
-   today. Cite the source via wikilink in `sources:` or inline.
+7. **Pass 2 — Generation.** Apply edits exactly per the Pass 1 plan the
+   human approved — same page set, no silent additions. For every page
+   touched, update `updated:` frontmatter to today. Cite the source via
+   wikilink in `sources:` or inline.
    - When the plan in step 6.5 declared cross-domain, write the
      `cross-domain` tag into the new/updated pages' frontmatter as
      part of this step. Verify the tag is present before moving on.

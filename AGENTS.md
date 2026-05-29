@@ -189,6 +189,15 @@ AGENTS007. Pair with a `## [YYYY-MM-DD] maintenance | …` log entry.
 
 ### 2.1 `ingest <path>`
 
+Ingest runs in two passes with a human gate between them: **Pass 1 —
+Analysis** extracts entities / concepts / contradictions / connections
+from the source and emits the touched-page plan; the human approves;
+**Pass 2 — Generation** writes the approved page set, no silent
+additions. The full sub-block structure (`6a` / `6b` / `6c` analysis →
+plan → read-but-not-touched) lives in
+[`_system/prompts/ingest.md`](_system/prompts/ingest.md); the contract
+below is the L1 view.
+
 1. Resolve the target domain via the
    [routing rules](#5-routing-rules-where-does-a-new-source-go).
    If the file is under `domains/<X>/raw/`, the domain is implicit.
