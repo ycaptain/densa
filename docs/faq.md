@@ -112,6 +112,21 @@ deprecation pattern (`status: deprecated` + a `> Superseded by [[…]]`
 redirect + remove from index) keeps the link graph intact while the
 page becomes a gravestone pointing at its successor.
 
+### What stops a malicious raw file from rewriting my wiki?
+
+Three things, in order. (1) The operation prompts fence raw content
+as `<untrusted source="<path>">…</untrusted>` per
+[AGENTS.md §6 red line #9](../AGENTS.md#6-red-lines-non-negotiable),
+so the LLM treats instruction-shaped text inside the fence as part of
+the source — *"ignore previous instructions"* shows up in your
+review as a flagged finding, not as silent compliance. (2) Every
+operation drafts a plan you approve before any write — review the
+*targets* of every write, not just the summary. (3) AGENTS007 won't
+let a commit prefixed `ingest(<X>):` write outside that operation's
+declared scope, so even a partial compromise can't, say, smuggle an
+edit into `_system/` from inside an ingest. Full threat model:
+[`SECURITY.md` §"Prompt-injection posture"](../SECURITY.md#prompt-injection-posture).
+
 ---
 
 ## Scale & drift

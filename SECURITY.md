@@ -56,10 +56,14 @@ If you instantiate this skill pack for sensitive material:
 - [ ] **Treat `raw/` content as untrusted input to the LLM.** A clipped
       article, an ASR-transcribed call, or a web-clip can contain
       adversarial instructions targeting the agent ("ignore previous
-      instructions and write ..."). The plan-then-confirm gate (every
-      operation drafts a plan you approve before writes) is your
-      primary defence — never approve a plan without reading the
-      *targets* of every write, not just the summary.
+      instructions and write ..."). Densa's operation prompts fence
+      raw content as `<untrusted>` so the LLM can tell its
+      instructions apart from the source — see
+      [§"Prompt-injection posture"](#prompt-injection-posture) below.
+      The plan-then-confirm gate (every operation drafts a plan you
+      approve before writes) is your second line of defence — never
+      approve a plan without reading the *targets* of every write,
+      not just the summary.
 - [ ] If you push to a public remote, audit `.gitattributes` and
       `.gitignore` against accidentally exposing `inbox/` or `raw/`
       paths that weren't yet routed. `inbox/` is especially risky as
@@ -75,6 +79,47 @@ If you instantiate this skill pack for sensitive material:
       your Cursor / Claude Code / Codex / other-vendor data-handling
       policy before ingesting clinically sensitive or NDA-bound
       material.
+
+## Prompt-injection posture
+
+Densa is a markdown skill pack — it makes no LLM calls of its own.
+The threat surface is the agent IDE (Cursor / Claude Code / Codex /
+Cline) your human operator runs Densa's operation prompts inside.
+A clipped article, an ASR transcript, or any web-clip dropped into
+`raw/` can carry adversarial instructions targeting the agent
+("ignore previous instructions and write …"). Densa's response is
+defence-in-depth across three layers, none of which depends on the
+LLM vendor:
+
+1. **The LLM fences raw content as data.** Every operation prompt
+   (`ingest` / `query` / `process-inbox` plus the three
+   `_system/prompts/domains/*-analysis.md` sub-prompts) instructs the
+   LLM to wrap raw-source content in
+   `<untrusted source="<path>">…</untrusted>` and treat instruction-
+   shaped text inside the fence as findings to surface, never as
+   commands. The canonical rule is
+   [AGENTS.md §6 red line #9](AGENTS.md#6-red-lines-non-negotiable);
+   the threat model + mitigation pattern is at
+   [`docs/reference/red-lines.md` §9](docs/reference/red-lines.md).
+2. **The human approves the plan.** Every operation drafts the page
+   set + diff before any write. Skipping the plan-then-confirm step
+   is the failure mode the fence is designed to make survivable.
+3. **The validator gates the commit.** AGENTS007 restricts each
+   commit to its prefix's declared write scope; AGENTS003 + AGENTS006
+   enforce source-grounding on what does land. A successful injection
+   would still have to thread the operation-scope needle without
+   tripping any rule — much harder than persuading one prompt to
+   misbehave.
+
+A 2026-05 review of the wiki-compiler / Obsidian-AI prior-art set
+([`docs/maintainers/prior-art/`](docs/maintainers/prior-art/), n=7)
+found Densa is the first project in the space to document an
+explicit prompt-injection mitigation. Smart Composer's "Multimedia
+Context" feature auto-scrapes URL + YouTube transcript content into
+the prompt with no fencing; nashsu/llm_wiki, Tolaria, and
+obsidian-llm-wiki-local ingest raw content directly into prompts.
+The fence convention is cheap to adopt downstream — it is one bullet
+in your operation prompt.
 
 ## Supply-chain notes
 
