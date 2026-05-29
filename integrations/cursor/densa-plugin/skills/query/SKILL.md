@@ -1,6 +1,6 @@
 ---
 name: densa-query
-description: Answer a question against a Densa vault — read the global and per-domain `index.md`, follow wikilinks, compose an inline-cited answer, and file substantive Q&As to `outputs/qa/<date>-<slug>.md`. Use when the user asks "what does the wiki say about X", "summarise across pages on Y", "compare A vs B", or similar synthesis questions. Operates in any AGENTS.md-aware IDE; assumes the current workspace is a Densa vault clone.
+description: Answer a question against a Densa vault — read the global and per-domain `index.md`, follow wikilinks, compose an inline-cited answer, and file substantive Q&As to `outputs/qa/<date>-<slug>.md`. Use when the user asks "what does the wiki say about X", "summarise across pages in my wiki on Y", "compare A vs B in my notes", or explicitly names Densa / the vault. Do NOT fire on "search the codebase" (use grep), "what's in this file" (read), "explain this code" (code Q&A), or any question that does not target a Densa-authored wiki; require both `AGENTS.md` at root and `_system/densa/` present before firing. Operates in any AGENTS.md-aware IDE.
 ---
 
 # Densa · query

@@ -1,6 +1,6 @@
 ---
 name: densa-lint
-description: Health-check a Densa wiki — survey against the rule registry, surface contradictions, stale claims, orphan pages, and missing cross-references; write a report to `outputs/lint/<date>.md`; auto-apply only additive fixes (missing index entries, obvious cross-references). Destructive fixes wait for human approval. Use when the user says "lint", "find contradictions", "what's stale", "orphan pages", or similar wiki-quality checks. Operates in any AGENTS.md-aware IDE; assumes the current workspace is a Densa vault clone.
+description: Health-check a Densa wiki — survey against the rule registry, surface contradictions, stale claims, orphan pages, and missing cross-references; write a report to `outputs/lint/<date>.md`; auto-apply only additive fixes (missing index entries, obvious cross-references). Destructive fixes wait for human approval. Use when the user says "lint the wiki", "find contradictions in my notes", "what's stale", "orphan pages", "densa lint", or explicitly names the wiki / Densa. Do NOT fire on code-linting requests (ruff / eslint / typecheck), "check this file for errors", or generic "review my notes"; require both `AGENTS.md` at root and `_system/densa/` present before firing. Operates in any AGENTS.md-aware IDE.
 ---
 
 # Densa · lint

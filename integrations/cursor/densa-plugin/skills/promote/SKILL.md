@@ -1,6 +1,6 @@
 ---
 name: densa-promote
-description: Promote an evergreen Q&A from a Densa vault's `outputs/qa/` into a first-class wiki page — perform a controlled information-shape transform (voice transform, citation hoist, L2 fill-in, section restructure) wrapped in a `git mv` so `git log --follow` traces the new wiki page back to the source Q&A. One Q&A becomes one wiki page (1:1 only). Use when the user says "promote <qa-path>", "wikify this Q&A", or asks to lift an evergreen answer into the wiki. Operates in any AGENTS.md-aware IDE; assumes the current workspace is a Densa vault clone.
+description: Promote an evergreen Q&A from a Densa vault's `outputs/qa/` into a first-class wiki page — perform a controlled information-shape transform (voice transform, citation hoist, L2 fill-in, section restructure) wrapped in a `git mv` so `git log --follow` traces the new wiki page back to the source Q&A. One Q&A becomes one wiki page (1:1 only). Use when the user says "promote <qa-path>", "wikify this Q&A", or asks to lift an evergreen answer into the Densa wiki. Do NOT fire on "promote this commit/branch" (git), "promote to production" (deploy), or generic "make this official"; the input must resolve to an `outputs/qa/<file>.md` and the workspace must be a Densa vault (`AGENTS.md` at root + `_system/densa/`). Operates in any AGENTS.md-aware IDE.
 ---
 
 # Densa · promote

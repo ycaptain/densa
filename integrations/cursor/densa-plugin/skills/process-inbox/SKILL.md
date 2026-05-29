@@ -1,6 +1,6 @@
 ---
 name: densa-process-inbox
-description: Triage un-routed files in a Densa vault's `/inbox/` directory — classify each file by domain and bucket, propose a canonical slug, and `git mv` it into `domains/<X>/raw/<bucket>/` after the user approves. Does NOT ingest — that is a deliberate separate step (use `densa-ingest` after). Use when the user says "process-inbox", "triage the inbox", or has dropped un-routed files into `/inbox/`. Operates in any AGENTS.md-aware IDE; assumes the current workspace is a Densa vault clone.
+description: Triage un-routed files in a Densa vault's `/inbox/` directory — classify each file by domain and bucket, propose a canonical slug, and `git mv` it into `domains/<X>/raw/<bucket>/` after the user approves. Does NOT ingest — that is a deliberate separate step (use `densa-ingest` after). Use when the user says "process-inbox", "triage the Densa inbox", or has dropped un-routed files into the workspace's `/inbox/` directory. Do NOT fire on email-inbox triage, generic "clean up my downloads", or "what's in this folder" (ls); require both `AGENTS.md` at root and an `inbox/` directory present before firing. Operates in any AGENTS.md-aware IDE.
 ---
 
 # Densa · process-inbox

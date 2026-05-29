@@ -1,6 +1,6 @@
 ---
 name: densa-ingest
-description: Ingest a raw source into a Densa vault — distill it into one summary plus updates to entities/concepts/open-questions, then prepend a log entry. Use when the user says "ingest <path>", "process this source", drops a new file under `raw/`, or asks the agent to compile a raw source into the wiki. Operates in any AGENTS.md-aware IDE; assumes the current workspace is a Densa vault clone.
+description: Ingest a raw source into a Densa vault — distill it into one summary plus updates to entities/concepts/open-questions, then prepend a log entry. Use when the user says "ingest <path>" (in a Densa vault), "compile this raw into my wiki", drops a new file under `raw/`, or explicitly names Densa / the wiki. Do NOT fire on generic "summarise this", "tldr this file", "ingest data from API/logs", or any request where the workspace lacks both `AGENTS.md` at root and `_system/densa/` — those are not Densa ingests. Operates in any AGENTS.md-aware IDE.
 ---
 
 # Densa · ingest
