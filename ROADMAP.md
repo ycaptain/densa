@@ -4,8 +4,10 @@
 > watch-list. Maintained by the upstream maintainer; updated alongside
 > [`CHANGELOG.md`](CHANGELOG.md) release markers.
 >
-> Last updated: 2026-05-28 (showcase v1→v2 migration + structured
-> lint promotion-candidates struck — both shipped).
+> Last updated: 2026-05-29 (pre-launch plan filed — MCP-server RFC
+> closed as "build, stdlib JSON-RPC"; three n=7-backed differentiators
+> promoted to short term. Sequencing in
+> [`docs/maintainers/2026-05-29-pre-launch-plan.md`](docs/maintainers/2026-05-29-pre-launch-plan.md)).
 
 ## Current state (2026-05-26)
 
@@ -23,6 +25,34 @@
 
 ## Short term (0–3 months)
 
+> **Pre-launch focus.** The four items marked **[launch]** below are
+> sequenced as Phases A–D in
+> [`docs/maintainers/2026-05-29-pre-launch-plan.md`](docs/maintainers/2026-05-29-pre-launch-plan.md)
+> and gate the `v0.7.0` open-source launch tag. Each is anchored to an
+> n=7 prior-art finding; the plan carries the file-level scope.
+
+- **[launch] MCP server (stdlib JSON-RPC, zero-dep)** — *RFC closed:
+  build it.* Hand-rolled JSON-RPC/stdio under `_system/densa/mcp/`,
+  leaving `_system/densa/` core dependency-free. Exposes the compiled
+  wiki + validator as read/navigate/lint **tools** and the five
+  operations as MCP **prompts** (no write tools; the human gate is
+  unchanged) — "the opposite of RAG" rendered in MCP. Completes the
+  AGENTS.md + MCP + plugin triple no upstream occupies
+  (n=7; [Tolaria's 15-tool surface](docs/maintainers/prior-art/2026-05-25-tolaria-study.md)
+  is the spec template). Was medium-term "MCP server path — RFC".
+- **[launch] `<untrusted>` fenced ingest** — first documented
+  prompt-injection mitigation in the wiki-compiler space; injection
+  posture is uniformly weak across all n=7
+  ([finding §3.9](docs/maintainers/prior-art/2026-05-25-research-action-plan.md)).
+  Prompt-only change.
+- **[launch] Two-step ingest (analysis → generation)** — nashsu + olw
+  independently converge on the split for quality; aligns with the
+  existing plan-first gate. Prompt-only change.
+- **[launch] AGENTS013 literal-grounding rule (warn)** — port olw's
+  Knowledge-Item-Candidates literal-match check; the strongest
+  anti-hallucination pattern in the set
+  ([finding §3.8](docs/maintainers/prior-art/2026-05-25-research-action-plan.md)).
+  Extends the public rule registry.
 - **Cursor plugin marketplace submission** — manifest is schema-aligned
   as of 2026-05-26; logo + submission via
   [`cursor.com/marketplace/publish`](https://cursor.com/marketplace/publish);
@@ -44,8 +74,10 @@
   curated entries; reference-impl rationale anchored at the n=7
   prior-art mid-checkpoint
   ([`docs/maintainers/prior-art/2026-05-25-research-action-plan.md`](docs/maintainers/prior-art/2026-05-25-research-action-plan.md)).
-- **PyPI publication** — so `pipx install densa` works without a
-  prior clone (tracked in CHANGELOG `[Unreleased]`).
+- **[launch] PyPI publication** — so `pipx install densa` works without
+  a prior clone (tracked in CHANGELOG `[Unreleased]`; Phase C of the
+  pre-launch plan: OIDC trusted-publishing workflow + Quickstart
+  rewrite to lead with `pipx install densa && densa init`).
 
 ## Medium term (3–6 months)
 
@@ -91,13 +123,15 @@
   on-demand body` per the Codex Skills progressive-disclosure
   pattern. Skip if under budget — `AGENTS.md` already mandates
   on-demand loading.
-- **MCP server path — RFC** — Tolaria's "MCP everywhere" posture
-  (15 tools auto-registered across Claude Code / Cursor / Gemini
-  CLI / OpenCode) is the highest-leverage cross-tool reach we
-  haven't taken. Decision needed: build (write `_system/densa/mcp/`
-  + Tolaria-style auto-registration installer) vs. publish a stable
-  CLI surface (`densa query`, `densa ingest`) and let users wire
-  MCP themselves. Source: [`docs/maintainers/prior-art/2026-05-25-tolaria-study.md`](docs/maintainers/prior-art/2026-05-25-tolaria-study.md).
+- ~~**MCP server path — RFC**~~ *Closed 2026-05-29: **build it**, as a
+  hand-rolled stdlib JSON-RPC/stdio server under `_system/densa/mcp/`
+  with a Tolaria-style auto-registration installer — promoted to a
+  **[launch]** short-term item above. The "stable CLI surface + let
+  users wire MCP" alternative was rejected: `densa query`/`ingest` are
+  LLM operations, not deterministic CLI calls, so a CLI surface
+  wouldn't carry them. Rationale + tool surface in
+  [`docs/maintainers/2026-05-29-pre-launch-plan.md` §1](docs/maintainers/2026-05-29-pre-launch-plan.md).
+  Source: [`Tolaria study`](docs/maintainers/prior-art/2026-05-25-tolaria-study.md).*
 
 ## Watch-list (informational only)
 
