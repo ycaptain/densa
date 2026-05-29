@@ -69,3 +69,9 @@ If the hook rejects a commit, the fix is almost always to split it into two comm
 - `%%HUMAN: …%%` blocks inside LLM-owned pages are authoritative — always preserve them.
 - `outputs/` holds rebuildable artifacts (lint reports, Q&A); wiki pages never cite them. A Q&A becomes a wiki page only via the `promote` operation, never a hand copy.
 - ruff `extend-exclude` covers `domains`, `docs`, `attic`, `inbox`, `_system/templates`, `_system/prompts` — markdown content is not linted as code.
+
+## Local dev tracker
+
+If `docs/maintainers/tracker/INDEX.md` exists, load it at session start — it lists open architecture questions and decided-but-pending tasks for the maintainer's local work-in-progress. Conventions in [`tracker/README.md`](docs/maintainers/tracker/README.md). The tracker directory is `.gitignore`d; for forks without it, this section is a no-op.
+
+When picking up a task: read INDEX, pick one with `status: open` or `decided`, set its `owner:` to your session, bump `last_touched:` to today, work, then either move the file to `tracker/done/` (if shipped) or add a `## Resume notes` section (if pausing mid-way). Pre-launch plan with phase sequencing: [`docs/maintainers/2026-05-29-pre-launch-plan.md`](docs/maintainers/2026-05-29-pre-launch-plan.md).
