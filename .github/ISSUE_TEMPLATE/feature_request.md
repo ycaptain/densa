@@ -7,7 +7,7 @@ assignees: ""
 ---
 
 > **Note.** Changes to the L1 schema (`AGENTS.md`) require discussion
-> here before any PR. See [`CONTRIBUTING.md`](../../CONTRIBUTING.md)
+> here before any PR. See [`CONTRIBUTING.md`](../CONTRIBUTING.md)
 > §"Changing the L1 schema". This template applies to all feature
 > requests, schema or otherwise.
 

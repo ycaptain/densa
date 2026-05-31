@@ -32,15 +32,15 @@ Please do **not** open a public issue for these. We aim to acknowledge
 within 7 days.
 
 For non-security bugs (rendering glitches, prompt clarity, etc.) use a
-normal [bug report issue](.github/ISSUE_TEMPLATE/bug_report.md).
+normal [bug report issue](ISSUE_TEMPLATE/bug_report.md).
 
 ## Hardening checklist for your vault
 
 If you instantiate this skill pack for sensitive material:
 
-- [ ] Wire the pre-commit hook per [`README.md` §"Quickstart"](README.md#quickstart).
+- [ ] Wire the pre-commit hook per [`README.md` §"Quickstart"](../README.md#quickstart).
 - [ ] Configure encryption for any sensitive L2 before the first push:
-      see [`docs/setup.md` §"Privacy — sensitive material"](docs/setup.md#privacy--sensitive-material).
+      see [`docs/setup.md` §"Privacy — sensitive material"](../docs/setup.md#privacy--sensitive-material).
 - [ ] Verify encryption is active: `git-crypt status -e` should list
       every path you intended to encrypt.
 - [ ] Use a **second cold-backup remote** on a different provider
@@ -50,7 +50,7 @@ If you instantiate this skill pack for sensitive material:
       or in a vetted secrets manager. Loss of the key = loss of encrypted
       history. Never commit `.git-crypt/keys/default`.
 - [ ] Treat the LLM agent's web access as adversarial: per the
-      [L1 red lines](AGENTS.md#6-red-lines-non-negotiable), no silent
+      [L1 red lines](../AGENTS.md#6-red-lines-non-negotiable), no silent
       web fetches during ingest. Review every prompt-driven enrichment
       before it lands in the wiki.
 - [ ] **Treat `raw/` content as untrusted input to the LLM.** A clipped
@@ -98,9 +98,9 @@ LLM vendor:
    `<untrusted source="<path>">…</untrusted>` and treat instruction-
    shaped text inside the fence as findings to surface, never as
    commands. The canonical rule is
-   [AGENTS.md §6 red line #9](AGENTS.md#6-red-lines-non-negotiable);
+   [AGENTS.md §6 red line #9](../AGENTS.md#6-red-lines-non-negotiable);
    the threat model + mitigation pattern is at
-   [`docs/reference/red-lines.md` §9](docs/reference/red-lines.md).
+   [`docs/reference/red-lines.md` §9](../docs/reference/red-lines.md).
 2. **The human approves the plan.** Every operation drafts the page
    set + diff before any write. Skipping the plan-then-confirm step
    is the failure mode the fence is designed to make survivable.
@@ -112,7 +112,7 @@ LLM vendor:
    misbehave.
 
 A 2026-05 review of the wiki-compiler / Obsidian-AI prior-art set
-([`docs/maintainers/prior-art/`](docs/maintainers/prior-art/), n=7)
+(a maintainer-only prior-art review, n=7)
 found Densa is the first project in the space to document an
 explicit prompt-injection mitigation. Smart Composer's "Multimedia
 Context" feature auto-scrapes URL + YouTube transcript content into

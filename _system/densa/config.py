@@ -123,6 +123,7 @@ WIKILINK_SKIP_TOP_LEVEL: Final[frozenset[str]] = frozenset({
     "writing",
     "projects",
     "examples",
+    ".github",
 })
 """Top-level directories whose markdown files contain ``[[placeholder]]``
 examples by design — wikilink resolvability is not enforced there.
@@ -132,7 +133,7 @@ examples by design — wikilink resolvability is not enforced there.
 ``wikilinks_scoped``.
 
 ``writing/`` and ``projects/`` are opt-in workspaces (see
-``docs/reference/design-rationale.md`` "Optional layers" section):
+``docs/design/design-rationale.md`` "Optional layers" section):
 they may cite wiki pages with ``[[wikilink]]`` but the reverse is
 forbidden and their frontmatter is advisory.
 
@@ -141,6 +142,12 @@ forbidden and their frontmatter is advisory.
 These are reference material, not part of the wikilink graph; their
 internal cross-links are pre-validated when shipped and re-validated
 in a dedicated CI job, not the main ``densa --all`` pass.
+
+``.github/`` holds GitHub community-health files (``CONTRIBUTING.md`` /
+``SECURITY.md`` / ``CODE_OF_CONDUCT.md``) and issue / PR templates.
+These are project-process docs, not wiki pages, and reference each
+other by relative path — never by ``[[wikilink]]`` — so resolvability
+is not enforced there.
 """
 
 
@@ -179,13 +186,9 @@ def _build_operation_writes() -> dict[str, frozenset[str]]:
         "GUIDE.md",
         "README.md",
         "CHANGELOG.md",
-        "CONTRIBUTING.md",
-        "CODE_OF_CONDUCT.md",
-        "SECURITY.md",
         "LICENSE",
         ".gitignore",
         ".gitattributes",
-        ".gitattributes.example",
         ".editorconfig",
         ".pre-commit-hooks.yaml",
         "pyproject.toml",

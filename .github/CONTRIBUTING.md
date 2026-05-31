@@ -14,8 +14,8 @@ participating you agree to follow our
 > forked Densa and only edit your own vault content (your `raw/`
 > sources and the `domains/<X>/wiki/` pages the agent compiles
 > from them), your workflow is:
-> [`README.md` §Quickstart](README.md#quickstart) → daily use
-> guided by [`GUIDE.md`](GUIDE.md). The pre-commit hook installed
+> [`README.md` §Quickstart](../README.md#quickstart) → daily use
+> guided by [`GUIDE.md`](../GUIDE.md). The pre-commit hook installed
 > via `git config core.hooksPath _system/hooks` is **pure stdlib**
 > and needs no `pip install` for self-use. The dev extras (ruff /
 > mypy / pytest, see below) only matter when you change validator
@@ -46,6 +46,72 @@ If you want to contribute but don't have an itch yet:
   one of the AGENTS001–012 rules currently doesn't catch.
 - A worked example seed L2 (see *Adding an example L2 domain* below).
 
+Or browse the
+[`good first issue`](https://github.com/ycaptain/densa/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22)
+label — each one is a self-contained, 1–2-hour task that links the
+exact file to touch. The walkthrough below gets you from clone to a
+green test in under half an hour.
+
+## ⏱ Your first 30 minutes
+
+The validator is built so a first contribution is small and
+self-contained. Each lint rule is **one module under
+[`_system/densa/checks/`](../_system/densa/checks/), one stable ID
+(`AGENTS001`–`012`), and one test file** — so you can land a fix
+without holding the whole system in your head.
+
+**1. Set up (≈5 min).** From the repo root:
+
+```bash
+pip install -e ".[dev]"                     # pytest + ruff + mypy + pyyaml
+PYTHONPATH=_system python -m densa doctor   # confirm your setup is wired right
+PYTHONPATH=_system python -m densa --all    # confirm a clean baseline
+python -m pytest                            # confirm the suite is green
+```
+
+If `densa doctor` shows a ✗, fix that first — it catches the usual
+setup snags (unwired hook, wrong Python, an L2 domain that won't
+parse) before they surface as a confusing validator error.
+
+**2. Find your file via the rule↔file mapping (≈5 min).** The mapping
+is direct — no indirection to chase:
+
+```bash
+PYTHONPATH=_system python -m densa rules    # the live AGENTS001–012 registry
+```
+
+A rule ID maps straight to its module: `AGENTS001` →
+[`checks/raw_immutability.py`](../_system/densa/checks/raw_immutability.py),
+`AGENTS007` →
+[`checks/operation_writes_scope.py`](../_system/densa/checks/operation_writes_scope.py),
+and so on (the
+[rules registry doc](../docs/reference/rules-registry.md) lists every
+pairing). The machine-readable contract those rules enforce lives in
+[`_system/densa/schema.py`](../_system/densa/schema.py).
+
+**3. Iterate on one check in a tight loop (≈15 min).** Run just the
+test for the rule you're touching so the feedback is instant:
+
+```bash
+python -m pytest -k raw_immutability -v     # swap in your check's name
+```
+
+Test files mirror the modules under
+[`_system/tests/`](../_system/tests/) (e.g.
+`test_check_raw_immutability.py`). Add or adjust a fixture, watch it go
+red, make your change, watch it go green.
+
+**4. Before you push (≈5 min).** Run the four gates CI runs (next
+section). Keep the PR to one concern, prefix the commit per the
+[convention](#commit-message-convention) (a docs/validator change is
+prefix-free and must not touch `domains/**` — see the AGENTS007 note
+below), and open the PR.
+
+That's the whole loop. If your first commit is rejected by the
+pre-commit hook, the
+[AGENTS007 section](#if-the-pre-commit-hook-rejects-your-first-commit-agents007)
+below is almost always the fix.
+
 ## 🛠 Before submitting a PR
 
 Canonical local commands are `python -m X` invocations matching the
@@ -61,7 +127,7 @@ pip install -e ".[dev]"               # installs pytest + ruff + mypy + pyyaml
 ```
 
 Wire the pre-commit hook per
-[`README.md` §"Quickstart"](README.md#quickstart) (one
+[`README.md` §"Quickstart"](../README.md#quickstart) (one
 `git config core.hooksPath _system/hooks` line). The hook itself is
 **pure stdlib** — it doesn't need the `[dev]` extra. Install is only
 for the validator's own dev suite.
@@ -91,7 +157,7 @@ python -m pytest -k <check-name> -v                       # iterate on a single 
 
 ### Commit message convention
 
-Follow [`AGENTS.md` §"Versioning"](AGENTS.md#9-versioning):
+Follow [`AGENTS.md` §"Versioning"](../AGENTS.md#9-versioning):
 
 ```
 <op>(<scope>): <short summary>
@@ -114,7 +180,7 @@ The validator classifies commits by their leading prefix
 (`ingest(<domain>):`, `query:`, `lint:`, `process-inbox:`,
 `promote:`, or no recognised prefix). Each class has its own allowed
 write scope — see
-[`AGENTS.md` §"Operation writes"](AGENTS.md#20-operation-writes-machine-enforced-via-agents007).
+[`AGENTS.md` §"Operation writes"](../AGENTS.md#20-operation-writes-machine-enforced-via-agents007).
 The most common
 first-commit rejection looks like:
 
@@ -133,7 +199,7 @@ recoveries:
 
 - **Did you mean to ingest?** Move the wiki edit out of this commit,
   redo it via the `ingest` flow
-  ([`_system/prompts/ingest.md`](_system/prompts/ingest.md)), and use
+  ([`_system/prompts/ingest.md`](../_system/prompts/ingest.md)), and use
   `git commit -m "ingest(<domain>): <date> <slug>"`.
 - **Did you mean unrelated docs work?** Move the `domains/**` edit to
   a separate commit (with the correct prefix) and keep the original
@@ -153,7 +219,7 @@ two-commit fix is almost always cleaner.
 ## ⚠️ Red lines (will block merge)
 
 These mirror the L1 contract in
-[`AGENTS.md` §"Red lines"](AGENTS.md#6-red-lines-non-negotiable).
+[`AGENTS.md` §"Red lines"](../AGENTS.md#6-red-lines-non-negotiable).
 Do not:
 
 - Edit, rename, move, or delete anything under `*/raw/`.
@@ -186,11 +252,11 @@ Changes here have outsized blast radius. Before opening a PR:
 The repo ships three example L2s (`research-papers`, `workspace`,
 `psychology`) covering light/medium/heavy schema density across
 distinct working subjects. See
-[`docs/setup.md` §"Choosing or replacing the default domain"](docs/setup.md#choosing-or-replacing-the-default-domain)
+[`docs/setup.md` §"Choosing or replacing the default domain"](../docs/setup.md#choosing-or-replacing-the-default-domain)
 for the per-domain matrix.
 
 New seed L2s are welcome — open a
-[`domain-design-help`](.github/ISSUE_TEMPLATE/domain-design-help.md)
+[`domain-design-help`](ISSUE_TEMPLATE/domain-design-help.md)
 issue first to discuss persona / page-types / required frontmatter,
 then PR a directory under `domains/`. Bar for inclusion: *would a
 plausible adopter of this skill pack ship this exact L2 unmodified?*
@@ -200,4 +266,4 @@ that ingests cleanly.
 ## License
 
 By contributing, you agree your contributions are licensed under the
-[MIT License](LICENSE).
+[MIT License](../LICENSE).

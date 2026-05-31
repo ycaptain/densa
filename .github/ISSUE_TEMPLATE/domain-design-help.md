@@ -9,7 +9,7 @@ assignees: ""
 > Use this template when you want feedback on a new L2 you're standing
 > up in your own vault. We'll work through the four design questions
 > from
-> [`docs/reference/design-rationale.md`](../../docs/reference/design-rationale.md)
+> [`docs/design/design-rationale.md`](../../docs/design/design-rationale.md)
 > §"How to design your own L2" together. Answer what you can; leave
 > the rest blank.
 

@@ -94,9 +94,6 @@ _ROOT_DOC_EXEMPT: Final[frozenset[str]] = frozenset({
     "GUIDE.md",
     "README.md",
     "CHANGELOG.md",
-    "CONTRIBUTING.md",
-    "SECURITY.md",
-    "CODE_OF_CONDUCT.md",
 })
 
 
@@ -114,10 +111,12 @@ def wikilinks_scoped(path: str) -> bool:
         domains — all of which contain ``[[<placeholder>]]`` examples
         or shipped-reference wikilinks by design).
       - The root-level documentation files (``AGENTS.md`` at any depth,
-        plus ``GUIDE.md`` / ``README.md`` / ``CHANGELOG.md`` /
-        ``CONTRIBUTING.md`` / ``SECURITY.md`` / ``CODE_OF_CONDUCT.md``
-        at the repo root) — these contain ``[[placeholder]]`` examples
-        and historical references by design.
+        plus ``GUIDE.md`` / ``README.md`` / ``CHANGELOG.md`` at the repo
+        root) — these contain ``[[placeholder]]`` examples and
+        historical references by design. The GitHub community-health
+        files (``CONTRIBUTING.md`` / ``SECURITY.md`` /
+        ``CODE_OF_CONDUCT.md``) live under ``.github/`` and are excluded
+        via ``WIKILINK_SKIP_TOP_LEVEL`` instead.
       - Any ``log.md`` at any depth — the log is an append-only audit
         ledger. Past entries' wikilinks reflect the state when the
         entry was written; targets may legitimately disappear later
