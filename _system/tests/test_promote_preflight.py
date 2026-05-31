@@ -1,13 +1,16 @@
 """Contract tests for the `promote` operation pre-flight gate.
 
-`promote` is an LLM-driven prompt (`_system/prompts/promote.md`), not a
-Python function. These tests pin the **prompt contract** so a careless
-edit doesn't silently drop a pre-flight check the wider design depends
-on. Every assertion here corresponds to a row in the pre-flight table
-in [`/AGENTS.md` §"promote"](../../AGENTS.md#25-promote-qa-path-qa--wiki-page) /
-step 1 of the prompt.
+`promote` is an LLM-driven prompt, not a Python function. Since the
+T009 progressive-disclosure split it lives in two files —
+`_system/prompts/promote.md` (header) and `_system/prompts/promote.body.md`
+(on-demand procedure); the `promote_prompt` fixture concatenates both.
+These tests pin the **prompt contract** so a careless edit doesn't
+silently drop a pre-flight check the wider design depends on. Every
+assertion here corresponds to a row in the pre-flight table in
+[`/AGENTS.md` §"promote"](../../AGENTS.md#25-promote-qa-path-qa--wiki-page) /
+step 1 of the prompt body.
 
-If you intentionally restructure the prompt body, update both files
+If you intentionally restructure the prompt, update both files
 together — they are the canonical statement of the contract.
 """
 
@@ -20,9 +23,19 @@ import pytest
 
 @pytest.fixture(scope="module")
 def promote_prompt() -> str:
+    """The promote contract spans two files since the T009
+    progressive-disclosure split: the always-loaded header
+    (`promote.md`, carrying the write table + summary + non-negotiables)
+    and the on-demand body (`promote.body.md`, carrying the pre-flight
+    checklist and the four transform stages). Concatenate both so the
+    contract assertions below see the whole prompt regardless of which
+    half a given keyword lives in.
+    """
     repo = Path(__file__).resolve().parents[2]
-    path = repo / "_system" / "prompts" / "promote.md"
-    return path.read_text(encoding="utf-8")
+    prompts = repo / "_system" / "prompts"
+    header = (prompts / "promote.md").read_text(encoding="utf-8")
+    body = (prompts / "promote.body.md").read_text(encoding="utf-8")
+    return header + "\n" + body
 
 
 @pytest.fixture(scope="module")
@@ -49,7 +62,11 @@ def guide_md() -> str:
 class TestPromotePromptExists:
     def test_prompt_file_present(self) -> None:
         repo = Path(__file__).resolve().parents[2]
-        assert (repo / "_system" / "prompts" / "promote.md").is_file()
+        prompts = repo / "_system" / "prompts"
+        # Both halves of the post-T009 split must exist: the header
+        # (always loaded) and the on-demand body (full procedure).
+        assert (prompts / "promote.md").is_file()
+        assert (prompts / "promote.body.md").is_file()
 
 
 class TestPreFlightChecks:
