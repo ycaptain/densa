@@ -10,6 +10,10 @@ Subcommands:
   in ``--select`` discovery and in docs generation.
 - ``version``  — print the package version.
 - ``init``     — bootstrap a personal Densa vault from upstream.
+- ``doctor``   — preflight a local setup (hook, Python, importability,
+  active domain) and print a ✓/✗ checklist with fix commands.
+- ``stats``    — read-only vault health report (page counts, types,
+  orphans, log staleness).
 - ``upgrade``  — pull upstream schema/validator changes into a vault.
 
 The **canonical lint invocation is the bare form** (``densa --all``,
@@ -36,8 +40,10 @@ import sys
 from pathlib import Path
 
 from densa import __version__
+from densa.commands import doctor as doctor_cmd
 from densa.commands import init as init_cmd
 from densa.commands import migrate as migrate_cmd
+from densa.commands import stats as stats_cmd
 from densa.commands import upgrade as upgrade_cmd
 from densa.config import RULES, Config, rule_by_id, rule_by_name
 from densa.formatters import FORMATTERS
@@ -118,12 +124,16 @@ def _parse_rule_csv(raw: str | None) -> frozenset[str]:
 def _build_parser() -> argparse.ArgumentParser:
     """Build the top-level parser.
 
-    The parser doubles as the ``lint`` subcommand's parser: any
-    invocation without a subcommand (``densa --all``,
-    ``densa --staged``, ``densa --diff <ref>``, ``densa path1 path2``)
-    is interpreted as ``densa lint <same args>``. The bare form is
-    canonical (see module docstring); the ``lint`` subcommand exists
-    for discoverability via ``densa --help``.
+    The top-level parser owns only ``--version`` and the subcommand
+    table — it deliberately carries **no** ``paths`` positional, because
+    a variadic top-level positional cannot coexist with
+    ``add_subparsers`` (argparse splits the tokens, so
+    ``densa init my-vault`` mis-parses as ``paths=['init'],
+    command='my-vault'`` → "invalid choice"). The lint flags + ``paths``
+    live on the explicit ``lint`` subparser instead; :func:`main`
+    rewrites the canonical bare form (``densa --all``,
+    ``densa path1 path2``) to ``densa lint <same args>`` before parsing,
+    so both forms work and ``densa --help`` still lists every subcommand.
     """
     parser = argparse.ArgumentParser(
         prog="densa",
@@ -138,7 +148,6 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--version", action="version", version=f"densa {__version__}",
     )
-    _add_lint_args(parser)
 
     sub = parser.add_subparsers(dest="command")
 
@@ -162,6 +171,8 @@ def _build_parser() -> argparse.ArgumentParser:
     sub.add_parser("version", help="print the package version")
 
     init_cmd.add_parser(sub)
+    doctor_cmd.add_parser(sub)
+    stats_cmd.add_parser(sub)
     upgrade_cmd.add_parser(sub)
     migrate_cmd.add_parser(sub)
 
@@ -289,24 +300,41 @@ def _cmd_version(_: argparse.Namespace) -> int:
     return 0
 
 
+_DISPATCH = {
+    "lint": _cmd_lint,
+    "rules": _cmd_rules,
+    "version": _cmd_version,
+    "init": init_cmd.run,
+    "doctor": doctor_cmd.run,
+    "stats": stats_cmd.run,
+    "upgrade": upgrade_cmd.run,
+    "migrate": migrate_cmd.run,
+}
+
+# Tokens that must reach the top-level parser verbatim instead of being
+# folded into the bare-lint form (so `densa --help` lists subcommands and
+# `densa --version` prints the version).
+_TOP_LEVEL_FLAGS = ("-h", "--help", "--version")
+
+
 def main(argv: list[str] | None = None) -> int:
+    if argv is None:
+        argv = sys.argv[1:]
+
+    # Disambiguate the canonical bare-lint form from a subcommand. The
+    # `paths` positional lives only on the `lint` subparser (see
+    # `_build_parser`), so any first token that is neither a subcommand
+    # nor a top-level flag is rewritten to `lint <args>`. This is what
+    # lets `densa --all` / `densa foo.md` and `densa init my-vault`
+    # coexist without argparse mis-splitting the positionals.
+    if not argv or (
+        argv[0] not in _DISPATCH and argv[0] not in _TOP_LEVEL_FLAGS
+    ):
+        argv = ["lint", *argv]
+
     parser = _build_parser()
     args = parser.parse_args(argv)
-    command = args.command
-
-    # Legacy mode: no subcommand but lint flags were given.
-    if command is None:
-        return _cmd_lint(args)
-
-    dispatch = {
-        "lint": _cmd_lint,
-        "rules": _cmd_rules,
-        "version": _cmd_version,
-        "init": init_cmd.run,
-        "upgrade": upgrade_cmd.run,
-        "migrate": migrate_cmd.run,
-    }
-    return dispatch[command](args)
+    return _DISPATCH[args.command](args)
 
 
 if __name__ == "__main__":

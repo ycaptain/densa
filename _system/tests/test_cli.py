@@ -66,6 +66,42 @@ class TestSubcommandRegistration:
         assert _run([]) == 2
 
 
+class TestSubcommandPositionalParsing:
+    """Regression for the `densa init <dest>` bare-positional bug (T023 S2).
+
+    A variadic top-level `paths` positional used to coexist with
+    `add_subparsers`, so argparse split `densa init my-vault` into
+    `paths=['init'], command='my-vault'` → `error: argument command:
+    invalid choice: 'my-vault'`. The README's headline bootstrap command
+    therefore failed for every first-time user. The fix moves `paths`
+    onto the `lint` subparser and folds the bare form into `lint` in
+    `main`, so a subcommand carrying a positional now parses.
+    """
+
+    def test_init_with_bare_destination_parses(self) -> None:
+        """The exact failing invocation (README §Quickstart) must reach
+        the `init` command with its destination, not SystemExit on a bad
+        subcommand choice."""
+        args = cli._build_parser().parse_args(["init", "my-vault"])
+        assert args.command == "init"
+        assert args.destination == "my-vault"
+
+    def test_init_destination_with_flags_parses(self) -> None:
+        args = cli._build_parser().parse_args(
+            ["init", "my-vault", "--yes"],
+        )
+        assert args.command == "init"
+        assert args.destination == "my-vault"
+        assert args.yes is True
+
+    def test_paths_positional_lives_on_lint_subparser(self) -> None:
+        """`paths` moved off the top-level parser onto `lint`; explicit
+        `densa lint a.md b.md` still collects them."""
+        args = cli._build_parser().parse_args(["lint", "a.md", "b.md"])
+        assert args.command == "lint"
+        assert args.paths == ["a.md", "b.md"]
+
+
 class TestLintAgainstRealRepo:
     """End-to-end smoke: `lint --all` runs over a minimal repo."""
 
