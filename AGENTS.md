@@ -119,10 +119,14 @@ reading **exactly four** files:
    is implied, defer reading L2 until the
    [routing rules](#5-routing-rules-where-does-a-new-source-go)
    resolve it.
-3. `_system/prompts/<op>.md` — the prompt for the operation being
-   run. For `ingest`, also glob
+3. `_system/prompts/<op>.md` — the **header** for the operation being
+   run: its write-contract table, a one-paragraph summary, and the
+   non-negotiables. The header is enough to know *what* the operation
+   does and *what it writes*; load the full procedure
+   `_system/prompts/<op>.body.md` once you commit to executing (small
+   operations may not need it). For `ingest`, also glob
    `_system/prompts/domains/<domain>-*-analysis.md` and read any
-   matching domain-specific sub-prompt.
+   matching domain-specific sub-prompt before drafting the plan.
 4. `outputs/snapshots/index-snapshot.md` — the machine-readable
    mirror of the index (LLMs cannot execute Dataview queries). The
    template ships a pre-populated snapshot; regenerate via `lint` if
