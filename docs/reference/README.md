@@ -25,8 +25,13 @@ contract file stays short.
 | [`rules-registry.md`](rules-registry.md) | AGENTS001–012 stable IDs, severity, bypasses |
 | [`repository-layout.md`](repository-layout.md) | Full annotated vault tree (broken out of [AGENTS.md §"Layered architecture"](../../AGENTS.md#1-layered-architecture)) |
 | [`red-lines.md`](red-lines.md) | Full failure-mode rationale for each red line |
-| [`design-rationale.md`](design-rationale.md) | The long-form design essay — every load-bearing decision, the L1/L2 split, the `outputs/` / `promote` design choices, how to design your own L2, anti-patterns |
-| [`harness-memory-vs-llm-wiki.md`](harness-memory-vs-llm-wiki.md) | Where Densa sits relative to AGENTS.md / Cline Memory Bank / Skills / session memory / RAG / Letta personal memory — the six "knowledge-base-shaped" layers in the agent stack |
+
+> **Looking for the "why"?** The long-form design essays moved to
+> [`../design/`](../design/README.md): `design-rationale.md` (every
+> load-bearing decision, how to design your own L2, anti-patterns) and
+> `harness-memory-vs-llm-wiki.md` (where Densa sits in the agent-memory
+> stack). This folder is now purely the contract lookup tables — the
+> "what", not the "why".
 
 The Python source of truth is
 [`../../_system/densa/schema.py`](../../_system/densa/schema.py) —

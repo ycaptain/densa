@@ -115,7 +115,7 @@ For each domain I named, draft a `domains/<X>/AGENTS.md` patterned on
 the `research-papers` active default (the only shipped v2 example)
 but **tuned to my domain's needs**. For each draft, work through the
 four design questions explicitly (see
-[`docs/reference/design-rationale.md` §"How to design your own L2"](reference/design-rationale.md#how-to-design-your-own-l2)):
+[`docs/design/design-rationale.md` §"How to design your own L2"](design/design-rationale.md#how-to-design-your-own-l2)):
 
 1. **Persona** — what voice should the LLM adopt when synthesising
    this domain? Show me 2-3 alternative persona paragraphs to pick
@@ -179,7 +179,7 @@ For each optional layer the user opted into:
 - **`writing/`** — create `writing/drafts/` and `writing/published/`
   directories (empty) plus a short top-level `writing/README.md`
   explaining the convention (see
-  [`docs/reference/design-rationale.md` §"Optional layers"](reference/design-rationale.md#optional-layers-projects-and-writing)).
+  [`docs/design/design-rationale.md` §"Optional layers"](design/design-rationale.md#optional-layers-projects-and-writing)).
   The templates already ship at
   `_system/templates/writing-draft.md` and
   `_system/templates/writing-publication.md`.
@@ -241,11 +241,12 @@ remove**, because they only confuse the LLM in future sessions:
 
 - `LICENSE` — the template's MIT license; replace with your own only
   if you intend to publish *your vault* as a derived work.
-- `CONTRIBUTING.md`, `SECURITY.md`, `CHANGELOG.md` — project process
-  docs; irrelevant to a personal vault.
-- `docs/reference/design-rationale.md` — the long-form design essay
-  explaining why each load-bearing decision exists. Remove only if
-  you've decided you won't reference it again; ~28 KB.
+- `.github/` (CONTRIBUTING / SECURITY / CODE_OF_CONDUCT + issue/PR
+  templates), `CHANGELOG.md` — project process docs; irrelevant to a
+  personal vault.
+- `docs/design/` — the long-form design essays (design rationale +
+  ecosystem positioning) explaining why each load-bearing decision
+  exists. Remove only if you've decided you won't reference them again.
 - `docs/bootstrap.md` (you're reading it right now) —
   remove after bootstrap is complete.
 - `examples/showcases/README.md` — keep alongside `examples/`; it's
@@ -264,8 +265,7 @@ Keep by default — these stay useful in any personal vault:
   the hook, domain decisions.
 - `docs/faq.md` — the conceptual answers behind the red lines and
   drift signals.
-- `docs/reference/*` (except `design-rationale.md`) — schema long
-  tables the LLM consults on demand.
+- `docs/reference/*` — schema long tables the LLM consults on demand.
 
 Suggested commands (run only if I approve):
 
@@ -282,14 +282,12 @@ git mv LICENSE LICENSE-upstream
 
 # Remove project-only docs.
 # (Drop docs/cjk-workflow.md from the rm list if you work in CJK.)
-rm docs/cjk-workflow.md docs/reference/design-rationale.md \
-   docs/bootstrap.md
-rm -rf .github/ CODE_OF_CONDUCT.md CONTRIBUTING.md SECURITY.md \
-       CHANGELOG.md _system/templates/vault-readme.md
+rm -rf docs/cjk-workflow.md docs/design/ docs/bootstrap.md
+rm -rf .github/ CHANGELOG.md _system/templates/vault-readme.md
 ```
 
 If I want to keep more of the project metadata as reference, ask me
-which specific subset (e.g. "keep `docs/reference/design-rationale.md`
+which specific subset (e.g. "keep `docs/design/design-rationale.md`
 and `LICENSE` but remove the rest").
 
 ## Hard rules during bootstrap (and forever after)

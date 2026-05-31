@@ -10,6 +10,14 @@ the L1 schema version recorded in [`AGENTS.md`](AGENTS.md) frontmatter
 
 ### Changed
 
+- **`docs/reference/` split: design essays moved to `docs/design/`.**
+  The two "why" essays (`design-rationale.md` +
+  `harness-memory-vs-llm-wiki.md`) moved out of `docs/reference/` into a
+  new published `docs/design/`, leaving `docs/reference/` as pure
+  contract lookup tables ("what" vs "why"). Inbound links across README
+  / ROADMAP / GUIDE / setup / bootstrap / the ingest prompt / issue
+  template updated; `AGENTS.md` unaffected (it only links the contract
+  specs).
 - **`lint` now emits structured `## Promotion candidates`**
   ([`_system/prompts/lint.md`](_system/prompts/lint.md) §6.6 + the
   report skeleton). Each Q&A meeting ≥2 of the existing heuristics
@@ -37,6 +45,22 @@ the L1 schema version recorded in [`AGENTS.md`](AGENTS.md) frontmatter
 
 ### Added
 
+- **`densa doctor`** — a preflight that diagnoses a local setup before
+  it fails confusingly: checks the pre-commit hook is wired, the Python
+  meets `requires-python`, `densa` is importable, every active L2
+  `domains/<X>/AGENTS.md` parses, and the linter can walk the vault.
+  Prints a ✓/✗ checklist with the exact fix command per failure; exits
+  non-zero if any check fails (CI/script usable). `--format json` for
+  tooling. Stdlib-only (`_system/densa/commands/doctor.py`), so the
+  core stays `cp -R`-able. Wired into the README Quickstart ("stuck?")
+  and CONTRIBUTING §"Your first 30 minutes".
+- **`densa stats`** — a read-only vault-health report: total wiki pages,
+  per-domain and per-`type:` breakdown, average page age per type,
+  orphan-page count (no inbound wikilinks), cross-domain count, and
+  per-domain log staleness. `--format json` feeds shields.io badges and
+  CI. Stdlib-only (`_system/densa/commands/stats.py`); counts only
+  `domains/<X>/wiki/` pages (so `raw/`, `outputs/`, `.legacy/` never
+  inflate the numbers).
 - **`examples/showcases/workspace/wiki/syntheses/how-to-read-this-domain.md`**
   — four time-budgeted reading paths (5 min / 30 min / 2 h /
   half-day) over the workspace showcase, mirroring the

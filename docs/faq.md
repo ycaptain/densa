@@ -42,7 +42,7 @@ hook is pure stdlib.
 
 Upstream PR contributions (against the schema, validator, prompts,
 templates) are the secondary path and live under
-[`../CONTRIBUTING.md`](../CONTRIBUTING.md). The fork-self-use vs
+[`../.github/CONTRIBUTING.md`](../.github/CONTRIBUTING.md). The fork-self-use vs
 upstream-contributor split is the first callout on CONTRIBUTING so
 self-users don't accidentally read 200 lines of dev-extras
 instructions they don't need.
@@ -125,7 +125,7 @@ operation drafts a plan you approve before any write — review the
 let a commit prefixed `ingest(<X>):` write outside that operation's
 declared scope, so even a partial compromise can't, say, smuggle an
 edit into `_system/` from inside an ingest. Full threat model:
-[`SECURITY.md` §"Prompt-injection posture"](../SECURITY.md#prompt-injection-posture).
+[`SECURITY.md` §"Prompt-injection posture"](../.github/SECURITY.md#prompt-injection-posture).
 
 ---
 

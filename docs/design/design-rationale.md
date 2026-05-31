@@ -16,12 +16,12 @@
 > - [Who this is not for](#who-this-is-not-for)
 > - [The core invariant](#the-core-invariant)
 > - [Why L1 / L2 schema layering](#why-l1--l2-schema-layering)
-> - [The frontmatter contract](#the-frontmatter-contract) — pointer to [`sources-cardinality.md`](sources-cardinality.md)
+> - [The frontmatter contract](#the-frontmatter-contract) — pointer to [`sources-cardinality.md`](../reference/sources-cardinality.md)
 > - [`outputs/`: where operations write](#outputs-where-operations-write)
 > - [Q&A as operation artifact, not compiled knowledge](#qa-as-operation-artifact)
 > - [The promote operation: how Q&A becomes wiki knowledge](#the-promote-operation)
-> - [Red lines (and why each one is non-negotiable)](#red-lines) — pointer to [`red-lines.md`](red-lines.md)
-> - [Operation writes red line (AGENTS007)](#operation-writes-red-line-agents007) — pointer to [`operation-scopes.md`](operation-scopes.md)
+> - [Red lines (and why each one is non-negotiable)](#red-lines) — pointer to [`red-lines.md`](../reference/red-lines.md)
+> - [Operation writes red line (AGENTS007)](#operation-writes-red-line-agents007) — pointer to [`operation-scopes.md`](../reference/operation-scopes.md)
 > - [Routing: where does a new source go?](#routing-where-does-a-new-source-go) — pointer to [AGENTS.md §"Routing rules"](../../AGENTS.md#5-routing-rules-where-does-a-new-source-go)
 > - [Engineering hooks: turning soft norms into hard rules](#engineering-hooks)
 > - [How to design your own L2](#how-to-design-your-own-l2)
@@ -137,10 +137,10 @@ The schema is split deliberately:
     `open-question`, `report`) — all named verbatim from
     [Karpathy's `llm-wiki` gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f);
     full glossary at
-    [`karpathy-mapping.md`](karpathy-mapping.md).
+    [`karpathy-mapping.md`](../reference/karpathy-mapping.md).
   - Sources cardinality per type (e.g. `summary.sources` must be
     exactly 1; `synthesis.sources` must be ≥ 2). Detail:
-    [`sources-cardinality.md`](sources-cardinality.md).
+    [`sources-cardinality.md`](../reference/sources-cardinality.md).
   - The red lines (raw immutable, log append-only, no wiki deletion,
     bulk renames require human consent).
   - The five operations and their procedures.
@@ -174,7 +174,7 @@ Why this split?
 ## The frontmatter contract
 
 The universal frontmatter shape and the per-type `sources` cardinality
-table live at [`sources-cardinality.md`](sources-cardinality.md) (the
+table live at [`sources-cardinality.md`](../reference/sources-cardinality.md) (the
 canonical reference) and
 [`_system/densa/schema.py::PAGE_TYPES`](../../_system/densa/schema.py)
 (the machine-enforced source of truth). The two load-bearing
@@ -326,7 +326,7 @@ The LLM runs every pre-flight check before touching the worktree. If
 any fails (source not in `outputs/qa/`, target type not in L2's
 allowed set, slug+aliases collision with existing wiki page, `sources`
 cardinality below the
-[`sources-cardinality.md`](sources-cardinality.md) contract,
+[`sources-cardinality.md`](../reference/sources-cardinality.md) contract,
 missing L2 type-specific fields), it surfaces
 the specific blocker with a remediation suggestion and aborts. A
 half-promoted page is worse than no promote at all: it pollutes the
@@ -388,7 +388,7 @@ traces to ≥1 source, bulk re-ingest preserves `.legacy/`, no silent
 web fetches, multi-modal sources require explicit read-bound
 declarations — each carry a load-bearing failure-mode rationale and a
 sanctioned escape hatch (where one exists). Full table:
-[`red-lines.md`](red-lines.md). The contract is one sentence per
+[`red-lines.md`](../reference/red-lines.md). The contract is one sentence per
 rule at [`AGENTS.md` §"Red lines"](../../AGENTS.md#6-red-lines-non-negotiable).
 
 ---
@@ -403,7 +403,7 @@ operation = one bounded blast radius*. AGENTS007 keeps every commit's
 scope matched to its operation.
 
 Full per-prefix scope table + bypass usage:
-[`operation-scopes.md`](operation-scopes.md). Machine-readable source:
+[`operation-scopes.md`](../reference/operation-scopes.md). Machine-readable source:
 [`_system/densa/schema.py`](../../_system/densa/schema.py) `OPERATIONS`
 (assembled into globs by
 [`_system/densa/config.py::OPERATION_WRITES`](../../_system/densa/config.py)).

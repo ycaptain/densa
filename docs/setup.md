@@ -8,7 +8,7 @@
 >
 > Conceptual day-to-day usage lives in [`../GUIDE.md`](../GUIDE.md);
 > long-form rationale for each decision lives in
-> [`reference/design-rationale.md`](reference/design-rationale.md).
+> [`design/design-rationale.md`](design/design-rationale.md).
 
 ## Required (everyone) — pre-commit hook + manual validation
 
@@ -16,16 +16,23 @@ Prereqs (fork + clone + `git config core.hooksPath _system/hooks`)
 are covered in
 [`../README.md` §"Quickstart"](../README.md#quickstart). The
 pre-commit hook is **pure stdlib** (no `pip install` required).
+
+> **Python ≥ 3.10 required** for the `densa` CLI (validator,
+> `init`, `doctor`, `stats`) — the floor `pyproject.toml` pins.
+> Fresh macOS / Linux often ship only the `python3` launcher, so
+> this doc writes `python3 -m densa` throughout; substitute
+> `python` if that is what your platform calls 3.10+.
+
 Manual validation any time:
 
 ```bash
-PYTHONPATH=_system python -m densa --all
+PYTHONPATH=_system python3 -m densa --all
 ```
 
 The 12 enforced rules (`AGENTS001`–`AGENTS012`) are documented at
 [`reference/rules-registry.md`](reference/rules-registry.md);
-`python -m densa rules` prints the live registry. For vulnerability
-reporting see [`../SECURITY.md`](../SECURITY.md).
+`python3 -m densa rules` prints the live registry. For vulnerability
+reporting see [`../.github/SECURITY.md`](../.github/SECURITY.md).
 
 ---
 
@@ -110,7 +117,7 @@ remote until git-crypt is verified working.** Outline:
 The psychology showcase demonstrates the two privacy postures
 (public-shareable vs private-repo) in its
 [§"Privacy posture"](../examples/showcases/psychology/AGENTS.md#privacy-posture).
-For vulnerability reporting see [`../SECURITY.md`](../SECURITY.md).
+For vulnerability reporting see [`../.github/SECURITY.md`](../.github/SECURITY.md).
 
 ---
 
@@ -202,11 +209,11 @@ WIKI_ALLOW_CROSS_SCOPE=1 git commit -m "chore(domains): remove default example r
 
 A deliberate human-approved cascade (wikilinks propagate). Mechanics:
 `git mv domains/<old>/ domains/<new>/`, sweep the wiki for
-`domains/<old>` references, `python -m densa --all` to confirm zero
+`domains/<old>` references, `python3 -m densa --all` to confirm zero
 dangling links, update `/index.md`, commit with bypass + log entry.
 
 Standing up your own L2 from scratch is covered by the bootstrap
 prompt at [`bootstrap.md`](bootstrap.md).
 The longer essay on persona-before-schema, page-type subsetting, and
 schema-by-dogfood lives in
-[`reference/design-rationale.md` §"How to design your own L2"](reference/design-rationale.md#how-to-design-your-own-l2).
+[`design/design-rationale.md` §"How to design your own L2"](design/design-rationale.md#how-to-design-your-own-l2).

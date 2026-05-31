@@ -43,7 +43,7 @@ That's the loop. Now scale it.
 | **Glance** — see what one ingest produces, no install | [`examples/hello-world/`](examples/hello-world/) (source + expected wiki output + log entry) | 3 min |
 | **Try the slash commands** — sideload the plugin into Cursor without committing to a vault | [`integrations/cursor/densa-plugin/` §Install Option B](integrations/cursor/densa-plugin/#option-b--local-sideload-works-today) (symlink + restart Cursor) | ~5 min |
 | **Set up your own vault** | [Quickstart](#quickstart) below → [`docs/setup.md`](docs/setup.md) | ~30 min to first ingest |
-| **Evaluate the design** | [`docs/reference/design-rationale.md`](docs/reference/design-rationale.md) | ~1 hr deep read |
+| **Evaluate the design** | [`docs/design/design-rationale.md`](docs/design/design-rationale.md) | ~1 hr deep read |
 
 [`GUIDE.md`](GUIDE.md) is the day-to-day FAQ + scenarios; bookmark
 it for *after* your first ingests. [`docs/setup.md`](docs/setup.md)
@@ -67,16 +67,22 @@ git remote add upstream https://github.com/ycaptain/densa.git
 git config core.hooksPath _system/hooks
 git config --get core.hooksPath        # verify: should print _system/hooks
 
-# 3. Open the folder in Cursor / Claude Code / Codex / Cline, paste
+# 3. Confirm the setup is healthy (hook wired, Python OK, importable):
+PYTHONPATH=_system python3 -m densa doctor
+
+# 4. Open the folder in Cursor / Claude Code / Codex / Cline, paste
 #    docs/bootstrap.md into the chat. The agent interviews
 #    you, drafts your first L2 schema, and walks the first ingest.
 ```
 
 That's it. The agent reads [`AGENTS.md`](AGENTS.md) natively in every
-major coding-agent IDE. Manual validation any time:
+major coding-agent IDE. **Stuck on setup?** `densa doctor` prints a
+✓/✗ checklist with the exact fix for each problem (unwired hook, wrong
+Python, unresolvable domain). Manual validation any time:
 
 ```bash
-PYTHONPATH=_system python -m densa --all
+PYTHONPATH=_system python3 -m densa --all     # validate page content
+PYTHONPATH=_system python3 -m densa stats     # vault health: pages, types, orphans
 ```
 
 **Optional IDE plugins** (slash commands + auto-triggered skills) live
@@ -93,7 +99,7 @@ them.
 
 The 12 enforced rules (`AGENTS001`–`AGENTS012`) are documented at
 [`docs/reference/rules-registry.md`](docs/reference/rules-registry.md);
-`python -m densa rules` prints the live registry. Obsidian plugin
+`python3 -m densa rules` prints the live registry. Obsidian plugin
 setup, encryption, disabling the hook, and the domain decision tree
 all live in [`docs/setup.md`](docs/setup.md).
 
@@ -101,7 +107,7 @@ all live in [`docs/setup.md`](docs/setup.md).
 ~60 minutes for a meeting transcript whose L2 schema needs new fields.
 The agent does the typing; you do the reviewing.
 
-<sub>*Naming note: the project is **Densa**; `python -m densa` is the
+<sub>*Naming note: the project is **Densa**; `python3 -m densa` is the
 stdlib validator that ships with it. The supported install today is
 `git clone` + `git config core.hooksPath _system/hooks` above, or
 `densa init` from an existing Densa install (see Alternative below).
@@ -118,9 +124,12 @@ example-domain disposition, and (optionally) injects
 `docs/bootstrap.md` into your AI agent.
 
 ```bash
-PYTHONPATH=_system python -m densa init my-vault
+PYTHONPATH=_system python3 -m densa init my-vault
 # or, after `pip install -e .` in a Densa clone:
 densa init my-vault
+
+# then confirm the new vault is wired correctly:
+cd my-vault && python3 -m densa doctor
 ```
 
 Useful when you're standing up multiple vaults; for your *first*
@@ -161,11 +170,11 @@ Karpathy described **what to build**. Densa gives you the **how**:
   `comparison`, `overview`, `synthesis`, `open-question`, `source`,
   `report` — every name comes verbatim from Karpathy's gist plus the
   `report` extension for operation artifacts).
-- A **stdlib-only validator** (`python -m densa`) that enforces the
+- A **stdlib-only validator** (`python3 -m densa`) that enforces the
   schema on every commit.
 - **Five operation prompts** (`ingest` / `query` / `lint` /
   `process-inbox` / `promote`) the agent loads on demand.
-- **Migration tooling** (`python -m densa migrate`) for carrying an
+- **Migration tooling** (`python3 -m densa migrate`) for carrying an
   existing vault forward when upstream ships a breaking schema bump.
 - A shipped **example domain** (`research-papers/`) plus two
   heavier showcases under `examples/showcases/`.
@@ -182,7 +191,7 @@ If you read Karpathy's gist and thought "ok but where do I start"
 — this is where. Vocabulary glossary:
 [`docs/reference/karpathy-mapping.md`](docs/reference/karpathy-mapping.md).
 
-![Storyboard: one Densa ingest cycle — drop source, agent plans, human approves, agent writes summary + concepts + log entry](assets/hello-world-ingest.svg)
+![Storyboard: one Densa ingest cycle — drop source, agent plans, human approves, agent writes summary + concepts + log entry](examples/hello-world/hello-world-ingest.svg)
 
 The plan-first-then-apply gate is the same for every operation; you
 never see edits land without consent. For a worked example of one
@@ -205,7 +214,7 @@ natural-language → operation mapping lives in
 
 The validator at [`_system/densa/`](_system/densa/) enforces the
 red lines on every commit and in CI:
-`PYTHONPATH=_system python -m densa --all`.
+`PYTHONPATH=_system python3 -m densa --all`.
 
 ---
 
@@ -227,34 +236,14 @@ the prose. The hallucination surface is a one-time write-time event
 | Notion AI / mem.ai | proprietary DB | partially | sometimes | no |
 | [Obsidian + Smart Connections](https://github.com/brianpetro/obsidian-smart-connections) | markdown + index | retrieve-only | no | yes |
 
-**The fault line.** Two architectural families both call themselves
-"AI knowledge bases":
-
-- **RAG-classic** ([RAGFlow](https://github.com/infiniflow/ragflow),
-  vector stacks, Notion AI) — documents → chunks → retrieve at query
-  time. Fast onboarding; never structurally consolidates; the
-  hallucination surface is the answer text on every query.
-- **Wiki-compiler** (Karpathy pattern; Densa;
-  [Tolaria](https://github.com/refactoringhq/tolaria);
-  [nashsu/llm_wiki](https://github.com/nashsu/llm_wiki);
-  [`kytmanov/obsidian-llm-wiki-local`](https://github.com/kytmanov/obsidian-llm-wiki-local))
-  — raw sources → LLM compiles structured prose → query the prose.
-  Slower onboarding; structure compounds; the hallucination surface
-  is a write-time event under human review.
-
-A 2026-05 review of the wiki-compiler space (six upstream projects
-at four artifact layers) sediments Densa's specific differentiation:
-**MIT + stdlib-only Python validator**, **L2 per-domain schema**
-layering, **public `AGENTS001`–`AGENTS012` rule registry**,
-**`.legacy/` schema-migration snapshot** red line, and
-**AGENTS.md-native** posture across Cursor / Claude Code / Codex /
-Cline. Maintainer-only details:
-[`docs/maintainers/prior-art/`](docs/maintainers/prior-art/).
-
-Past ~500 pages, layer embedding search on top of the wiki as fuzzy
-fallback. The wiki gives you compounded structure; embedding search
-gives you fuzzy recall. **Both, not either.** Detailed comparison
-lives in [`docs/reference/design-rationale.md`](docs/reference/design-rationale.md).
+**The fault line.** RAG-classic (RAGFlow, vector stacks, Notion AI)
+retrieves chunks at query time — fast onboarding, never consolidates,
+hallucination surface on every query. Wiki-compilers (Karpathy pattern;
+Densa) compile structured prose once — slower onboarding, structure
+compounds, hallucination surface is a write-time event under human
+review. Past ~500 pages, layer embedding search on top as fuzzy
+fallback — **both, not either.** Full argument:
+[`docs/design/design-rationale.md`](docs/design/design-rationale.md).
 
 ---
 
@@ -263,67 +252,47 @@ lives in [`docs/reference/design-rationale.md`](docs/reference/design-rationale.
 Densa is a **schema, not a harness**. Your coding agent (Cursor /
 Claude Code / Codex / Cline / Pi / OpenCode) is replaceable; the
 markdown wiki it maintains is not. Six other layers in the agent stack
-look like "knowledge bases" but bind their data to one runtime:
-
-- **`AGENTS.md` / `CLAUDE.md` / Rules** — static instructions, not
-  accumulated knowledge.
-- **[Cline Memory Bank](https://docs.cline.bot/best-practices/memory-bank)** —
-  project state continuity, no source-grounding.
-- **[Codex / Pi Skills](https://developers.openai.com/codex/skills)** —
-  reusable procedures, not facts.
-- **Session memory / compaction** — runtime checkpoints; transient by
-  design.
-- **RAG / MCP / VFS retrieval** — synthesises at query time, doesn't
-  file the answer back. The Karpathy critique applies.
-- **[Letta-style personal memory](https://docs.letta.com/letta-code/memory/)** —
-  agent self-edits memory blocks, but the artifact is bound to one
-  vendor harness ([LangChain's framing](https://www.langchain.com/blog/your-harness-your-memory)).
-
-Densa is the seventh layer: markdown + git, validated by
-`AGENTS001`–`AGENTS012`, browsable in any markdown reader, survives
-swapping your agent. Full taxonomy with per-layer decision tree:
-[`docs/reference/harness-memory-vs-llm-wiki.md`](docs/reference/harness-memory-vs-llm-wiki.md).
+look like "knowledge bases" but bind their data to one runtime —
+`AGENTS.md`/Rules (instructions, not facts),
+[Cline Memory Bank](https://docs.cline.bot/best-practices/memory-bank)
+(state, no source-grounding),
+[Codex/Pi Skills](https://developers.openai.com/codex/skills)
+(procedures, not facts), session memory (transient), RAG/MCP retrieval
+(query-time, never filed back), and
+[Letta personal memory](https://docs.letta.com/letta-code/memory/)
+(bound to one vendor harness). Densa is the seventh: markdown + git,
+validated by `AGENTS001`–`AGENTS012`, browsable in any reader, survives
+swapping your agent. Full taxonomy + per-layer decision tree:
+[`docs/design/harness-memory-vs-llm-wiki.md`](docs/design/harness-memory-vs-llm-wiki.md).
 
 ---
 
 ## Where this sits in the ecosystem
 
-A 2026-05-25 maintainer-only review (n=7 upstream projects read at
-the README + architecture-docs level; see
-[`docs/maintainers/prior-art/`](docs/maintainers/prior-art/) for the
-full study set) anchors Densa's position relative to adjacent OSS
-projects. Every row below cites a specific study file so the diff is
-verifiable.
+A 2026-05 review of the wiki-compiler space (n=7 upstream projects)
+sediments Densa's differentiation, all empirically unoccupied at n=7:
 
-| Project | Pattern | What it does well | Where Densa differs |
-| --- | --- | --- | --- |
-| [Tolaria](https://github.com/refactoringhq/tolaria) | Wiki-compiler desktop app + MCP-everywhere | 15-tool MCP server auto-registers across Claude Code / Cursor / Gemini CLI / OpenCode / generic clients; per-vault `AGENTS.md` + `CLAUDE.md` + `GEMINI.md` triple ([study](docs/maintainers/prior-art/2026-05-25-tolaria-study.md)) | Tolaria's "types as lenses, not schemas" stance refuses any enum + validator; Densa's closed 9-type enum + `AGENTS001`–`AGENTS012` is the diametric philosophy |
-| [`nashsu/llm_wiki`](https://github.com/nashsu/llm_wiki) | Wiki-compiler desktop app + SKILL.md | Two-step CoT ingest (analysis → generation); SHA-256 incremental cache; SKILL.md trigger discipline ([study](docs/maintainers/prior-art/2026-05-25-nashsu-llm-wiki-study.md)) | No `.legacy/` snapshot; no `type:` enum; no L2 per-domain schema layering; lint rule set not publicly documented |
-| [`kytmanov/obsidian-llm-wiki-local`](https://github.com/kytmanov/obsidian-llm-wiki-local) | Wiki-compiler Python CLI (MIT) | Closest architectural sibling to Densa; Knowledge Item Candidates ledger (literal-match source-grounding); rejection-feedback loop; hash-mismatch hand-edit guard ([study](docs/maintainers/prior-art/2026-05-25-obsidian-llm-wiki-local-study.md)) | Single flat vault, no L2 domain layering; no `AGENTS.md` (`vault-schema.md` instead); no MCP / SKILL.md / plugin exposure; upstream in maintenance mode (succeeded by [Synto](https://github.com/kytmanov/synto)) |
-| [Smart Composer](https://github.com/glowingjade/obsidian-smart-composer) + [Smart Connections](https://github.com/brianpetro/obsidian-smart-connections) | Obsidian assistant (out-of-pattern complement) | Cursor-flavoured `@`-mention UX; one-click Apply Edit; Smart Environment shared substrate across plugins ([paired study](docs/maintainers/prior-art/2026-05-25-smart-composer-connections-study.md)) | Not wiki-compilers — they solve "AI assists in-place editing", not "AI compiles a wiki". Co-installable with Densa; source-grounding posture is the weakest in the surveyed set |
-| [RAGFlow](https://github.com/infiniflow/ragflow) | Enterprise RAG (Category E anchor) | DeepDoc multimodal parsing (PDF / DOCX / PPT / scanned); visual chunk inspection + read-time citation traceability ([study](docs/maintainers/prior-art/2026-05-25-ragflow-study.md)) | Architectural inverse — read-time grounding vs Densa's write-time grounding; heavy server stack (Docker + ES + MySQL + 16 GB RAM); not a per-vault tool. Pair-with, not substitute |
-| [Graphiti](https://github.com/getzep/graphiti) + [Cognee](https://github.com/topoteretes/cognee) | Temporal graph memory (Category F; informational only) | Bi-temporal validity windows on facts; episodes-as-provenance; both ship MCP integration ([paired study](docs/maintainers/prior-art/2026-05-25-graphiti-cognee-study.md)) | Different layer entirely (graph DB vs markdown wiki); v0.8 watch-list anchor only. Densa stays at the markdown layer; pair downstream if fact-level temporal queries ever need it |
+- **Triple agent-surface** — AGENTS.md + MCP server + plugin/SKILL.md;
+  no upstream covers more than two.
+- **MIT + stdlib-only Python** — the only `_system/densa/` that `cp -R`s
+  into a fork with zero runtime deps (Tolaria AGPL, nashsu GPL, RAGFlow
+  /Graphiti/Cognee heavy deps, olw ships SQLite + embeddings).
+- **`.legacy/` schema-migration snapshot** + **public
+  `AGENTS001`–`AGENTS012` rule registry** (`python3 -m densa rules`) —
+  neither has an equivalent in the surveyed set.
 
-**Empirical findings the table sediments** (n=7):
-
-- **No upstream covers more than two agent-exposure surfaces.** Densa's
-  planned AGENTS.md + MCP server + plugin / SKILL.md triple is
-  empirically unoccupied — a defensible-by-superset bet, not a
-  validated-by-precedent one.
-- **`.legacy/` schema-migration snapshot is uniquely Densa's red line.**
-  Of the seven upstreams, none ships an equivalent mechanism — they
-  use SHA-256 cache + cascade delete (nashsu), git history alone
-  (Tolaria), hash-mismatch refusal (olw), or no equivalent (the rest).
-- **MIT + stdlib-only Python is uniquely Densa's combo.** Tolaria is
-  AGPL-3.0-or-later; nashsu is GPL-3.0; RAGFlow + Graphiti + Cognee
-  are Apache 2.0 but drag heavy transitive deps; olw is MIT but ships
-  SQLite + embedding runtime. Only Densa's `_system/densa/` can be
-  `cp -R`'d into a downstream fork with zero runtime deps.
-- **Public `AGENTS001`–`AGENTS012` rule registry is uniquely Densa's.**
-  nashsu and olw ship lint surfaces but neither publishes the rule
-  set; Densa's
-  [`docs/reference/rules-registry.md`](docs/reference/rules-registry.md)
-  + `python -m densa rules` is the only public stable-ID registry.
+Closest siblings: [Tolaria](https://github.com/refactoringhq/tolaria)
+(types-as-lenses, refuses an enum + validator),
+[`nashsu/llm_wiki`](https://github.com/nashsu/llm_wiki) (no `.legacy/`,
+no `type:` enum), [`obsidian-llm-wiki-local`](https://github.com/kytmanov/obsidian-llm-wiki-local)
+(closest architectural sibling; single flat vault, no L2 / AGENTS.md),
+[RAGFlow](https://github.com/infiniflow/ragflow) (read-time grounding,
+heavy server stack), and
+[Graphiti](https://github.com/getzep/graphiti)/[Cognee](https://github.com/topoteretes/cognee)
+(temporal graph DB — a different layer; v0.8 watch-list). The
+row-by-row comparison and the n=7 study set are maintainer notes under
+`docs/maintainers/prior-art/`; the public design rationale is in
+[`docs/design/`](docs/design/README.md).
 
 ---
 
@@ -331,7 +300,7 @@ verifiable.
 
 If your `raw/` will ever hold therapy notes, medical records, NDA
 material, or anything you wouldn't post in a public thread, treat
-encryption as part of setup. See [`SECURITY.md`](SECURITY.md) and
+encryption as part of setup. See [`SECURITY.md`](.github/SECURITY.md) and
 [`docs/setup.md` §"Privacy — sensitive material"](docs/setup.md#privacy--sensitive-material) for
 the walkthrough. The schema is language-neutral; the wiki happily
 holds CJK content — see [`docs/cjk-workflow.md`](docs/cjk-workflow.md).
@@ -350,12 +319,12 @@ Pick one based on what you're trying to do.
 - **Conceptual FAQ** — [`docs/faq.md`](docs/faq.md). The red lines,
   scale & drift, operation philosophy.
 - **Evaluating the design** —
-  [`docs/reference/design-rationale.md`](docs/reference/design-rationale.md).
+  [`docs/design/design-rationale.md`](docs/design/design-rationale.md).
   Every load-bearing decision explained.
 - **Starting your own vault from scratch** —
   [`docs/bootstrap.md`](docs/bootstrap.md).
 - **Hacking on the schema / validator / prompts** —
-  [`CONTRIBUTING.md`](CONTRIBUTING.md).
+  [`CONTRIBUTING.md`](.github/CONTRIBUTING.md).
 
 ---
 

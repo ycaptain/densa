@@ -30,9 +30,6 @@ to have, broken out of the contract file so AGENTS.md stays short.
 ├── GUIDE.md                     ← human-facing day-to-day guide (explanatory)
 ├── README.md                    ← human onboarding entry (Pick your path)
 ├── CHANGELOG.md                 ← release notes (this template's history)
-├── CONTRIBUTING.md              ← contributor guide
-├── SECURITY.md                  ← vulnerability reporting + vault hardening
-├── CODE_OF_CONDUCT.md
 ├── index.md                     ← global content map
 ├── log.md                       ← global append-only timeline
 ├── inbox/                       ← optional: un-routed material (see AGENTS.md §"process-inbox")
@@ -54,9 +51,12 @@ to have, broken out of the contract file so AGENTS.md stays short.
 │   ├── setup.md                 ← install + Obsidian + encryption + domain decisions
 │   ├── faq.md                   ← red lines, scale & drift, operation philosophy
 │   ├── cjk-workflow.md          ← Chinese / Japanese / Korean conventions
-│   ├── reference/               ← schema reference (long tables)
+│   ├── design/                  ← the "why" essays (read when evaluating the design)
 │   │   ├── README.md
 │   │   ├── design-rationale.md  ← long-form design essay
+│   │   └── harness-memory-vs-llm-wiki.md
+│   ├── reference/               ← schema reference (long tables; the "what")
+│   │   ├── README.md
 │   │   ├── karpathy-mapping.md
 │   │   ├── operation-scopes.md
 │   │   ├── red-lines.md
@@ -64,9 +64,17 @@ to have, broken out of the contract file so AGENTS.md stays short.
 │   │   ├── rules-registry.md
 │   │   ├── schema-versioning.md
 │   │   └── sources-cardinality.md
-│   └── maintainers/             ← .gitignored: design archive, dogfood notes
+│   ├── .gitattributes.example   ← fork-template dotfile (git-crypt / filter setup)
+│   └── maintainers/             ← .gitignored: design archive, prior-art, tracker
+├── .github/                     ← GitHub community-health + CI (rendered by GitHub from here)
+│   ├── CONTRIBUTING.md          ← contributor guide
+│   ├── SECURITY.md              ← vulnerability reporting + vault hardening
+│   ├── CODE_OF_CONDUCT.md
+│   ├── ISSUE_TEMPLATE/
+│   ├── pull_request_template.md
+│   └── workflows/ci.yml
 ├── examples/                    ← opt-in showcases + hello-world demo (not in wikilink graph)
-│   ├── hello-world/             ← 5-minute demo: source.md + expected wiki output
+│   ├── hello-world/             ← 5-minute demo: source.md + expected wiki output + hello-world-ingest.svg
 │   └── showcases/<X>/           ← heavier shipped L2s (workspace, psychology, …)
 ├── integrations/                ← (optional) agent-specific UX add-ons (Claude Code plugin)
 ├── domains/<X>/                 ← your active L2(s) — this is the namespace you own

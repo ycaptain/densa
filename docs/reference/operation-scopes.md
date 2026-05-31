@@ -26,7 +26,7 @@ synchronised.
 | `lint:` | `outputs/**`, `domains/*/wiki/**` (additive auto-fix only), `domains/*/log.md`, `log.md` |
 | `process-inbox:` | `domains/*/raw/**` (rename/move only via `git mv`), `domains/*/log.md`, `log.md` |
 | `promote:` | `outputs/qa/**` (delete-intent, single file), `outputs/lint/**` (append "Issues to surface"), `domains/*/wiki/**`, `domains/*/log.md`, `log.md` |
-| *(no recognised prefix)* | `_system/**`, `docs/**`, `examples/**`, `integrations/**`, `outputs/**`, `projects/**`, `writing/**`, `.github/**`, `AGENTS.md`, `GUIDE.md`, `README.md`, `CHANGELOG.md`, `CONTRIBUTING.md`, `SECURITY.md`, `LICENSE`, `*.md` at repo root, `pyproject.toml`, `noxfile.py`, `.editorconfig`, `.gitignore`, `.gitattributes*`, `.pre-commit-hooks.yaml` — **never `domains/**`** |
+| *(no recognised prefix)* | `_system/**`, `docs/**`, `examples/**`, `integrations/**`, `outputs/**`, `projects/**`, `writing/**`, `.github/**` (incl. `CONTRIBUTING.md` / `SECURITY.md` / `CODE_OF_CONDUCT.md`), `AGENTS.md`, `GUIDE.md`, `README.md`, `CHANGELOG.md`, `LICENSE`, `*.md` at repo root, `pyproject.toml`, `noxfile.py`, `.editorconfig`, `.gitignore`, `.gitattributes*`, `.pre-commit-hooks.yaml` — **never `domains/**`** |
 
 ## Bypass
 

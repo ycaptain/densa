@@ -115,7 +115,7 @@ def test_domain_is_placeholder_or_psychology_l2_specific(
         )
     elif name.startswith("writing-"):
         # writing/ is an opt-in workspace outside the L2 schema (see
-        # docs/reference/design-rationale.md "Optional layers" section);
+        # docs/design/design-rationale.md "Optional layers" section);
         # its templates hard-code `domain: writing` for symmetry, but the
         # tree is excluded from AGENTS003/006 enforcement via
         # WIKILINK_SKIP_TOP_LEVEL.

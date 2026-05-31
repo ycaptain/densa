@@ -183,7 +183,7 @@ that file changes, this prompt loses authority — re-read the schema.
    The `Reasoning` field is **encouraged, not required**: it's the
    schema-friendly replacement for a runtime session trace (Densa has no
    trace layer by design — see
-   [`docs/reference/harness-memory-vs-llm-wiki.md`](../../docs/reference/harness-memory-vs-llm-wiki.md)).
+   [`docs/design/harness-memory-vs-llm-wiki.md`](../../docs/design/harness-memory-vs-llm-wiki.md)).
    Skip it only when the ingest was mechanical (e.g. a single
    Appearances row append with one obvious target).
 10. **If cross-domain**, also prepend a one-liner to the global `log.md`
