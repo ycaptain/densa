@@ -20,6 +20,7 @@ from wikilint.checks.frontmatter_required import (
     FrontmatterTypeAllowed,
 )
 from wikilint.checks.wikilink_resolvable import WikilinkResolvable
+from wikilint.config import ALLOWED_TYPES
 from wikilint.report import Report, Severity
 from wikilint.wikilink import build_index
 
@@ -88,6 +89,10 @@ class TestFrontmatterTypeAllowed:
             path, text, build_index(mini_vault.root), report,
         )
         assert _ids(report) == [self.rule_id]
+        message = report.diagnostics[0].message
+        assert "unknown type: totally-made-up" in message
+        for type_ in ALLOWED_TYPES:
+            assert type_ in message
 
 
 class TestAnalysisSourcesCardinality:

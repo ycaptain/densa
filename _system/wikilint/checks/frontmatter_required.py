@@ -25,6 +25,10 @@ def _needs_frontmatter(path: str) -> bool:
     return is_wiki(path) or is_output_artifact(path)
 
 
+def _allowed_types_message() -> str:
+    return ", ".join(sorted(ALLOWED_TYPES))
+
+
 class FrontmatterRequiredKeys:
     """Every wiki markdown file must declare the universal frontmatter."""
 
@@ -85,5 +89,5 @@ class FrontmatterTypeAllowed:
                 severity=Severity.ERROR,
                 path=path,
                 line=1,
-                message=f"unknown type: {t}",
+                message=f"unknown type: {t} (allowed: {_allowed_types_message()})",
             ))
