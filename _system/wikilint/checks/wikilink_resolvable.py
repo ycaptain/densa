@@ -40,6 +40,7 @@ class WikilinkResolvable:
                     message=f"unresolved wikilink: [[{hit.target}]]",
                 ))
             elif resolution.status is ResolutionStatus.AMBIGUOUS:
+                candidates = ", ".join(resolution.hits)
                 report.add(Diagnostic(
                     rule_id=self.id,
                     severity=Severity.WARNING,
@@ -47,6 +48,6 @@ class WikilinkResolvable:
                     line=hit.lineno,
                     message=(
                         f"ambiguous wikilink [[{hit.target}]] "
-                        f"({len(resolution.hits)} matches)"
+                        f"({len(resolution.hits)} matches): {candidates}"
                     ),
                 ))

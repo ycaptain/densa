@@ -180,3 +180,5 @@ class TestWikilinkResolvable:
         diag = report.diagnostics[0]
         assert diag.rule_id == self.rule_id
         assert diag.severity is Severity.WARNING
+        assert "domains/psychology/wiki/concepts/dup" in diag.message
+        assert "domains/research-papers/wiki/concepts/dup" in diag.message
