@@ -6,8 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This repo is **Densa** — an AGENTS.md-native skill pack that compiles raw sources into a queryable markdown wiki (an executable implementation of Karpathy's llm-wiki pattern; the opposite of RAG). It has a **dual nature**, and which one you're in changes the rules:
 
-1. **A content vault.** `domains/<X>/raw/` holds immutable sources; `domains/<X>/wiki/` holds LLM-compiled pages. Here you act as the *wiki maintainer* via the five operations (`ingest` / `query` / `lint` / `process-inbox` / `promote`).
-2. **The upstream tool.** `_system/densa/` is a stdlib-only Python validator (the `densa` CLI) plus prompts/templates. Here you act as a *software contributor*.
+1. **A content vault.** `domains/<X>/raw/` holds immutable sources; `domains/<X>/wiki/` holds LLM-compiled pages. Here you act as the _wiki maintainer_ via the five operations (`ingest` / `query` / `lint` / `process-inbox` / `promote`).
+2. **The upstream tool.** `_system/densa/` is a stdlib-only Python validator (the `densa` CLI) plus prompts/templates. Here you act as a _software contributor_.
 
 **`AGENTS.md` is the authoritative L1 contract** — read it before doing any vault work; it is not duplicated here. Each `domains/<X>/AGENTS.md` is an L2 override (L2-wins inside that domain). `GUIDE.md` is explanatory only; when GUIDE and AGENTS disagree, AGENTS wins. When prose and `_system/densa/schema.py` disagree, the Python wins (AGENTS011 catches the drift).
 
@@ -48,7 +48,7 @@ When adding/changing a rule: update its `checks/` module **and** `schema.py` if 
 AGENTS007 classifies every commit by its message prefix and restricts which paths it may touch:
 
 - `ingest(<domain>):` / `query:` / `lint:` / `process-inbox:` / `promote:` — operation commits (may write `domains/**` per the operation's scope in `schema.py`).
-- **(no prefix)** — treated as schema/docs/validator maintenance and **MUST NOT touch `domains/**`**.
+- **(no prefix)** — treated as schema/docs/validator maintenance and **MUST NOT touch `domains/**`\*\*.
 
 If the hook rejects a commit, the fix is almost always to split it into two commits (operation edit with its prefix, maintenance edit prefix-free) — not to bypass. Last-resort bypass: `WIKI_ALLOW_CROSS_SCOPE=1 git commit ...`, which must be paired with a `## [YYYY-MM-DD] maintenance | …` entry in `log.md`.
 
@@ -72,6 +72,36 @@ If the hook rejects a commit, the fix is almost always to split it into two comm
 
 ## Local dev tracker
 
-If `docs/maintainers/tracker/INDEX.md` exists, load it at session start — it lists open architecture questions and decided-but-pending tasks for the maintainer's local work-in-progress. Conventions in [`tracker/README.md`](docs/maintainers/tracker/README.md). The tracker directory is `.gitignore`d; for forks without it, this section is a no-op.
+Tasks are tracked in `.backlog/` via Backlog.md MCP. Use `mcp__backlog__task_*` tools to create, view, and complete tasks. See `.backlog/` for the full task list.
 
-When picking up a task: read INDEX, pick one with `status: open` or `decided`, set its `owner:` to your session, bump `last_touched:` to today, work, then either move the file to `tracker/done/` (if shipped) or add a `## Resume notes` section (if pausing mid-way). Pre-launch plan with phase sequencing: [`docs/maintainers/2026-05-29-pre-launch-plan.md`](docs/maintainers/2026-05-29-pre-launch-plan.md).
+Pre-launch plan with phase sequencing: [`docs/maintainers/2026-05-29-pre-launch-plan.md`](docs/maintainers/2026-05-29-pre-launch-plan.md).
+
+<!-- BACKLOG.MD MCP GUIDELINES START -->
+
+<CRITICAL_INSTRUCTION>
+
+## BACKLOG WORKFLOW INSTRUCTIONS
+
+This project uses Backlog.md MCP for all task and project management activities.
+
+**CRITICAL GUIDANCE**
+
+- If your client supports MCP resources, read `backlog://workflow/overview` to understand when and how to use Backlog for this project.
+- If your client only supports tools or the above request fails, call `backlog.get_backlog_instructions()` to load the tool-oriented overview. Use the `instruction` selector when you need `task-creation`, `task-execution`, or `task-finalization`.
+
+- **First time working here?** Read the overview resource IMMEDIATELY to learn the workflow
+- **Already familiar?** You should have the overview cached ("## Backlog.md Overview (MCP)")
+- **When to read it**: BEFORE creating tasks, or when you're unsure whether to track work
+
+These guides cover:
+
+- Decision framework for when to create tasks
+- Search-first workflow to avoid duplicates
+- Links to detailed guides for task creation, execution, and finalization
+- MCP tools reference
+
+You MUST read the overview resource to understand the complete workflow. The information is NOT summarized here.
+
+</CRITICAL_INSTRUCTION>
+
+<!-- BACKLOG.MD MCP GUIDELINES END -->

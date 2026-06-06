@@ -16,22 +16,22 @@
    List them as a "candidates" set before reading.
 3. **Read the candidates in full**. Do not synthesise from snippets — pull
    whole pages so cross-references and frontmatter are visible.
-3.5. **Raw spot-check** (only when the answer involves event-level
-    facts — dates, who-said-what, quoted decisions). Pick the 1–2 most
-    load-bearing factual claims in your draft answer; for each, walk
-    the wiki citation chain back to a `raw/` file and grep / re-read
-    the relevant fragment. If the raw text contradicts or fails to
-    support the wiki claim, **do not paper over it**: surface the
-    discrepancy in the answer ("the wiki says X; the raw transcript at
-    `[[2025-11-25-session#^14:32]]` actually shows Y") and queue a
-    flag for the next `lint` run by adding a bullet to the Q&A file's
-    own "Issues to surface at next lint" section (step 6). The next
-    `lint` ingests that section into "Quote-integrity failures" or
-    "Citation depth violations" automatically. Do **not** edit
-    `outputs/lint/<latest>.md` from inside a `query` commit —
-    AGENTS007 forbids cross-scope writes.
-    Skip this step for pure conceptual / framework questions where no
-    specific factual claim is being made.
+   3.5. **Raw spot-check** (only when the answer involves event-level
+   facts — dates, who-said-what, quoted decisions). Pick the 1–2 most
+   load-bearing factual claims in your draft answer; for each, walk
+   the wiki citation chain back to a `raw/` file and grep / re-read
+   the relevant fragment. If the raw text contradicts or fails to
+   support the wiki claim, **do not paper over it**: surface the
+   discrepancy in the answer ("the wiki says X; the raw transcript at
+   `[[2025-11-25-session#^14:32]]` actually shows Y") and queue a
+   flag for the next `lint` run by adding a bullet to the Q&A file's
+   own "Issues to surface at next lint" section (step 6). The next
+   `lint` ingests that section into "Quote-integrity failures" or
+   "Citation depth violations" automatically. Do **not** edit
+   `outputs/lint/<latest>.md` from inside a `query` commit —
+   AGENTS007 forbids cross-scope writes.
+   Skip this step for pure conceptual / framework questions where no
+   specific factual claim is being made.
 4. **Synthesise** an answer. Every non-trivial claim must carry an inline
    citation `[[wiki-page]]` or `[[raw-source]]`.
 5. **Identify uncertainty**. Flag claims where the wiki is silent, stale, or
@@ -44,7 +44,7 @@
      [`_system/templates/qa.md`](../templates/qa.md). Default = file
      back. Skip only if it's a trivial lookup. Step 3.5's flags go in
      the file's "Issues to surface at next lint" section.
-   - The Q&A file is an *artifact* under `outputs/` (per
+   - The Q&A file is an _artifact_ under `outputs/` (per
      [`outputs/README.md`](../../outputs/README.md)), not a wiki page.
      The wikilink resolver ignores `outputs/`, so wiki pages cannot
      cite this Q&A. If the answer is wiki-grade (evergreen, ≥ 2
@@ -59,6 +59,7 @@
    ## [YYYY-MM-DD] query | <one-line question>
    - Filed as: outputs/qa/<YYYY-MM-DD>-<slug>.md (or "not filed — trivial lookup")
    - Pages read: [[…]], [[…]]
+   - Fenced sources: <N> untrusted | <M> human-authoritative preserved
    ```
    Use plain paths (not wikilinks) for `outputs/` artifacts —
    `outputs/` is deliberately excluded from the wikilink graph.
@@ -85,6 +86,7 @@
 ## Quality bar
 
 A good query answer:
+
 - Names its sub-claims up front.
 - Carries inline citations every paragraph.
 - Ends with a "What's missing in the wiki" paragraph if relevant.

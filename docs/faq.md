@@ -56,7 +56,7 @@ bases"; Densa sits in family C:
   LlamaIndex / LangChain vector stacks. Documents → chunks →
   retrieve at query time. Fast onboarding; never structurally
   consolidates; the hallucination surface is the answer text on
-  *every* query.
+  _every_ query.
 - **B · In-place assist** — [Smart Composer](https://github.com/glowingjade/obsidian-smart-composer),
   [Smart Connections](https://github.com/brianpetro/obsidian-smart-connections),
   Notion AI. Cursor-flavoured `@`-mention UX; the AI is a typing
@@ -114,18 +114,18 @@ page becomes a gravestone pointing at its successor.
 
 ### What stops a malicious raw file from rewriting my wiki?
 
-Three things, in order. (1) The operation prompts fence raw content
-as `<untrusted source="<path>">…</untrusted>` per
-[AGENTS.md §6 red line #9](../AGENTS.md#6-red-lines-non-negotiable),
-so the LLM treats instruction-shaped text inside the fence as part of
-the source — *"ignore previous instructions"* shows up in your
-review as a flagged finding, not as silent compliance. (2) Every
-operation drafts a plan you approve before any write — review the
-*targets* of every write, not just the summary. (3) AGENTS007 won't
-let a commit prefixed `ingest(<X>):` write outside that operation's
-declared scope, so even a partial compromise can't, say, smuggle an
-edit into `_system/` from inside an ingest. Full threat model:
-[`SECURITY.md` §"Prompt-injection posture"](../.github/SECURITY.md#prompt-injection-posture).
+Three things, in order. (1) The vault uses a three-tier trust protocol
+([AGENTS.md §4.5](../AGENTS.md#45-trust-tier-protocol)): raw content is
+fenced as `<untrusted source="<path>">…</untrusted>`, so the LLM treats
+instruction-shaped text inside the fence as part of the source —
+_"ignore previous instructions"_ shows up in your review as a flagged
+finding, not as silent compliance. (2) Every operation drafts a plan
+you approve before any write — review the _targets_ of every write,
+not just the summary. (3) AGENTS007 won't let a commit prefixed
+`ingest(<X>):` write outside that operation's declared scope, so even a
+partial compromise can't smuggle an edit into `_system/` from inside an
+ingest. Full threat model:
+[`SECURITY.md` §"Trust-tier protocol"](../.github/SECURITY.md#trust-tier-protocol).
 
 ---
 
@@ -157,7 +157,7 @@ naturally.
   entity / concept.
 
 Treat lint reports as work-in-progress dashboards, not pass/fail
-gates. The goal is a *boring* lint report: each subsequent run mostly
+gates. The goal is a _boring_ lint report: each subsequent run mostly
 says "no new findings since last lint", with the human-review queue
 draining gradually.
 
@@ -167,7 +167,7 @@ draining gradually.
 
 ### Why does `outputs/` exist instead of `wiki/syntheses/`?
 
-Lint reports and Q&A archives are *operation artifacts*, not compiled
+Lint reports and Q&A archives are _operation artifacts_, not compiled
 knowledge. Three concrete problems with dropping them in
 `wiki/syntheses/`:
 
@@ -194,4 +194,4 @@ and `outputs/snapshots/`, not inside `wiki/`. Same reasoning as above.
 If a particular answer turns out to be evergreen and worth
 wikilink-graph membership, the path forward is `promote` (see
 [`../GUIDE.md` §"The seams"](../GUIDE.md#the-seams-when-to-use-which-operation)
-*"Q&A that recurs"*).
+_"Q&A that recurs"_).

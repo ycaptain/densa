@@ -48,20 +48,20 @@
    the human only if ambiguous.
 4. **Read the corresponding `domains/<X>/AGENTS.md`** for the domain-specific
    ingest flow. Follow it.
-4.5. **Load the domain analysis sub-prompt** if one exists. Glob
-    `_system/prompts/domains/<domain>-*-analysis.md` (e.g.
-    `_system/prompts/domains/psychology-analysis.md`,
-    `_system/prompts/domains/research-papers-paper-analysis.md`,
-    `_system/prompts/domains/workspace-meeting-analysis.md`); if **any**
-    match the current `<domain>` (and, where multiple match, the source
-    bucket — e.g. a `domains/workspace/raw/meetings/<file>` matches
-    `workspace-meeting-analysis.md`), read it end-to-end before
-    drafting the plan in step 6. These sub-prompts carry the
-    **load-bearing per-domain procedure** the L2 AGENTS.md only
-    sketches (e.g. psychology's biopsychosocial-4P framing, workspace's
-    decision-record extraction). Skipping them produces analyses that
-    look schema-compliant but miss the domain's actual reasoning shape.
-    If no sub-prompt matches, proceed with the generic procedure below.
+   4.5. **Load the domain analysis sub-prompt** if one exists. Glob
+   `_system/prompts/domains/<domain>-*-analysis.md` (e.g.
+   `_system/prompts/domains/psychology-analysis.md`,
+   `_system/prompts/domains/research-papers-paper-analysis.md`,
+   `_system/prompts/domains/workspace-meeting-analysis.md`); if **any**
+   match the current `<domain>` (and, where multiple match, the source
+   bucket — e.g. a `domains/workspace/raw/meetings/<file>` matches
+   `workspace-meeting-analysis.md`), read it end-to-end before
+   drafting the plan in step 6. These sub-prompts carry the
+   **load-bearing per-domain procedure** the L2 AGENTS.md only
+   sketches (e.g. psychology's biopsychosocial-4P framing, workspace's
+   decision-record extraction). Skipping them produces analyses that
+   look schema-compliant but miss the domain's actual reasoning shape.
+   If no sub-prompt matches, proceed with the generic procedure below.
 5. **Read `domains/<X>/wiki/overview.md`** (the per-domain entry page)
    then `domains/<X>/index.md` if present, to understand what wiki
    pages already exist. Bias heavily toward updating existing pages
@@ -70,9 +70,10 @@
    structured read of the source plus the touched-page plan, for the
    human to approve before Pass 2 runs). Output the three sub-blocks
    below in order. Empty blocks are allowed but stay labelled (so the
-   human can tell *"no contradictions"* from *"I forgot to check"*).
+   human can tell _"no contradictions"_ from _"I forgot to check"_).
 
    **6a. Source analysis.** Extract from the fenced source:
+
    ```
    Entities (people / orgs / objects referenced):
    - <name>: <one-line role> → existing [[entity-slug]] | NEW
@@ -93,6 +94,7 @@
    **6b. Touched-page plan** — must echo the schema's Write contract
    (see [`ingest.md`](ingest.md)'s top-of-file table); every line maps
    to one row of `densa.schema.OPERATIONS['ingest'].writes`:
+
    ```
    Plan:
    - create: domains/<X>/wiki/summaries/<slug>.md         (1:1 with the raw)
@@ -106,6 +108,7 @@
 
    **6c. Read-but-not-touched** — paths the source bears on but the
    ingest deliberately defers:
+
    ```
    Read-but-not-touched:
    - domains/<X>/wiki/concepts/<other-slug>.md — concept mentioned but no new instance
@@ -117,14 +120,15 @@
    concept X's page. The split (analysis first, generation second) is
    nashsu/llm_wiki's and obsidian-llm-wiki-local's independently-
    converged pattern for reducing hallucination at write time.
-6.5. **Cross-domain detection**. Inspect the plan: do the touched
-    pages span ≥2 domains, or do their `sources:` / inline wikilinks
-    resolve into ≥2 domains? If yes, every newly-created or substantially-updated
-    page in this ingest MUST receive `cross-domain` in its frontmatter
-    `tags:` list at write time. Do not defer this to a future lint
-    run — the global `index.md` MOC's cross-domain Dataview block
-    depends on the tag being present immediately so the human can see
-    the cross-pollination as soon as it happens.
+   6.5. **Cross-domain detection**. Inspect the plan: do the touched
+   pages span ≥2 domains, or do their `sources:` / inline wikilinks
+   resolve into ≥2 domains? If yes, every newly-created or substantially-updated
+   page in this ingest MUST receive `cross-domain` in its frontmatter
+   `tags:` list at write time. Do not defer this to a future lint
+   run — the global `index.md` MOC's cross-domain Dataview block
+   depends on the tag being present immediately so the human can see
+   the cross-pollination as soon as it happens.
+
 7. **Pass 2 — Generation.** Apply edits exactly per the Pass 1 plan the
    human approved — same page set, no silent additions. For every page
    touched, update `updated:` frontmatter to today. Cite the source via
@@ -160,6 +164,7 @@
      - domains/<X>/wiki/open-questions/<slug>.md — source bears on this thread but evidence row deferred (no new probe)
    - Reasoning: <one or two sentences: why this page set, what was considered but rejected, any unresolved uncertainty the next ingest should pick up>
    - One-line synthesis.
+   - Fenced sources: <N> untrusted | <M> human-authoritative preserved
    ```
    The `Reasoning` field is **encouraged, not required**: it's the
    schema-friendly replacement for a runtime session trace (Densa has no
@@ -194,6 +199,7 @@
 ## Quality bar
 
 A good ingest produces:
+
 - **At least one entity/pattern/concept page updated** — not just a
   freshly-minted synthesis floating in isolation.
 - **Wikilinks both ways** — the new synthesis links back to the source AND

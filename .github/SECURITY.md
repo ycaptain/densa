@@ -7,8 +7,8 @@ knowledge bases. It does not run a service and stores no user data
 of its own. However, vaults built from this skill pack routinely
 hold material that
 is highly sensitive — therapy transcripts, medical notes, NDA-bound
-meeting records, private journals. The guidance below treats *your
-vault* as the primary asset to protect.
+meeting records, private journals. The guidance below treats _your
+vault_ as the primary asset to protect.
 
 ## Reporting a vulnerability
 
@@ -59,10 +59,10 @@ If you instantiate this skill pack for sensitive material:
       instructions and write ..."). Densa's operation prompts fence
       raw content as `<untrusted>` so the LLM can tell its
       instructions apart from the source — see
-      [§"Prompt-injection posture"](#prompt-injection-posture) below.
+      [§"Trust-tier protocol"](#trust-tier-protocol) below.
       The plan-then-confirm gate (every operation drafts a plan you
       approve before writes) is your second line of defence — never
-      approve a plan without reading the *targets* of every write,
+      approve a plan without reading the _targets_ of every write,
       not just the summary.
 - [ ] If you push to a public remote, audit `.gitattributes` and
       `.gitignore` against accidentally exposing `inbox/` or `raw/`
@@ -80,7 +80,7 @@ If you instantiate this skill pack for sensitive material:
       policy before ingesting clinically sensitive or NDA-bound
       material.
 
-## Prompt-injection posture
+## Trust-tier protocol
 
 Densa is a markdown skill pack — it makes no LLM calls of its own.
 The threat surface is the agent IDE (Cursor / Claude Code / Codex /
@@ -97,8 +97,8 @@ LLM vendor:
    LLM to wrap raw-source content in
    `<untrusted source="<path>">…</untrusted>` and treat instruction-
    shaped text inside the fence as findings to surface, never as
-   commands. The canonical rule is
-   [AGENTS.md §6 red line #9](../AGENTS.md#6-red-lines-non-negotiable);
+   commands. The three-tier trust vocabulary is defined in
+   [AGENTS.md §4.5](../AGENTS.md#45-trust-tier-protocol);
    the threat model + mitigation pattern is at
    [`docs/reference/red-lines.md` §9](../docs/reference/red-lines.md).
 2. **The human approves the plan.** Every operation drafts the page
