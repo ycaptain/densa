@@ -31,8 +31,8 @@
 > and gate the `v0.7.0` open-source launch tag. Each is anchored to an
 > n=7 prior-art finding; the plan carries the file-level scope.
 
-- **[launch] MCP server (stdlib JSON-RPC, zero-dep)** — *RFC closed:
-  build it.* Hand-rolled JSON-RPC/stdio under `_system/densa/mcp/`,
+- **[launch] MCP server (stdlib JSON-RPC, zero-dep)** — _RFC closed:
+  build it._ Hand-rolled JSON-RPC/stdio under `_system/densa/mcp/`,
   leaving `_system/densa/` core dependency-free. Exposes the compiled
   wiki + validator as read/navigate/lint **tools** and the five
   operations as MCP **prompts** (no write tools; the human gate is
@@ -62,14 +62,14 @@
   showcases (`psychology/`, `workspace/`) ship on v1 frontmatter
   per the v2-bump CHANGELOG; migration is parametric and will run
   via the existing `_system/scripts/migrate_02_karpathy_vocab.py`
-  with an `--extra-roots` flag.~~ *Shipped 2026-05-26: the
+  with an `--extra-roots` flag.~~ _Shipped 2026-05-26: the
   migration ran with `--mode in-place --extra-roots
-  examples/showcases` (logged in
+examples/showcases` (logged in
   [`_system/migrations.log`](_system/migrations.log)); both
   showcase `AGENTS.md` files now carry a "v1 design — v2 schema"
   banner pointing readers at
   [`docs/reference/karpathy-mapping.md`](docs/reference/karpathy-mapping.md)
-  and the active default L2.*
+  and the active default L2._
 - **agentskills.io reference-impl listing** — apply once it accepts
   curated entries; reference-impl rationale anchored at the n=7
   prior-art mid-checkpoint
@@ -91,24 +91,24 @@
   (the contract is in [`AGENTS.md` §6](AGENTS.md#6-red-lines-non-negotiable);
   the operational prompt isn't shipped yet).
 - ~~**Structured "promotion candidates" output from `lint`** —
-  currently surfaced only as free-text in the report.~~ *Shipped
+  currently surfaced only as free-text in the report.~~ _Shipped
   2026-05-28 via [`_system/prompts/lint.md`](_system/prompts/lint.md)
   §6.6 + the `## Promotion candidates` report skeleton; each
   candidate is now emitted as a fenced YAML record with `qa /
-  suggested_type / suggested_slug / criteria_met / reason`, and
+suggested_type / suggested_slug / criteria_met / reason`, and
   zero-candidate runs explicitly emit `_No candidates this run._`
   so downstream tooling can distinguish a clean run from a forgotten
-  section.*
+  section._
 - **`overview.md` sub-section template** — evaluate borrowing the
   Cline Memory Bank "multi-section project state" pattern as
-  *optional* anchored sub-sections inside the existing single
+  _optional_ anchored sub-sections inside the existing single
   `overview.md` (no schema change). Trigger: when a domain's
   overview exceeds ~200 lines or its mindmap stops being scannable.
   Rationale anchor:
   [`docs/design/harness-memory-vs-llm-wiki.md` §2](docs/design/harness-memory-vs-llm-wiki.md#2-cline-memory-bank--project-state-docs).
 - **`query` → `outputs/notes/<date>-<wiki-page>.md` micro-artifact** —
-  evaluate giving `query` a way to file *fine-grained fact
-  candidates* (one fact per file) that the next `lint` proposes for
+  evaluate giving `query` a way to file _fine-grained fact
+  candidates_ (one fact per file) that the next `lint` proposes for
   merge into an existing wiki page. The schema-friendly equivalent
   of Letta's `/remember`. Validate on a small sample (≥10 query
   sessions) before deciding; do **not** add a sixth operation —
@@ -120,10 +120,10 @@
   index snapshot) under a typical ingest. If it exceeds ~30% of the
   4-tool consensus context budget (Cursor / Claude Code / Codex /
   Cline), split each `_system/prompts/<op>.md` into a `header +
-  on-demand body` per the Codex Skills progressive-disclosure
+on-demand body` per the Codex Skills progressive-disclosure
   pattern. Skip if under budget — `AGENTS.md` already mandates
   on-demand loading.
-- ~~**MCP server path — RFC**~~ *Closed 2026-05-29: **build it**, as a
+- ~~**MCP server path — RFC**~~ _Closed 2026-05-29: **build it**, as a
   hand-rolled stdlib JSON-RPC/stdio server under `_system/densa/mcp/`
   with a Tolaria-style auto-registration installer — promoted to a
   **[launch]** short-term item above. The "stable CLI surface + let
@@ -131,7 +131,7 @@
   LLM operations, not deterministic CLI calls, so a CLI surface
   wouldn't carry them. Rationale + tool surface in
   [`docs/maintainers/2026-05-29-pre-launch-plan.md` §1](docs/maintainers/2026-05-29-pre-launch-plan.md).
-  Source: [`Tolaria study`](docs/maintainers/prior-art/2026-05-25-tolaria-study.md).*
+  Source: [`Tolaria study`](docs/maintainers/prior-art/2026-05-25-tolaria-study.md)._
 
 ## Watch-list (informational only)
 
@@ -158,6 +158,13 @@ re-evaluate each release cycle; full studies under
   re-read each release cycle to confirm the harness landscape
   hasn't moved the goal posts (e.g. a vendor shipping a true
   markdown-export contract).
+- **`densa run` thin orchestrator (v0.8 if demand surfaces)** — a
+  `densa run <op> <path>` subcommand that shells out to
+  `DENSA_AGENT_CLI` (e.g. `claude`, `codex`) without adding SDK
+  deps. Solves the headless/batch-ingest friction case. Land when
+  ≥2 users report "headless workflow" as a blocker; until then
+  the human-in-the-loop gate is the default. Design sketch:
+  [`docs/design/harness-memory-vs-llm-wiki.md` §"Thin orchestrator seam"](docs/design/harness-memory-vs-llm-wiki.md#thin-orchestrator-seam--the-v08-watch-item-t004).
 
 ## Non-goals
 
@@ -165,7 +172,7 @@ re-evaluate each release cycle; full studies under
   markdown + git substrate; vendor lock-in is the failure mode the
   red lines prevent.
 - An in-vault embedding-search runtime. Past ~500 pages, layer
-  Smart Connections (Obsidian) or any embedding tool *on top* of the
+  Smart Connections (Obsidian) or any embedding tool _on top_ of the
   wiki as fuzzy fallback; embeddings don't belong in the validator.
 - A non-stdlib validator. The "MIT + stdlib-only Python" combination
   is one of Densa's four uniquely-occupied positions in the prior-art
