@@ -81,6 +81,19 @@ examples/showcases` (logged in
 
 ## Medium term (3–6 months)
 
+- **`body_hash:` guard — AGENTS014 (warn, Phase B)** — each wiki page
+  carries `body_hash: sha256:<hex>` in frontmatter; AGENTS014 warns when
+  an ingest would overwrite a page whose hash has diverged from the stored
+  value (meaning a human edited it between ingests). Default-on, warn-level
+  (matches AGENTS008 precedent). Opt-out: `body_hash_check: skip` per-page
+  frontmatter. Guard does **not** fire on `.legacy/` moves (that is the
+  legitimate overwrite path). Implementation alongside AGENTS013.
+- **`feedback:` field + `%%FEEDBACK%%` marker (Phase B)** — two-granularity
+  user-correction loop. Whole-page: `feedback:` YAML array in frontmatter
+  (`opened`, `text`, `applied`); next ingest acknowledges + sets `applied:
+<date>`. Section-level: `%%FEEDBACK: …%%` inline parallel to `%%HUMAN%%`;
+  LLM fixes the flagged text and removes the marker. Blast radius is
+  page-local only. See [`docs/faq.md` §"How do I correct…"](docs/faq.md#how-do-i-correct-the-llms-output-without-it-forgetting).
 - **Obsidian `.base` evaluation** — adopt only if Dataview drift
   (any block exceeding ~50 rendered rows, or `index.md` rendering
   becoming noticeably slow) crosses the trigger described in
@@ -96,9 +109,9 @@ examples/showcases` (logged in
   §6.6 + the `## Promotion candidates` report skeleton; each
   candidate is now emitted as a fenced YAML record with `qa /
 suggested_type / suggested_slug / criteria_met / reason`, and
-  zero-candidate runs explicitly emit `_No candidates this run._`
+  zero-candidate runs explicitly emit `\_No candidates this run._`
   so downstream tooling can distinguish a clean run from a forgotten
-  section._
+  section.\_
 - **`overview.md` sub-section template** — evaluate borrowing the
   Cline Memory Bank "multi-section project state" pattern as
   _optional_ anchored sub-sections inside the existing single

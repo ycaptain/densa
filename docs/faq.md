@@ -127,6 +127,50 @@ partial compromise can't smuggle an edit into `_system/` from inside an
 ingest. Full threat model:
 [`SECURITY.md` §"Trust-tier protocol"](../.github/SECURITY.md#trust-tier-protocol).
 
+### How do I correct the LLM's output without it forgetting?
+
+Two mechanisms, one mental model — use whichever matches your granularity:
+
+**Whole-page feedback** — add a `feedback:` block to the page's YAML frontmatter:
+
+```yaml
+feedback:
+  - opened: 2026-06-04
+    text: "The summary over-emphasises technique X; the raw transcript shows Y was the main focus."
+    applied: null # the LLM sets this to YYYY-MM-DD when it addresses the note
+```
+
+At the next `ingest` that touches this page, the operation prompt reads the
+feedback block, acknowledges it explicitly in the plan ("Saw feedback: …"), and
+addresses it in the rewrite. When addressed, it sets `applied: <date>` so the note
+doesn't drive future ingests.
+
+**Inline section feedback** — use `%%FEEDBACK: …%%` in the page body, parallel
+to the existing `%%HUMAN%%` marker:
+
+```markdown
+## Decision record
+
+The team chose option A because …
+
+%%FEEDBACK: This paragraph conflates two separate meetings — the option-A decision
+was 2026-04-12 (session A) not 2026-05-02 (session B). Fix the date and the
+attendee list.%%
+```
+
+The LLM locates the marker on the next ingest that covers this page and fixes
+the flagged text in-place, then removes the `%%FEEDBACK%%` marker.
+
+**Blast radius:** feedback is page-local. It never propagates to related pages
+automatically; to fix a claim that appears on multiple pages, add feedback to
+each individually.
+
+**When the page re-ingests via `.legacy/`:** feedback travels forward to the new
+version (copy the frontmatter block) OR gets marked `applied: <date>` if the
+re-ingest addresses it — never silently dropped.
+
+_(Full spec is in the Phase B pre-launch plan; implementation lands alongside AGENTS013.)_
+
 ---
 
 ## Scale & drift
