@@ -75,7 +75,7 @@ In addition to L1 universal frontmatter:
   `venue: "<conf or journal>"`, `arxiv_id: "<id>"` (optional).
 - `summary` pages: `paper: [[<paper-slug>]]` (redundant with
   `sources`, but front-and-centre), `evidence_quality:
-  rct|controlled|observational|theoretical|anecdote`,
+rct|controlled|observational|theoretical|anecdote`,
   `replicated: yes|partial|no|unknown`.
 - `concept` pages: `first_appeared: YYYY-MM-DD` (the earliest paper
   that named it), `also_known_as: [...]` (synonyms in the
@@ -105,7 +105,7 @@ When ingesting a paper under `raw/papers/<slug>.md`:
      important limit.
    - **How to read this paper** (`> [!faq]-` collapsed callout) —
      3-7 numbered steps pointing the reader at the load-bearing
-     sections of the *raw paper* with a time budget.
+     sections of the _raw paper_ with a time budget.
    - **Mechanism / design diagram** — exactly one Mermaid diagram
      (flowchart / quadrantChart / timeline; see the sub-prompt's
      decision table).
@@ -115,7 +115,7 @@ When ingesting a paper under `raw/papers/<slug>.md`:
    - **Method** — what they actually did. Mechanism, not just effect.
    - **Evidence** — strongest figure / table; rate
      `evidence_quality` per the sub-prompt rubric.
-   - **Limits** — what the paper does *not* show, in the authors'
+   - **Limits** — what the paper does _not_ show, in the authors'
      own words where possible (cite section).
    - **Open questions** — what would settle the next layer of the
      debate. Link to any `wiki/open-questions/` page these update.
@@ -189,4 +189,4 @@ paper-specific checks remain:
 - **No verbatim quoting from copyrighted papers in the wiki.**
   Paraphrase + section anchor
   (`[[2024-anthropic-dictionary-summary#§4.2]]`). Verbatim is fine
-  in *your own* `raw/notes/`.
+  in _your own_ `raw/notes/`.
