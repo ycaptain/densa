@@ -16,18 +16,11 @@ updated: 2026-05-29
 >
 > **Empirical backing (2026-05-25 n=7 prior-art review).** Of seven
 > Karpathy-pattern / wiki-compiler / agent-memory upstreams surveyed
-> at the [`docs/maintainers/prior-art/`](docs/maintainers/prior-art/)
-> level, only Tolaria
-> ([study](docs/maintainers/prior-art/2026-05-25-tolaria-study.md))
-> independently adopts `AGENTS.md` as the per-vault contract
-> filename; the rest use `purpose.md` + `schema.md`
-> ([nashsu](docs/maintainers/prior-art/2026-05-25-nashsu-llm-wiki-study.md)),
-> `vault-schema.md`
-> ([olw](docs/maintainers/prior-art/2026-05-25-obsidian-llm-wiki-local-study.md)),
-> or no per-vault contract at all
-> ([Smart Composer+Connections](docs/maintainers/prior-art/2026-05-25-smart-composer-connections-study.md);
-> [RAGFlow](docs/maintainers/prior-art/2026-05-25-ragflow-study.md);
-> [Graphiti+Cognee](docs/maintainers/prior-art/2026-05-25-graphiti-cognee-study.md)).
+> in the maintainers' prior-art notes, only Tolaria independently
+> adopts `AGENTS.md` as the per-vault contract filename; the rest
+> use `purpose.md` + `schema.md` (nashsu), `vault-schema.md`
+> (obsidian-llm-wiki-local), or no per-vault contract at all
+> (Smart Composer+Connections; RAGFlow; Graphiti+Cognee).
 > Adopting the cross-tool standard early is the bet.
 
 > [!faq]- Humans: start at [`README.md`](README.md).

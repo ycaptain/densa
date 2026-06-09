@@ -6,8 +6,7 @@
 >
 > Last updated: 2026-05-29 (pre-launch plan filed — MCP-server RFC
 > closed as "build, stdlib JSON-RPC"; three n=7-backed differentiators
-> promoted to short term. Sequencing in
-> [`docs/maintainers/2026-05-29-pre-launch-plan.md`](docs/maintainers/2026-05-29-pre-launch-plan.md)).
+> promoted to short term).
 
 ## Current state (2026-05-26)
 
@@ -26,10 +25,9 @@
 ## Short term (0–3 months)
 
 > **Pre-launch focus.** The four items marked **[launch]** below are
-> sequenced as Phases A–D in
-> [`docs/maintainers/2026-05-29-pre-launch-plan.md`](docs/maintainers/2026-05-29-pre-launch-plan.md)
-> and gate the `v0.7.0` open-source launch tag. Each is anchored to an
-> n=7 prior-art finding; the plan carries the file-level scope.
+> sequenced as Phases A–D of the maintainers' pre-launch plan and
+> gate the `v0.7.0` open-source launch tag. Each is anchored to an
+> n=7 prior-art finding.
 
 - **[launch] MCP server (stdlib JSON-RPC, zero-dep)** — _RFC closed:
   build it._ Hand-rolled JSON-RPC/stdio under `_system/densa/mcp/`,
@@ -38,26 +36,23 @@
   operations as MCP **prompts** (no write tools; the human gate is
   unchanged) — "the opposite of RAG" rendered in MCP. Completes the
   AGENTS.md + MCP + plugin triple no upstream occupies
-  (n=7; [Tolaria's 15-tool surface](docs/maintainers/prior-art/2026-05-25-tolaria-study.md)
-  is the spec template). Was medium-term "MCP server path — RFC".
+  (n=7; Tolaria's 15-tool surface is the spec template). Was
+  medium-term "MCP server path — RFC".
 - **[launch] `<untrusted>` fenced ingest** — first documented
   prompt-injection mitigation in the wiki-compiler space; injection
-  posture is uniformly weak across all n=7
-  ([finding §3.9](docs/maintainers/prior-art/2026-05-25-research-action-plan.md)).
+  posture is uniformly weak across all n=7 (survey finding §3.9).
   Prompt-only change.
 - **[launch] Two-step ingest (analysis → generation)** — nashsu + olw
   independently converge on the split for quality; aligns with the
   existing plan-first gate. Prompt-only change.
 - **[launch] AGENTS013 literal-grounding rule (warn)** — port olw's
   Knowledge-Item-Candidates literal-match check; the strongest
-  anti-hallucination pattern in the set
-  ([finding §3.8](docs/maintainers/prior-art/2026-05-25-research-action-plan.md)).
+  anti-hallucination pattern in the set (survey finding §3.8).
   Extends the public rule registry.
 - **Cursor plugin marketplace submission** — manifest is schema-aligned
   as of 2026-05-26; logo + submission via
   [`cursor.com/marketplace/publish`](https://cursor.com/marketplace/publish);
-  procedural checklist in
-  [`docs/maintainers/skill-pack-submission.md` §C](docs/maintainers/skill-pack-submission.md#c-cursor-plugin-marketplace-live-as-of-2026-05).
+  procedural checklist in the maintainers' submission notes.
 - ~~**`examples/showcases/` v1 → v2 migration** — the two heavier
   showcases (`psychology/`, `workspace/`) ship on v1 frontmatter
   per the v2-bump CHANGELOG; migration is parametric and will run
@@ -72,8 +67,7 @@ examples/showcases` (logged in
   and the active default L2._
 - **agentskills.io reference-impl listing** — apply once it accepts
   curated entries; reference-impl rationale anchored at the n=7
-  prior-art mid-checkpoint
-  ([`docs/maintainers/prior-art/2026-05-25-research-action-plan.md`](docs/maintainers/prior-art/2026-05-25-research-action-plan.md)).
+  prior-art mid-checkpoint.
 - **[launch] PyPI publication** — so `pipx install densa` works without
   a prior clone (tracked in CHANGELOG `[Unreleased]`; Phase C of the
   pre-launch plan: OIDC trusted-publishing workflow + Quickstart
@@ -142,15 +136,14 @@ on-demand body` per the Codex Skills progressive-disclosure
   **[launch]** short-term item above. The "stable CLI surface + let
   users wire MCP" alternative was rejected: `densa query`/`ingest` are
   LLM operations, not deterministic CLI calls, so a CLI surface
-  wouldn't carry them. Rationale + tool surface in
-  [`docs/maintainers/2026-05-29-pre-launch-plan.md` §1](docs/maintainers/2026-05-29-pre-launch-plan.md).
-  Source: [`Tolaria study`](docs/maintainers/prior-art/2026-05-25-tolaria-study.md)._
+  wouldn't carry them. Tool surface frozen in
+  [`_system/densa/mcp/SPEC.md`](_system/densa/mcp/SPEC.md)._
 
 ## Watch-list (informational only)
 
 Projects in the wiki-compiler / agent-memory neighbourhood that we
-re-evaluate each release cycle; full studies under
-[`docs/maintainers/prior-art/`](docs/maintainers/prior-art/):
+re-evaluate each release cycle (full studies live in the
+maintainers' prior-art notes):
 
 - [Synto](https://github.com/kytmanov/synto) — successor to
   `obsidian-llm-wiki-local`; re-read at v0.7 to see whether its

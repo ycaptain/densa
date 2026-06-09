@@ -170,9 +170,8 @@ drafts a plan the human approves before any write), and the AGENTS007
 write-scope check is the third.
 
 **Why.** Of the n=7 wiki-compiler / Obsidian-AI prior-art set surveyed
-in [`docs/maintainers/prior-art/`](../maintainers/prior-art/), every
-project ingests raw content directly into prompts with no fencing
-([finding §3.9](../maintainers/prior-art/2026-05-25-research-action-plan.md));
+in the maintainers' prior-art notes, every project ingests raw
+content directly into prompts with no fencing (survey finding §3.9);
 Smart Composer's "Multimedia Context" feature auto-scrapes URL +
 YouTube transcript content into the prompt and is the most exposed
 surface observed. Densa's threat model is realistic: any clipped

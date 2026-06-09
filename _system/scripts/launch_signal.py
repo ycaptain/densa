@@ -4,8 +4,7 @@
 MAINTAINER-ONLY. This script is deliberately **not** part of the
 `_system/densa/` package: it shells out to the `gh` CLI, and dragging
 that dependency into the otherwise stdlib-only, `cp -R`-able core would
-break the differentiator that the whole project protects (see
-`docs/maintainers/tracker/open/T016-adoption-signal-loop.md`).
+break the differentiator that the whole project protects.
 
 It is pure stdlib here (subprocess + json + datetime) and assumes a
 working, authenticated `gh` on PATH. No telemetry phone-home, no

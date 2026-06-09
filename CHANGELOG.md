@@ -75,12 +75,12 @@ the L1 schema version recorded in [`AGENTS.md`](AGENTS.md) frontmatter
   `examples/showcases/workspace/AGENTS.md`'s "Onboarding reading
   order" section, which now defers to the navigator as the
   canonical entry.
-- **`docs/reference/harness-memory-vs-llm-wiki.md`** — distinguishes
+- **`docs/design/harness-memory-vs-llm-wiki.md`** — distinguishes
   Densa from the six other "knowledge-base-shaped" layers in the
   agent stack (AGENTS.md / Cline Memory Bank / Skills / session
-  memory / RAG-MCP retrieval / Letta personal memory). Distilled from
-  the 2026-05-27 ecosystem snapshot survey filed under
-  `docs/maintainers/prior-art/`. Linked from `README.md` (new
+  memory / RAG-MCP retrieval / Letta personal memory). Distilled
+  from the maintainers' 2026-05-27 ecosystem snapshot survey.
+  Linked from `README.md` (new
   "Why not just `CLAUDE.md` / Memory Bank / Letta?" section) and
   `docs/reference/README.md`.
 - **Optional `CLAUDE.md` / `GEMINI.md` shim guidance** in
@@ -95,6 +95,26 @@ the L1 schema version recorded in [`AGENTS.md`](AGENTS.md) frontmatter
   the schema-friendly substitute for a runtime session trace (Densa
   stays at the schema layer; the explanation lives in the new
   reference doc above).
+
+- **`<untrusted>` fenced ingest** — raw-source content is wrapped in
+  an `<untrusted>` data fence during `ingest`, with nested-tag and
+  premature-close escape handling (the D+B protocol,
+  [`AGENTS.md` §4.5](AGENTS.md)). Regression fixtures under
+  `_system/tests/fixtures/`.
+- **Trust-tier protocol** (`AGENTS.md` §4.5) — formalizes the trust
+  vocabulary (contract / wiki / raw / external) the operations and
+  the MCP surface share.
+- **Two-pass ingest** — `_system/prompts/ingest.md` split into
+  Pass 1 (analysis) and Pass 2 (generation), converging with the
+  quality pattern independently adopted by two upstreams in the
+  prior-art set.
+- **MCP tool-surface spec** — [`_system/densa/mcp/SPEC.md`](_system/densa/mcp/SPEC.md)
+  freezes the 8-tool read/navigate/lint surface (plus the @-mention
+  picker design in [`integrations/README.md`](integrations/README.md))
+  ahead of the stdlib JSON-RPC server implementation.
+- **Op-prompt progressive disclosure** — each `_system/prompts/<op>.md`
+  is split into a small header + an on-demand body, cutting the
+  per-operation context cost.
 
 ## [0.5.0] - 2026-05-26 — schema v2 (Karpathy vocab) + onboarding clarity sweep
 

@@ -48,5 +48,5 @@ done
 echo
 echo "Done. Next steps:"
 echo "  1. Verify each zip: unzip -l $OUTPUT_DIR/densa-<op>.zip"
-echo "  2. Submit per the maintainer-only checklist:"
-echo "     docs/maintainers/skill-pack-submission.md"
+echo "  2. Submit per the maintainers' submission checklist"
+echo "     (skills.sh / agentskills.io / Cursor marketplace / Claude Code Skills)"
