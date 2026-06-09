@@ -38,3 +38,9 @@ docs/maintainers/
 # Local virtualenvs
 .venv-test/
 .venv/
+
+# Local dev tooling — never published
+.backlog/
+.claude/
+skills-lock.json
+CLAUDE.local.md

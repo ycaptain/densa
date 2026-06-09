@@ -1,7 +1,7 @@
 ---
 type: log
 scope: global
-updated: 2026-05-28
+updated: 2026-06-09
 compiled_against: 2
 ---
 
@@ -22,6 +22,11 @@ Entry format:
 ```
 
 ---
+
+## [2026-06-09] maintenance | pre-publication review — public docs de-linked from the private archive, local dev tooling untracked
+- Pages touched: [[AGENTS.md]], [[CHANGELOG]], [[ROADMAP]], `docs/reference/red-lines.md`, `_system/scripts/launch_signal.py`, `integrations/cursor/densa-plugin/scripts/build-skill-zips.sh`, `CLAUDE.md`, `.gitignore`.
+- Reasoning: ahead of the public launch, markdown links into the local-only maintainers' archive became plain descriptions (they rendered as dead links for every reader); the CHANGELOG caught up on the shipped trust-tier / untrusted-fence / two-pass-ingest / MCP-spec / progressive-disclosure work; and the local task tracker plus agent scratch directories joined `.gitignore`, with session-only guidance moved to the untracked `CLAUDE.local.md`.
+- One-line synthesis: the published tree is self-contained — every in-repo link resolves for a fresh clone.
 
 ## [2026-05-28] maintenance | workspace showcase gains how-to-read-this-domain navigator
 - Pages touched:
