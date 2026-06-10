@@ -48,20 +48,28 @@
    the human only if ambiguous.
 4. **Read the corresponding `domains/<X>/AGENTS.md`** for the domain-specific
    ingest flow. Follow it.
-   4.5. **Load the domain analysis sub-prompt** if one exists. Glob
-   `_system/prompts/domains/<domain>-*-analysis.md` (e.g.
-   `_system/prompts/domains/psychology-analysis.md`,
-   `_system/prompts/domains/research-papers-paper-analysis.md`,
-   `_system/prompts/domains/workspace-meeting-analysis.md`); if **any**
-   match the current `<domain>` (and, where multiple match, the source
-   bucket — e.g. a `domains/workspace/raw/meetings/<file>` matches
-   `workspace-meeting-analysis.md`), read it end-to-end before
+   4.5. **Load the domain analysis sub-prompt** if one exists.
+   Resolution order — first match wins:
+   1. **Vault-local**: glob `domains/<domain>/prompts/<domain>-*-analysis.md`.
+      This directory is vault-owned (a documented `_system` sync never
+      touches it), so vaults can carry domain prompts upstream does not
+      ship, or override a shipped one wholesale.
+   2. **Shipped**: glob `_system/prompts/domains/<domain>-*-analysis.md`
+      (e.g. `_system/prompts/domains/psychology-session-analysis.md`,
+      `_system/prompts/domains/research-papers-paper-analysis.md`,
+      `_system/prompts/domains/workspace-meeting-analysis.md`).
+
+   If **any** match the current `<domain>` (and, where multiple match,
+   the source bucket — e.g. a `domains/workspace/raw/meetings/<file>`
+   matches `workspace-meeting-analysis.md`), read it end-to-end before
    drafting the plan in step 6. These sub-prompts carry the
    **load-bearing per-domain procedure** the L2 AGENTS.md only
    sketches (e.g. psychology's biopsychosocial-4P framing, workspace's
    decision-record extraction). Skipping them produces analyses that
    look schema-compliant but miss the domain's actual reasoning shape.
    If no sub-prompt matches, proceed with the generic procedure below.
+   (Mechanism documented in [`docs/setup.md`](../../docs/setup.md)
+   §"Vault-local domain prompts".)
 5. **Read `domains/<X>/wiki/overview.md`** (the per-domain entry page)
    then `domains/<X>/index.md` if present, to understand what wiki
    pages already exist. Bias heavily toward updating existing pages

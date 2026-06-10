@@ -213,6 +213,43 @@ git rm -r domains/research-papers/
 WIKI_ALLOW_CROSS_SCOPE=1 git commit -m "chore(domains): remove default example research-papers"
 ```
 
+### Vault-local domain prompts
+
+Domain analysis sub-prompts shipped by upstream live in
+`_system/prompts/domains/`. That directory is **upstream-owned**: if
+your vault tracks upstream by syncing `_system/` wholesale (e.g.
+`rsync -a --delete <upstream>/_system/ _system/`), anything you place
+there is overwritten or deleted on the next sync.
+
+To carry a domain prompt of your own — for a domain upstream ships no
+prompt for, or to replace a shipped prompt wholesale — put it in the
+domain folder instead:
+
+```
+domains/<X>/prompts/<X>-<bucket>-analysis.md
+```
+
+`ingest` resolves sub-prompts in this order (first match wins; see
+[`../_system/prompts/ingest.body.md`](../_system/prompts/ingest.body.md)
+step 4.5):
+
+1. `domains/<X>/prompts/<X>-*-analysis.md` (vault-local)
+2. `_system/prompts/domains/<X>-*-analysis.md` (shipped)
+
+Notes:
+
+- Vault-local prompts are excluded from the wikilink graph (they
+  contain `[[<placeholder>]]` examples by design, same as
+  `_system/prompts/`).
+- Commit-wise they get the same treatment as a domain's `AGENTS.md`:
+  no operation prefix covers them, so edits ride a
+  `WIKI_ALLOW_CROSS_SCOPE=1` commit paired with a
+  `## [YYYY-MM-DD] maintenance | …` entry in `log.md`.
+- Prefer a vault-local prompt over stretching the L2: procedural
+  pipelines (multi-stage drafting, critique checklists, worked
+  examples) belong in a prompt; schema and invariants belong in the
+  L2. When the two disagree, AGENTS still wins.
+
 ### Renaming a domain after committing
 
 A deliberate human-approved cascade (wikilinks propagate). Mechanics:

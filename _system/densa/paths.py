@@ -61,6 +61,27 @@ def is_wiki(path: str) -> bool:
     return _LEGACY not in p
 
 
+_PROMPTS: Final[str] = "prompts"
+
+
+def is_domain_prompt(path: str) -> bool:
+    """True iff *path* is a vault-local domain prompt.
+
+    Layout: ``domains/<X>/prompts/<file>.md``. These override the
+    upstream-owned ``_system/prompts/domains/`` (which a documented
+    ``_system`` sync may overwrite or delete); like their ``_system``
+    counterparts they contain ``[[<placeholder>]]`` examples by design,
+    so they are excluded from the wikilink graph.
+    """
+    p = parts(path)
+    return (
+        len(p) >= 4
+        and p[0] == _DOMAIN
+        and p[2] == _PROMPTS
+        and p[-1].endswith(".md")
+    )
+
+
 def is_outputs(path: str) -> bool:
     """True iff *path* is under ``outputs/``.
 
@@ -110,6 +131,8 @@ def wikilinks_scoped(path: str) -> bool:
         ``examples/`` (templates, prompts, AGENTS docs, showcase
         domains — all of which contain ``[[<placeholder>]]`` examples
         or shipped-reference wikilinks by design).
+      - Vault-local domain prompts (``domains/<X>/prompts/*.md``) —
+        same placeholder-by-design rationale as ``_system/prompts/``.
       - The root-level documentation files (``AGENTS.md`` at any depth,
         plus ``GUIDE.md`` / ``README.md`` / ``CHANGELOG.md`` at the repo
         root) — these contain ``[[placeholder]]`` examples and
@@ -130,6 +153,8 @@ def wikilinks_scoped(path: str) -> bool:
     if is_outputs(path):
         return False
     if is_log(path):
+        return False
+    if is_domain_prompt(path):
         return False
     p = parts(path)
     if p[0] in WIKILINK_SKIP_TOP_LEVEL:

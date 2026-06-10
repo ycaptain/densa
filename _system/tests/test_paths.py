@@ -5,6 +5,7 @@ from __future__ import annotations
 import pytest
 
 from densa.paths import (
+    is_domain_prompt,
     is_log,
     is_output_artifact,
     is_outputs,
@@ -92,6 +93,8 @@ class TestWikilinksScoped:
         "domains/psychology/raw/sessions/x.md",
         "AGENTS.md",
         "domains/psychology/AGENTS.md",
+        "domains/people/prompts/people-interaction-analysis.md",
+        "domains/projects/prompts/projects-client-call-analysis.md",
     ])
     def test_unscoped(self, path: str) -> None:
         assert wikilinks_scoped(path) is False
@@ -99,6 +102,26 @@ class TestWikilinksScoped:
     def test_docs_is_scoped(self) -> None:
         # docs/ has no placeholders; remains in the wikilink graph.
         assert wikilinks_scoped("docs/setup.md") is True
+
+
+class TestIsDomainPrompt:
+    @pytest.mark.parametrize("path", [
+        "domains/people/prompts/people-interaction-analysis.md",
+        "domains/psychology/prompts/psychology-session-analysis.md",
+        "domains/projects/prompts/nested/extra.md",
+    ])
+    def test_domain_prompt(self, path: str) -> None:
+        assert is_domain_prompt(path) is True
+
+    @pytest.mark.parametrize("path", [
+        "domains/psychology/wiki/prompts/x.md",  # prompts must be directly under the domain
+        "domains/people/prompts",  # the bare directory
+        "domains/people/prompts/notes.txt",  # not markdown
+        "_system/prompts/domains/psychology-session-analysis.md",  # upstream copy
+        "prompts/x.md",  # not under domains/
+    ])
+    def test_not_domain_prompt(self, path: str) -> None:
+        assert is_domain_prompt(path) is False
 
 
 class TestIsOutputs:
