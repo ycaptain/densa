@@ -1,14 +1,16 @@
-# Sub-prompt: psychology session / psychiatry analysis (v4)
+# Sub-prompt: psychology session / psychiatry analysis (v5)
 
 Used by [`_system/prompts/ingest.md`](../ingest.md) whenever a new file under
 `domains/psychology/raw/sessions/` is being processed. Produces
-**exactly one** `summary` page per raw, in single-file layout, opening
-with a **human-first readability layer** (§"Required summary structure")
-above the machine-dense sections.
+**exactly one** `summary` page per raw — opening with a **human-first
+readability layer** (§"Required summary structure") above the
+machine-dense sections — plus **exactly one client debrief companion
+page** (§"Stage 4") that re-compiles the session for the client
+themselves to deep-read.
 
-> v4 = v3's single-file design + v2 vocabulary throughout + the
-> mandatory human-first layer (2026-06 readability pass — parity with
-> the research-papers and workspace sub-prompts). Per Persons / Eells
+> v5 = v4 + the client debrief companion page and the living
+> formulation (current-state) convention. v4 = v3's single-file design
+> + v2 vocabulary + the human-first layer (2026-06 readability pass). Per Persons / Eells
 > case formulation literature + DAP/SOAP industry practice,
 > per-session notes reference the living formulation rather than
 > re-derive it. The living formulation in this wiki is the union of
@@ -38,9 +40,9 @@ bucket the L2 routes here). Determine `session_kind` and clinician slug
 from the filename pattern (see §"Routing" below); if ambiguous, ask
 once before drafting.
 
-## Three-stage pipeline
+## Three-stage pipeline (+ Stage 4 debrief)
 
-Every ingest runs three stages in sequence within the **same LLM context**
+Every ingest runs the stages in sequence within the **same LLM context**
 (no subagent overhead — the critique self-review is cheaper as a
 contiguous reasoning pass).
 
@@ -48,9 +50,12 @@ contiguous reasoning pass).
 Stage 1 Draft       — read raw + load conditional wiki pages, draft the summary. NOT WRITTEN TO DISK.
 Stage 2 Critique    — self-review the draft against the raw + wiki invariants. Output an issue list.
 Stage 3 Revise      — apply critique fixes, write the file + all wiki side-effects.
+Stage 4 Debrief     — compile the client debrief companion page FROM the written summary + raw.
 ```
 
-The three stages compose; do NOT shortcut to a single pass.
+The stages compose; do NOT shortcut to a single pass. The L2 may refer
+to this as the "three-stage pipeline" — Stage 4 is the 2026-06
+client-facing extension, run after the summary lands.
 
 ### Stage 1 — Draft
 
@@ -105,7 +110,15 @@ Output an issue list (do NOT modify the draft). Use this prompt body:
 (m) 折线以上违规：callout 里出现 wikilink / 时间戳，临床术语首次出现未加白话 gloss，
     H1 超出"一个主题短语 + 日期"，或 frontmatter tags > 8
 
-输出格式：每条 `[一致性 | 失实 | 越界 | 漏改 | 隐私 | 可读性] line<n>: <问题> → <建议修复>`
+针对 Stage-4 debrief 草稿（在 Stage 4 内复跑本 checklist 的以下四条）：
+
+(n) 处方化语言：与当前治疗方向有张力的行动建议没有改写成"带回咨询室问"
+    （AI 不开处方；自助建议仅限低风险自我观察 / 记录 / grounding 类）
+(o) 来源标注缺失：解惑或建议没有标「场内」/「文献」/「推断」
+(p) 审判 / 羞辱语气；或机制只写缺陷、没写它的保护功能（CFT 语气规则违例）
+(q) debrief 里的论断在 summary / 机器层找不到支撑，或与之矛盾
+
+输出格式：每条 `[一致性 | 失实 | 越界 | 漏改 | 隐私 | 可读性 | 安全] line<n>: <问题> → <建议修复>`
 不修改草稿，只输出 issue 清单。
 ```
 
@@ -140,6 +153,32 @@ Stage 3.
    entry format.
 8. Output the **"Pages NOT touched but should be (carry-over)"** section in
    the summary file with anything you discovered but didn't update.
+
+### Stage 4 — Compile the client debrief (companion page)
+
+The summary preserves formulation state for the machine; the debrief
+re-compiles the same session **for the client to deep-read** — the
+narrative-therapy therapeutic-documents tradition (White / Epston),
+plus psychoeducation. It is compiled FROM the written summary + raw
+(never drafted from the raw alone — same drift control as the human
+layer), then self-checked against critique items (n)-(q) before
+writing.
+
+1. Write to `domains/psychology/wiki/debriefs/<raw-stem>-debrief.md`.
+   Frontmatter: `type: synthesis`, `kind: debrief`,
+   `sources: ["[[<raw>]]", "[[<summary>]]"]` (exactly these two),
+   `session_kind` mirrored from the summary, `tags` ≤ 8.
+   (Folder layout is a convention per `schema.py` — `debriefs/` keeps
+   the 1:1 series legible and out of `syntheses/`' cross-session
+   essays; the monthly consolidation lint counts only `kind: theme`,
+   so debriefs never satisfy it by accident.)
+2. Full structure, voice and safety rules: §"Client debrief — the
+   deep-read companion page" below.
+3. `therapy` sessions: debrief REQUIRED. `psychiatry` sessions: light
+   variant (§below). Re-run critique items (n)-(q) on the debrief
+   draft; fix before writing.
+4. Append the debrief to the same `log.md` entry's "Pages touched"
+   list (one ingest = one log entry).
 
 ---
 
@@ -302,6 +341,150 @@ The example is fictional; copy its **shape**, not its content.
 
 ---
 
+## Client debrief — the deep-read companion page
+
+The debrief answers four client needs the summary cannot: **understand
+my current state** (in plain language AND in clinical terms — the
+client is learning the vocabulary), **know what to do next**, **get my
+in-session confusions answered**, and **see what my clinician was
+doing and why**. One debrief per therapy session, 1:1, named
+`<raw-stem>-debrief.md`.
+
+**Voice rules.** Second person（"你"）, the register of a therapeutic
+letter: warm, precise, never cheerleading, never judging. CFT-informed
+hard rule: every mechanism is described **by its function** — what it
+protects, how it once helped — never as a deficit list; a debrief that
+reads like a list of what is wrong with the reader has failed
+regardless of accuracy. Do not re-quote the most painful verbatim
+lines — reference them by anchor; the debrief is for re-reading, and
+re-reading should build understanding, not re-open the wound
+(rumination control).
+
+**Provenance markers — used throughout the page:**
+
+- `「场内」` — the clinician or you actually said it; carry the anchor.
+- `「文献」` — clinical-literature consensus; name the framework
+  (e.g. 「文献：CFT 三系统模型」), keep it textbook-level, no citations
+  needed.
+- `「推断」` — an AI connection not made in-session and not
+  textbook-standard; always append 「待验证」. When a 「推断」 item
+  has treatment implications, it MUST also appear in the
+  bring-back-to-therapy list — never as advice.
+
+### Section structure (names fixed)
+
+1. **开头定位** — a `> [!important]` callout: what this page is (写给
+   你自己的解读，理解自己的地图，不是审判清单), how to read it (慢读;
+   哪里不同意就记下来带去咨询室——你的不同意本身是临床数据), link to
+   the summary page for the dense reference layer.
+2. **`## 本场出现的机制，逐个讲透`** — 3-5 mechanisms, each with the
+   five-step shape:
+   - 现象：你在场内做了 / 说了什么（anchor）
+   - 名字：术语 + 白话 gloss + `[[concept]]` link
+   - 怎么形成的：发展史，引 wiki 已命名材料（不重新推导）
+   - 此刻怎么运作：功能视角——它在保护什么 / 回避什么 / 曾经怎么帮过你
+   - 怎么对待：当前姿势（观察它 / 命名它 / 暂不对抗它……），与治疗方向一致
+3. **`## 咨询师在做什么（干预解码）`** — one block per load-bearing
+   intervention: 她做了什么（technique 名 + gloss）/ 为什么这么做 /
+   期待它起什么作用 / 你可以怎么配合。Demystifying the therapy process
+   is itself psychoeducation — a client who understands the intervention
+   cooperates with it better.
+4. **`## 你的疑问，三层作答`** — explicit questions you asked in-session
+   plus implicit confusions visible in the raw. Each answered at three
+   levels: ① 咨询师场内怎么回应的（anchor；"没有回应到" is a valid
+   answer）② 临床文献怎么看（`「文献」`）③ 还没答案的部分。Level-③
+   items auto-collect into the bring-back list in section 5.
+5. **`## 接下来`** — three sub-lists, all low-risk, all labelled:
+   - **观察**：first-person executable self-observation tasks, rewritten
+     from the summary's open-thread watch items（"留意 X 出现时身体先
+     有什么反应"——可做，而非"监测 trajectory β"）.
+   - **可以试**：optional low-risk self-help（记录、grounding、行为
+     观察实验）。Each labelled 「非处方；试不试都可以；与咨询师的方向
+     不冲突」. Anything in tension with the current treatment direction
+     is NOT advice — it moves to the bring-back list (critique item (n)).
+   - **带去咨询室**：split per clinician the vault actually has,
+     respecting each one's established working ground. Never decide
+     disclosure for the client (e.g. when parallel clinicians don't
+     know about each other, list where each thread has working ground
+     and leave the choice explicit). Risk-relevant material (e.g.
+     passive SI data points) is stated plainly with a routing line —
+     "这是带给 <精神科医生> 的数据点" — never buried, never dramatised.
+6. **`## 你在长线上的位置`** — one short paragraph: which arcs this
+   session sits on and what moved, linking the `kind: theme` overviews
+   and the living formulation page（[[current-state]]）. If the
+   current-state page is stale (older than the last 2-3 sessions),
+   say so here — do NOT auto-edit it (its refresh is a deliberate
+   periodic pass, §"Living formulation page" below).
+
+### Worked example — debrief opening + one mechanism block (fictional)
+
+Continues the fictional session from §"Required summary structure"
+(periodic-report procrastination / self-critic):
+
+```markdown
+# 2026-03-12 session 精读 — 拖延、批评的声音，和你可以怎么读这一页
+
+> [!important] 这页怎么用
+> 这是写给你自己的解读，不是评估报告。它把这场咨询里出现的机制逐个讲开：
+> 它叫什么、怎么来的、此刻在你身上怎么运作、你可以怎么对待它。
+> 慢读。哪里不同意，记下来——你的不同意是下次咨询最好的材料。
+> 高密度的原始记录在 [[2026-03-12-session-l-summary]]。
+
+## 本场出现的机制，逐个讲透
+
+### 1. 拖延，其实是在躲一个声音
+
+**现象**「场内」：你描述周报又拖到截止前一晚，并说"一想到要交，就觉得肯定不够好，
+干脆先不开始"（[14:02]）。
+
+**名字**：这在认知行为框架里叫**经验性回避**（experiential avoidance，
+为了不接触某种内在体验——这里是"不够好"的声音——而推开整件事），
+背后那个声音是你的 [[inner-critic|内在批评者]]。
+
+**怎么形成的**：你在场内把它接回了小时候交作业前的紧张（[31:40]）；
+这与 wiki 里已记录的"作业被检查"场景同源——它不是新东西，是旧通路。
+
+**此刻怎么运作**：注意它的保护功能——只要不开始，"不够好"就永远不会被证实。
+它曾经帮你躲开真实的批评；代价是现在每个 deadline 都变成一场消耗战。
+
+**怎么对待**：本周先不对抗它（这也是 L 老师的方向「场内」[44:10]）——
+只观察：声音出现的那一刻，身体先有什么反应。把对抗留到咨询室里做。
+```
+
+The example is fictional; copy its **shape**, not its content.
+
+### `psychiatry` light variant
+
+Psychiatry debriefs carry only: ① 这次用药决策是什么、为什么（场内
+理由 + 「文献」机制白话——这个药在做什么、调量在试什么假设）② 症状
+psychoeducation（本次评估关注的症状维度，用白话讲清楚它是什么）③ 带去
+下次的问题（症状观察数据点 + 没问出口的疑问）。No mechanism deep-dive,
+no intervention decoding — process material belongs to therapy.
+
+---
+
+## Living formulation page (current-state)
+
+`domains/psychology/wiki/overviews/current-state.md` — `type:
+overview`, `kind: formulation`. The single deep-read entry point for
+"我现在整体在哪"：
+
+- 现在的我（一页纸白话）
+- 活跃模式与机制清单（每条：名字 + gloss、当前强度/阶段、最近
+  evidence 链接、当前相处姿势）
+- 长线弧线们（每条 `kind: theme` 在哪个阶段、最近移动）
+- 用药与症状现状（[[medication-arc]] 摘要）
+- 保护性因素与资源（CFT 规则：必列，页面不可只有缺陷）
+- 当前功课（observe / try / ask 滚动清单，从近期 debriefs 收敛）
+- 已学术语表（client 已掌握的临床词汇——临床素养成长记录）
+
+**Refresh cadence: deliberate and periodic, NOT per-ingest** — refresh
+it on the monthly consolidation pass (the synthesis-as-front-door
+cadence) or when the owner asks. Stage 4 links to it and flags
+staleness; it never edits it.
+
+---
+
 ## Lens menu (11 + 4 conditional)
 
 Pick the lenses that genuinely apply to the material at hand. Drop the
@@ -428,5 +611,11 @@ A correct ingest produces:
 10. For psychiatry: [[medication-arc]] has a new timeline entry **(non-negotiable)**
 11. `log.md` prepended per [AGENTS.md §"ingest"](../../../AGENTS.md#21-ingest-path)
 12. `Pages NOT touched but should be` section is non-empty if Stage 2 surfaced any carry-over (or explicitly states "none")
+13. **Exactly one** debrief companion page (`<raw-stem>-debrief.md`,
+    `type: synthesis` + `kind: debrief`, sources = raw + summary), with
+    every 解惑/建议 item provenance-marked and critique items (n)-(q)
+    passing — full structure for therapy, light variant for psychiatry
+14. The debrief links the living formulation page and flags (not fixes)
+    its staleness
 
-If any of (1)-(11) is missing, the ingest is incomplete — do not output a "done" message.
+If any of (1)-(14) is missing, the ingest is incomplete — do not output a "done" message.
