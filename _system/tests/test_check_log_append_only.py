@@ -284,6 +284,86 @@ class TestBypass:
         assert "AGENTS002" in _ids(_run(repo))
 
 
+class TestMigrationBypass:
+    """WIKI_ALLOW_MIGRATION=1 sanctions log.md rewrites only when the
+    same commit stages an addition to _system/migrations.log (TK-0034:
+    migrations rewrite wikilinks inside past entries — not a
+    permutation, so the reorder sweep cannot cover them)."""
+
+    @staticmethod
+    def _stage_link_rewrite(repo: Path) -> None:
+        """Rewrite a wikilink inside the seeded past entry — the exact
+        edit shape migrate_02 produces, rejected by default."""
+        rewritten = (
+            "---\n"
+            "type: log\n"
+            "scope: global\n"
+            "updated: 2026-05-01\n"
+            "---\n"
+            "\n"
+            "# Log\n"
+            "\n"
+            "## [2026-05-01] ingest | first\n"
+            "- Source: [[a-renamed]]\n"
+            "- One-line synthesis.\n"
+        )
+        _write(repo, "log.md", rewritten)
+        _stage(repo, "log.md")
+
+    def test_env_with_staged_migrations_log_addition_is_clean(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        repo = _init_repo(tmp_path)
+        _seed_log(repo)
+        self._stage_link_rewrite(repo)
+        _write(
+            repo,
+            "_system/migrations.log",
+            "2026-06-10 migrate_02_karpathy_vocab applied\n",
+        )
+        _stage(repo, "_system/migrations.log")
+
+        monkeypatch.setenv("WIKI_ALLOW_MIGRATION", "1")
+        assert _ids(_run(repo)) == []
+
+    def test_env_without_staged_migrations_log_is_error(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """The env var alone is inert — without a recorded migration
+        in the same commit, AGENTS002 still fires."""
+        repo = _init_repo(tmp_path)
+        _seed_log(repo)
+        self._stage_link_rewrite(repo)
+
+        monkeypatch.setenv("WIKI_ALLOW_MIGRATION", "1")
+        assert "AGENTS002" in _ids(_run(repo))
+
+    def test_staged_migrations_log_without_env_is_error(
+        self,
+        tmp_path: Path,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """A staged migrations.log addition alone does not open the
+        escape hatch — the env var must be set too (no regression of
+        the default rejection)."""
+        repo = _init_repo(tmp_path)
+        _seed_log(repo)
+        self._stage_link_rewrite(repo)
+        _write(
+            repo,
+            "_system/migrations.log",
+            "2026-06-10 migrate_02_karpathy_vocab applied\n",
+        )
+        _stage(repo, "_system/migrations.log")
+
+        monkeypatch.delenv("WIKI_ALLOW_MIGRATION", raising=False)
+        assert "AGENTS002" in _ids(_run(repo))
+
+
 class TestNonLogPathsIgnored:
     def test_modifying_wiki_page_is_clean(self, tmp_path: Path) -> None:
         repo = _init_repo(tmp_path)

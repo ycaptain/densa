@@ -43,6 +43,16 @@ the L1 schema version recorded in [`AGENTS.md`](AGENTS.md) frontmatter
   rewrite). Unknown target types fail fast against `ALLOWED_TYPES`.
   Dry-run plans annotate type rewrites; the `migrations.log` marker
   records the mapping. (TK-0033)
+- **`WIKI_ALLOW_MIGRATION=1` — sanctioned AGENTS002 escape for
+  migration commits.** `migrate_02` rewrites wikilinks inside past
+  `log.md` entries by design, but AGENTS002 rejected every staged
+  log deletion, making the migration's own output uncommittable.
+  The new bypass skips AGENTS002 for one commit and is inert unless
+  the same commit also stages an addition to
+  `_system/migrations.log` (it only works inside a recorded
+  migration). `WIKI_ALLOW_LOG_REORDER` semantics unchanged. Found
+  preparing the actual v1→v2 migration commit on a real vault.
+  (TK-0034)
 
 
 ### Changed

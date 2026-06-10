@@ -47,10 +47,16 @@ factual error retroactively hides the moment that error was made,
 which is exactly the moment a future reader needs to find to
 understand the wiki's evolution.
 
-**Sanctioned exception.** `WIKI_ALLOW_LOG_REORDER=1` for one commit
+**Sanctioned exceptions.** `WIKI_ALLOW_LOG_REORDER=1` for one commit
 (a pure-permutation reorder sweep to repair drift). The diff must be
 set-equal (no content changes, only line reordering) plus a new
 `## [YYYY-MM-DD] maintenance | …` entry explaining the reorder.
+`WIKI_ALLOW_MIGRATION=1` for one migration commit (a schema-version
+bump rewrites wikilinks inside past entries to keep the audit trail
+resolvable — not a permutation, so the reorder sweep cannot cover
+it). Inert unless the same commit also stages an addition to
+`_system/migrations.log`, so it only works inside a recorded
+migration.
 
 **Note on terminology.** The word "append" in older prompts / docs is
 a legacy synonym for "prepend at the entry insertion point". The

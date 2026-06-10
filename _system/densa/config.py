@@ -103,6 +103,14 @@ CROSS_SCOPE_BYPASS_ENV: Final[str] = "WIKI_ALLOW_CROSS_SCOPE"
 """
 
 
+MIGRATION_BYPASS_ENV: Final[str] = "WIKI_ALLOW_MIGRATION"
+"""Sanctioned narrow exception to log append-only for migration
+commits — see AGENTS.md's "Red lines" section and
+:class:`densa.checks.log_append_only.LogAppendOnly`. Inert unless the
+same commit stages an addition to ``_system/migrations.log``.
+"""
+
+
 # --- Path classifiers (string-set constants) ------------------------------
 
 SKIP_DIRS: Final[frozenset[str]] = frozenset({

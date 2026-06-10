@@ -16,6 +16,13 @@ order and needs a clean re-permutation) is permitted via the
 be a *pure permutation* — every removed line reappears verbatim on the
 added side — plus a fresh ``## [YYYY-MM-DD] maintenance | …`` heading
 recording the reorder for audit.
+
+A migration commit (schema-version bump rewriting wikilinks inside
+past entries — not a permutation, so the reorder sweep cannot cover
+it) is permitted via ``WIKI_ALLOW_MIGRATION=1``. Belt-and-braces: the
+bypass is inert unless the *same commit* also stages an addition to
+``_system/migrations.log``, so it only works inside a recorded
+migration.
 """
 
 from __future__ import annotations
@@ -25,12 +32,14 @@ import re
 from collections import Counter
 from pathlib import Path
 
-from densa.config import LOG_REORDER_BYPASS_ENV
+from densa.config import LOG_REORDER_BYPASS_ENV, MIGRATION_BYPASS_ENV
 from densa.git_io import StagedDiff, StagedEntry, staged_deletions, staged_diff
 from densa.paths import is_log
 from densa.report import Diagnostic, Report, Severity
 
 _RULE_ID = "AGENTS002"
+
+_MIGRATIONS_LOG = "_system/migrations.log"
 
 _UPDATED_FIELD_RE = re.compile(r"^\s*updated:\s*\d{4}-\d{2}-\d{2}\s*$")
 _MAINTENANCE_HEADING_RE = re.compile(
@@ -47,11 +56,29 @@ class LogAppendOnly:
         entries: list[StagedEntry],
         report: Report,
     ) -> None:
+        if self._migration_sanctioned(repo):
+            # WIKI_ALLOW_MIGRATION=1 plus a staged addition to
+            # _system/migrations.log sanctions this commit's log.md
+            # rewrites wholesale — a migration rewrites wikilinks
+            # inside past entries, which no other exception covers.
+            return
         bypass = os.environ.get(LOG_REORDER_BYPASS_ENV) == "1"
         for entry in entries:
             if not is_log(entry.path) or entry.letter == "A":
                 continue
             self._check_one(repo, entry.path, bypass, report)
+
+    @staticmethod
+    def _migration_sanctioned(repo: Path) -> bool:
+        """True iff the migration bypass is requested *and* earned.
+
+        Earned means the same commit stages at least one added line in
+        ``_system/migrations.log`` — the env var alone is inert, so the
+        bypass only exists inside a recorded migration.
+        """
+        if os.environ.get(MIGRATION_BYPASS_ENV) != "1":
+            return False
+        return bool(staged_diff(repo, _MIGRATIONS_LOG).added)
 
     def _check_one(
         self,
@@ -108,7 +135,10 @@ class LogAppendOnly:
                         "reverse-chronological (AGENTS.md §\"Red lines\"); new entries go above "
                         "older ones. For a one-shot reorder sweep, set "
                         f"`{LOG_REORDER_BYPASS_ENV}=1` and include a "
-                        "`## [YYYY-MM-DD] maintenance | ...` audit entry."
+                        "`## [YYYY-MM-DD] maintenance | ...` audit entry. "
+                        "For a migration commit, set "
+                        f"`{MIGRATION_BYPASS_ENV}=1` and stage an addition "
+                        f"to `{_MIGRATIONS_LOG}` in the same commit."
                     ),
                 ))
 
