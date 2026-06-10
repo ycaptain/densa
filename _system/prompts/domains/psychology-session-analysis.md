@@ -117,6 +117,8 @@ Output an issue list (do NOT modify the draft). Use this prompt body:
 (o) 来源标注缺失：解惑或建议没有标「场内」/「文献」/「推断」
 (p) 审判 / 羞辱语气；或机制只写缺陷、没写它的保护功能（CFT 语气规则违例）
 (q) debrief 里的论断在 summary / 机器层找不到支撑，或与之矛盾
+(r) 用药事实（药名 / 剂量 / 起停时间）与 protocol 页（medication-arc 类
+    kind: protocol concept）对不上而未修正、未标注分歧
 
 输出格式：每条 `[一致性 | 失实 | 越界 | 漏改 | 隐私 | 可读性 | 安全] line<n>: <问题> → <建议修复>`
 不修改草稿，只输出 issue 清单。
@@ -175,9 +177,25 @@ writing.
 2. Full structure, voice and safety rules: §"Client debrief — the
    deep-read companion page" below.
 3. `therapy` sessions: debrief REQUIRED. `psychiatry` sessions: light
-   variant (§below). Re-run critique items (n)-(q) on the debrief
-   draft; fix before writing.
-4. Append the debrief to the same `log.md` entry's "Pages touched"
+   variant (§below). `conversation` raws (deep talks with named
+   people, no clinician): NO debrief by default — there is no
+   intervention to decode; the human layer + the people-domain twin
+   carry the reader-facing load. Produce one only on explicit request.
+4. **Fact cross-check before writing** (critique item (r)): every
+   medication name / dose / start-stop fact in the debrief AND in the
+   summary it compiles from is verified against the protocol page
+   ([[medication-arc]]-style `kind: protocol` concept) — the protocol
+   page is authoritative. On mismatch, fix the summary in the same
+   pass (or flag the divergence explicitly); never propagate. Field
+   precedent: a wrong drug name in one summary spread to 4 pages
+   before a debrief cross-check caught it.
+5. **Sibling pairing**: when the session is part of a mirror pair
+   (same week's material worked with two clinicians), the debrief's
+   opening callout names the pairing and links the sibling debrief —
+   reading one alone gives half the picture.
+6. Re-run critique items (n)-(r) on the debrief draft; fix before
+   writing.
+7. Append the debrief to the same `log.md` entry's "Pages touched"
    list (one ingest = one log entry).
 
 ---
@@ -415,6 +433,22 @@ re-reading should build understanding, not re-open the wound
    current-state page is stale (older than the last 2-3 sessions),
    say so here — do NOT auto-edit it (its refresh is a deliberate
    periodic pass, §"Living formulation page" below).
+
+Section-5 extras: when the raw names the **next appointment**
+(date/time), it goes into 带去咨询室 verbatim — the single most
+actionable line a debrief can carry. Items the clinician explicitly
+booked as next-session topics lead that clinician's list.
+
+### Retro mode (debriefs written after later sessions already exist)
+
+When a debrief is compiled for a past session (backfill, on-touch
+retrofit), a naive "接下来一周" is stale fiction. Switch the section
+to **`## 接下来（回顾模式）`** with two sub-blocks: **当时值得带走的**
+(what the observe/try/bring lists would have been) and
+**后来实际发生了什么**「事后」 (what the already-ingested later
+sessions show — link them; name answered watch-items and convergences,
+e.g. two clinicians independently arriving at the same working
+question). State the retro mode in the opening callout.
 
 ### Worked example — debrief opening + one mechanism block (fictional)
 
