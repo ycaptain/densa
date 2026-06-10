@@ -13,6 +13,12 @@ The flow:
    (``_system/scripts/migrate_NN_<slug>.py``) by invoking it as a
    subprocess with ``--apply`` (or ``--dry-run`` when the user passed
    that flag). The migration scripts are themselves idempotent.
+   When the chain came from the ``compiled_against`` scan, ``--force``
+   is appended: the scan is ground truth, so a stale
+   ``_system/migrations.log`` (e.g. shipped by upstream and copied
+   into an adopted vault that is genuinely still on an older version)
+   must not short-circuit a pending migration. Scripts invoked by hand
+   keep their own log-based guard.
 
 Migrations are intentionally **separate scripts** rather than imported
 modules — each one is a one-shot transform that may go on to live
@@ -176,12 +182,21 @@ def run(args: argparse.Namespace) -> int:
             print("Aborted.")
             return 0
 
+    # When our own compiled_against scan says these migrations are
+    # still pending, that scan is ground truth — pass --force so a
+    # stale migrations.log (e.g. shipped by upstream into an adopted
+    # vault) cannot short-circuit the run. The scripts are idempotent
+    # by design, so forcing is safe. Explicit --from-version runs and
+    # recover runs keep the scripts' own guards.
+    scan_says_pending = args.from_version is None and not is_recover_run
+
     print()
     for m in chain:
         mode_for_step = requested_mode or m.default_mode
         rc = _run_migration(
             repo, m, dry_run=False, mode=mode_for_step,
             extra_roots=args.extra_roots,
+            force=scan_says_pending,
         )
         if rc != 0:
             _err(
@@ -339,6 +354,7 @@ def _run_migration(
     dry_run: bool,
     mode: str = MIGRATION_MODE_IN_PLACE,
     extra_roots: list[str] | None = None,
+    force: bool = False,
 ) -> int:
     """Invoke ``python <migration.script> --apply --mode <mode>`` as a
     subprocess.
@@ -349,6 +365,12 @@ def _run_migration(
     structure, and subprocess isolation keeps that flexibility. The
     same mechanism makes it safe to retire old migration scripts to
     ``attic/`` once every active vault has applied them.
+
+    ``force=True`` appends ``--force``, bypassing the script's
+    migrations.log idempotency guard. The caller sets it when its own
+    ``compiled_against`` scan already established the migration is
+    pending — the scan outranks the log (which may have been shipped
+    by upstream into an adopted vault).
     """
     script_path = repo / migration.script
     if not script_path.is_file():
@@ -357,10 +379,16 @@ def _run_migration(
 
     flag = "--dry-run" if dry_run else "--apply"
     argv = [sys.executable, str(script_path), flag, "--mode", mode]
+    if force:
+        argv.append("--force")
     for root in extra_roots or []:
         argv.extend(["--extra-roots", root])
+    force_label = " --force" if force else ""
     extra_label = f" --extra-roots {','.join(extra_roots)}" if extra_roots else ""
-    print(f"--- running {migration.script} {flag} --mode {mode}{extra_label} ---")
+    print(
+        f"--- running {migration.script} {flag} --mode {mode}"
+        f"{force_label}{extra_label} ---"
+    )
     rc = subprocess.run(argv, cwd=repo, check=False).returncode
     print(f"--- {migration.script} exit {rc} ---")
     return rc

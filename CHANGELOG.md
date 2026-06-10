@@ -8,6 +8,43 @@ the L1 schema version recorded in [`AGENTS.md`](AGENTS.md) frontmatter
 
 ## [Unreleased]
 
+### Fixed
+
+- **`migrate_02` now seeds missing v2 universal frontmatter keys.**
+  v1 pages predate `aliases` (and occasionally `sources`); the
+  frontmatter rewrite pass now appends the missing presence-only keys
+  as empty lists so a freshly migrated vault validates clean under
+  AGENTS003. Found migrating a real ~600-file v1 vault, which surfaced
+  254 post-migration `missing universal frontmatter key: aliases`
+  errors. (TK-0030)
+- **`migrate_02` rewrites folder path segments in wikilinks.** The
+  rewriter previously only renamed bare-slug links; full-path links
+  (`[[domains/<d>/wiki/analyses/...]]`) and wiki-relative
+  folder-prefixed links (`[[questions/...]]`, `[[decisions/...]]`)
+  kept their v1 folder segment, leaving ~1,600 AGENTS006 errors on the
+  same real-vault migration. Folder renames (schema table + `--map`)
+  now compose with slug renames in one pass; `raw/` is skipped per
+  AGENTS001. (TK-0031)
+- **Adopted v1 vaults migrate without manual `--force`.** Copying
+  upstream `_system/` into a pre-existing v1 vault also copies densa's
+  own `_system/migrations.log`, whose entries made the migration
+  script refuse to run. `densa migrate` now passes `--force` to the
+  scripts whenever its own `compiled_against` scan determined the
+  migration is still pending — the scan is ground truth, the scripts
+  are idempotent. Direct script invocation keeps the log guard.
+  `docs/reference/schema-versioning.md` gains an "Adopting densa into
+  a pre-existing vault" note. (TK-0032)
+
+### Added
+
+- **`migrate_02 --map OLDFOLDER=NEWFOLDER[:NEWTYPE]`** (repeatable) —
+  fold custom v1 folders/types into the v2 vocabulary in the same
+  migration run (folder rename + optional type rewrite + wikilink
+  rewrite). Unknown target types fail fast against `ALLOWED_TYPES`.
+  Dry-run plans annotate type rewrites; the `migrations.log` marker
+  records the mapping. (TK-0033)
+
+
 ### Changed
 
 - **`docs/reference/` split: design essays moved to `docs/design/`.**

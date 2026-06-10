@@ -118,3 +118,22 @@ narrowing their `supported_modes` tuple — `densa migrate --mode X`
 errors cleanly if `X` isn't supported by every step in the chain.
 
 Your raw material is never touched by any migration.
+
+### Adopting densa into a pre-existing vault
+
+If you adopted densa by copying upstream `_system/` over an existing
+(pre-densa or older-schema) vault, the copy brings along upstream's
+`_system/migrations.log` — which already records migrations that ran
+against the showcase content, **not** against your vault. That stale
+log does not block you: `densa migrate` trusts its own
+`compiled_against` scan as ground truth and passes `--force` to each
+migration script it dispatches, so a pending migration always runs.
+Only when you invoke a migration script **by hand** does its
+log-based guard apply — add `--force` yourself in that case.
+
+If your vault has custom v1 wiki folders outside the standard rename
+table, fold them into the v2 vocabulary in the same run with the
+script's repeatable `--map OLDFOLDER=NEWFOLDER[:NEWTYPE]` flag, e.g.
+`python _system/scripts/migrate_02_karpathy_vocab.py --apply --force
+--map skills=concepts:concept`. The folder is renamed, moved pages get
+`type: NEWTYPE`, and wikilinks are rewritten accordingly.

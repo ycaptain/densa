@@ -15,7 +15,10 @@ Three modes are supported. ``densa migrate`` selects one via
        :data:`densa.schema.TYPE_RENAMES_V1_TO_V2`. When the v1 type
        carried a sub-category nuance ``pattern``, ``project``,
        ``decision`` …) the script writes a ``kind:`` field so L2s
-       can preserve the distinction.
+       can preserve the distinction. Universal presence-only keys
+       missing from the v1 page (``aliases`` / ``sources`` / ``tags``)
+       are seeded as empty lists so the migrated vault passes
+       AGENTS003.
     3. Rename slug stems via
        :data:`densa.schema.SLUG_SUFFIX_RENAMES_V1_TO_V2`
        (``*-analysis.md`` → ``*-summary.md``).
@@ -24,9 +27,18 @@ Three modes are supported. ``densa migrate`` selects one via
        were mechanically migrated vs. re-ingested under v2.
     5. Rewrite every ``[[wikilink]]`` (and ``[[link|alias]]``,
        ``[[link#anchor]]``) across the *entire* vault so the new
-       slugs resolve.
+       slugs resolve. Path-shaped links also have their stale v1
+       folder segment rewritten — both full-path
+       (``[[domains/<d>/wiki/<folder>/<slug>]]``) and wiki-relative
+       (``[[<folder>/<slug>]]``) forms. Files under ``raw/`` are
+       never rewritten (AGENTS001).
     6. Create the seven recommended v2 folders and a per-domain
        ``overview.md`` if missing.
+
+Vaults with custom v1 folders outside the rename table can fold them
+into the v2 vocabulary in the same run via the repeatable
+``--map OLDFOLDER=NEWFOLDER[:NEWTYPE]`` flag (folder rename + forced
+``type:`` + wikilink rewrite).
 
 ``--mode archive``
     For each ``domains/<X>/wiki/`` in the vault:
@@ -58,6 +70,7 @@ Usage::
     python _system/scripts/migrate_02_karpathy_vocab.py --apply
     python _system/scripts/migrate_02_karpathy_vocab.py --apply --mode archive
     python _system/scripts/migrate_02_karpathy_vocab.py --apply --mode recover
+    python _system/scripts/migrate_02_karpathy_vocab.py --apply --map skills=concepts:concept
     python _system/scripts/migrate_02_karpathy_vocab.py --dry-run
 """
 
@@ -82,7 +95,10 @@ _SYSTEM = _HERE.parent.parent
 if str(_SYSTEM) not in sys.path:
     sys.path.insert(0, str(_SYSTEM))
 
+from densa.config import PRESENCE_ONLY_FRONTMATTER_KEYS  # noqa: E402
+from densa.paths import is_raw  # noqa: E402
 from densa.schema import (  # noqa: E402
+    ALLOWED_TYPES,
     FOLDER_RENAMES_V1_TO_V2,
     MIGRATION_MODE_ARCHIVE,
     MIGRATION_MODE_IN_PLACE,
@@ -263,11 +279,21 @@ def main(argv: list[str] | None = None) -> int:
         _err("not inside a Densa vault (no AGENTS.md + _system/densa/ here)")
         return 2
 
+    try:
+        extra_folder_renames, type_overrides = _parse_map_specs(args.map)
+    except ValueError as exc:
+        _err(str(exc))
+        return 2
+    folder_renames: dict[str, str | None] = {
+        **FOLDER_RENAMES_V1_TO_V2,
+        **extra_folder_renames,
+    }
+
     # Idempotency guard: skip re-runs unless --force OR mode is recover
     # (recover is meant to be re-applied after the initial archive).
     if (
         args.mode != MIGRATION_MODE_RECOVER
-        and _already_applied(repo, args.mode, args.extra_roots)
+        and _already_applied(repo, args.mode, args.extra_roots, args.map)
         and not args.force
     ):
         roots_label = (
@@ -284,27 +310,46 @@ def main(argv: list[str] | None = None) -> int:
     actions: list[Action] = []
     rename_map: dict[str, str] = {}  # slug → new slug; for wikilink rewrite
     for domain_dir in _iter_domain_dirs(repo, args.extra_roots):
-        sub_actions, sub_renames = _plan_domain(domain_dir, mode=args.mode)
+        sub_actions, sub_renames = _plan_domain(
+            domain_dir,
+            mode=args.mode,
+            folder_renames=folder_renames,
+            type_overrides=type_overrides,
+        )
         actions.extend(sub_actions)
         rename_map.update(sub_renames)
 
     # In-place / recover modes also rewrite wikilinks across the full
-    # repo so renamed slugs resolve. Archive mode does not — the moved
-    # pages live in .legacy/ and are not part of the live wikilink
-    # graph anyway.
-    if args.mode in (MIGRATION_MODE_IN_PLACE, MIGRATION_MODE_RECOVER) and rename_map:
+    # repo so renamed slugs *and* renamed folder path segments resolve.
+    # Archive mode does not — the moved pages live in .legacy/ and are
+    # not part of the live wikilink graph anyway. Only rewrite when
+    # this run actually migrates pages; on an already-migrated vault
+    # the plan stays empty and the early "already v2-shaped" exit fires.
+    folder_link_renames = _folder_link_renames(folder_renames)
+    migrates_pages = any(
+        a.kind in ("mv-and-rewrite", "rewrite-frontmatter") for a in actions
+    )
+    if (
+        args.mode in (MIGRATION_MODE_IN_PLACE, MIGRATION_MODE_RECOVER)
+        and migrates_pages
+        and (rename_map or folder_link_renames)
+    ):
         actions.append(Action(
             kind="rewrite-wikilinks",
-            src=repo,  # placeholder; the action carries the map below
+            src=repo,  # placeholder; the action carries the maps below
             renames=dict(rename_map),
-            note=f"rewrite {len(rename_map)} wikilink slug(s) across the vault",
+            folder_renames=folder_link_renames,
+            note=(
+                f"rewrite wikilinks: {len(rename_map)} slug(s), "
+                f"{len(folder_link_renames)} folder segment(s)"
+            ),
         ))
 
     if not actions:
         print(f"Vault is already v{TO_VERSION}-shaped (mode={args.mode}). "
               f"Nothing to do.")
         if not args.dry_run:
-            _record_migration(repo, args.mode, args.extra_roots)
+            _record_migration(repo, args.mode, args.extra_roots, args.map)
         return 0
 
     _print_plan(actions, dry_run=args.dry_run)
@@ -315,7 +360,7 @@ def main(argv: list[str] | None = None) -> int:
     git_available = _git_available()
     for a in actions:
         _apply(repo, a, use_git=git_available)
-    _record_migration(repo, args.mode, args.extra_roots)
+    _record_migration(repo, args.mode, args.extra_roots, args.map)
     print()
     print(f"✓ {MIGRATION_LABEL} applied (mode={args.mode}).")
     return 0
@@ -374,7 +419,74 @@ def _parse_args(argv: list[str] | None) -> argparse.Namespace:
             "`--extra-roots examples/showcases`."
         ),
     )
+    p.add_argument(
+        "--map",
+        action="append",
+        default=[],
+        metavar="OLDFOLDER=NEWFOLDER[:NEWTYPE]",
+        help=(
+            "extend the v1→v2 folder rename table with a custom "
+            "mapping. OLDFOLDER (a wiki sub-folder name) is renamed to "
+            "NEWFOLDER; when :NEWTYPE is given, pages moved out of "
+            "OLDFOLDER also have their frontmatter `type:` rewritten "
+            "to NEWTYPE (must be a v2 page type). Wikilink rewriting "
+            "picks up the extra renames. Can be passed multiple times. "
+            "Example: `--map skills=concepts:concept`."
+        ),
+    )
     return p.parse_args(argv)
+
+
+def _parse_map_specs(
+    specs: list[str],
+) -> tuple[dict[str, str], dict[str, str]]:
+    """Parse repeated ``--map OLDFOLDER=NEWFOLDER[:NEWTYPE]`` flags.
+
+    Returns ``(folder_renames, type_overrides)``. ``folder_renames``
+    extends :data:`densa.schema.FOLDER_RENAMES_V1_TO_V2` at runtime;
+    ``type_overrides`` maps the *old* folder name to the v2 ``type:``
+    its pages should carry after the move. Raises :class:`ValueError`
+    on a malformed spec or an unknown v2 type so typos fail fast
+    instead of silently producing AGENTS004 leftovers.
+    """
+    folder_renames: dict[str, str] = {}
+    type_overrides: dict[str, str] = {}
+    for spec in specs:
+        old, eq, rest = spec.partition("=")
+        old = old.strip()
+        new_folder, _, new_type = rest.partition(":")
+        new_folder = new_folder.strip()
+        new_type = new_type.strip()
+        if not eq or not old or not new_folder:
+            raise ValueError(
+                f"--map expects OLDFOLDER=NEWFOLDER[:NEWTYPE], got {spec!r}"
+            )
+        if new_type and new_type not in ALLOWED_TYPES:
+            raise ValueError(
+                f"--map {spec!r}: {new_type!r} is not a v2 page type "
+                f"(allowed: {', '.join(sorted(ALLOWED_TYPES))})"
+            )
+        folder_renames[old] = new_folder
+        if new_type:
+            type_overrides[old] = new_type
+    return folder_renames, type_overrides
+
+
+def _folder_link_renames(
+    folder_renames: dict[str, str | None],
+) -> dict[str, str]:
+    """Reduce a folder rename table to the entries wikilinks need.
+
+    Drops removed folders (``None`` — their pages need human handling,
+    so their links cannot be mechanically retargeted) and identity
+    entries (``concepts`` → ``concepts``), leaving only segments whose
+    spelling actually changes.
+    """
+    return {
+        old: new
+        for old, new in folder_renames.items()
+        if new is not None and new != old
+    }
 
 
 def _find_repo_root() -> Path | None:
@@ -403,8 +515,10 @@ class Action:
     ``kind`` discriminates the union; ``src`` is the primary path the
     action operates on; ``dst`` (when present) is the target. The
     ``transform`` payload carries action-specific data
-    (e.g. ``type:`` rewrite for ``rewrite-frontmatter``). ``renames``
-    is used only by ``rewrite-wikilinks``.
+    (e.g. a forced ``type:`` rewrite for ``rewrite-frontmatter`` /
+    ``mv-and-rewrite``, set by ``--map``). ``renames`` (slug → slug)
+    and ``folder_renames`` (folder segment → folder segment) are used
+    only by ``rewrite-wikilinks``.
     """
 
     kind: str
@@ -412,6 +526,7 @@ class Action:
     dst: Path | None = None
     transform: dict[str, str] | None = None
     renames: dict[str, str] = field(default_factory=dict)
+    folder_renames: dict[str, str] = field(default_factory=dict)
     note: str = ""
 
 
@@ -443,8 +558,15 @@ def _plan_domain(
     domain_dir: Path,
     *,
     mode: str,
+    folder_renames: dict[str, str | None],
+    type_overrides: dict[str, str],
 ) -> tuple[list[Action], dict[str, str]]:
     """Plan the v1 → v2 transform for one domain in the requested mode.
+
+    ``folder_renames`` is the effective rename table
+    (:data:`densa.schema.FOLDER_RENAMES_V1_TO_V2` extended by any
+    ``--map`` flags); ``type_overrides`` maps old folder names to the
+    forced v2 ``type:`` from ``--map``'s ``:NEWTYPE`` suffix.
 
     Returns ``(actions, rename_map)``. ``rename_map`` is a slug → slug
     table (without the ``.md`` extension) accumulated across all
@@ -452,11 +574,20 @@ def _plan_domain(
     emits a single ``rewrite-wikilinks`` action at the end.
     """
     if mode == MIGRATION_MODE_IN_PLACE:
-        return _plan_in_place(domain_dir, root=domain_dir / "wiki")
+        return _plan_in_place(
+            domain_dir,
+            root=domain_dir / "wiki",
+            folder_renames=folder_renames,
+            type_overrides=type_overrides,
+        )
     if mode == MIGRATION_MODE_ARCHIVE:
         return _plan_archive(domain_dir)
     if mode == MIGRATION_MODE_RECOVER:
-        return _plan_recover(domain_dir)
+        return _plan_recover(
+            domain_dir,
+            folder_renames=folder_renames,
+            type_overrides=type_overrides,
+        )
     raise ValueError(f"unknown mode: {mode!r}")
 
 
@@ -464,6 +595,8 @@ def _plan_in_place(
     domain_dir: Path,
     *,
     root: Path,
+    folder_renames: dict[str, str | None],
+    type_overrides: dict[str, str],
 ) -> tuple[list[Action], dict[str, str]]:
     """In-place migration: rename folder + frontmatter + slug; rewrite
     wikilinks repo-wide.
@@ -485,9 +618,9 @@ def _plan_in_place(
             continue
         if child.name == LEGACY_DIR:
             continue
-        new_folder = FOLDER_RENAMES_V1_TO_V2.get(child.name)
+        new_folder = folder_renames.get(child.name)
         if new_folder is None:
-            if child.name in FOLDER_RENAMES_V1_TO_V2:
+            if child.name in folder_renames:
                 # Explicitly removed in v2 (e.g. ``fleeting/``).
                 actions.append(Action(
                     kind="warn-removed-folder",
@@ -513,6 +646,10 @@ def _plan_in_place(
         target_folder = wiki / new_folder
         target_folder.mkdir(parents=True, exist_ok=True)
 
+        # ``--map old=new:type`` forces the moved pages' ``type:``.
+        override = type_overrides.get(child.name)
+        transform = {"type": override} if override else None
+
         for md in sorted(child.rglob("*.md")):
             new_md = _planned_target_for(md, child, target_folder)
             if md == new_md:
@@ -522,6 +659,7 @@ def _plan_in_place(
                 actions.append(Action(
                     kind="rewrite-frontmatter",
                     src=md,
+                    transform=transform,
                     note="upgrade frontmatter in place (folder unchanged)",
                 ))
                 continue
@@ -529,6 +667,7 @@ def _plan_in_place(
                 kind="mv-and-rewrite",
                 src=md,
                 dst=new_md,
+                transform=transform,
                 note="v1 page → v2 layout",
             ))
             # Record slug rename for wikilink rewriting.
@@ -621,13 +760,21 @@ def _plan_archive(
 
 def _plan_recover(
     domain_dir: Path,
+    *,
+    folder_renames: dict[str, str | None],
+    type_overrides: dict[str, str],
 ) -> tuple[list[Action], dict[str, str]]:
     """Recover mode: lift .legacy/ contents into the live v2 layout."""
     wiki = domain_dir / "wiki"
     legacy = wiki / LEGACY_DIR
     if not legacy.is_dir():
         return [], {}
-    return _plan_in_place(domain_dir, root=legacy)
+    return _plan_in_place(
+        domain_dir,
+        root=legacy,
+        folder_renames=folder_renames,
+        type_overrides=type_overrides,
+    )
 
 
 def _planned_target_for(
@@ -697,10 +844,14 @@ def _print_plan(actions: list[Action], dry_run: bool) -> None:
     header = "Plan (dry run — no changes will be made):" if dry_run else "Plan:"
     print(header)
     for a in actions:
+        type_label = (
+            f"  (type -> {a.transform['type']})"
+            if a.transform and "type" in a.transform else ""
+        )
         if a.kind == "mv-and-rewrite":
-            print(f"  git mv + rewrite  {a.src}  ->  {a.dst}")
+            print(f"  git mv + rewrite  {a.src}  ->  {a.dst}{type_label}")
         elif a.kind == "rewrite-frontmatter":
-            print(f"  rewrite frontmatter  {a.src}")
+            print(f"  rewrite frontmatter  {a.src}{type_label}")
         elif a.kind == "mv-folder":
             print(f"  git mv  {a.src}  ->  {a.dst}")
         elif a.kind == "create-folder":
@@ -710,7 +861,10 @@ def _print_plan(actions: list[Action], dry_run: bool) -> None:
         elif a.kind == "annotate-legacy":
             print(f"  annotate  {a.src}  (status: legacy-snapshot)")
         elif a.kind == "rewrite-wikilinks":
-            print(f"  rewrite wikilinks: {len(a.renames)} slug(s)")
+            print(
+                f"  rewrite wikilinks: {len(a.renames)} slug(s), "
+                f"{len(a.folder_renames)} folder segment(s)"
+            )
         elif a.kind == "cleanup-empty-folder":
             print(f"  rmdir if empty  {a.src}")
         elif a.kind == "warn-removed-folder" or a.kind == "warn-unknown-folder":
@@ -720,9 +874,12 @@ def _print_plan(actions: list[Action], dry_run: bool) -> None:
 
 def _apply(repo: Path, action: Action, use_git: bool) -> None:
     if action.kind == "mv-and-rewrite":
-        _do_mv_and_rewrite(repo, action.src, action.dst, use_git=use_git)
+        _do_mv_and_rewrite(
+            repo, action.src, action.dst,
+            use_git=use_git, transform=action.transform,
+        )
     elif action.kind == "rewrite-frontmatter":
-        _do_rewrite_frontmatter(action.src)
+        _do_rewrite_frontmatter(action.src, transform=action.transform)
     elif action.kind == "mv-folder":
         _do_mv_folder(repo, action.src, action.dst, use_git=use_git)
     elif action.kind == "create-folder":
@@ -732,7 +889,7 @@ def _apply(repo: Path, action: Action, use_git: bool) -> None:
     elif action.kind == "annotate-legacy":
         _do_annotate_legacy(action.src)
     elif action.kind == "rewrite-wikilinks":
-        _do_rewrite_wikilinks(repo, action.renames)
+        _do_rewrite_wikilinks(repo, action.renames, action.folder_renames)
     elif action.kind == "cleanup-empty-folder":
         _do_cleanup_empty_folder(action.src)
     # warn-* actions are diagnostic only; the warning text already
@@ -767,6 +924,7 @@ def _do_mv_and_rewrite(
     dst: Path | None,
     *,
     use_git: bool,
+    transform: dict[str, str] | None = None,
 ) -> None:
     """Move a single markdown file and rewrite its frontmatter."""
     if dst is None:
@@ -782,7 +940,7 @@ def _do_mv_and_rewrite(
             shutil.move(str(src), str(dst))
     else:
         shutil.move(str(src), str(dst))
-    _do_rewrite_frontmatter(dst)
+    _do_rewrite_frontmatter(dst, transform=transform)
 
 
 def _do_create_folder(folder: Path) -> None:
@@ -868,17 +1026,24 @@ def _do_cleanup_empty_folder(folder: Path) -> None:
 # ---------------------------------------------------------------------------
 
 
-def _do_rewrite_frontmatter(page: Path) -> None:
+def _do_rewrite_frontmatter(
+    page: Path,
+    transform: dict[str, str] | None = None,
+) -> None:
     """Rewrite a single page's frontmatter to v2 semantics.
 
-    Three changes:
+    Four changes:
 
     1. ``type:`` value renamed per :data:`TYPE_RENAMES_V1_TO_V2`.
        When the v1 type carried a sub-kind nuance (e.g. ``pattern``,
        ``decision``), a ``kind:`` field is added with the original
-       value.
+       value. A ``--map`` ``:NEWTYPE`` override (carried in
+       ``transform``) wins over the table.
     2. ``compiled_against:`` is set to 2 (added if absent).
-    3. ``migration_history:`` is appended with a single entry recording
+    3. Universal presence-only keys (``sources`` / ``tags`` /
+       ``aliases``) missing from the v1 page are seeded as empty lists
+       so AGENTS003 passes on the freshly migrated vault.
+    4. ``migration_history:`` is appended with a single entry recording
        this run. Existing history is preserved so future migrations
        accumulate rather than overwrite.
 
@@ -899,18 +1064,26 @@ def _do_rewrite_frontmatter(page: Path) -> None:
         return
     block = text[4:end]
     body = text[end + len("\n---"):]
-    new_block, mutated = _transform_frontmatter_block(block)
+    type_override = (transform or {}).get("type")
+    new_block, mutated = _transform_frontmatter_block(
+        block, type_override=type_override,
+    )
     if not mutated:
         return
     page.write_text("---\n" + new_block + "\n---" + body, encoding="utf-8")
 
 
-def _transform_frontmatter_block(block: str) -> tuple[str, bool]:
+def _transform_frontmatter_block(
+    block: str,
+    type_override: str | None = None,
+) -> tuple[str, bool]:
     """Apply the v1 → v2 transform to a frontmatter block.
 
     Returns ``(new_block, mutated)``. ``new_block`` is the rewritten
     body without the surrounding ``---`` delimiters; ``mutated`` is
-    ``True`` when at least one byte changed.
+    ``True`` when at least one byte changed. ``type_override`` (from a
+    ``--map`` ``:NEWTYPE`` suffix) forces the new ``type:`` value
+    instead of consulting :data:`TYPE_RENAMES_V1_TO_V2`.
 
     The parser is line-oriented and limited to the flat-mapping subset
     used by Densa templates: ``key: value`` pairs and ``key:`` lists
@@ -938,7 +1111,10 @@ def _transform_frontmatter_block(block: str) -> tuple[str, bool]:
             saw_type = True
             value = line.split(":", 1)[1].strip()
             type_v1 = value
-            mapped = TYPE_RENAMES_V1_TO_V2.get(value, value)
+            if type_override is not None:
+                mapped = type_override
+            else:
+                mapped = TYPE_RENAMES_V1_TO_V2.get(value, value)
             type_v2 = mapped
             if mapped is None:
                 # Removed type — leave as-is and let the human handle.
@@ -998,6 +1174,14 @@ def _transform_frontmatter_block(block: str) -> tuple[str, bool]:
             if line.lstrip().startswith("type:"):
                 out.insert(idx + 1, f"kind: {needs_kind}")
                 break
+
+    # Seed universal presence-only keys v1 pages routinely omitted
+    # (v1 never had ``aliases``). AGENTS003 requires the key to be
+    # present even when its list is empty, so a freshly migrated vault
+    # would otherwise fail validation.
+    for key in PRESENCE_ONLY_FRONTMATTER_KEYS:
+        if not any(ln.lstrip().startswith(f"{key}:") for ln in lines):
+            out.append(f"{key}: []")
 
     if not saw_compiled:
         out.append(f"compiled_against: {TO_VERSION}")
@@ -1079,10 +1263,14 @@ _WIKILINK_RE: Final[re.Pattern[str]] = re.compile(
 )
 
 
-def _do_rewrite_wikilinks(repo: Path, renames: dict[str, str]) -> None:
-    """Rewrite every ``[[<slug>]]`` whose ``<slug>`` is in ``renames``.
+def _do_rewrite_wikilinks(
+    repo: Path,
+    renames: dict[str, str],
+    folder_renames: dict[str, str] | None = None,
+) -> None:
+    """Rewrite every ``[[…]]`` affected by slug or folder renames.
 
-    Handles three suffix shapes (Obsidian wikilink grammar):
+    Handles four suffix shapes (Obsidian wikilink grammar):
 
     - ``[[slug]]``                  → ``[[new-slug]]``
     - ``[[slug|alias]]``            → ``[[new-slug|alias]]``
@@ -1091,24 +1279,40 @@ def _do_rewrite_wikilinks(repo: Path, renames: dict[str, str]) -> None:
 
     The rename map is keyed by raw slug (no extension, no anchor, no
     alias), which is also what the wikilink resolver uses.
+    ``folder_renames`` maps stale v1 folder path segments to their v2
+    spelling (see :func:`_rewrite_wikilinks_in_text`).
+
+    Files under any ``raw/`` directory are never touched — raw sources
+    are immutable (AGENTS001), even for a sanctioned migration.
+    ``log.md`` files *are* rewritten, matching the existing slug-rename
+    behaviour: a migration is the sanctioned moment links in past log
+    entries are allowed to be retargeted so they keep resolving (the
+    run is recorded in ``_system/migrations.log`` / per-page
+    ``migration_history``).
     """
-    if not renames:
+    if not renames and not folder_renames:
         return
     skip = {".git", ".obsidian", "node_modules", "__pycache__"}
     for md in repo.rglob("*.md"):
-        parts = md.relative_to(repo).parts
-        if any(p in skip for p in parts):
+        rel = md.relative_to(repo)
+        if any(p in skip for p in rel.parts):
+            continue
+        if is_raw(rel.as_posix()):
             continue
         try:
             text = md.read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError):
             continue
-        new_text = _rewrite_wikilinks_in_text(text, renames)
+        new_text = _rewrite_wikilinks_in_text(text, renames, folder_renames)
         if new_text != text:
             md.write_text(new_text, encoding="utf-8")
 
 
-def _rewrite_wikilinks_in_text(text: str, renames: dict[str, str]) -> str:
+def _rewrite_wikilinks_in_text(
+    text: str,
+    renames: dict[str, str],
+    folder_renames: dict[str, str] | None = None,
+) -> str:
     """Walk every ``[[…]]`` and apply ``renames`` to the slug component.
 
     Mirrors :func:`densa.wikilink.resolve` parsing semantics so a
@@ -1123,10 +1327,15 @@ def _rewrite_wikilinks_in_text(text: str, renames: dict[str, str]) -> str:
       get a non-breaking table.
     - The slug component may carry an ``#anchor`` suffix; we keep it
       attached to the (possibly renamed) slug.
-    - The slug component may be path-shaped (``folder/slug``); only
-      the trailing path segment is the file stem the resolver
-      matches, so we rewrite only that.
+    - The slug component may be path-shaped. The trailing segment is
+      the file stem the resolver matches (rewritten per ``renames``);
+      the wiki sub-folder segment — right after ``wiki`` in full-path
+      links (``domains/<d>/wiki/<folder>/<slug>``), leading in
+      wiki-relative links (``<folder>/<slug>``) — is rewritten per
+      ``folder_renames``. Both renames compose in one pass, and the
+      alias label / anchor are preserved verbatim.
     """
+    folder_renames = folder_renames or {}
 
     def repl(match: re.Match[str]) -> str:
         body = match.group(1)
@@ -1136,17 +1345,41 @@ def _rewrite_wikilinks_in_text(text: str, renames: dict[str, str]) -> str:
             anchor_suffix = f"#{anchor}"
         else:
             stem, anchor_suffix = slug_part, ""
-        if "/" in stem:
-            head, last = stem.rsplit("/", 1)
-            head_prefix = head + "/"
-        else:
-            head_prefix, last = "", stem
-        new_last = renames.get(last, last)
-        if new_last == last:
+        segments = stem.split("/")
+        changed = False
+        folder_idx = _folder_segment_index(segments)
+        if folder_idx is not None:
+            new_segment = folder_renames.get(segments[folder_idx])
+            if new_segment is not None:
+                segments[folder_idx] = new_segment
+                changed = True
+        new_last = renames.get(segments[-1])
+        if new_last is not None:
+            segments[-1] = new_last
+            changed = True
+        if not changed:
             return match.group(0)
-        return f"[[{head_prefix}{new_last}{anchor_suffix}{alias_suffix}]]"
+        return f"[[{'/'.join(segments)}{anchor_suffix}{alias_suffix}]]"
 
     return _WIKILINK_RE.sub(repl, text)
+
+
+def _folder_segment_index(segments: list[str]) -> int | None:
+    """Locate the wiki sub-folder segment in a wikilink path.
+
+    Full-path links carry an explicit ``wiki`` segment
+    (``domains/<d>/wiki/<folder>/…``): the folder is the segment right
+    after the first ``wiki``. Wiki-relative links omit it
+    (``<folder>/<slug>``): the folder is the leading segment. Returns
+    ``None`` for bare-slug links and when the candidate would be the
+    final segment (that is the slug, handled by the slug rename map).
+    """
+    if len(segments) < 2:
+        return None
+    idx = segments.index("wiki") + 1 if "wiki" in segments else 0
+    if idx >= len(segments) - 1:
+        return None
+    return idx
 
 
 def _split_slug_alias(body: str) -> tuple[str, str]:
@@ -1176,35 +1409,49 @@ def _migrations_log_path(repo: Path) -> Path:
     return repo / "_system" / "migrations.log"
 
 
-def _run_marker(mode: str, extra_roots: list[str] | None) -> str:
+def _run_marker(
+    mode: str,
+    extra_roots: list[str] | None,
+    maps: list[str] | None = None,
+) -> str:
     """Return the migrations.log marker substring identifying one run.
 
     Pure idempotency key: ``MIGRATION_ID`` + mode + sorted extra
-    roots. A run without ``--extra-roots`` produces the historic
-    marker shape (``mode=<x>``) for backwards compatibility with
-    existing log lines.
+    roots + sorted ``--map`` specs. A run without ``--extra-roots`` /
+    ``--map`` produces the historic marker shape (``mode=<x>``) for
+    backwards compatibility with existing log lines — and so a later
+    run that *adds* custom mappings is not short-circuited by the
+    earlier plain run's record.
     """
     marker = f"{MIGRATION_ID}  mode={mode}"
     if extra_roots:
         marker += f"  extra-roots={','.join(sorted(extra_roots))}"
+    if maps:
+        marker += f"  map={','.join(sorted(maps))}"
     return marker
 
 
 def _already_applied(
-    repo: Path, mode: str, extra_roots: list[str] | None = None,
+    repo: Path,
+    mode: str,
+    extra_roots: list[str] | None = None,
+    maps: list[str] | None = None,
 ) -> bool:
     log = _migrations_log_path(repo)
     if not log.is_file():
         return False
-    return _run_marker(mode, extra_roots) in log.read_text(encoding="utf-8")
+    return _run_marker(mode, extra_roots, maps) in log.read_text(encoding="utf-8")
 
 
 def _record_migration(
-    repo: Path, mode: str, extra_roots: list[str] | None = None,
+    repo: Path,
+    mode: str,
+    extra_roots: list[str] | None = None,
+    maps: list[str] | None = None,
 ) -> None:
     log = _migrations_log_path(repo)
     log.parent.mkdir(parents=True, exist_ok=True)
-    marker = _run_marker(mode, extra_roots)
+    marker = _run_marker(mode, extra_roots, maps)
     line = f"{date.today().isoformat()}  {marker}  {MIGRATION_LABEL}\n"
     if log.is_file():
         existing = log.read_text(encoding="utf-8")

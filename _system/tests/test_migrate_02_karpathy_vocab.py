@@ -20,6 +20,12 @@ from __future__ import annotations
 import os
 import sys
 from pathlib import Path
+from typing import ClassVar
+
+import pytest
+
+from densa.checks.frontmatter_required import FrontmatterRequiredKeys
+from densa.report import Report
 
 # Make the migration script importable as a module so we can unit-test
 # its helpers without spawning subprocesses.
@@ -206,6 +212,336 @@ class TestInPlaceMode:
             for p in wiki.rglob("*.md")
         )
         assert before == after
+
+
+# --- presence-only key seeding (TK-0030) ----------------------------------
+
+
+class TestSeedsPresenceOnlyKeys:
+    """v1 pages routinely lack ``aliases`` (and sometimes ``sources`` /
+    ``tags``); the migration must seed them as empty lists so the
+    migrated vault passes AGENTS003."""
+
+    @staticmethod
+    def _v1_page_missing_presence_keys() -> str:
+        # No aliases/sources/tags at all — the common v1 shape.
+        return (
+            "---\n"
+            "type: analysis\n"
+            "domain: research-papers\n"
+            "created: 2024-01-01\n"
+            "updated: 2024-01-01\n"
+            "status: active\n"
+            "compiled_against: 1\n"
+            "---\n"
+            "# Page\n"
+        )
+
+    def test_missing_keys_seeded_as_empty_lists(self, tmp_path: Path) -> None:
+        _build_v1_vault(tmp_path)
+        domain = tmp_path / "domains" / "research-papers"
+        _write(
+            domain / "wiki" / "analyses" / "2024-bare-analysis.md",
+            self._v1_page_missing_presence_keys(),
+        )
+        _run_script(tmp_path, "--apply", "--mode", "in-place")
+
+        page = domain / "wiki" / "summaries" / "2024-bare-summary.md"
+        assert page.is_file()
+        assert _frontmatter_value(page, "aliases") == "[]"
+        assert _frontmatter_value(page, "sources") == "[]"
+        assert _frontmatter_value(page, "tags") == "[]"
+
+    def test_existing_keys_not_duplicated(self, tmp_path: Path) -> None:
+        _build_v1_vault(tmp_path)
+        _run_script(tmp_path, "--apply", "--mode", "in-place")
+        page = (
+            tmp_path / "domains" / "research-papers" / "wiki"
+            / "summaries" / "2024-foo-summary.md"
+        )
+        body = page.read_text(encoding="utf-8")
+        # _v1_page already carries all three keys; no second copy.
+        for key in ("aliases", "sources", "tags"):
+            assert body.count(f"{key}:") == 1
+
+    def test_migrated_page_passes_agents003(self, tmp_path: Path) -> None:
+        _build_v1_vault(tmp_path)
+        domain = tmp_path / "domains" / "research-papers"
+        _write(
+            domain / "wiki" / "analyses" / "2024-bare-analysis.md",
+            self._v1_page_missing_presence_keys(),
+        )
+        _run_script(tmp_path, "--apply", "--mode", "in-place")
+
+        report = Report()
+        for md in (domain / "wiki").rglob("*.md"):
+            rel = md.relative_to(tmp_path).as_posix()
+            FrontmatterRequiredKeys().visit(
+                rel, md.read_text(encoding="utf-8"), {}, report,
+            )
+        assert [d.rule_id for d in report.diagnostics] == []
+
+
+# --- folder path segments in wikilinks (TK-0031) ---------------------------
+
+
+class TestRewriteWikilinksInText:
+    """Unit coverage for the folder-segment + slug rename composition."""
+
+    FOLDERS: ClassVar[dict[str, str]] = {
+        "questions": "open-questions",
+        "analyses": "summaries",
+    }
+    SLUGS: ClassVar[dict[str, str]] = {
+        "2024-foo-analysis": "2024-foo-summary",
+    }
+
+    @pytest.mark.parametrize("src,expected", [
+        # Wiki-relative folder-prefixed links.
+        ("[[questions/open-arc]]", "[[open-questions/open-arc]]"),
+        ("[[questions/open-arc|the arc]]", "[[open-questions/open-arc|the arc]]"),
+        ("[[questions/sub/open-arc]]", "[[open-questions/sub/open-arc]]"),
+        # Full-path links: folder segment is the one right after wiki/.
+        (
+            "[[domains/psych/wiki/questions/open-arc]]",
+            "[[domains/psych/wiki/open-questions/open-arc]]",
+        ),
+        # Folder rename + slug rename compose in one pass.
+        (
+            "[[domains/psych/wiki/analyses/2024-foo-analysis]]",
+            "[[domains/psych/wiki/summaries/2024-foo-summary]]",
+        ),
+        ("[[analyses/2024-foo-analysis]]", "[[summaries/2024-foo-summary]]"),
+        # Anchor + alias label preserved verbatim.
+        (
+            "[[analyses/2024-foo-analysis#sec|Foo]]",
+            "[[summaries/2024-foo-summary#sec|Foo]]",
+        ),
+        # Bare slugs keep working (no folder segment at all).
+        ("[[2024-foo-analysis]]", "[[2024-foo-summary]]"),
+        # Unknown folder segment: left alone.
+        ("[[customs/whatever]]", "[[customs/whatever]]"),
+        # Candidate folder is the final segment → it is a slug, not a
+        # folder; left to the slug map (which has no entry here).
+        ("[[domains/psych/wiki/questions]]", "[[domains/psych/wiki/questions]]"),
+    ])
+    def test_rewrite(self, src: str, expected: str) -> None:
+        assert mig._rewrite_wikilinks_in_text(src, self.SLUGS, self.FOLDERS) == expected
+
+
+class TestFolderSegmentWikilinksEndToEnd:
+    def test_wiki_relative_folder_links_rewritten(self, tmp_path: Path) -> None:
+        _build_v1_vault(tmp_path)
+        domain = tmp_path / "domains" / "research-papers"
+        _write(
+            domain / "wiki" / "syntheses" / "linker.md",
+            _v1_page(
+                "synthesis",
+                "Track [[questions/open-arc]] and [[questions/open-arc|the arc]]\n",
+            ),
+        )
+        _run_script(tmp_path, "--apply", "--mode", "in-place")
+
+        body = (domain / "wiki" / "syntheses" / "linker.md").read_text(
+            encoding="utf-8"
+        )
+        assert "[[open-questions/open-arc]]" in body
+        assert "[[open-questions/open-arc|the arc]]" in body
+        assert "[[questions/" not in body
+
+    def test_full_path_links_folder_and_slug_compose(self, tmp_path: Path) -> None:
+        _build_v1_vault(tmp_path)
+        domain = tmp_path / "domains" / "research-papers"
+        _write(
+            domain / "wiki" / "syntheses" / "linker.md",
+            _v1_page(
+                "synthesis",
+                "See [[domains/research-papers/wiki/analyses/2024-foo-analysis]]\n"
+                "and [[domains/research-papers/wiki/questions/open-arc|Arc]]\n",
+            ),
+        )
+        _run_script(tmp_path, "--apply", "--mode", "in-place")
+
+        body = (domain / "wiki" / "syntheses" / "linker.md").read_text(
+            encoding="utf-8"
+        )
+        assert (
+            "[[domains/research-papers/wiki/summaries/2024-foo-summary]]" in body
+        )
+        assert (
+            "[[domains/research-papers/wiki/open-questions/open-arc|Arc]]" in body
+        )
+
+    def test_log_md_links_rewritten(self, tmp_path: Path) -> None:
+        """log.md follows the existing slug-rename precedent: a
+        sanctioned migration retargets its links so they keep
+        resolving."""
+        _build_v1_vault(tmp_path)
+        domain = tmp_path / "domains" / "research-papers"
+        _write(
+            domain / "log.md",
+            "# Log\n\n"
+            "## [2024-01-02] ingest | wrote "
+            "[[domains/research-papers/wiki/analyses/2024-foo-analysis]]\n",
+        )
+        _run_script(tmp_path, "--apply", "--mode", "in-place")
+
+        body = (domain / "log.md").read_text(encoding="utf-8")
+        assert (
+            "[[domains/research-papers/wiki/summaries/2024-foo-summary]]" in body
+        )
+
+    def test_raw_files_never_rewritten(self, tmp_path: Path) -> None:
+        """AGENTS001: raw/ sources are immutable, even for a migration."""
+        _build_v1_vault(tmp_path)
+        domain = tmp_path / "domains" / "research-papers"
+        raw = domain / "raw" / "sessions" / "2024-01-01-foo.md"
+        original = (
+            "Mentions [[questions/open-arc]] and [[2024-foo-analysis]]\n"
+        )
+        _write(raw, original)
+        _run_script(tmp_path, "--apply", "--mode", "in-place")
+        assert raw.read_text(encoding="utf-8") == original
+
+    def test_idempotent_with_folder_renames(self, tmp_path: Path) -> None:
+        _build_v1_vault(tmp_path)
+        domain = tmp_path / "domains" / "research-papers"
+        _write(
+            domain / "wiki" / "syntheses" / "linker.md",
+            _v1_page("synthesis", "Track [[questions/open-arc]]\n"),
+        )
+        _run_script(tmp_path, "--apply", "--mode", "in-place")
+        before = sorted(
+            (p.relative_to(tmp_path), p.read_text(encoding="utf-8"))
+            for p in tmp_path.rglob("*.md")
+        )
+        _run_script(tmp_path, "--apply", "--mode", "in-place", "--force")
+        after = sorted(
+            (p.relative_to(tmp_path), p.read_text(encoding="utf-8"))
+            for p in tmp_path.rglob("*.md")
+        )
+        assert before == after
+
+
+# --- user-supplied --map (TK-0033) ------------------------------------------
+
+
+def _build_custom_folder_vault(root: Path) -> Path:
+    """v1 vault plus a custom ``skills/`` folder outside the rename
+    table, with a page linking into it. Returns the domain dir."""
+    _build_v1_vault(root)
+    domain = root / "domains" / "research-papers"
+    _write(
+        domain / "wiki" / "skills" / "negotiation.md",
+        _v1_page("skill"),
+    )
+    _write(
+        domain / "wiki" / "syntheses" / "skill-linker.md",
+        _v1_page("synthesis", "Builds on [[skills/negotiation]]\n"),
+    )
+    return domain
+
+
+class TestMapOption:
+    def test_map_moves_folder_and_rewrites_type(self, tmp_path: Path) -> None:
+        domain = _build_custom_folder_vault(tmp_path)
+        rc = _run_script(
+            tmp_path, "--apply", "--mode", "in-place",
+            "--map", "skills=concepts:concept",
+        )
+        assert rc == 0
+        assert not (domain / "wiki" / "skills").exists()
+        page = domain / "wiki" / "concepts" / "negotiation.md"
+        assert page.is_file()
+        assert _frontmatter_value(page, "type") == "concept"
+        assert _frontmatter_value(page, "compiled_against") == "2"
+        assert "type skill → concept" in page.read_text(encoding="utf-8")
+
+    def test_map_rewrites_wikilinks(self, tmp_path: Path) -> None:
+        domain = _build_custom_folder_vault(tmp_path)
+        _run_script(
+            tmp_path, "--apply", "--mode", "in-place",
+            "--map", "skills=concepts:concept",
+        )
+        body = (domain / "wiki" / "syntheses" / "skill-linker.md").read_text(
+            encoding="utf-8"
+        )
+        assert "[[concepts/negotiation]]" in body
+        assert "[[skills/" not in body
+
+    def test_map_without_type_keeps_type(self, tmp_path: Path) -> None:
+        domain = _build_custom_folder_vault(tmp_path)
+        _run_script(
+            tmp_path, "--apply", "--mode", "in-place",
+            "--map", "skills=concepts",
+        )
+        page = domain / "wiki" / "concepts" / "negotiation.md"
+        assert page.is_file()
+        # No :NEWTYPE → the (unknown) v1 type is left for the human.
+        assert _frontmatter_value(page, "type") == "skill"
+
+    def test_map_dry_run_shows_mapping(self, tmp_path: Path, capsys) -> None:
+        domain = _build_custom_folder_vault(tmp_path)
+        rc = _run_script(
+            tmp_path, "--dry-run", "--mode", "in-place",
+            "--map", "skills=concepts:concept",
+        )
+        assert rc == 0
+        out = capsys.readouterr().out
+        assert "(type -> concept)" in out
+        assert "folder segment(s)" in out
+        # Dry run: nothing moved.
+        assert (domain / "wiki" / "skills" / "negotiation.md").is_file()
+
+    @pytest.mark.parametrize("spec", [
+        "skills",                  # no '='
+        "=concepts",               # empty old folder
+        "skills=",                 # empty new folder
+        "skills=concepts:wizard",  # not a v2 page type
+    ])
+    def test_map_invalid_spec_exits_2(self, tmp_path: Path, spec: str) -> None:
+        _build_custom_folder_vault(tmp_path)
+        rc = _run_script(
+            tmp_path, "--apply", "--mode", "in-place", "--map", spec,
+        )
+        assert rc == 2
+
+    def test_map_recorded_in_log_marker(self, tmp_path: Path) -> None:
+        _build_custom_folder_vault(tmp_path)
+        _run_script(
+            tmp_path, "--apply", "--mode", "in-place",
+            "--map", "skills=concepts:concept",
+        )
+        log = tmp_path / "_system" / "migrations.log"
+        body = log.read_text(encoding="utf-8")
+        # A --map run must not be confused with a plain run (and vice
+        # versa) by the idempotency guard.
+        assert "map=skills=concepts:concept" in body
+
+
+# --- migrations.log guard on direct invocation (TK-0032 counterpart) -------
+
+
+class TestMigrationsLogGuard:
+    def test_direct_run_honours_recorded_log(
+        self, tmp_path: Path, capsys,
+    ) -> None:
+        """Hand-run scripts keep the log-based guard; only ``densa
+        migrate`` (whose compiled_against scan is ground truth)
+        bypasses it with --force."""
+        _build_v1_vault(tmp_path)
+        log = tmp_path / "_system" / "migrations.log"
+        log.write_text(
+            "2026-01-01  02_karpathy_vocab  mode=in-place  "
+            "v1 → v2: Karpathy vocabulary\n",
+            encoding="utf-8",
+        )
+        rc = _run_script(tmp_path, "--apply", "--mode", "in-place")
+        assert rc == 0
+        assert "nothing to do" in capsys.readouterr().out
+        # Vault untouched: still v1-shaped.
+        wiki = tmp_path / "domains" / "research-papers" / "wiki"
+        assert (wiki / "analyses" / "2024-foo-analysis.md").is_file()
 
 
 # --- archive mode ---------------------------------------------------------
