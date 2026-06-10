@@ -8,9 +8,11 @@ machine-dense sections — plus **exactly one client debrief companion
 page** (§"Stage 4") that re-compiles the session for the client
 themselves to deep-read.
 
-> v6 = v5 + the deep-analysis toolkit (CCRT extraction, behavioural
-> chain analysis, integrative mechanism hypothesis, falsifiable
-> prediction register). v5 = v4 + the client debrief + living
+> v6.1 = v6 + the between-session learning loop (diary card, homework
+> backfill, prep note, owner co-writing, guided re-listening, early-
+> warning list). v6 = v5 + the deep-analysis toolkit (CCRT extraction,
+> behavioural chain analysis, integrative mechanism hypothesis,
+> falsifiable prediction register). v5 = v4 + the client debrief + living
 > formulation. v4 = v3's single-file design + v2 vocabulary + the
 > human-first layer. Per Persons / Eells
 > case formulation literature + DAP/SOAP industry practice,
@@ -80,11 +82,17 @@ client-facing extension, run after the summary lands.
    plus the L2 §"Required frontmatter additions" fields
    (`session_kind`, `participants`, `analysis_lens`,
    `diagnostic_signals`) and any body sections the L2 prescribes.
-4.5. **Backfill last session's predictions** (deep-analysis loop):
-   read the previous summary's `预测登记` block (when present) and
-   mark each prediction 验证 / 证伪 / 无数据 against the current raw —
-   BEFORE drafting new analysis, so confirmation bias has less room.
-   A falsified prediction is a formulation update, not a failure.
+4.5. **Backfill last session's predictions AND homework** (learning
+   loop): read the previous summary's `预测登记` block and the previous
+   debrief's 接下来 items (H-IDs), mark each 验证/证伪/无数据 and
+   做了/部分/没做+发现了什么 against the current raw + recent diary
+   cards — BEFORE drafting new analysis, so confirmation bias has less
+   room. A falsified prediction is a formulation update; undone
+   homework is data about fit, never a moral fact.
+4.55. **Read recent diary cards** when `raw/diary/` exists: the
+   longitudinal signal line uses real card data over transcript
+   proxies whenever available; biweekly self-rated PHQ-9/GAD-7 rows
+   feed the psychiatry track.
 4.6. **Run the deep-analysis toolkit** (§"Deep-analysis toolkit"):
    integrative mechanism hypothesis; CCRT episode extraction when the
    raw contains relationship episodes; behavioural chain analysis when
@@ -140,6 +148,9 @@ Output an issue list (do NOT modify the draft). Use this prompt body:
 (v) raw 含风险级 / 重复行为事件但没做行为链分析；或链里漏了短期强化物
     （短期后果是行为维持的发动机，漏它 = 链白做）
 (w) 上一场的预测登记没有回填；或新机制命名没有生成 ≥1 条可证伪预测
+(x) 上一篇 debrief 的功课（H-ID）没有回填；或"接下来"项没编 H-ID
+(y) debrief 末尾缺空白 %%HUMAN%% 自写块；或任何既有 %%HUMAN%% 块被
+    改写/删除（owner 亲笔永远原样保留——L1 红线的本地强调）
 
 输出格式：每条 `[一致性 | 失实 | 越界 | 漏改 | 隐私 | 可读性 | 安全] line<n>: <问题> → <建议修复>`
 不修改草稿，只输出 issue 清单。
@@ -589,6 +600,54 @@ staleness; it never edits it.
 
 ---
 
+## Between-session learning loop (v6.1)
+
+Six practices that turn reading into learning. All BINDING unless
+marked optional:
+
+1. **Diary card（每日记录卡，DBT diary-card shape）** — the vault
+   convention: one file per ISO week under `domains/psychology/raw/diary/`
+   (arrives via inbox / direct drop; raw = immutable once ingested).
+   One line per day, ~1 minute:
+   `日期 | 情绪0-10 | 冲动(无/绿/黄/红) | 用了什么技能 | 睡眠(时长/醒次) | 例外时刻一句`.
+   Biweekly: self-rated PHQ-9 / GAD-7 totals as extra rows. Ingest
+   consumes cards for the longitudinal signal line (real data beats
+   transcript proxies); 黄/红 rows route per the crisis action card.
+2. **Homework loop** — every debrief 接下来 item carries an ID
+   (H1, H2…). Next ingest backfills them (Stage 1 step 4.5); the new
+   debrief opens its 接下来 with one line of 上次回填 (做了/部分/没做 +
+   发现了什么). No-feedback homework is reading, not learning.
+3. **Prep note（会前预习页）** — on request before a session
+   ("prep <clinician>"), generate a one-page agenda from the living
+   formulation's bring-list + open predictions + booked topics:
+   预约过的主题 / 我要带的三件事 / 我希望离开时知道什么. Write to
+   `outputs/prep/<date>-<clinician>.md` — a rebuildable artifact
+   (committing optional). Agenda-setting measurably raises
+   single-session yield.
+4. **Owner co-writing（共同作者性）** — every debrief ENDS with an
+   empty block:
+   `%%HUMAN: 合上这页，用自己的话写三句今天学到的%%`
+   and the living formulation page carries an owner-voice section
+   （e.g. `## 我自己的理论（owner 亲笔）`）seeded empty. Per the L1
+   red line, %%HUMAN%% content is authoritative and never rewritten;
+   generation (writing from memory) beats re-reading by an order of
+   magnitude.
+5. **Guided re-listening（值得回听的片段）** — debriefs include a
+   short section `## 值得回听的 3 个片段`: timestamp + one line of
+   what to listen FOR (a pause, a reframe landing, one's own voice
+   changing). Clients forget 40-60% of session content; anchored
+   re-listening is the cheapest recovery the transcript already pays
+   for. Optional for psychiatry debriefs.
+6. **Early-warning list（早期预警清单，WRAP shape）** — the living
+   formulation page carries, between the crisis card and protective
+   factors, a personal prodrome list (signals already named in the
+   client's own data) + a rule: ≥2 present → the named low-threshold
+   actions (earlier psychiatry contact, tell one real person, diary
+   card daily). The crisis card handles "already bad"; this layer
+   handles "getting worse".
+
+---
+
 ## Deep-analysis toolkit (v6 — from pattern bookkeeping to mechanism reasoning)
 
 The lens paragraphs record WHAT happened and what it echoes. Depth
@@ -794,6 +853,9 @@ A correct ingest produces:
 12.5. `## Working formulation` ends with the four deep-analysis
     sub-blocks (整合机制假设 / CCRT 提取(条件) / 行为链分析(条件) /
     预测登记 — 含上场回填); critique items (u)-(w) passing
+12.6. Debrief 接下来 items carry H-IDs; previous homework + diary
+    cards backfilled; debrief ends with the empty %%HUMAN%% block;
+    值得回听 section present (therapy)
 13. **Exactly one** debrief companion page (`<raw-stem>-debrief.md`,
     `type: synthesis` + `kind: debrief`, sources = raw + summary), with
     every 解惑/建议 item provenance-marked and critique items (n)-(q)
