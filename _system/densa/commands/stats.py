@@ -37,8 +37,8 @@ from datetime import date, datetime
 from pathlib import Path
 
 from densa import paths
-from densa.config import SKIP_DIRS
 from densa.frontmatter import parse
+from densa.fswalk import iter_markdown
 from densa.schema import ALLOWED_TYPES
 from densa.wikilink import build_index, resolve, scan
 
@@ -143,13 +143,11 @@ def collect_stats(repo: Path, today: date) -> VaultStats:
 def _collect_pages(repo: Path) -> list[_PageInfo]:
     """Gather a :class:`_PageInfo` for every wiki page in the vault."""
     out: list[_PageInfo] = []
-    for abs_path in repo.rglob("*.md"):
-        rel = abs_path.relative_to(repo)
-        if any(part in SKIP_DIRS for part in rel.parts):
-            continue
+    for rel in iter_markdown(repo):
         rel_str = str(rel).replace("\\", "/")
         if not paths.is_wiki(rel_str):
             continue
+        abs_path = repo / rel
         try:
             fm = parse(abs_path.read_text(encoding="utf-8"))
         except (OSError, UnicodeDecodeError, ValueError):

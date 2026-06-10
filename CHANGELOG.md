@@ -10,6 +10,18 @@ the L1 schema version recorded in [`AGENTS.md`](AGENTS.md) frontmatter
 
 ### Fixed
 
+- **Vault walkers no longer descend into nested git checkouts.** A
+  repo checked out inside the vault (e.g. an upstream densa working
+  copy, gitignored by the vault) polluted the slug index — foreign
+  showcase pages made every bare `[[slug]]` ambiguous — and raised
+  AGENTS006 on foreign template placeholders. The new shared
+  `densa.fswalk.iter_markdown` prunes any subdirectory carrying its
+  own `.git` (directory or worktree-style file); the slug index,
+  `densa --all` collection, `densa stats`, and `migrate_02`'s
+  wikilink rewrite all walk through it. The same descent let a
+  migration run rewrite files inside the nested upstream repo.
+  (TK-0035)
+
 - **`migrate_02` now seeds missing v2 universal frontmatter keys.**
   v1 pages predate `aliases` (and occasionally `sources`); the
   frontmatter rewrite pass now appends the missing presence-only keys

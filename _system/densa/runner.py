@@ -21,7 +21,8 @@ from pathlib import Path
 
 from densa.checks import FILE_RULES, STAGED_RULES
 from densa.checks.base import FileRule, StagedRule
-from densa.config import SKIP_DIRS, Config
+from densa.config import Config
+from densa.fswalk import iter_markdown
 from densa.git_io import diff_entries, ref_blob, staged_blob, staged_entries
 from densa.report import Diagnostic, Report, Severity
 from densa.wikilink import SlugIndex, build_index
@@ -123,10 +124,9 @@ def lint_paths(
 
 
 def _walk_repo_markdown(repo: Path) -> Iterable[str]:
-    for p in repo.rglob("*.md"):
-        rel = p.relative_to(repo)
-        if any(part in SKIP_DIRS for part in rel.parts):
-            continue
+    """Every markdown path ``--all`` checks, via the shared vault walk
+    (prunes :data:`~densa.config.SKIP_DIRS` and nested git checkouts)."""
+    for rel in iter_markdown(repo):
         yield str(rel).replace("\\", "/")
 
 

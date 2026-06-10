@@ -14,7 +14,8 @@ from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 
-from densa.config import SKIP_DIRS, WIKILINK_SKIP_TOP_LEVEL
+from densa.config import WIKILINK_SKIP_TOP_LEVEL
+from densa.fswalk import iter_markdown
 
 WIKILINK_RE = re.compile(r"\[\[([^\[\]\n]+?)\]\]")
 """Match ``[[anything-but-brackets-or-newline]]``. Greedy non-empty body."""
@@ -69,11 +70,12 @@ def _walk_markdown(
     ``include_skipped_top_level=True`` to walk the full repo, used to
     keep explicit-path wikilinks like ``[[_system/templates/concept]]``
     resolving.
+
+    The underlying walk (:func:`densa.fswalk.iter_markdown`) already
+    prunes :data:`~densa.config.SKIP_DIRS` and nested git checkouts,
+    so foreign repos inside the vault never pollute the slug index.
     """
-    for p in repo.rglob("*.md"):
-        rel = p.relative_to(repo)
-        if any(part in SKIP_DIRS for part in rel.parts):
-            continue
+    for rel in iter_markdown(repo):
         if (
             not include_skipped_top_level
             and rel.parts

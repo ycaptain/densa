@@ -96,6 +96,7 @@ if str(_SYSTEM) not in sys.path:
     sys.path.insert(0, str(_SYSTEM))
 
 from densa.config import PRESENCE_ONLY_FRONTMATTER_KEYS  # noqa: E402
+from densa.fswalk import iter_markdown  # noqa: E402
 from densa.paths import is_raw  # noqa: E402
 from densa.schema import (  # noqa: E402
     ALLOWED_TYPES,
@@ -1292,11 +1293,8 @@ def _do_rewrite_wikilinks(
     """
     if not renames and not folder_renames:
         return
-    skip = {".git", ".obsidian", "node_modules", "__pycache__"}
-    for md in repo.rglob("*.md"):
-        rel = md.relative_to(repo)
-        if any(p in skip for p in rel.parts):
-            continue
+    for rel in iter_markdown(repo):
+        md = repo / rel
         if is_raw(rel.as_posix()):
             continue
         try:
