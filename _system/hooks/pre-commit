@@ -11,15 +11,22 @@ cd "$REPO_ROOT"
 # design — the schema/code travel together.
 export PYTHONPATH="$REPO_ROOT/_system:${PYTHONPATH:-}"
 
+# AGENTS007 (operation-writes-within-scope) is deliberately skipped
+# here. Git hook timing: the commit message is not yet available at
+# pre-commit time — git rewrites .git/COMMIT_EDITMSG only after this
+# hook passes, so any message read now would be the PREVIOUS commit's
+# (TK-0038). The sibling commit-msg hook re-runs AGENTS007 with the
+# real message file ($1); core.hooksPath wires both at once.
+
 # Prefer `python3` over `python` — macOS ships without `python` on
 # the default PATH and some minimal Linux containers do too. Fall
 # back to `python` only when `python3` is absent. If neither exists,
 # print an actionable error rather than a cryptic `command not found`.
 if command -v python3 >/dev/null 2>&1; then
-    exec python3 -m densa --staged
+    exec python3 -m densa --staged --ignore AGENTS007
 fi
 if command -v python >/dev/null 2>&1; then
-    exec python -m densa --staged
+    exec python -m densa --staged --ignore AGENTS007
 fi
 cat >&2 <<'EOF'
 error: densa pre-commit hook requires python3 (>= 3.10).

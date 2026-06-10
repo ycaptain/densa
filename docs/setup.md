@@ -14,8 +14,15 @@
 
 Prereqs (fork + clone + `git config core.hooksPath _system/hooks`)
 are covered in
-[`../README.md` §"Quickstart"](../README.md#quickstart). The
-pre-commit hook is **pure stdlib** (no `pip install` required).
+[`../README.md` §"Quickstart"](../README.md#quickstart). The hooks
+are **pure stdlib** (no `pip install` required), and that single
+`core.hooksPath` wires both of them:
+
+- **pre-commit** runs every rule except AGENTS007 — the commit
+  message doesn't exist yet at that stage (git rewrites
+  `.git/COMMIT_EDITMSG` only after pre-commit passes).
+- **commit-msg** re-runs AGENTS007 (operation-writes-within-scope)
+  against the real message file git hands it as `$1`.
 
 > **Python ≥ 3.10 required** for the `densa` CLI (validator,
 > `init`, `doctor`, `stats`) — the floor `pyproject.toml` pins.
@@ -124,7 +131,8 @@ For vulnerability reporting see [`../.github/SECURITY.md`](../.github/SECURITY.m
 ## Disabling the pre-commit hook
 
 ```bash
-# One-shot bypass (e.g. sanctioned transcription sweep):
+# One-shot bypass — skips both the pre-commit and commit-msg hooks
+# (e.g. sanctioned transcription sweep):
 git commit --no-verify -m "..."
 
 # Permanently disable on this clone:

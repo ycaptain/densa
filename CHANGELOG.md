@@ -24,6 +24,22 @@ the L1 schema version recorded in [`AGENTS.md`](AGENTS.md) frontmatter
 
 ### Fixed
 
+- **AGENTS007 no longer classifies commits one-behind under
+  `git commit -m`.** The rule read `.git/COMMIT_EDITMSG` assuming it
+  held the in-flight message, but git rewrites that file only *after*
+  the pre-commit hook passes — so every commit was classified by the
+  PREVIOUS commit's prefix, and a correctly prefixed operation commit
+  following a maintenance commit always failed on first attempt. The
+  prefix-scope rule now runs in a new `_system/hooks/commit-msg` hook,
+  which receives the real message file as `$1` and hands it to the
+  validator via `DENSA_COMMIT_MSG_FILE`; the pre-commit hook runs
+  every other rule and skips AGENTS007 (`--ignore AGENTS007`).
+  `_commit_subject()` prefers the env-provided file and never reads
+  `COMMIT_EDITMSG` anymore (falling back to the `HEAD` subject for
+  post-commit re-runs and CI `--diff`). The existing
+  `core.hooksPath _system/hooks` wiring covers both hooks — no setup
+  change needed. (TK-0038)
+
 - **Vault walkers no longer descend into nested git checkouts.** A
   repo checked out inside the vault (e.g. an upstream densa working
   copy, gitignored by the vault) polluted the slug index — foreign
