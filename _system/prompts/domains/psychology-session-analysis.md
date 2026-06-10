@@ -1,14 +1,20 @@
-# Sub-prompt: psychology session / psychiatry analysis (v3)
+# Sub-prompt: psychology session / psychiatry analysis (v4)
 
 Used by [`_system/prompts/ingest.md`](../ingest.md) whenever a new file under
 `domains/psychology/raw/sessions/` is being processed. Produces
-**exactly one** `analysis` page per raw, in single-file v3 layout.
+**exactly one** `summary` page per raw, in single-file layout, opening
+with a **human-first readability layer** (§"Required summary structure")
+above the machine-dense sections.
 
-> Replaces v2's lens-A / lens-B dual-file design. Per Persons / Eells case
-> formulation literature + DAP/SOAP industry practice, per-session notes
-> should reference the living formulation rather than re-derive it. The
-> living formulation in this wiki is the union of `wiki/patterns/` +
-> `wiki/themes/` + `wiki/entities/` + `wiki/concepts/` + `wiki/frameworks/`.
+> v4 = v3's single-file design + v2 vocabulary throughout + the
+> mandatory human-first layer (2026-06 readability pass — parity with
+> the research-papers and workspace sub-prompts). Per Persons / Eells
+> case formulation literature + DAP/SOAP industry practice,
+> per-session notes reference the living formulation rather than
+> re-derive it. The living formulation in this wiki is the union of
+> `wiki/concepts/` (incl. `kind: pattern` loops and `kind: protocol`
+> clinical protocols) + `wiki/overviews/` (framework digests +
+> `kind: theme` multi-session arcs) + `wiki/entities/`.
 
 > Authority: this prompt is procedural; the schema is in
 > [`/AGENTS.md`](../../../AGENTS.md) (L1) and
@@ -27,9 +33,10 @@ Used by [`_system/prompts/ingest.md`](../ingest.md) whenever a new file under
 ## When invoked
 
 A user dropped a new raw file or said `ingest <path>`. The path resolves
-under `domains/psychology/raw/sessions/`. Determine `session_kind` and
-clinician slug from the filename pattern (see §"Routing" below); if
-ambiguous, ask once before drafting.
+under `domains/psychology/raw/sessions/` (or another psychology raw
+bucket the L2 routes here). Determine `session_kind` and clinician slug
+from the filename pattern (see §"Routing" below); if ambiguous, ask
+once before drafting.
 
 ## Three-stage pipeline
 
@@ -38,7 +45,7 @@ Every ingest runs three stages in sequence within the **same LLM context**
 contiguous reasoning pass).
 
 ```
-Stage 1 Draft       — read raw + load conditional wiki pages, draft analysis. NOT WRITTEN TO DISK.
+Stage 1 Draft       — read raw + load conditional wiki pages, draft the summary. NOT WRITTEN TO DISK.
 Stage 2 Critique    — self-review the draft against the raw + wiki invariants. Output an issue list.
 Stage 3 Revise      — apply critique fixes, write the file + all wiki side-effects.
 ```
@@ -51,8 +58,9 @@ The three stages compose; do NOT shortcut to a single pass.
    `participants`, `clinician-slug`. If unsure, ask once.
 2. **Load conditional context** (token budget):
    - Always: this sub-prompt + L1 + L2 + `outputs/snapshots/index-snapshot.md`
+     (when the vault keeps one).
    - Conditional: read frontmatter (and only the relevant section bodies)
-     of any `wiki/{entities,patterns,themes,concepts,frameworks}/<slug>.md`
+     of any `wiki/{entities,concepts,overviews,open-questions}/<slug>.md`
      that the routing step suggests will be touched.
    - Just-in-time: the full raw transcript.
    - Target ≤40K tokens before drafting.
@@ -60,10 +68,18 @@ The three stages compose; do NOT shortcut to a single pass.
    process if the raw includes images, audio, or non-text data (per
    [AGENTS.md §"Red lines"](../../../AGENTS.md#6-red-lines-non-negotiable)
    multi-modal red line).
-4. **Draft** the appropriate template:
-   - therapy → [`attic/templates-v1/psychology-analysis.md`](../../../attic/templates-v1/psychology-analysis.md) (legacy v1 template; under v2 these become `type: summary` pages — see [`_system/templates/summary.md`](../../templates/summary.md))
-   - psychiatry → [`attic/templates-v1/psychiatry-analysis.md`](../../../attic/templates-v1/psychiatry-analysis.md) (legacy v1 template; same v2 note as above)
-5. **Do not write to disk yet.** Hold the draft in working memory.
+4. **Draft the machine layer first**: the
+   [`_system/templates/summary.md`](../../templates/summary.md) skeleton
+   plus the L2 §"Required frontmatter additions" fields
+   (`session_kind`, `participants`, `analysis_lens`,
+   `diagnostic_signals`) and any body sections the L2 prescribes.
+5. **Compile the human layer from the machine layer** — the four
+   readability elements (§"Required summary structure" below) are
+   written AFTER the machine sections exist, and derive from them,
+   never from the raw directly. This ordering is the drift control:
+   a human-layer claim with no machine-layer support below is a
+   Stage-2 issue, not a stylistic choice.
+6. **Do not write to disk yet.** Hold the draft in working memory.
 
 ### Stage 2 — Critique
 
@@ -77,14 +93,19 @@ Output an issue list (do NOT modify the draft). Use this prompt body:
 (b) 用了某 lens 但 frontmatter `analysis_lens` 没声明（或反之）
 (c) 提到的 pattern / entity / theme / concept 没回链 wiki/<bucket>/<slug>
 (d) 引文超过 raw 原文（捏造引文）
-(e) Working formulation 章节里复述了 [[frameworks/X]] 的定义（应只引不展）
+(e) Working formulation 章节里复述了某 framework overview 页（如 [[cbt]]）的定义（应只引不展）
 (f) `diagnostic_signals` 列了某诊断但本文找不到对应的 raw 锚点（诊断越界）
 (g) 决策瘫痪 / 逃避场景没跑 alone-test（独处时是否也出现？）— 漏判神经发育成分
 (h) 跨临床归属错乱（精神科 raw 里出现了应该在 therapy session 里处理的 process 材料）
 (i) `Wiki side-effects` 清单与正文实际触动的页不一致
 (j) Privacy: 第三方姓名 / 联系方式 / 地址被引入而本来不必要
+(k) 30 秒 TL;DR 过不了 alone-reader test（只读 callout 的读者无法复述本场要点，
+    或读完仍需要查术语才能理解）
+(l) 人读层出现了机器层找不到支撑的论断（人读层只许编译，不许新增）
+(m) 折线以上违规：callout 里出现 wikilink / 时间戳，临床术语首次出现未加白话 gloss，
+    H1 超出"一个主题短语 + 日期"，或 frontmatter tags > 8
 
-输出格式：每条 `[一致性 | 失实 | 越界 | 漏改 | 隐私] line<n>: <问题> → <建议修复>`
+输出格式：每条 `[一致性 | 失实 | 越界 | 漏改 | 隐私 | 可读性] line<n>: <问题> → <建议修复>`
 不修改草稿，只输出 issue 清单。
 ```
 
@@ -98,21 +119,27 @@ Stage 3.
 2. Verify `diagnostic_signals` only contain items with raw anchors.
 3. Verify `analysis_lens` matches the `(<lens> lens)` paragraphs in the
    body (each lens declared has a paragraph; each paragraph has a declared lens).
-4. Write the file to `domains/psychology/wiki/analyses/<raw-stem>-analysis.md`
+4. Verify the human layer (four elements, §"Required summary structure")
+   is present, in order, above the machine layer, and passes the (k)/(l)/(m)
+   checks.
+5. Write the file to `domains/psychology/wiki/summaries/<raw-stem>-summary.md`
    (per L2 §"Slug recognition rules" naming convention).
-5. Apply all `Wiki side-effects` listed in the body:
-   - **Append** instances to `wiki/patterns/<slug>.md`'s "Instances" / "实例"
-   - **Append** timeline entries to `wiki/themes/<slug>.md`'s timeline
+6. Apply all `Wiki side-effects` listed in the body:
+   - **Append** instances to `wiki/concepts/<slug>.md` with
+     `kind: pattern` — "Instances" / "实例" section
+   - **Append** timeline entries to `wiki/overviews/<slug>.md` with
+     `kind: theme` — the arc timeline
    - **Append** appearances to `wiki/entities/<slug>.md`'s "Appearances"
-   - **Append** instances to `wiki/concepts/<slug>.md`'s "在我的材料里如何出现"
-   - For psychiatry: **append** a row to `wiki/protocols/medication-arc.md`'s
-     timeline (always, even when nothing changed).
-6. Prepend to `domains/psychology/log.md` (top-of-file under frontmatter, per
+   - **Append** instances to plain `wiki/concepts/<slug>.md`'s "在我的材料里如何出现"
+   - For psychiatry: **append** a row to the [[medication-arc]]
+     protocol page's timeline (`wiki/concepts/medication-arc.md`,
+     `kind: protocol`) — always, even when nothing changed.
+7. Prepend to `domains/psychology/log.md` (top-of-file under frontmatter, per
    [AGENTS.md §"Red lines"](../../../AGENTS.md#6-red-lines-non-negotiable))
    using the [AGENTS.md §"ingest"](../../../AGENTS.md#21-ingest-path)
    entry format.
-7. Output the **"Pages NOT touched but should be (carry-over)"** section in
-   the analysis file with anything you discovered but didn't update.
+8. Output the **"Pages NOT touched but should be (carry-over)"** section in
+   the summary file with anything you discovered but didn't update.
 
 ---
 
@@ -151,6 +178,130 @@ Determine which speaker is self by content patterns:
 
 ---
 
+## Required summary structure — the human layer (four readability elements)
+
+Every session summary opens with these four blocks, in order, between
+the H1 and the machine layer. They exist because the page has **two
+readers**: the owner re-reading their own therapy arc (human layer),
+and the LLM re-loading formulation state on the next ingest (machine
+layer). A page the owner cannot retell after a full read is a failed
+compilation regardless of retrieval quality.
+
+**Layering rule.** Human layer above, then a `---` separator, then the
+machine layer. The machine layer opens with a one-line
+**`Threads touched（机器层索引）`** index (the dense clause-chain that
+v3 pages put in the H1) and continues with the template/L2 machine
+sections. Nothing in the machine layer is weakened or shortened to
+make room for the human layer.
+
+**Caps (enforced by Stage-2 item (m)):**
+- H1 ≤ one topic phrase + the date. The multi-clause thread dump moves
+  to the `Threads touched` index line.
+- Frontmatter `tags` ≤ 8 (forward rule for new pages; existing pages
+  are trimmed on-touch, not bulk-edited).
+
+**Language & gloss voice rules.** The human layer is written in the
+vault's primary language (Chinese in the showcase vault), in plain
+prose, in the owner's own register — 不堆术语. Every clinical term that
+survives into the human layer is glossed inline in plain language at
+first use, e.g. "重构（reframe，咨询师把问题换一个框架重新表述）".
+Code-switched jargon without a gloss fails Stage-2 item (m).
+
+### 1. 30 秒 TL;DR — `> [!important]` callout
+
+3-5 sentences. Hard rules:
+
+- **Zero wikilinks, zero timestamps** above the fold — anchors live in
+  the machine layer.
+- Every clinical term glossed inline at first use (voice rules above).
+- **Alone-reader test (voice rule):** a reader who reads ONLY this
+  callout holds the same understanding of the session you hold after
+  reading the full page — what happened, what moved, what it means for
+  the arc. No inflation, no hedge inflation, no "见下文".
+
+### 2. At-a-glance table（一眼看全）
+
+A two-column markdown table with these rows (skip a row only when it
+truly does not apply):
+
+| Row | Content |
+| --- | --- |
+| **会话主线** | one line — the session's through-line, A → B → C shape allowed |
+| **Session** | session_kind + clinician (entity link allowed here) + duration if known |
+| **本次移动了什么** | the delta: what got named / shifted / completed this session |
+| **关键干预或 reframe** | the clinician's load-bearing intervention, in one line |
+| **未处理但浮现的材料** | surfaced-but-unworked material — the **highest-leverage row**: what came up and was NOT worked is the best predictor of next sessions |
+| **下次 session 前留意什么** | what to watch / what was explicitly booked for next time |
+
+### 3. Arc placement（弧线）
+
+A mandatory 1-2 sentence paragraph (bold-prefixed `**弧线**：`) naming
+which long-running named thread — a `kind: theme` overview or a
+`kind: pattern` concept — this session advances, and what changed on
+that thread. Wikilinks allowed here (this is the bridge row between
+the layers).
+
+A Mermaid `timeline` diagram is **OPTIONAL** and allowed only when the
+named thread has ≥3 prior sessions to place this one against. A forced
+per-session diagram degenerates into restating the at-a-glance table
+with shapes — that is noise, not arc legibility; omit it.
+
+### 4. 人物与影响 table
+
+One row per real-life figure **substantively discussed** in the
+session (not the clinician, who is already in the at-a-glance table;
+not passing mentions):
+
+| 人物 | 本次涉及 | 对我的内在影响 | entity 页 |
+| --- | --- | --- | --- |
+| `[[<entity-slug>\|名字]]` | what came up about them | one-line inner impact, plain language | 已更新 / 未建页 / 本次未触动 |
+
+The "对我的内在影响" column is one sentence, owner-voice, no jargon.
+The "entity 页" column must agree with the machine layer's
+`Wiki side-effects` list (Stage-2 item (i) checks this).
+
+### Worked example — a compliant opening (fictional)
+
+```markdown
+# 2026-03-12 与 L 老师 session — 拖延背后的自我批评
+
+> [!important] 30 秒 TL;DR（人读层 — 只读这一段也能带走本场的全部要点）
+> 这周我又把周报拖到了截止前一晚，这次咨询第一次把"拖延"和"自我批评"接到了一起：
+> 不是我懒，而是一想到要交东西，脑子里先出现"肯定不够好"的声音，于是干脆不开始。
+> L 老师做了一个重构（reframe，把问题换一个框架重新表述）：拖延不是时间管理问题，
+> 而是我在躲那个批评的声音。我第一次承认，这个声音和小时候交作业前的紧张是同一个。
+> 下次约定先观察：声音出现时，身体先有什么反应。
+
+| 一眼看全 | |
+| --- | --- |
+| **会话主线** | 周报拖延 → 自我批评声音的命名 → 童年作业场景的同源连接 |
+| **Session** | 心理咨询（therapy），咨询师 [[therapist-l\|L 老师]]，约 50 分钟 |
+| **本次移动了什么** | 首次把拖延行为和自我批评声音连成一个机制，并追溯到童年同源场景 |
+| **关键干预或 reframe** | "拖延不是时间管理问题，是在躲那个批评的声音" |
+| **未处理但浮现的材料** | 提到"爸爸检查作业"时声音哽了一下，没有展开 |
+| **下次 session 前留意什么** | 批评声音出现时的身体反应；已预约下次围绕这个观察工作 |
+
+**弧线**：本场处在 [[self-critic-procrastination]]（自我批评驱动的拖延）模式弧上 —
+从行为层描述（前 2 场）第一次推进到机制命名 + 童年同源场景。
+
+| 人物与影响 | 本次涉及 | 对我的内在影响 | entity 页 |
+| --- | --- | --- | --- |
+| [[father\|爸爸]] | 童年检查作业场景被提起 | "肯定不够好"声音的可能源头，提到时有躯体反应 | 已更新 |
+
+---
+
+**Threads touched（机器层索引）**：周报 deadline 拖延 episode + self-critic
+voice 首次命名 + reframe "躲批评的声音" + 童年作业检查场景 somatic 反应 +
+下次 session 身体观察 contract
+
+## TL;DR
+（机器层照常 — 高密度、带锚点、带 wikilink）
+```
+
+The example is fictional; copy its **shape**, not its content.
+
+---
+
 ## Lens menu (11 + 4 conditional)
 
 Pick the lenses that genuinely apply to the material at hand. Drop the
@@ -183,28 +334,31 @@ rest from `analysis_lens` and the body. Don't pad.
 
 ## session_kind branches
 
+Both branches use the
+[`_system/templates/summary.md`](../../templates/summary.md) skeleton
+plus the L2 §"Required frontmatter additions" fields, and both open
+with the human layer (§"Required summary structure").
+
 ### `therapy`
 
-Use [`psychology-analysis.md`](../../templates/psychology-analysis.md) template.
-
-- Body length: 1500-2500 字
+- Machine-layer body length: 1500-2500 字
 - Lenses: typically 2-4 from the core 11
-- Wiki side-effects: usually 3-7 pages updated (entity + 1-2 patterns + maybe theme + concept if new)
+- Wiki side-effects: usually 3-7 pages updated (entity + 1-2
+  `kind: pattern` concepts + maybe a `kind: theme` overview + a plain
+  concept if a genuinely new term surfaced)
 
 ### `psychiatry`
 
-Use [`psychiatry-analysis.md`](../../templates/psychiatry-analysis.md) template.
-
-- Body length: 1000-2000 字 (briefer than therapy)
+- Machine-layer body length: 1000-2000 字 (briefer than therapy)
 - Lenses: `biopsychosocial-4P` and `diagnostic-differential` always; CBT optionally if cognitive material surfaced
-- **Wiki side-effects MUST include `medication-arc` timeline +1 entry** (even on "no change" sessions)
+- **Wiki side-effects MUST include a [[medication-arc]] timeline row +1** (even on "no change" sessions)
 - Pattern / theme work is **NOT done here**. Process material surfacing in psychiatry sessions is logged under "Open threads" for next therapy session.
 
 ---
 
 ## Biopsychosocial 4P — when to apply
 
-Per L2 §"Biopsychosocial 4P framing", every analysis MUST consider whether
+Per L2 §"Biopsychosocial 4P framing", every summary MUST consider whether
 the session surfaces material from each of the four causal layers, and
 when used, label `analysis_lens: [..., biopsychosocial-4P]`.
 
@@ -242,10 +396,14 @@ section. Two postures are supported:
   `raw/` with `git-crypt` before any remote push.
 - **Private-repo (only if the repo will never leave your own
   machines + a single encrypted backup remote)** — verbatim quotes
-  in `analyses/` allowed without strict line cap; first names and
+  in `summaries/` allowed without strict line cap; first names and
   full personal context allowed; user's real name in raw is
   recognised as `self`; `syntheses/` retains the ≤3-line soft cap;
   third parties not directly involved still use first-name + role.
+
+The human layer follows the same posture as the rest of the page, with
+one extra rule either way: the 30-second TL;DR carries **no verbatim
+quotes** — it is a compilation, not an excerpt.
 
 ---
 
@@ -253,14 +411,22 @@ section. Two postures are supported:
 
 A correct ingest produces:
 
-1. **Exactly one** `analysis` file per raw, named `<raw-stem>-analysis.md`
-2. `frontmatter.session_kind` matches the raw bucket / filename pattern
-3. `frontmatter.analysis_lens` exactly mirrors the `(<lens> lens)` body paragraphs
-4. `frontmatter.diagnostic_signals` contains only entries with raw anchors in body
-5. `frontmatter.sources` is a list of length **exactly 1**, the raw wikilink
-6. **Bidirectional wikilinks**: every entity / pattern / theme / concept named in the analysis body has been updated in its own page (Appearances / Instances / timeline)
-7. For psychiatry: `[[medication-arc]]` has a new timeline entry **(non-negotiable)**
-8. `log.md` appended per [AGENTS.md §"ingest"](../../../AGENTS.md#21-ingest-path)
-9. `Pages NOT touched but should be` section is non-empty if Stage 2 surfaced any carry-over (or explicitly states "none")
+1. **Exactly one** `summary` file per raw, named `<raw-stem>-summary.md`,
+   under `wiki/summaries/`
+2. The **four readability elements** (30 秒 TL;DR callout + 一眼看全
+   table + 弧线 + 人物与影响 table) are present, in order, above the
+   `---` separator; the machine layer below opens with the
+   `Threads touched（机器层索引）` line
+3. H1 ≤ one topic phrase + date; frontmatter `tags` ≤ 8
+4. Every human-layer claim is supported by the machine layer below
+   (the human layer is compiled, never original)
+5. `frontmatter.session_kind` matches the raw bucket / filename pattern
+6. `frontmatter.analysis_lens` exactly mirrors the `(<lens> lens)` body paragraphs
+7. `frontmatter.diagnostic_signals` contains only entries with raw anchors in body
+8. `frontmatter.sources` is a list of length **exactly 1**, the raw wikilink
+9. **Bidirectional wikilinks**: every entity / pattern / theme / concept named in the summary body has been updated in its own page (Appearances / Instances / timeline)
+10. For psychiatry: [[medication-arc]] has a new timeline entry **(non-negotiable)**
+11. `log.md` prepended per [AGENTS.md §"ingest"](../../../AGENTS.md#21-ingest-path)
+12. `Pages NOT touched but should be` section is non-empty if Stage 2 surfaced any carry-over (or explicitly states "none")
 
-If any of (1)-(8) is missing, the ingest is incomplete — do not output a "done" message.
+If any of (1)-(11) is missing, the ingest is incomplete — do not output a "done" message.
