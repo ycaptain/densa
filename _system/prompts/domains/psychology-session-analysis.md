@@ -1,4 +1,4 @@
-# Sub-prompt: psychology session / psychiatry analysis (v5)
+# Sub-prompt: psychology session / psychiatry analysis (v6)
 
 Used by [`_system/prompts/ingest.md`](../ingest.md) whenever a new file under
 `domains/psychology/raw/sessions/` is being processed. Produces
@@ -8,9 +8,11 @@ machine-dense sections — plus **exactly one client debrief companion
 page** (§"Stage 4") that re-compiles the session for the client
 themselves to deep-read.
 
-> v5 = v4 + the client debrief companion page and the living
-> formulation (current-state) convention. v4 = v3's single-file design
-> + v2 vocabulary + the human-first layer (2026-06 readability pass). Per Persons / Eells
+> v6 = v5 + the deep-analysis toolkit (CCRT extraction, behavioural
+> chain analysis, integrative mechanism hypothesis, falsifiable
+> prediction register). v5 = v4 + the client debrief + living
+> formulation. v4 = v3's single-file design + v2 vocabulary + the
+> human-first layer. Per Persons / Eells
 > case formulation literature + DAP/SOAP industry practice,
 > per-session notes reference the living formulation rather than
 > re-derive it. The living formulation in this wiki is the union of
@@ -78,6 +80,16 @@ client-facing extension, run after the summary lands.
    plus the L2 §"Required frontmatter additions" fields
    (`session_kind`, `participants`, `analysis_lens`,
    `diagnostic_signals`) and any body sections the L2 prescribes.
+4.5. **Backfill last session's predictions** (deep-analysis loop):
+   read the previous summary's `预测登记` block (when present) and
+   mark each prediction 验证 / 证伪 / 无数据 against the current raw —
+   BEFORE drafting new analysis, so confirmation bias has less room.
+   A falsified prediction is a formulation update, not a failure.
+4.6. **Run the deep-analysis toolkit** (§"Deep-analysis toolkit"):
+   integrative mechanism hypothesis; CCRT episode extraction when the
+   raw contains relationship episodes; behavioural chain analysis when
+   the raw contains a risk-grade or repeated behavioural event; new
+   prediction register.
 5. **Compile the human layer from the machine layer** — the four
    readability elements (§"Required summary structure" below) are
    written AFTER the machine sections exist, and derive from them,
@@ -123,6 +135,11 @@ Output an issue list (do NOT modify the draft). Use this prompt body:
     紧跟即时动作行）；或非教科书的自造命名被标成「文献」（应标"工作名"）
 (t) "接下来"没有零门槛即时项；或羞耻负载的问题先给分析后给结论
     （应结论前置）；或干预解码替咨询师断言意图（应改为"可带去求证的问题"）
+(u) 整合机制假设缺失，或只是把各 lens 段落换句话复述（应是单一因果模型：
+    哪个环喂哪个环、断哪里）；维持循环没标"可断点"
+(v) raw 含风险级 / 重复行为事件但没做行为链分析；或链里漏了短期强化物
+    （短期后果是行为维持的发动机，漏它 = 链白做）
+(w) 上一场的预测登记没有回填；或新机制命名没有生成 ≥1 条可证伪预测
 
 输出格式：每条 `[一致性 | 失实 | 越界 | 漏改 | 隐私 | 可读性 | 安全] line<n>: <问题> → <建议修复>`
 不修改草稿，只输出 issue 清单。
@@ -572,6 +589,82 @@ staleness; it never edits it.
 
 ---
 
+## Deep-analysis toolkit (v6 — from pattern bookkeeping to mechanism reasoning)
+
+The lens paragraphs record WHAT happened and what it echoes. Depth
+means answering: **why it happens, under what conditions it will
+happen again, and where the loop can be broken.** Four evidence-based
+tools, all machine-executable from transcripts. Their outputs are new
+sub-blocks at the END of `## Working formulation` (order fixed):
+`(整合机制假设)` → `(CCRT 关系叙事提取)` → `(行为链分析)` → `(预测登记)`.
+
+### 1. Integrative mechanism hypothesis（整合机制假设 — Persons 案例概念化）
+
+ALWAYS (therapy sessions). One paragraph + optional small diagram that
+assembles the lens outputs into a SINGLE causal model: origins → core
+beliefs/schemas → current precipitant → the maintaining loops this
+session evidences → **where each loop is breakable**（可断点）.
+「文献」shape: Persons' case formulation; maintaining loops per
+Moorey's "vicious flower" — each petal one self-reinforcing circle.
+Rules: no new content that lacks lens-level support below; every loop
+names its reinforcer; hypothesis language ("当前最佳假设"), never
+verdict language.
+
+### 2. CCRT extraction（核心冲突关系主题 — Luborsky）
+
+WHEN the raw contains ≥1 relationship episode (an interaction with a
+specific other, narrated or enacted in-session — incl. the therapist).
+For each episode, one table row:
+
+| Episode (对象 + anchor) | W 愿望 | RO 对方（预期/实际）反应 | RS 自我反应 |
+| --- | --- | --- | --- |
+
+Then one line: does this session's W-RO-RS support, refine, or
+contradict the standing CCRT profile (`wiki/overviews/ccrt-profile.md`,
+`kind: formulation` — create on first use; append-only episode ledger
++ a periodically-revised theme synthesis). The CCRT profile is the
+psychodynamic lens's quantitative backbone: themes earn confidence by
+recurring across episodes and counterparts, not by sounding right.
+
+### 3. Behavioural chain analysis（行为链分析 — DBT chain analysis）
+
+WHEN the raw contains a risk-grade event (safety, irreversibility) or
+a repeated problem behaviour. Full chain, each link anchored:
+
+```
+脆弱性因素（睡眠/药物窗口/阶段状态）→ 触发事件 → 链条（念头→情绪→
+身体→微决定，逐环）→ 行为 → 短期后果（强化物 — 这是发动机，必须显式）
+→ 长期代价 → 可断点（标 2-3 个最早可介入的环）
+```
+
+The 可断点 list feeds the debrief's 怎么对待 and the living
+formulation's 当前姿势 column — chain analysis is where "怎么对待"
+stops being generic advice and starts being surgical.
+
+### 4. Prediction register（预测登记 — formulation as hypothesis）
+
+ALWAYS. Two parts:
+- **回填**: last session's predictions, each marked 验证 / 证伪 /
+  无数据 (with anchor). Falsifications get one line on what the
+  formulation update is.
+- **新预测**: 1-3 falsifiable, observable predictions per newly named
+  mechanism ("若 X 场景出现，预期可观察到 Y；若反而出现 Z，假设需
+  修正为…"). Predictions must be checkable from a future raw — no
+  mind-reading, no unfalsifiable claims.
+
+### Longitudinal signals（纵向信号行 — lightweight, in the at-a-glance table）
+
+Add one machine-layer line per session（in `Threads touched` block or
+formulation head）: 5-6 transcript-derived proxy signals, marked
+「推断」: e.g. 自发主题转换次数 / SI 是否出现（级别）/ 例外时刻数 /
+情绪词密度印象（高中低）/ 决策外包次数. Crude but longitudinally
+comparable — trajectories need an axis, not only narrative.
+
+Psychiatry sessions: toolkit reduces to prediction register +
+longitudinal signals (chain/CCRT belong to therapy material).
+
+---
+
 ## Lens menu (11 + 4 conditional)
 
 Pick the lenses that genuinely apply to the material at hand. Drop the
@@ -698,6 +791,9 @@ A correct ingest produces:
 10. For psychiatry: [[medication-arc]] has a new timeline entry **(non-negotiable)**
 11. `log.md` prepended per [AGENTS.md §"ingest"](../../../AGENTS.md#21-ingest-path)
 12. `Pages NOT touched but should be` section is non-empty if Stage 2 surfaced any carry-over (or explicitly states "none")
+12.5. `## Working formulation` ends with the four deep-analysis
+    sub-blocks (整合机制假设 / CCRT 提取(条件) / 行为链分析(条件) /
+    预测登记 — 含上场回填); critique items (u)-(w) passing
 13. **Exactly one** debrief companion page (`<raw-stem>-debrief.md`,
     `type: synthesis` + `kind: debrief`, sources = raw + summary), with
     every 解惑/建议 item provenance-marked and critique items (n)-(q)
