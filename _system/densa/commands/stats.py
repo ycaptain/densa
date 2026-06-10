@@ -184,7 +184,7 @@ def _count_orphans(repo: Path, pages: list[_PageInfo]) -> int:
             continue
         src_no_ext = pg.rel[:-3] if pg.rel.endswith(".md") else pg.rel
         for hit in scan(text):
-            res = resolve(hit.target, idx)
+            res = resolve(hit.target, idx, source=pg.rel)
             for target_no_ext in res.hits:
                 target_rel = f"{target_no_ext}.md"
                 if target_rel == pg.rel or target_no_ext == src_no_ext:

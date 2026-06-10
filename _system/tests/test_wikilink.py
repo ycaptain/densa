@@ -59,6 +59,85 @@ def test_resolve_ambiguous(tmp_path: Path) -> None:
     assert len(res.hits) == 2
 
 
+def _write(tmp_path: Path, rel: str) -> None:
+    p = tmp_path / rel
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text("x", encoding="utf-8")
+
+
+def test_resolve_prefers_same_domain_match(tmp_path: Path) -> None:
+    """TK-0037 AC#1: multiple global matches, exactly one in the linking
+    file's own domain -> resolves to the same-domain candidate."""
+    _write(tmp_path, "domains/psychology/wiki/entities/xiao-zhou.md")
+    _write(tmp_path, "domains/people/wiki/entities/xiao-zhou.md")
+    idx = build_index(tmp_path)
+    res = resolve(
+        "xiao-zhou", idx,
+        source="domains/psychology/wiki/concepts/attachment.md",
+    )
+    assert res.status is ResolutionStatus.OK
+    assert res.hits == ("domains/psychology/wiki/entities/xiao-zhou",)
+    # Same slug linked from the other domain picks that domain's page.
+    res = resolve(
+        "xiao-zhou", idx,
+        source="domains/people/wiki/entities/mom.md",
+    )
+    assert res.hits == ("domains/people/wiki/entities/xiao-zhou",)
+
+
+def test_resolve_cross_domain_falls_back_to_global(tmp_path: Path) -> None:
+    """TK-0037 AC#2: zero same-domain matches -> global candidate set.
+
+    A unique global match resolves; a genuinely ambiguous one stays
+    ambiguous even when linked from a third domain.
+    """
+    _write(tmp_path, "domains/people/wiki/entities/xiao-zhou.md")
+    idx = build_index(tmp_path)
+    res = resolve(
+        "xiao-zhou", idx,
+        source="domains/psychology/wiki/concepts/attachment.md",
+    )
+    assert res.status is ResolutionStatus.OK
+    assert res.hits == ("domains/people/wiki/entities/xiao-zhou",)
+
+    _write(tmp_path, "domains/research-papers/wiki/entities/xiao-zhou.md")
+    idx = build_index(tmp_path)
+    res = resolve(
+        "xiao-zhou", idx,
+        source="domains/psychology/wiki/concepts/attachment.md",
+    )
+    assert res.status is ResolutionStatus.AMBIGUOUS
+    assert len(res.hits) == 2
+
+
+def test_resolve_no_domain_context_keeps_ambiguity(tmp_path: Path) -> None:
+    """TK-0037 AC#3: files outside any domain (and source=None) keep the
+    historical behaviour — multiple matches are ambiguous."""
+    _write(tmp_path, "domains/psychology/wiki/entities/xiao-zhou.md")
+    _write(tmp_path, "domains/people/wiki/entities/xiao-zhou.md")
+    idx = build_index(tmp_path)
+    for source in (None, "log.md", "index.md"):
+        res = resolve("xiao-zhou", idx, source=source)
+        assert res.status is ResolutionStatus.AMBIGUOUS
+        assert len(res.hits) == 2
+
+
+def test_resolve_multiple_same_domain_matches_stay_ambiguous(
+    tmp_path: Path,
+) -> None:
+    """Two candidates inside the linking file's own domain are still a
+    genuine ambiguity; the full candidate set is reported."""
+    _write(tmp_path, "domains/psychology/wiki/concepts/dup.md")
+    _write(tmp_path, "domains/psychology/wiki/entities/dup.md")
+    _write(tmp_path, "domains/people/wiki/entities/dup.md")
+    idx = build_index(tmp_path)
+    res = resolve(
+        "dup", idx, source="domains/psychology/wiki/concepts/x.md",
+    )
+    assert res.status is ResolutionStatus.AMBIGUOUS
+    assert len(res.hits) == 3
+
+
 def test_resolve_strips_anchor_and_display(tmp_path: Path) -> None:
     (tmp_path / "page.md").write_text("x", encoding="utf-8")
     idx = build_index(tmp_path)

@@ -79,7 +79,7 @@ class AnalysisSourcesCardinality:
         # Per docs/reference/sources-cardinality.md: analysis.sources
         # MUST point at a raw/ file.
         target = match.group(1)
-        resolution = resolve(target, idx)
+        resolution = resolve(target, idx, source=path)
         if resolution.status != ResolutionStatus.OK:
             # AGENTS006 (wikilink-resolvable) already complains about
             # MISSING / AMBIGUOUS; don't double-report here.

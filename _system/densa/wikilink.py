@@ -115,7 +115,24 @@ def build_index(repo: Path) -> SlugIndex:
 
 # --- Resolution -----------------------------------------------------------
 
-def resolve(target: str, idx: SlugIndex) -> Resolution:
+def _domain_prefix(path: str) -> str | None:
+    """Return ``"domains/<X>/"`` for a path under a domain, else ``None``.
+
+    Pure string classification of a repo-relative path; files outside
+    any ``domains/<X>/`` tree (root ``log.md``, ``index.md``, ...) have
+    no domain context.
+    """
+    p = path.replace("\\", "/").split("/")
+    if len(p) > 2 and p[0] == "domains":
+        return f"domains/{p[1]}/"
+    return None
+
+
+def resolve(
+    target: str,
+    idx: SlugIndex,
+    source: str | None = None,
+) -> Resolution:
     """Resolve a single wikilink body (everything between ``[[`` ``]]``).
 
     Strips display labels (``slug|Display``), section anchors
@@ -123,6 +140,15 @@ def resolve(target: str, idx: SlugIndex) -> Resolution:
     Explicit paths (``[[_system/templates/concept]]``, ``[[domains/x/wiki/y]]``)
     are matched against the full repo-relative path set; bare slugs
     are matched against the wiki-graph-relevant suffix index only.
+
+    *source* is the repo-relative path of the file containing the link.
+    When a **bare slug** has multiple global matches and the source file
+    lives under ``domains/<X>/``, candidates are first filtered to that
+    domain (the L2-wins philosophy at the link-resolution layer):
+    exactly one same-domain survivor resolves; multiple survivors stay
+    ambiguous; zero survivors fall back to the global candidate set so
+    cross-domain links keep working. ``source=None`` (or a source
+    outside any domain) keeps the historical global-only behaviour.
     """
     target = target.replace("\\|", "|")
     main = target.split("|", 1)[0].split("#", 1)[0].strip()
@@ -131,6 +157,12 @@ def resolve(target: str, idx: SlugIndex) -> Resolution:
         return Resolution(ResolutionStatus.ANCHOR_ONLY)
     hits = sorted(set(idx.get(main, [])))
     if hits:
+        if len(hits) > 1 and "/" not in main and source is not None:
+            domain = _domain_prefix(source)
+            if domain is not None:
+                same = [h for h in hits if h.startswith(domain)]
+                if len(same) == 1:
+                    return Resolution(ResolutionStatus.OK, tuple(same))
         if len(hits) > 1:
             return Resolution(ResolutionStatus.AMBIGUOUS, tuple(hits))
         return Resolution(ResolutionStatus.OK, tuple(hits))

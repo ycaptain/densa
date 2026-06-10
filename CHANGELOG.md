@@ -8,6 +8,20 @@ the L1 schema version recorded in [`AGENTS.md`](AGENTS.md) frontmatter
 
 ## [Unreleased]
 
+### Changed
+
+- **AGENTS006 bare-slug wikilinks prefer a same-domain match before
+  reporting ambiguity.** When a bare `[[slug]]` has multiple global
+  candidates, the resolver now filters them to the linking file's own
+  `domains/<X>/` first: exactly one survivor resolves silently,
+  multiple survivors stay ambiguous, zero survivors fall back to the
+  global candidate set (cross-domain links keep working). Files
+  outside any domain (root `log.md`, `index.md`) keep the historical
+  behaviour. On a migrated real vault this silenced 561 of 575
+  ambiguity warnings where two domains legitimately keep an entity of
+  the same slug — the L2-wins philosophy at the link-resolution layer.
+  (TK-0037)
+
 ### Fixed
 
 - **Vault walkers no longer descend into nested git checkouts.** A
@@ -66,7 +80,6 @@ the L1 schema version recorded in [`AGENTS.md`](AGENTS.md) frontmatter
   preparing the actual v1→v2 migration commit on a real vault.
   (TK-0034)
 
-
 ### Changed
 
 - **`docs/reference/` split: design essays moved to `docs/design/`.**
@@ -82,7 +95,7 @@ the L1 schema version recorded in [`AGENTS.md`](AGENTS.md) frontmatter
   report skeleton). Each Q&A meeting ≥2 of the existing heuristics
   (`inbound_refs` / `citation_breadth` / `age`) is now written as a
   fenced YAML record with `qa / suggested_type / suggested_slug /
-  criteria_met / reason`, replacing the prior free-text rows.
+criteria_met / reason`, replacing the prior free-text rows.
   Zero-candidate runs MUST emit `_No candidates this run._` so
   `promote` and other downstream tooling can distinguish "section
   absent" (LLM forgot) from "section present, nothing qualified"
@@ -99,8 +112,8 @@ the L1 schema version recorded in [`AGENTS.md`](AGENTS.md) frontmatter
   example, run the migration to upgrade". Both banners now read
   "v1 design — v2 schema" and point readers at
   [`docs/reference/karpathy-mapping.md`](docs/reference/karpathy-mapping.md)
-  + the active default L2. ROADMAP "Short term: examples/showcases
-  v1→v2 migration" struck in lockstep.
+  - the active default L2. ROADMAP "Short term: examples/showcases
+    v1→v2 migration" struck in lockstep.
 
 ### Added
 
@@ -197,7 +210,7 @@ the L1 schema version recorded in [`AGENTS.md`](AGENTS.md) frontmatter
   bootstrap: clones upstream, wires the pre-commit hook, walks
   example-domain disposition, and (optionally) injects
   `docs/bootstrap.md` into your AI agent (`--auto-inject
-  cursor|claude-code|codex|auto`). Runnable today via
+cursor|claude-code|codex|auto`). Runnable today via
   `PYTHONPATH=_system python -m densa init my-vault` from any Densa
   clone (or `densa init my-vault` after `pip install -e .`). Documented
   in [`README.md` §"Alternative: scaffold without cloning by hand"](README.md#alternative-scaffold-without-cloning-by-hand).
@@ -244,8 +257,8 @@ AGENTS012) so you can later see when a page moved from v1 to v2.
 
 #### Changed (non-schema)
 
-- **README** gains a *Pick your path* router (just-look / just-use /
-  evaluate) before the 5-minute demo. The *Two names, one project*
+- **README** gains a _Pick your path_ router (just-look / just-use /
+  evaluate) before the 5-minute demo. The _Two names, one project_
   callout is demoted to a footnote at the end of Quickstart.
 - **`index.md`** redirects new users to `README.md` instead of GUIDE
   (was confusing: index is a content map, not an onboarding entry).
@@ -266,8 +279,8 @@ AGENTS012) so you can later see when a page moved from v1 to v2.
   - Canonical-fact callout removed from §3 (already documented in
     [`docs/reference/karpathy-mapping.md`](docs/reference/karpathy-mapping.md)).
 - **`SETUP.md`** reorganised into three explicit segments:
-  *Required (everyone) / Recommended (Obsidian users) / Privacy
-  (sensitive material)*. Each opt-in segment has an applicability
+  _Required (everyone) / Recommended (Obsidian users) / Privacy
+  (sensitive material)_. Each opt-in segment has an applicability
   callout — a VSCode-only user can skip the Obsidian section
   cleanly. The rule table extended to AGENTS001-012.
 - **`docs/reference/rules-registry.md`** extended to AGENTS010-012
@@ -275,16 +288,16 @@ AGENTS012) so you can later see when a page moved from v1 to v2.
 - **`docs/EXAMPLE-DOMAINS.md` content merged into
   [`docs/setup.md` §"Choosing or replacing the default domain"](docs/setup.md#choosing-or-replacing-the-default-domain)** —
   the decision tree lives alongside the install runbook so domain
-  setup is one stop. Per-showcase descriptive content (the *what does
-  it look like* tour) moved to the showcase README so each doc has a
+  setup is one stop. Per-showcase descriptive content (the _what does
+  it look like_ tour) moved to the showcase README so each doc has a
   single role.
 - **`docs/EXAMPLES.md` deleted** — its per-domain tour merged into
   [`examples/showcases/README.md`](examples/showcases/README.md);
   shipped showcases now self-document their structure in one place.
 - **`domains/research-papers/wiki/overview.md`** now opens with a
   collapsed callout that empty Dataview sections (`entities/`,
-  `comparisons/`, `overviews/`) mean *not yet triggered*, not
-  *broken*. Avoids a fresh-fork first-impression that the wiki is
+  `comparisons/`, `overviews/`) mean _not yet triggered_, not
+  _broken_. Avoids a fresh-fork first-impression that the wiki is
   half-empty.
 
 #### Fork update procedure (no migration script needed)
@@ -301,11 +314,11 @@ No `compiled_against` bump, no migration script needed.
 
 ### Planned
 
-- **Publish `densa` to PyPI**. *Status as of 2026-05-25: not yet
+- **Publish `densa` to PyPI**. _Status as of 2026-05-25: not yet
   available; `pipx install densa` will fail. The supported install
   today is `git clone` + `git config core.hooksPath _system/hooks`
   (pure stdlib, no `pip install` needed), or `densa init` from an
-  existing Densa install (see Added above).*
+  existing Densa install (see Added above)._
 
 ## [0.2.0] - 2026-05-24 — onboarding refactor (BREAKING repository layout)
 
@@ -315,8 +328,8 @@ of `0.1.0` need to either re-fork or run a small path-update sweep
 (see "Migration" below).
 
 > **Reading guide.** This release combines repository-layout work
-> (affects every fork) with cosmetic fixes to the *shipped example
-> L2* (the synthesised psychology / workspace content). Forks that
+> (affects every fork) with cosmetic fixes to the _shipped example
+> L2_ (the synthesised psychology / workspace content). Forks that
 > have already replaced the shipped examples with their own content
 > can skip the second subsection entirely.
 
@@ -347,20 +360,20 @@ of `0.1.0` need to either re-fork or run a small path-update sweep
   `examples/showcases/`**. Default fork now ships **one** active
   example L2 (`research-papers/` — the light schema). The heavier
   showcases stay as reference material, opt-in by `cp -r
-  examples/showcases/<X> domains/<X>`. The validator's wikilink
+examples/showcases/<X> domains/<X>`. The validator's wikilink
   resolver skips `examples/` so showcase internals don't pollute your
   active wiki graph.
 - **`README.md`** rewritten from 393 → ~175 lines. Single
   Quickstart path (the `pipx install densa` preview block was
   dropped — it'll come back when PyPI publication actually ships).
-  Adds an explicit *Densa (project) vs `densa` (CLI)* distinction in
+  Adds an explicit _Densa (project) vs `densa` (CLI)_ distinction in
   the lead, since they were silently colliding.
 
 #### Added
 
 - **`examples/hello-world/`** — a 5-minute walkthrough: one-page
   source + the wiki pages an ingest would produce + the log entry.
-  Linked from the README's *5-minute demo* section. No agent
+  Linked from the README's _5-minute demo_ section. No agent
   required to consume.
 - **`examples/` is a new validator-recognised top-level**
   (`WIKILINK_SKIP_TOP_LEVEL` includes it); `(no prefix)` commits may
@@ -401,8 +414,8 @@ of `0.1.0` need to either re-fork or run a small path-update sweep
   full-repo index.
 - **AGENTS001 inbox→raw rename false positive**. `StagedEntry` now
   carries the rename source path; the rule only forbids renames
-  whose *source* sits under `raw/`. `git mv inbox/x.md
-  domains/<X>/raw/<bucket>/y.md` (the canonical `process-inbox`
+  whose _source_ sits under `raw/`. `git mv inbox/x.md
+domains/<X>/raw/<bucket>/y.md` (the canonical `process-inbox`
   action per L1 §2.4) is now permitted as designed.
 - **AGENTS005 didn't require the source to be a raw file**. Per L1
   §3.1 `analysis.sources` MUST point at a raw file; the rule now
@@ -465,7 +478,7 @@ the validator, or any path your fork depends on.
   unambiguous.
 - **Three `index.md` files** were displaying recent activity
   backwards (`entries.slice(-15).reverse()` on a
-  reverse-chronological log shows the *oldest* 15). All four
+  reverse-chronological log shows the _oldest_ 15). All four
   `index.md` files now use `entries.slice(0, 15)`.
 - **~170 broken Obsidian block-id anchors** under
   `domains/psychology/wiki/` rewritten from `[[file#^[HH:MM]]]`

@@ -247,6 +247,32 @@ class TestWikilinkResolvable:
         assert diag.severity is Severity.ERROR
 
     def test_ambiguous_link_is_warning(self, mini_vault: MiniVault) -> None:
+        """Two same-domain candidates are a genuine ambiguity (TK-0037:
+        the same-domain filter only resolves a *unique* survivor)."""
+        mini_vault.write(
+            "domains/psychology/wiki/concepts/dup.md", make_wiki_page(),
+        )
+        mini_vault.write(
+            "domains/psychology/wiki/entities/dup.md", make_wiki_page(),
+        )
+        path = "domains/psychology/wiki/concepts/x.md"
+        text = make_wiki_page(extra="See [[dup]] for more.\n")
+        mini_vault.write(path, text)
+        report = Report()
+        WikilinkResolvable().visit(
+            path, text, build_index(mini_vault.root), report,
+        )
+        assert len(report.diagnostics) == 1
+        diag = report.diagnostics[0]
+        assert diag.rule_id == self.rule_id
+        assert diag.severity is Severity.WARNING
+
+    def test_same_domain_match_resolves_silently(
+        self, mini_vault: MiniVault,
+    ) -> None:
+        """TK-0037 AC#1 at the check level: a bare slug with one
+        candidate per domain resolves to the linking file's own domain
+        without an ambiguity warning."""
         mini_vault.write(
             "domains/psychology/wiki/concepts/dup.md", make_wiki_page(),
         )
@@ -260,7 +286,4 @@ class TestWikilinkResolvable:
         WikilinkResolvable().visit(
             path, text, build_index(mini_vault.root), report,
         )
-        assert len(report.diagnostics) == 1
-        diag = report.diagnostics[0]
-        assert diag.rule_id == self.rule_id
-        assert diag.severity is Severity.WARNING
+        assert _ids(report) == []

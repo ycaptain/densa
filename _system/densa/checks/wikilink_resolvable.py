@@ -5,6 +5,10 @@ share the same shortest-unique slug) is a WARNING — Obsidian will pick
 one of them at render time so the link still works, but the
 ambiguity is a maintenance smell worth surfacing.
 
+Bare slugs with multiple global matches prefer a same-domain match:
+a link inside ``domains/<X>/`` whose slug has exactly one candidate
+in that domain resolves silently (see :func:`densa.wikilink.resolve`).
+
 The set of files this rule examines is :func:`~densa.paths.wikilinks_scoped`:
 canonical markdown content (domains, root index/log), excluding
 schema docs (AGENTS, templates, prompts) and ``raw/``.
@@ -30,7 +34,7 @@ class WikilinkResolvable:
         if not wikilinks_scoped(path):
             return
         for hit in scan(text):
-            resolution = resolve(hit.target, idx)
+            resolution = resolve(hit.target, idx, source=path)
             if resolution.status is ResolutionStatus.MISSING:
                 report.add(Diagnostic(
                     rule_id=self.id,
