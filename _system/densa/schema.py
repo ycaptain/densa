@@ -470,6 +470,46 @@ OPERATIONS: Final[tuple[OperationSpec, ...]] = (
             "voice transform documented in the prompt",
         ),
     ),
+    OperationSpec(
+        name="visualize",
+        writes=(
+            WriteSpec(
+                "domains/<X>/wiki/<folder>/<slug>.md",
+                "chart blocks only, on pages whose trigger conditions pass",
+                "embed/refresh a chart block (+ data-as-of line) compiled "
+                "from the host page's own prose and frontmatter",
+            ),
+            WriteSpec(
+                "domains/<X>/log.md",
+                "always",
+                "audit trail (newest first per AGENTS002)",
+            ),
+            WriteSpec(
+                "log.md",
+                "only when cross-domain",
+                "global timeline (newest first)",
+            ),
+        ),
+        scope_globs=(
+            "domains/*/wiki/**",
+            "domains/*/log.md",
+            "index.md",
+            "log.md",
+        ),
+        reads=(
+            "domains/<X>/wiki/**",
+            "domains/<X>/AGENTS.md",
+            "AGENTS.md",
+            "_system/prompts/visualize.md",
+            "_system/templates/charts/**",
+        ),
+        forbids=(
+            "introducing claims absent from the host page's prose "
+            "(charts are compiled, never authored)",
+            "charting crisis-card / SI / medication material",
+            "reading raw/** except to verify an existing anchor",
+        ),
+    ),
 )
 
 

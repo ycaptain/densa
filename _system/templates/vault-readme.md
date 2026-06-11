@@ -31,16 +31,17 @@ An Obsidian-based personal LLM wiki, built on Andrej Karpathy's
 
 ## 📅 Daily use
 
-The five operations you ever run:
+The six operations you ever run:
 
 - 📥 `ingest <path>` — file a new source into the wiki
 - 🔍 `query <question>` — ask the wiki a question (read-only by default)
 - 🩺 `lint [--domain <X>]` — health-check the wiki
 - 📨 `process-inbox` — triage un-routed material in `/inbox/`
 - ⬆️ `promote <outputs/qa/...>` — lift a Q&A archive into a first-class wiki page
+- 📊 `visualize [<path> | --domain <X>]` — embed/refresh chart blocks on pages whose triggers pass
 
 Per-op write scopes + canonical procedures live in
-[`AGENTS.md` §"The five operations"](AGENTS.md#2-the-five-operations).
+[`AGENTS.md` §"The six operations"](AGENTS.md#2-the-six-operations).
 
 ## 🧱 Layout
 

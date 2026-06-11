@@ -10,7 +10,7 @@ updated: 2026-05-29
 > [!important] Reference implementation of the
 > [AGENTS.md](https://agents.md) standard for personal knowledge.
 > Densa uses the AGENTS.md cross-tool agent contract to define a
-> complete L1/L2 schema + five operations + machine validator
+> complete L1/L2 schema + six operations + machine validator
 > (`AGENTS001`–`AGENTS013`). The same contract powers full-repo
 > forks and lightweight skill-plugin installs alike.
 >
@@ -152,7 +152,7 @@ jumps walk the chain step by step. `raw/` is never touched.
 Full runbook + the three-mode comparison table:
 [`docs/reference/schema-versioning.md` §"Migration runbook"](docs/reference/schema-versioning.md#migration-runbook).
 
-## 2. The five operations
+## 2. The six operations
 
 ### 2.0 Operation writes (machine-enforced via AGENTS007)
 
@@ -167,7 +167,7 @@ Full runbook + the three-mode comparison table:
 Each operation declares which paths its commit may touch. The
 validator classifies a staged commit by its leading commit-message
 prefix (`ingest(<domain>):`, `query:`, `lint:`, `process-inbox:`,
-`promote:`). Commits without a recognised prefix fall under the
+`promote:`, `visualize(<domain>):`). Commits without a recognised prefix fall under the
 `(no prefix)` row and **MUST NOT touch `domains/**`\*\*.
 
 **Source of truth for the per-operation write contract**:
@@ -298,6 +298,31 @@ surface promotion candidates but never executes promote itself.
 Full procedure:
 [`_system/prompts/promote.md`](_system/prompts/promote.md).
 
+### 2.6 `visualize [<path> | --domain <X>]` (charts on existing pages)
+
+Embed or refresh chart blocks (Mermaid / dataviewjs) on wiki pages
+whose **trigger conditions** pass (per-domain trigger matrix in the
+L2 AGENTS.md "可视化约定" section). Charts are **compiled, never
+authored**: every node / data point must already be stated in the
+host page's prose or frontmatter. A chart that needs a relation the
+page doesn't state is a completeness defect in the *page* — fix the
+page first through the normal edit path, then chart it. Crisis-card,
+SI, and medication material is never charted.
+
+Runs in two passes with a human gate (same shape as `ingest`):
+**Pass 1 — Plan** evaluates the trigger matrix and emits a chart plan
+(host page, chart type, trigger condition cited); the human approves;
+**Pass 2 — Write** embeds the approved blocks, no silent additions.
+Most pages correctly get **zero** charts — a chart that restates an
+adjacent table is noise (the shape test). Every static chart carries
+a `图截至: <date> · 数据源: [[page]]` line so `lint` can flag
+staleness.
+
+Also consumes the carry-over queue left by `ingest` Stage V when a
+session deferred its chart work.
+
+Full procedure: [`_system/prompts/visualize.md`](_system/prompts/visualize.md).
+
 ## 3. Frontmatter schema (universal)
 
 Every wiki page MUST have YAML frontmatter:
@@ -418,7 +443,8 @@ during an `ingest`.
 
 - **Callouts** (`> [!type] Title`) for structural emphasis. Permitted
   types: `warning`, `important`, `quote`, `faq` (collapsed via `-`
-  suffix), `todo`.
+  suffix), `todo`, `chart` (chart blocks; default-collapsed via `-`,
+  title format `[!chart]- 图:<what it answers>`).
 - **Block IDs** (`^id`) for citing a specific moment inside a raw
   transcript. Use timestamps (`^14:32`) when available.
 - **HUMAN comments** (`%%HUMAN: …%%` / `%%HUMAN%%` … `%%/HUMAN%%`)
@@ -560,9 +586,9 @@ bypass env vars, and rationale:
 
 ## 8. Workflow with the agent
 
-User requests map to the five operations
+User requests map to the six operations
 ([`ingest`](#21-ingest-path) through
-[`promote`](#25-promote-qa-path-qa--wiki-page)). The canonical
+[`visualize`](#26-visualize-path---domain-x-charts-on-existing-pages)). The canonical
 "natural language → action" mapping table lives in
 [`GUIDE.md` §"Mapping natural language to operations"](GUIDE.md#mapping-natural-language-to-operations)
 — do not duplicate it here or in `index.md` (changing one and
