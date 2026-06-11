@@ -61,6 +61,32 @@
      `human-review` (a re-ingest may be needed). At v1 this should
      produce zero hits; the rule exists so v2 migrations have a
      ready-made audit gate.
+3.5. **Chart-block checks** (the `visualize` conventions —
+   [`visualize.body.md`](visualize.body.md)):
+   - **Format compliance**: every `[!chart]` callout carries the
+     intro line (`这张图回答:`), and every *static* chart block
+     (Mermaid/Chronos) carries a `图截至:` line. Missing either →
+     additive auto-fix candidate if trivially derivable, else
+     `human-review`.
+   - **Live-chart whitelist**: `dataviewjs` chart blocks
+     (`renderChart`) outside the hub whitelist (`index.md`,
+     `domains/*/wiki/overview.md`, career `profile.md` /
+     `skill-gap-map`-class synthesis hubs, psychology
+     `current-state.md`) → `human-review`.
+   - **Safety placement**: a chart block inside a section whose
+     heading matches 危机 / 用药 / 自杀 / SI → flag immediately
+     (`human-review`, top of report) — the visualize safety red line
+     forbids charting that material.
+   - **Density cap**: any `summary` page with >2 chart blocks →
+     `human-review` (charts are seasoning, not structure).
+   - **Staleness**: `图截至:` date more than 60 days older than the
+     page's `updated` frontmatter → nominate the page for a
+     `visualize` refresh (report listing, no auto-fix).
+   - **Trigger nominations**: while enumerating pages for other
+     checks, when a page *obviously* passes a chart trigger (e.g. a
+     `kind: theme` overview with ≥3 sessions and named stages, no
+     chart) → list under `Visualize nominations` in the report. A
+     missed chart is recoverable; never auto-draw from lint.
 4. **Provenance integrity checks** (the high-leverage anti-poisoning gates):
    - **Citation depth**: for each non-trivial claim in any
      `pattern` / `theme` / `synthesis` page, at least one wikilink

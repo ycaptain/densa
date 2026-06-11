@@ -190,7 +190,19 @@
     using the same top-of-file insertion point. The cross-domain entry
     is shorter (just `Source` + one-line synthesis); the detailed
     `Wrote`/`Read-but-not-touched` lists stay in the per-domain log.
-11. **Suggest a commit message** for the human:
+11. **Stage V — chart triggers (optional, always droppable).** After
+    all pages land, evaluate the chart trigger matrix
+    ([`visualize.body.md`](visualize.body.md) §1; L2 "可视化约定"
+    overrides win) over *the pages this ingest touched only*. Domains
+    with a domain sub-prompt (e.g. psychology) follow their own
+    Stage V section instead. Decide first: ≤2 triggered charts on
+    touched pages → draw now (run mini-critique (z1)-(z4)); context
+    already heavy, or the chart belongs to an untouched page → write
+    a `Chart carry-over:` block into the same log entry and leave it
+    for the standalone `visualize` operation. Most ingests correctly
+    trigger **zero** charts. Stage V must never thin the core
+    analysis — when in conflict, defer everything.
+12. **Suggest a commit message** for the human:
     `ingest(<domain>): <date> <slug>`.
 
 ## Hard rules

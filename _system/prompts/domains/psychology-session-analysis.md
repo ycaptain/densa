@@ -44,7 +44,7 @@ bucket the L2 routes here). Determine `session_kind` and clinician slug
 from the filename pattern (see §"Routing" below); if ambiguous, ask
 once before drafting.
 
-## Three-stage pipeline (+ Stage 4 debrief)
+## Three-stage pipeline (+ Stage 4 debrief + Stage V visualize)
 
 Every ingest runs the stages in sequence within the **same LLM context**
 (no subagent overhead — the critique self-review is cheaper as a
@@ -55,11 +55,14 @@ Stage 1 Draft       — read raw + load conditional wiki pages, draft the summar
 Stage 2 Critique    — self-review the draft against the raw + wiki invariants. Output an issue list.
 Stage 3 Revise      — apply critique fixes, write the file + all wiki side-effects.
 Stage 4 Debrief     — compile the client debrief companion page FROM the written summary + raw.
+Stage V Visualize   — evaluate chart triggers over the pages just written; draw 0-2 charts or defer.
 ```
 
 The stages compose; do NOT shortcut to a single pass. The L2 may refer
 to this as the "three-stage pipeline" — Stage 4 is the 2026-06
-client-facing extension, run after the summary lands.
+client-facing extension, run after the summary lands; Stage V is the
+2026-06 chart extension, run last and always droppable (defer, never
+degrade Stages 1-4).
 
 ### Stage 1 — Draft
 
@@ -98,6 +101,14 @@ client-facing extension, run after the summary lands.
    raw contains relationship episodes; behavioural chain analysis when
    the raw contains a risk-grade or repeated behavioural event; new
    prediction register.
+4.7. **Leave shape notes** (for Stage V): while the raw is still in
+   context, note in the machine layer any *shapes* the analysis
+   surfaced — mutually-feeding maintenance loops (X→Y→X), layered
+   multi-factor convergence, a thread crossing its ≥3rd session with
+   nameable stages. One line each, e.g. `形状笔记: evaluation-fear ↔
+   catastrophising 互馈环(行为链 § 见下)`. Stage V compiles charts
+   from these notes + the written page — never from raw memory. No
+   shapes → write nothing.
 5. **Compile the human layer from the machine layer** — the four
    readability elements (§"Required summary structure" below) are
    written AFTER the machine sections exist, and derive from them,
@@ -151,6 +162,18 @@ Output an issue list (do NOT modify the draft). Use this prompt body:
 (x) 上一篇 debrief 的功课（H-ID）没有回填；或"接下来"项没编 H-ID
 (y) debrief 末尾缺空白 %%HUMAN%% 自写块；或任何既有 %%HUMAN%% 块被
     改写/删除（owner 亲笔永远原样保留——L1 红线的本地强调）
+
+仅当草稿 / debrief / Stage V 计划含图表块时（mini-critique，全文定义
+见 _system/prompts/visualize.body.md §2.3）：
+
+(z1) 编译性：图中存在所在页正文找不到支撑的节点 / 数据点 / 边
+     （图只许编译，不许创作——从 raw 记忆补图 = 本条违例）
+(z2) 形状检验：遮住图读者不丢失任何"形状"信息（环 / 分叉 / 密度 /
+     象限）——图只是复述了相邻表格 → 删图
+(z3) 安全：危机卡 / SI 级材料 / 用药事实（药名/剂量/起停）入图
+(z4) 规约：缺 [!chart]- callout / 引语行 / 图截至行；节点 >12 字；
+     flowchart 横向 >8 节点；硬编码颜色；缺 handDrawn 配置头；
+     单页 >1 张 hero；dataviewjs 出现在 hub 白名单之外
 
 输出格式：每条 `[一致性 | 失实 | 越界 | 漏改 | 隐私 | 可读性 | 安全] line<n>: <问题> → <建议修复>`
 不修改草稿，只输出 issue 清单。
@@ -229,6 +252,47 @@ writing.
    writing.
 7. Append the debrief to the same `log.md` entry's "Pages touched"
    list (one ingest = one log entry).
+
+### Stage V — Visualize (chart triggers over the pages just written)
+
+Run AFTER Stage 4, same session, fresh attention. Shared conventions,
+trigger matrix, block formats and the (z1)-(z4) mini-critique live in
+[`_system/prompts/visualize.body.md`](../visualize.body.md) — this
+stage is that operation scoped to *this ingest's written pages only*.
+
+**Dynamic trade-off (decide FIRST, before drawing anything):**
+
+| Situation | Decision |
+|---|---|
+| Triggered charts ≤2, all on pages this ingest touched | draw them now, in this session |
+| Context already heavy (long raw / batch ingest / many Stage-2-issue rounds) | write the chart plan into the log entry's `Chart carry-over:` block and STOP — the standalone `visualize` operation consumes it |
+| A triggered chart lives on a page this ingest did NOT touch (hub panels, monthly syntheses) | always defer to `visualize` |
+| The human-layer arc timeline (≥3 sessions rule) | stays a Stage 1 concern — it is one of the four readability elements' optional add-ons, not Stage V work |
+| Any doubt | don't draw. `lint` nominates missed charts; a wrong chart is noise |
+
+**Procedure (when drawing now):**
+
+1. Inputs = the pages written in Stages 3-4 + their shape notes
+   (Stage 1 step 4.7). Do not re-read the raw (anchor verification
+   excepted, and it never adds chart content).
+2. Evaluate triggers (L2 "可视化约定" matrix). Most sessions
+   correctly yield **0-1 charts**.
+3. If a needed relation is missing from the page prose: that is a
+   summary completeness defect — fix the page through Stage 3
+   mechanics first, then chart. The chart doubles as a completeness
+   probe.
+4. Draw per visualize.body.md block formats; run (z1)-(z4); fix or
+   drop on any failure.
+5. Append chart writes to the SAME log entry's Pages-touched list.
+   Deferred work goes under `Chart carry-over:` in the same entry:
+
+   ```markdown
+   - Chart carry-over:
+     - <page> — <chart type> — trigger: <condition met> — deferred: <reason>
+   ```
+
+Stage V never blocks the ingest: when in conflict, Stages 1-4 quality
+wins and everything defers.
 
 ---
 
@@ -862,5 +926,11 @@ A correct ingest produces:
     passing — full structure for therapy, light variant for psychiatry
 14. The debrief links the living formulation page and flags (not fixes)
     its staleness
+15. Stage V ran: its chart plan and its writes match 1:1 (drawn charts
+    passed (z1)-(z4)), OR the log entry carries a `Chart carry-over:`
+    block, OR the entry implicitly records zero triggers (no chart
+    lines, no carry-over). An ingest whose Stage 2 issue count grew or
+    whose machine layer thinned because of chart work is a Stage V
+    violation — defer instead.
 
-If any of (1)-(14) is missing, the ingest is incomplete — do not output a "done" message.
+If any of (1)-(15) is missing, the ingest is incomplete — do not output a "done" message.
