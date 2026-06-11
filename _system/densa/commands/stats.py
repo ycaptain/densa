@@ -7,7 +7,11 @@ A cheap, read-only subcommand that prints how a vault is doing:
 - average ``updated:`` age per type, in days;
 - orphan-page count (wiki pages with no inbound wikilink);
 - cross-domain page count (pages tagged ``cross-domain``);
-- log staleness (days since each domain's ``log.md`` last grew).
+- log staleness (days since each domain's ``log.md`` last grew);
+- graph health: wikilinks Obsidian cannot resolve (AGENTS013 backlog),
+  the most-referenced ghost targets, and the highest-degree hub pages
+  (inbound / outbound) — the numbers that decide whether the Obsidian
+  graph view is readable or a hairball.
 
 It is the "my vault is growing" artifact — a dopamine signal for the
 maintainer and a README-badge candidate (``densa stats --format json``
@@ -31,7 +35,7 @@ from __future__ import annotations
 
 import argparse
 import sys
-from collections import defaultdict
+from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from datetime import date, datetime
 from pathlib import Path
@@ -39,8 +43,15 @@ from pathlib import Path
 from densa import paths
 from densa.frontmatter import parse
 from densa.fswalk import iter_markdown
+from densa.paths import wikilinks_scoped
 from densa.schema import ALLOWED_TYPES
-from densa.wikilink import build_index, resolve, scan
+from densa.wikilink import (
+    ResolutionStatus,
+    build_index,
+    obsidian_resolvable,
+    resolve,
+    scan,
+)
 
 
 @dataclass
@@ -65,6 +76,14 @@ class VaultStats:
     orphan_count: int = 0
     cross_domain_count: int = 0
     log_staleness_days: dict[str, int | None] = field(default_factory=dict)
+    obsidian_unresolvable_links: int = 0
+    ghost_targets: dict[str, int] = field(default_factory=dict)
+    top_inbound_pages: dict[str, int] = field(default_factory=dict)
+    top_outbound_pages: dict[str, int] = field(default_factory=dict)
+
+
+_TOP_N = 10
+"""How many entries the ghost-target / hub-page leaderboards keep."""
 
 
 def add_parser(subparsers: argparse._SubParsersAction) -> None:  # type: ignore[type-arg]
@@ -135,7 +154,7 @@ def collect_stats(repo: Path, today: date) -> VaultStats:
     for t in stats.by_type:
         stats.avg_age_days_by_type.setdefault(t, None)
 
-    stats.orphan_count = _count_orphans(repo, pages)
+    _collect_link_health(repo, pages, stats)
     stats.log_staleness_days = _log_staleness(repo, today)
     return stats
 
@@ -165,33 +184,71 @@ def _collect_pages(repo: Path) -> list[_PageInfo]:
     return out
 
 
-def _count_orphans(repo: Path, pages: list[_PageInfo]) -> int:
-    """Count wiki pages with zero inbound wikilinks.
+def _collect_link_health(
+    repo: Path,
+    pages: list[_PageInfo],
+    stats: VaultStats,
+) -> None:
+    """One pass over the wikilink graph: orphans, ghosts, hub degrees.
 
-    A page is an orphan when no *other* wiki page links to it. We build
-    the slug index once, then for every wikilink in every wiki page,
-    resolve it and mark the target as linked-to. Self-links don't
-    rescue a page from orphan status.
+    Orphan semantics are unchanged from the original orphan counter: a
+    wiki page is an orphan when no *other* wiki page links to it
+    (self-links don't rescue). On top of that walk we now also gather:
+
+    - ``obsidian_unresolvable_links`` — links AGENTS013 would flag
+      (bucket-relative forms Obsidian renders as ghost nodes), counted
+      over every :func:`~densa.paths.wikilinks_scoped` file;
+    - ``ghost_targets`` — the most-referenced targets that do not
+      resolve to a real file in Obsidian's eyes (densa-missing or
+      Obsidian-unresolvable), i.e. the grey nodes in the graph view;
+    - ``top_inbound_pages`` / ``top_outbound_pages`` — the wiki pages
+      with the highest link degree; the graph view's hub candidates.
     """
     idx = build_index(repo)
     page_rels = {pg.rel for pg in pages}
-    # Map resolvable no-ext target -> the rel path it points at.
+    inbound: Counter[str] = Counter()
+    outbound: Counter[str] = Counter()
+    ghosts: Counter[str] = Counter()
     linked: set[str] = set()
-    for pg in pages:
+
+    for rel in iter_markdown(repo):
+        rel_str = str(rel).replace("\\", "/")
+        if not wikilinks_scoped(rel_str):
+            continue
         try:
-            text = (repo / pg.rel).read_text(encoding="utf-8")
+            text = (repo / rel).read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError):
             continue
-        src_no_ext = pg.rel[:-3] if pg.rel.endswith(".md") else pg.rel
+        is_wiki_source = rel_str in page_rels
+        src_no_ext = rel_str[:-3] if rel_str.endswith(".md") else rel_str
         for hit in scan(text):
-            res = resolve(hit.target, idx, source=pg.rel)
+            if not obsidian_resolvable(hit.target, idx):
+                stats.obsidian_unresolvable_links += 1
+                ghosts[_link_main(hit.target)] += 1
+            res = resolve(hit.target, idx, source=rel_str)
+            if res.status is ResolutionStatus.MISSING:
+                ghosts[_link_main(hit.target)] += 1
             for target_no_ext in res.hits:
                 target_rel = f"{target_no_ext}.md"
-                if target_rel == pg.rel or target_no_ext == src_no_ext:
-                    continue  # self-link doesn't count as inbound
+                if target_rel == rel_str or target_no_ext == src_no_ext:
+                    continue  # self-link doesn't count
                 if target_rel in page_rels:
                     linked.add(target_rel)
-    return sum(1 for pg in pages if pg.rel not in linked)
+                    if is_wiki_source:
+                        inbound[target_rel] += 1
+                        outbound[rel_str] += 1
+
+    stats.orphan_count = sum(1 for pg in pages if pg.rel not in linked)
+    stats.ghost_targets = dict(ghosts.most_common(_TOP_N))
+    stats.top_inbound_pages = dict(inbound.most_common(_TOP_N))
+    stats.top_outbound_pages = dict(outbound.most_common(_TOP_N))
+
+
+def _link_main(target: str) -> str:
+    """Normalise a wikilink body to its target key (strip alias/anchor)."""
+    target = target.replace("\\|", "|")
+    main = target.split("|", 1)[0].split("#", 1)[0].strip()
+    return main[:-3] if main.endswith(".md") else main
 
 
 def _log_staleness(repo: Path, today: date) -> dict[str, int | None]:
@@ -294,6 +351,24 @@ def _emit_text(stats: VaultStats) -> None:
         for domain, days in stats.log_staleness_days.items():
             days_str = f"{days}d" if days is not None else "no log.md"
             print(f"    {domain:<24} {days_str}")
+        print()
+
+    print("  graph health:")
+    print(f"    obsidian-unresolvable links: "
+          f"{stats.obsidian_unresolvable_links} "
+          f"(AGENTS013 backlog — ghost nodes in the graph view)")
+    if stats.ghost_targets:
+        print("    top ghost targets (refs):")
+        for target, n in stats.ghost_targets.items():
+            print(f"      {target:<40} {n}")
+    if stats.top_inbound_pages:
+        print("    top hub pages (inbound links):")
+        for rel, n in stats.top_inbound_pages.items():
+            print(f"      {rel:<56} {n}")
+    if stats.top_outbound_pages:
+        print("    top fan-out pages (outgoing links):")
+        for rel, n in stats.top_outbound_pages.items():
+            print(f"      {rel:<56} {n}")
 
 
 def _emit_json(stats: VaultStats) -> None:
@@ -307,6 +382,10 @@ def _emit_json(stats: VaultStats) -> None:
         "by_type": stats.by_type,
         "avg_age_days_by_type": stats.avg_age_days_by_type,
         "log_staleness_days": stats.log_staleness_days,
+        "obsidian_unresolvable_links": stats.obsidian_unresolvable_links,
+        "ghost_targets": stats.ghost_targets,
+        "top_inbound_pages": stats.top_inbound_pages,
+        "top_outbound_pages": stats.top_outbound_pages,
     }
     json.dump(payload, sys.stdout, indent=2, sort_keys=True)
     sys.stdout.write("\n")
