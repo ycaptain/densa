@@ -22,6 +22,7 @@ from pathlib import Path
 import pytest
 
 from densa.checks.operation_writes_scope import (
+    _PREFIX_RE,
     COMMIT_MSG_FILE_ENV,
     OperationWritesScope,
     _commit_subject,
@@ -29,6 +30,7 @@ from densa.checks.operation_writes_scope import (
 )
 from densa.git_io import StagedEntry
 from densa.report import Report
+from densa.schema import OPERATIONS
 
 
 def _init_repo(
@@ -381,3 +383,45 @@ class TestGlobMatcher:
         self, path: str, pattern: str, expected: bool,
     ) -> None:
         assert _glob_match(path, pattern) is expected
+
+
+class TestVisualizeScope:
+    """The sixth operation must be recognised by the schema-derived
+    prefix regex (the hardcoded alternation it replaced dropped it)."""
+
+    def test_visualize_chart_writes_are_clean(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        repo = _init_repo(
+            tmp_path, monkeypatch, "visualize(career): 2026-06-11 批次A",
+        )
+        report = Report()
+        OperationWritesScope().apply(
+            repo,
+            _entries(
+                "domains/career/wiki/syntheses/skill-gap-map.md",
+                "domains/career/log.md",
+                "index.md",
+            ),
+            report,
+        )
+        assert _ids(report) == []
+
+    def test_visualize_writing_to_raw_is_error(
+        self, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        repo = _init_repo(
+            tmp_path, monkeypatch, "visualize(psychology): 2026-06-11 x",
+        )
+        report = Report()
+        OperationWritesScope().apply(
+            repo,
+            _entries("domains/psychology/raw/sessions/a.md"),
+            report,
+        )
+        assert _ids(report) == ["AGENTS007"]
+
+    def test_prefix_regex_covers_every_schema_operation(self) -> None:
+        for op in OPERATIONS:
+            m = _PREFIX_RE.match(f"{op.name}(x): subject")
+            assert m and m.group("op") == op.name, op.name

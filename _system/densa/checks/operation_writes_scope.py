@@ -2,7 +2,7 @@
 
 Each commit is classified by its leading commit-message prefix
 (``ingest(<domain>):``, ``query:``, ``lint:``, ``process-inbox:``,
-``promote:``). The prefix selects an allow-list of glob patterns from
+``promote:``, ``visualize(<domain>):``). The prefix selects an allow-list of glob patterns from
 :data:`densa.config.OPERATION_WRITES`; every staged path must match
 at least one pattern, otherwise we report an error.
 
@@ -45,8 +45,13 @@ over every other source.
 """
 
 _PREFIX_RE = re.compile(
-    r"^(?P<op>ingest|query|lint|process-inbox|promote)(?:\([^)]+\))?:\s",
+    r"^(?P<op>"
+    + "|".join(re.escape(op) for op in sorted(OPERATION_WRITES) if op)
+    + r")(?:\([^)]+\))?:\s",
 )
+"""Built from :data:`densa.config.OPERATION_WRITES` (schema-derived) so
+a newly registered operation is recognised without touching this file —
+the hardcoded alternation it replaces silently dropped ``visualize``."""
 
 
 class OperationWritesScope:
