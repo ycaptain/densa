@@ -299,3 +299,34 @@ def test_graph_health_in_json_payload(
     assert payload["ghost_targets"] == {}
     assert "top_inbound_pages" in payload
     assert "top_outbound_pages" in payload
+
+
+def test_non_wiki_inbound_does_not_rescue_orphan(tmp_path: Path) -> None:
+    """Orphan semantics: only links from *wiki pages* count as inbound.
+    A domain-root index.md linking to a page does not rescue it."""
+    repo = _vault(tmp_path)
+    base = repo / "domains" / "r" / "wiki" / "concepts"
+    base.mkdir(parents=True)
+    (base / "lonely.md").write_text(_page("concept"), encoding="utf-8")
+    (repo / "domains" / "r" / "index.md").write_text(
+        "# index\n\nSee [[lonely]].\n", encoding="utf-8",
+    )
+    stats = stats_cmd.collect_stats(repo, today=TODAY)
+    assert stats.orphan_count == 1
+    # And the non-wiki source contributes no degree rows either.
+    assert stats.top_inbound_pages == {}
+
+
+def test_missing_bucket_relative_ghost_counted_once(tmp_path: Path) -> None:
+    """A bucket-relative link to a non-existent file is both
+    Obsidian-unresolvable and densa-missing — one ghost, not two."""
+    repo = _vault(tmp_path)
+    base = repo / "domains" / "r" / "wiki" / "concepts"
+    base.mkdir(parents=True)
+    (base / "x.md").write_text(
+        _page("concept", extra="See [[concepts/does-not-exist]].\n"),
+        encoding="utf-8",
+    )
+    stats = stats_cmd.collect_stats(repo, today=TODAY)
+    assert stats.obsidian_unresolvable_links == 1
+    assert stats.ghost_targets == {"concepts/does-not-exist": 1}

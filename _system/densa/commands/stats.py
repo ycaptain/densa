@@ -222,21 +222,26 @@ def _collect_link_health(
         is_wiki_source = rel_str in page_rels
         src_no_ext = rel_str[:-3] if rel_str.endswith(".md") else rel_str
         for hit in scan(text):
-            if not obsidian_resolvable(hit.target, idx):
+            unresolvable = not obsidian_resolvable(hit.target, idx)
+            if unresolvable:
                 stats.obsidian_unresolvable_links += 1
-                ghosts[_link_main(hit.target)] += 1
             res = resolve(hit.target, idx, source=rel_str)
-            if res.status is ResolutionStatus.MISSING:
+            if unresolvable or res.status is ResolutionStatus.MISSING:
+                # One ghost node per offending link, whether the file
+                # is genuinely missing or just Obsidian-unresolvable.
                 ghosts[_link_main(hit.target)] += 1
+            if not is_wiki_source:
+                # Only wiki pages participate in the orphan / degree
+                # math — same semantics as the original orphan counter.
+                continue
             for target_no_ext in res.hits:
                 target_rel = f"{target_no_ext}.md"
                 if target_rel == rel_str or target_no_ext == src_no_ext:
                     continue  # self-link doesn't count
                 if target_rel in page_rels:
                     linked.add(target_rel)
-                    if is_wiki_source:
-                        inbound[target_rel] += 1
-                        outbound[rel_str] += 1
+                    inbound[target_rel] += 1
+                    outbound[rel_str] += 1
 
     stats.orphan_count = sum(1 for pg in pages if pg.rel not in linked)
     stats.ghost_targets = dict(ghosts.most_common(_TOP_N))
