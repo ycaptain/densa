@@ -175,6 +175,32 @@ def resolve(
     return Resolution(ResolutionStatus.MISSING)
 
 
+def obsidian_resolvable(target: str, idx: SlugIndex) -> bool:
+    """True iff *Obsidian itself* can resolve this wikilink body.
+
+    Obsidian's resolver knows two shapes only:
+
+    - a bare name (no ``/``), matched against file basenames; and
+    - a path containing ``/``, matched **from the vault root only**.
+
+    Densa's :func:`resolve` is more lenient: its suffix index also
+    accepts bucket-relative forms like ``[[concepts/x]]`` for a file at
+    ``domains/<d>/wiki/concepts/x.md``. Those links lint clean but
+    render as dead "ghost" nodes in Obsidian. This predicate closes
+    that gap — AGENTS013 flags links where the two resolvers disagree.
+
+    Bare names are reported resolvable here unconditionally: whether
+    the basename actually exists is AGENTS006's job, not a *format*
+    question.
+    """
+    target = target.replace("\\|", "|")
+    main = target.split("|", 1)[0].split("#", 1)[0].strip()
+    main = main[:-3] if main.endswith(".md") else main
+    if not main or "/" not in main:
+        return True
+    return main in idx.get(_EXPLICIT_PATHS_KEY, [])
+
+
 # --- Scanning -------------------------------------------------------------
 
 @dataclass(frozen=True)

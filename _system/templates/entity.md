@@ -26,9 +26,20 @@ represent in the wiki.
 
 ## Appearances
 
-<!-- Append-only timeline. Each entry: date, source link, one-line context. -->
+<!-- Append-only timeline. Each row MUST carry a one-line context note —
+that annotation is the information the page stores. A bare date + link
+row says nothing a backlink doesn't, and each explicit link is one more
+edge in the graph view; if you find yourself appending unannotated
+rows, delete the tail and let the Dataview block below surface them. -->
 
 - YYYY-MM-DD — [[<source>]] — short note
+
+<!-- Optional: replaces unannotated enumeration. `FROM [[]]` lists the
+pages that link here; a rendered query creates no graph edges. -->
+
+```dataview
+LIST FROM [[]] WHERE type = "summary" SORT file.name DESC
+```
 
 ## Recurring threads they participate in
 

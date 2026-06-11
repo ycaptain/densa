@@ -36,6 +36,11 @@
    - **Broken wikilinks** *(primarily enforced by pre-commit; lint
      re-runs only when pre-commit was bypassed)*: links pointing to
      non-existent files.
+   - **Graph health** *(via `densa stats`)*: record
+     `obsidian_unresolvable_links` (the AGENTS013 backlog — links
+     Obsidian renders as ghost nodes), the top ghost targets, and the
+     top hub / fan-out pages. Compare against the baseline report so
+     regressions in graph readability surface as numbers, not vibes.
    - **Frontmatter compliance** *(primarily enforced by pre-commit;
      lint re-runs only when pre-commit was bypassed)*: every page has
      the universal fields ([AGENTS.md §"Frontmatter schema"](../../AGENTS.md#3-frontmatter-schema-universal))

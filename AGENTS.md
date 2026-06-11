@@ -11,7 +11,7 @@ updated: 2026-05-29
 > [AGENTS.md](https://agents.md) standard for personal knowledge.
 > Densa uses the AGENTS.md cross-tool agent contract to define a
 > complete L1/L2 schema + five operations + machine validator
-> (`AGENTS001`–`AGENTS012`). The same contract powers full-repo
+> (`AGENTS001`–`AGENTS013`). The same contract powers full-repo
 > forks and lightweight skill-plugin installs alike.
 >
 > **Empirical backing (2026-05-25 n=7 prior-art review).** Of seven
@@ -203,7 +203,12 @@ below is the L1 view.
    (1:1 with the raw). Update existing `concepts/`, `entities/`, and
    `open-questions/` pages whose Appearances tables the source
    extends — never restate the underlying fact, only add a wikilink
-   row pointing back to the new summary.
+   row pointing back to the new summary. Every Appearances row MUST
+   carry a one-line annotation (what this appearance adds); a bare
+   date + link row stores nothing a backlink doesn't and only bloats
+   the graph — surface pure timelines with a Dataview block
+   (`LIST FROM [[]] WHERE type = "summary"`), which renders the same
+   list without creating graph edges.
 4. Page-count tier per L2 information density: **light**
    (`research-papers`) 3–6 pages; **medium** 5–10; **heavy** (e.g.
    `psychology` session) 8–15. Under-editing here loses the compounding
@@ -390,7 +395,16 @@ during an `ingest`.
   sources keep an ISO date prefix
   (`2024-12-11-session-<slug>.md`). Never spaces in wiki filenames.
 - **Wikilinks**: prefer `[[short-slug]]` over full paths. Use
-  `[[slug|display label]]` when display differs.
+  `[[slug|display label]]` when display differs. **Never write
+  bucket-relative links** (`[[concepts/x]]`, `[[entities/y]]`) —
+  Obsidian resolves any link containing `/` from the vault root only,
+  so these render as dead ghost nodes even when the validator's
+  suffix matching accepts them (AGENTS013 flags the mismatch; fix the
+  backlog mechanically with
+  `python _system/scripts/fix_obsidian_links.py`). When the bare slug
+  is not unique vault-wide — structural names like `log` / `index` /
+  `overview` always collide — link the full vault path with a display
+  alias: `[[domains/<X>/wiki/concepts/x|x]]`.
 - **Page titles** (H1): natural language, human-readable, can contain
   CJK / spaces. Don't repeat the title in the body.
 - **One concept = one page.** Fragmentation → lint flags it.
@@ -526,10 +540,10 @@ hatches: [`docs/reference/red-lines.md`](docs/reference/red-lines.md).
 > you want to know which rule fired.** The error message already names
 > the rule ID; this subsection only points at the long table.
 >
-> **LLM: pin the AGENTS001–012 ID list; resolve user-visible
+> **LLM: pin the AGENTS001–013 ID list; resolve user-visible
 > suppression comments (`# noqa: AGENTS00N`) against the same IDs.**
 
-Stable IDs `AGENTS001`–`AGENTS012`. Pin the ID (never the name) in
+Stable IDs `AGENTS001`–`AGENTS013`. Pin the ID (never the name) in
 suppression comments or commit messages. Full table with severity,
 bypass env vars, and rationale:
 [`docs/reference/rules-registry.md`](docs/reference/rules-registry.md);

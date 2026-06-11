@@ -35,6 +35,7 @@ from densa.checks.frontmatter_required import (
 from densa.checks.last_validated_stale import LastValidatedFresh
 from densa.checks.log_append_only import LogAppendOnly
 from densa.checks.migration_history_hygiene import MigrationHistoryHygiene
+from densa.checks.obsidian_link_format import ObsidianLinkFormat
 from densa.checks.operation_writes_scope import OperationWritesScope
 from densa.checks.prompt_schema_sync import PromptSchemaSync
 from densa.checks.raw_immutability import RawImmutability
@@ -46,6 +47,7 @@ FILE_RULES: tuple[FileRule, ...] = (
     FrontmatterTypeAllowed(),
     AnalysisSourcesCardinality(),
     WikilinkResolvable(),
+    ObsidianLinkFormat(),
     LastValidatedFresh(),
     CompiledAgainstCurrent(),
     SchemaVersionConsistency(),
@@ -70,6 +72,7 @@ __all__ = [
     "LastValidatedFresh",
     "LogAppendOnly",
     "MigrationHistoryHygiene",
+    "ObsidianLinkFormat",
     "OperationWritesScope",
     "PromptSchemaSync",
     "RawImmutability",

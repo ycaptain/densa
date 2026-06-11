@@ -1,4 +1,4 @@
-# Rules registry (AGENTS001–012)
+# Rules registry (AGENTS001–013)
 
 Reference companion to
 [`AGENTS.md` §"Machine-enforced rule registry"](../../AGENTS.md#61-machine-enforced-rule-registry).
@@ -35,6 +35,7 @@ the contract it enforces.
 | AGENTS010 | schema-version-consistency    | [`schema-versioning.md`](schema-versioning.md) (vN pages outside `.legacy/` MUST declare current `compiled_against`)                                                                     | error        | fix: `python -m densa migrate`                                                              |
 | AGENTS011 | prompt-schema-sync            | [AGENTS.md §"Operation writes"](../../AGENTS.md#20-operation-writes-machine-enforced-via-agents007) (prompt's `## What this command will write` table mirrors `densa.schema.OPERATIONS`) | warning      | catches "AI changed rules in one place, forgot the others"                                  |
 | AGENTS012 | migration-history-hygiene     | [AGENTS.md §"Upgrading an existing vault"](../../AGENTS.md#12-upgrading-an-existing-vault) (`migration_history` is well-formed and consistent with `compiled_against`)                   | warning      | keeps the upgrade audit trail honest                                                        |
+| AGENTS013 | obsidian-link-format          | [AGENTS.md §"Naming and linking conventions"](../../AGENTS.md#4-naming-and-linking-conventions) (no bucket-relative wikilinks — Obsidian resolves `/` links from the vault root only)      | warning      | fix backlog with `python _system/scripts/fix_obsidian_links.py`; intended to become error  |
 
 `DENSA-IO` (also returned by `python -m densa rules`) is a meta
 diagnostic, not a rule — it signals the validator could not read a

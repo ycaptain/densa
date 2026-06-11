@@ -8,7 +8,46 @@ the L1 schema version recorded in [`AGENTS.md`](AGENTS.md) frontmatter
 
 ## [Unreleased]
 
+### Added
+
+- **AGENTS013 `obsidian-link-format`.** Densa's suffix-matching
+  resolver accepts bucket-relative wikilinks (`[[concepts/x]]`) that
+  Obsidian cannot resolve — they lint clean but render as grey ghost
+  nodes in the graph view and 404 on click. The new rule (warning;
+  intended to become an error once active vaults are clean) flags any
+  `/`-containing link that is not a vault-root path.
+  `AGENTS.md` §"Naming and linking conventions" now forbids the form
+  explicitly. (`densa.wikilink.obsidian_resolvable` is the shared
+  predicate.)
+- **`_system/scripts/fix_obsidian_links.py`** clears the AGENTS013
+  backlog mechanically: bare `[[slug]]` when the basename is unique
+  across everything Obsidian indexes (including nested checkouts the
+  densa walk prunes), full vault path + display alias otherwise;
+  `--fuzzy` retargets stale bucket prefixes via unique basename.
+  `raw/` and `log.md` are never touched; dry-run default; idempotent.
+- **`densa graph-config`** generates `.obsidian/graph.json` tuned for
+  a Densa vault: filter excludes scaffolding / `raw/` / `log.md` /
+  schema docs (repeatable `--exclude` for vendored checkouts),
+  per-domain color groups plus index/syntheses landmarks, forces
+  tuned for a few-hundred-node graph. Write-once unless `--force`.
+  docs/setup.md gains a "Graph view" section with the
+  local-graph-first navigation workflow.
+- **`densa stats` graph-health metrics**: `obsidian_unresolvable_links`
+  (the AGENTS013 backlog), the top ghost targets, and the top
+  inbound/outbound hub pages — graph-readability regressions surface
+  as numbers in the lint baseline.
+
 ### Changed
+
+- **Appearances rows require a one-line annotation.** A bare
+  date + link row stores nothing a backlink doesn't, but each row is
+  an explicit graph edge — the biggest source of hub explosion in
+  grown vaults. Pure chronological timelines on concept/entity pages
+  now go through a rendered Dataview block (`LIST FROM [[]]`), which
+  shows the same list with zero graph edges. Annotated rows keep
+  explicit wikilinks; the canonical-fact rule is unchanged. Encoded in
+  the AGENTS.md ingest contract, both templates, and the ingest
+  prompt.
 
 - **AGENTS006 bare-slug wikilinks prefer a same-domain match before
   reporting ambiguity.** When a bare `[[slug]]` has multiple global

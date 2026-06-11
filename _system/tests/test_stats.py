@@ -234,3 +234,99 @@ def test_add_parser_registers_stats() -> None:
     args = parent.parse_args(["stats", "--format", "json"])
     assert args.command == "stats"
     assert args.format == "json"
+
+
+# --- graph health -----------------------------------------------------------
+
+
+def test_obsidian_unresolvable_and_ghost_targets(tmp_path: Path) -> None:
+    """A bucket-relative link counts toward the AGENTS013 backlog and
+    its target shows up on the ghost leaderboard; a densa-missing bare
+    slug is a ghost too but not format-unresolvable."""
+    repo = _vault(tmp_path)
+    base = repo / "domains" / "r" / "wiki" / "concepts"
+    base.mkdir(parents=True)
+    (base / "anxiety.md").write_text(_page("concept"), encoding="utf-8")
+    (base / "x.md").write_text(
+        _page("concept", extra=(
+            "See [[concepts/anxiety]] and [[nothing-here]].\n"
+        )),
+        encoding="utf-8",
+    )
+
+    stats = stats_cmd.collect_stats(repo, today=TODAY)
+    assert stats.obsidian_unresolvable_links == 1
+    assert stats.ghost_targets == {
+        "concepts/anxiety": 1,
+        "nothing-here": 1,
+    }
+
+
+def test_hub_degree_leaderboards(tmp_path: Path) -> None:
+    repo = _vault(tmp_path)
+    base = repo / "domains" / "r" / "wiki" / "concepts"
+    base.mkdir(parents=True)
+    (base / "hub.md").write_text(_page("concept"), encoding="utf-8")
+    for i in range(3):
+        (base / f"fan{i}.md").write_text(
+            _page("concept", extra="See [[hub]].\n"), encoding="utf-8",
+        )
+
+    stats = stats_cmd.collect_stats(repo, today=TODAY)
+    assert stats.top_inbound_pages == {
+        "domains/r/wiki/concepts/hub.md": 3,
+    }
+    assert all(
+        n == 1 for n in stats.top_outbound_pages.values()
+    )
+    assert len(stats.top_outbound_pages) == 3
+
+
+def test_graph_health_in_json_payload(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    repo = _vault(tmp_path)
+    base = repo / "domains" / "r" / "wiki" / "concepts"
+    base.mkdir(parents=True)
+    (base / "a.md").write_text(_page("concept"), encoding="utf-8")
+    monkeypatch.chdir(repo)
+
+    rc = stats_cmd.run(argparse.Namespace(format="json"))
+    assert rc == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["obsidian_unresolvable_links"] == 0
+    assert payload["ghost_targets"] == {}
+    assert "top_inbound_pages" in payload
+    assert "top_outbound_pages" in payload
+
+
+def test_non_wiki_inbound_does_not_rescue_orphan(tmp_path: Path) -> None:
+    """Orphan semantics: only links from *wiki pages* count as inbound.
+    A domain-root index.md linking to a page does not rescue it."""
+    repo = _vault(tmp_path)
+    base = repo / "domains" / "r" / "wiki" / "concepts"
+    base.mkdir(parents=True)
+    (base / "lonely.md").write_text(_page("concept"), encoding="utf-8")
+    (repo / "domains" / "r" / "index.md").write_text(
+        "# index\n\nSee [[lonely]].\n", encoding="utf-8",
+    )
+    stats = stats_cmd.collect_stats(repo, today=TODAY)
+    assert stats.orphan_count == 1
+    # And the non-wiki source contributes no degree rows either.
+    assert stats.top_inbound_pages == {}
+
+
+def test_missing_bucket_relative_ghost_counted_once(tmp_path: Path) -> None:
+    """A bucket-relative link to a non-existent file is both
+    Obsidian-unresolvable and densa-missing — one ghost, not two."""
+    repo = _vault(tmp_path)
+    base = repo / "domains" / "r" / "wiki" / "concepts"
+    base.mkdir(parents=True)
+    (base / "x.md").write_text(
+        _page("concept", extra="See [[concepts/does-not-exist]].\n"),
+        encoding="utf-8",
+    )
+    stats = stats_cmd.collect_stats(repo, today=TODAY)
+    assert stats.obsidian_unresolvable_links == 1
+    assert stats.ghost_targets == {"concepts/does-not-exist": 1}
