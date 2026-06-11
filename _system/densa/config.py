@@ -347,6 +347,16 @@ RULES: Final[tuple[RuleSpec, ...]] = (
         ),
         agents_anchor='AGENTS.md §"Upgrading an existing vault"',
     ),
+    RuleSpec(
+        id="AGENTS013",
+        name="obsidian-link-format",
+        summary=(
+            "warn when a wikilink containing '/' is not a vault-root "
+            "path — Obsidian cannot resolve bucket-relative links "
+            "like [[concepts/x]]"
+        ),
+        agents_anchor='AGENTS.md §"Naming and linking conventions"',
+    ),
 )
 
 
