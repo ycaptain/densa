@@ -13,8 +13,10 @@ Subcommands:
 - ``doctor``   — preflight a local setup (hook, Python, importability,
   active domain) and print a ✓/✗ checklist with fix commands.
 - ``stats``    — read-only vault health report (page counts, types,
-  orphans, log staleness).
+  orphans, log staleness, graph health).
 - ``upgrade``  — pull upstream schema/validator changes into a vault.
+- ``graph-config`` — generate ``.obsidian/graph.json`` tuned for a
+  Densa vault (filtered, per-domain colors).
 
 The **canonical lint invocation is the bare form** (``densa --all``,
 ``densa --staged``, ``densa --diff <ref>``, ``densa <paths>``); the
@@ -41,6 +43,7 @@ from pathlib import Path
 
 from densa import __version__
 from densa.commands import doctor as doctor_cmd
+from densa.commands import graph_config as graph_config_cmd
 from densa.commands import init as init_cmd
 from densa.commands import migrate as migrate_cmd
 from densa.commands import stats as stats_cmd
@@ -175,6 +178,7 @@ def _build_parser() -> argparse.ArgumentParser:
     stats_cmd.add_parser(sub)
     upgrade_cmd.add_parser(sub)
     migrate_cmd.add_parser(sub)
+    graph_config_cmd.add_parser(sub)
 
     return parser
 
@@ -309,6 +313,7 @@ _DISPATCH = {
     "stats": stats_cmd.run,
     "upgrade": upgrade_cmd.run,
     "migrate": migrate_cmd.run,
+    "graph-config": graph_config_cmd.run,
 }
 
 # Tokens that must reach the top-level parser verbatim instead of being

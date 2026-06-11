@@ -66,6 +66,47 @@ When using Obsidian, install these plugins:
 | **Marp**                  | optional  | Render markdown to slide decks for syntheses you want to present. | n/a |
 | **Smart Connections**     | optional  | Embedding-based similarity search. Add only when wiki > ~300 pages and `index.md` no longer suffices. | n/a |
 
+### Graph view
+
+Out of the box Obsidian graphs **every** markdown file — scaffolding
+(`_system/`, `attic/`, `outputs/`), immutable `raw/` sources, and the
+append-only logs (a mature domain `log.md` carries hundreds of
+outgoing links) bury the wiki pages in a grey hairball. Generate a
+tuned config instead:
+
+```bash
+# Run while Obsidian is CLOSED — it rewrites .obsidian/*.json on exit.
+PYTHONPATH=_system python -m densa graph-config
+# Vendored checkouts inside the vault? Exclude them too:
+PYTHONPATH=_system python -m densa graph-config --exclude share/
+```
+
+What it writes (`.obsidian/graph.json`):
+
+- **Filter**: only the wiki graph — `_system/`, `attic/`, `inbox/`,
+  `outputs/`, `raw/`, every `log.md`, and the schema docs are
+  excluded; unresolved ghosts hidden.
+- **Color groups**: one color per `domains/<X>/`, plus gold for
+  `index.md` landmarks and pink for `syntheses/` (the highest-value
+  compiled pages). Editable later in the graph settings panel.
+- **Forces**: tuned for a few-hundred-node graph (labels fade in
+  earlier, tighter link distance).
+
+Two habits make the graph actually useful:
+
+1. **The global graph is a domain map.** Open it to see cluster
+   shapes, orphan pockets, and cross-domain bridges — not to navigate.
+2. **Navigate with the local graph.** On any wiki page run *Open
+   local graph*, set depth to 2 and enable incoming + outgoing links.
+   That gives "what is connected to what I'm reading" without the
+   other 300 nodes. Save the layout with the core Workspaces plugin
+   if you use it daily.
+
+Two related hygiene tools: `densa stats` reports graph health
+(ghost-node backlog, hub degrees, orphans), and
+`python _system/scripts/fix_obsidian_links.py` rewrites
+bucket-relative wikilinks Obsidian can't resolve (AGENTS013).
+
 ### Web Clipper defaults
 
 Set "Default note location" to `inbox/`; filename template
