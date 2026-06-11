@@ -203,7 +203,12 @@ below is the L1 view.
    (1:1 with the raw). Update existing `concepts/`, `entities/`, and
    `open-questions/` pages whose Appearances tables the source
    extends — never restate the underlying fact, only add a wikilink
-   row pointing back to the new summary.
+   row pointing back to the new summary. Every Appearances row MUST
+   carry a one-line annotation (what this appearance adds); a bare
+   date + link row stores nothing a backlink doesn't and only bloats
+   the graph — surface pure timelines with a Dataview block
+   (`LIST FROM [[]] WHERE type = "summary"`), which renders the same
+   list without creating graph edges.
 4. Page-count tier per L2 information density: **light**
    (`research-papers`) 3–6 pages; **medium** 5–10; **heavy** (e.g.
    `psychology` session) 8–15. Under-editing here loses the compounding

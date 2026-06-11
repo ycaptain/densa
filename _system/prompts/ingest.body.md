@@ -99,6 +99,12 @@
    - extends [[concept-slug]] — new Appearances row
    ```
 
+   Appearances rows MUST carry a one-line annotation (what this
+   appearance adds). If the row would be a bare date + link, skip it —
+   the summary's own wikilink to the concept/entity already creates
+   the backlink, and the page's Dataview block surfaces the timeline
+   without adding graph edges.
+
    **6b. Touched-page plan** — must echo the schema's Write contract
    (see [`ingest.md`](ingest.md)'s top-of-file table); every line maps
    to one row of `densa.schema.OPERATIONS['ingest'].writes`:

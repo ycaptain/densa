@@ -20,6 +20,16 @@ One-paragraph definition in the human's own words.
 How this concept shows up in MY material — instances, examples, why I keep
 returning to it.
 
+<!-- Each instance row MUST carry a one-line annotation (what that
+appearance adds). Don't accumulate bare chronological link lists —
+they add graph edges without information; surface the full timeline
+with a rendered query instead (no graph edges):
+
+```dataview
+LIST FROM [[]] WHERE type = "summary" SORT file.name DESC
+```
+-->
+
 ## Mechanism / model
 
 The underlying explanation, neutral about flavour. Cite sources for any
