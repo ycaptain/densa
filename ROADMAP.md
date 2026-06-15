@@ -14,7 +14,7 @@
   [`AGENTS.md`](AGENTS.md) frontmatter.
 - **Release marker:** v0.5.0 (Karpathy vocab + onboarding clarity
   sweep) — see [`CHANGELOG.md`](CHANGELOG.md).
-- **Validator:** 210+ files tracked, AGENTS001–AGENTS012 enforced;
+- **Validator:** 210+ files tracked, AGENTS001–AGENTS013 enforced;
   CI parity via direct `python -m X` commands
   (`densa --all` / `pytest` / `ruff check .` / `mypy`).
 - **Integrations:** Cursor plugin + Claude Code plugin under
@@ -45,10 +45,6 @@
 - **[launch] Two-step ingest (analysis → generation)** — nashsu + olw
   independently converge on the split for quality; aligns with the
   existing plan-first gate. Prompt-only change.
-- **[launch] AGENTS013 literal-grounding rule (warn)** — port olw's
-  Knowledge-Item-Candidates literal-match check; the strongest
-  anti-hallucination pattern in the set (survey finding §3.8).
-  Extends the public rule registry.
 - **Cursor plugin marketplace submission** — manifest is schema-aligned
   as of 2026-05-26; logo + submission via
   [`cursor.com/marketplace/publish`](https://cursor.com/marketplace/publish);
@@ -81,7 +77,18 @@ examples/showcases` (logged in
   value (meaning a human edited it between ingests). Default-on, warn-level
   (matches AGENTS008 precedent). Opt-out: `body_hash_check: skip` per-page
   frontmatter. Guard does **not** fire on `.legacy/` moves (that is the
-  legitimate overwrite path). Implementation alongside AGENTS013.
+  legitimate overwrite path). Implementation alongside the
+  literal-grounding rule below (both anti-drift validator additions).
+- **Literal-grounding rule (warn) — next free `AGENTS0NN`** — port
+  olw's Knowledge-Item-Candidates literal-match check; the strongest
+  anti-hallucination pattern in the n=7 set (survey finding §3.8).
+  Extends the public rule registry. _De-scoped from the launch gate
+  2026-06-15: it never shipped, and the `AGENTS013` ID it had been
+  pencilled into was instead taken by `obsidian-link-format` (the
+  graph-readability batch). Do **not** re-pin a number until it ships
+  (pre-pinning is what caused the earlier 013 collision). Re-promote to
+  a `[launch]` blocker only if the anti-hallucination posture is judged
+  tag-critical._
 - **`feedback:` field + `%%FEEDBACK%%` marker (Phase B)** — two-granularity
   user-correction loop. Whole-page: `feedback:` YAML array in frontmatter
   (`opened`, `text`, `applied`); next ingest acknowledges + sets `applied:
