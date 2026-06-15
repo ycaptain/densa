@@ -71,7 +71,7 @@ bases"; Densa sits in family C:
   hallucination surface is a write-time event under human review.
 
 Densa's specific position within family C — MIT + stdlib-only Python
-validator, L2 per-domain schema layering, public AGENTS001–AGENTS012
+validator, L2 per-domain schema layering, public AGENTS001–AGENTS013
 rule registry, `.legacy/` schema-migration snapshot — is sedimented
 by a 2026-05 review of seven adjacent OSS projects at the README +
 architecture-docs level

@@ -38,7 +38,7 @@ to have, broken out of the contract file so AGENTS.md stays short.
 │   ├── snapshots/index-snapshot.md
 │   └── qa/<YYYY-MM-DD>-<slug>.md
 ├── _system/
-│   ├── prompts/{ingest,query,lint,process-inbox,promote}.md   ← 5 operation prompts the agent loads on demand
+│   ├── prompts/{ingest,query,lint,process-inbox,promote,visualize}.md   ← 6 operation prompts the agent loads on demand
 │   ├── prompts/domains/         ← domain-specific sub-prompts
 │   ├── templates/               ← page templates (one per v2 type) + vault-readme.md skeleton
 │   ├── scripts/                 ← migration scripts (migrate_NN_<slug>.py)

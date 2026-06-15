@@ -23,7 +23,7 @@
 | Session memory / compaction       | recent tool calls, branch summaries                        | agent (runtime only)        | no (per-session checkpoint)                | no                            | not applicable — Densa is schema, not runtime              |
 | RAG / MCP search / VFS            | chunks, vectors, external docs                             | agent (query-time retrieve) | no (query-time reassembly)                 | optional                      | not applicable — Densa is the inverse of RAG               |
 | Letta personal memory             | user preferences, agent experience, identity               | agent (self-edits)          | yes (within one vendor harness)            | no                            | not applicable — Densa's memory is filesystem, not runtime |
-| **LLM Wiki (Densa)**              | summaries, entities, concepts, comparisons, open-questions | human **and** agent         | **yes — every ingest densifies the graph** | **enforced by AGENTS001–012** | this repo                                                  |
+| **LLM Wiki (Densa)**              | summaries, entities, concepts, comparisons, open-questions | human **and** agent         | **yes — every ingest densifies the graph** | **enforced by AGENTS001–013** | this repo                                                  |
 
 The fault line is "does the artifact survive when you swap your agent
 harness?" The first six layers don't. Densa does.
@@ -181,7 +181,7 @@ What's distinct, restated against the six layers above:
 | Property                          | First six layers             | LLM Wiki / Densa                             |
 | --------------------------------- | ---------------------------- | -------------------------------------------- |
 | Persistence                       | per-session or per-runtime   | filesystem + git, harness-independent        |
-| Provenance                        | none enforced                | `sources:` required, AGENTS001-012 validates |
+| Provenance                        | none enforced                | `sources:` required, AGENTS001-013 validates |
 | Reader                            | agent only (usually)         | **human + agent**, browsable in Obsidian     |
 | Compounds across sessions         | no (state) or no (procedure) | **yes — every ingest densifies the graph**   |
 | Cross-references                  | within one tool's UI         | wikilinks render in every markdown reader    |

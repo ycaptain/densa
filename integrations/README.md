@@ -9,7 +9,7 @@ Nothing here changes the schema, the operations, or the red lines.
 Currently shipped:
 
 - [`claude-code/`](claude-code/) — `.claude-plugin/` manifest +
-  slash-command shims wrapping the five operations.
+  slash-command shims wrapping the six operations.
 - [`cursor/densa-plugin/`](cursor/densa-plugin/) — `.cursor-plugin/`
   manifest + Cursor slash-command shims + IDE-agnostic `skills/`
   directory with `SKILL.md` files installable into

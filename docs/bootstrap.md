@@ -70,7 +70,7 @@ Then briefly tell me, in 5-7 bullets, your understanding of:
 
 - The three semantic layers (`raw/`, `wiki/`, `AGENTS.md`) and why
   they're separated.
-- The five operations (`ingest`, `query`, `lint`, `process-inbox`, `promote`).
+- The six operations (`ingest`, `query`, `lint`, `process-inbox`, `promote`, `visualize`).
 - The red lines you must not cross during any operation.
 - What a `summary` page is vs a `synthesis` page.
 - Where the L1 contract ends and an L2's domain-specific schema begins.

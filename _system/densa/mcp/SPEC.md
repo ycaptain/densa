@@ -584,7 +584,7 @@ in the `diagnostics` array — they are expected output, not JSON-RPC errors.
           "line": { "type": ["integer", "null"] },
           "rule_id": {
             "type": "string",
-            "description": "AGENTS001–AGENTS012 (and future IDs)"
+            "description": "AGENTS001–AGENTS013 (and future IDs)"
           },
           "severity": { "type": "string", "enum": ["error", "warning"] },
           "message": { "type": "string" }

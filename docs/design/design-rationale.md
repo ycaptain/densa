@@ -143,7 +143,7 @@ The schema is split deliberately:
     [`sources-cardinality.md`](../reference/sources-cardinality.md).
   - The red lines (raw immutable, log append-only, no wiki deletion,
     bulk renames require human consent).
-  - The five operations and their procedures.
+  - The six operations and their procedures.
 
 - **L2** (`domains/<X>/AGENTS.md`) — domain-specific override:
   - Persona (what voice should the LLM adopt for this domain).

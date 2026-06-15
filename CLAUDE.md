@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This repo is **Densa** — an AGENTS.md-native skill pack that compiles raw sources into a queryable markdown wiki (an executable implementation of Karpathy's llm-wiki pattern; the opposite of RAG). It has a **dual nature**, and which one you're in changes the rules:
 
-1. **A content vault.** `domains/<X>/raw/` holds immutable sources; `domains/<X>/wiki/` holds LLM-compiled pages. Here you act as the _wiki maintainer_ via the five operations (`ingest` / `query` / `lint` / `process-inbox` / `promote`).
+1. **A content vault.** `domains/<X>/raw/` holds immutable sources; `domains/<X>/wiki/` holds LLM-compiled pages. Here you act as the _wiki maintainer_ via the six operations (`ingest` / `query` / `lint` / `process-inbox` / `promote` / `visualize`).
 2. **The upstream tool.** `_system/densa/` is a stdlib-only Python validator (the `densa` CLI) plus prompts/templates. Here you act as a _software contributor_.
 
 **`AGENTS.md` is the authoritative L1 contract** — read it before doing any vault work; it is not duplicated here. Each `domains/<X>/AGENTS.md` is an L2 override (L2-wins inside that domain). `GUIDE.md` is explanatory only; when GUIDE and AGENTS disagree, AGENTS wins. When prose and `_system/densa/schema.py` disagree, the Python wins (AGENTS011 catches the drift).
@@ -19,7 +19,7 @@ Validator / tests / lint (run from repo root; the package lives under `_system/d
 PYTHONPATH=_system python -m densa --all     # full validator pass (what CI runs)
 PYTHONPATH=_system python -m densa --staged  # what the pre-commit hook runs
 PYTHONPATH=_system python -m densa --diff origin/main   # PR-range staged-rule pass
-PYTHONPATH=_system python -m densa rules     # print live AGENTS001–012 registry
+PYTHONPATH=_system python -m densa rules     # print live AGENTS001–013 registry
 
 python -m pytest                  # test suite (testpaths=_system/tests)
 python -m pytest -k <check-name> -v   # iterate on one check
@@ -33,7 +33,7 @@ Strict-parsing variant (pyyaml backend, used in CI): `DENSA_STRICT=1 PYTHONPATH=
 
 ## Validator architecture (`_system/densa/`)
 
-A rule-based linter. Each rule has a stable ID `AGENTS001`–`AGENTS012` (pin the ID, never the name, in `# noqa: AGENTS00N` suppressions and commit messages).
+A rule-based linter. Each rule has a stable ID `AGENTS001`–`AGENTS013` (pin the ID, never the name, in `# noqa: AGENTS00N` suppressions and commit messages).
 
 - `checks/` — one module per rule, all subclassing `checks/base.py`. The rule↔file mapping is direct (e.g. `raw_immutability.py` → AGENTS001, `operation_writes_scope.py` → AGENTS007).
 - `schema.py` — the machine-readable source of truth: `PAGE_TYPES`, the `OPERATIONS` constant (per-operation write scopes for AGENTS007), `CANONICAL_FACTS`.
@@ -47,7 +47,7 @@ When adding/changing a rule: update its `checks/` module **and** `schema.py` if 
 
 AGENTS007 classifies every commit by its message prefix and restricts which paths it may touch:
 
-- `ingest(<domain>):` / `query:` / `lint:` / `process-inbox:` / `promote:` — operation commits (may write `domains/**` per the operation's scope in `schema.py`).
+- `ingest(<domain>):` / `query:` / `lint:` / `process-inbox:` / `promote:` / `visualize(<domain>):` — operation commits (may write `domains/**` per the operation's scope in `schema.py`).
 - **(no prefix)** — treated as schema/docs/validator maintenance and **MUST NOT touch `domains/**`\*\*.
 
 If the hook rejects a commit, the fix is almost always to split it into two commits (operation edit with its prefix, maintenance edit prefix-free) — not to bypass. Last-resort bypass: `WIKI_ALLOW_CROSS_SCOPE=1 git commit ...`, which must be paired with a `## [YYYY-MM-DD] maintenance | …` entry in `log.md`.

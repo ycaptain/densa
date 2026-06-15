@@ -100,7 +100,7 @@ done
 
 ## Relationship to `integrations/claude-code/`
 
-The two directories ship the same five operations in two different
+The two directories ship the same six operations in two different
 package formats:
 
 | | `integrations/cursor/densa-plugin/` | `integrations/claude-code/` |

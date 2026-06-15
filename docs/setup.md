@@ -36,7 +36,7 @@ Manual validation any time:
 PYTHONPATH=_system python3 -m densa --all
 ```
 
-The 12 enforced rules (`AGENTS001`–`AGENTS012`) are documented at
+The 13 enforced rules (`AGENTS001`–`AGENTS013`) are documented at
 [`reference/rules-registry.md`](reference/rules-registry.md);
 `python3 -m densa rules` prints the live registry. For vulnerability
 reporting see [`../.github/SECURITY.md`](../.github/SECURITY.md).
@@ -194,7 +194,7 @@ A single workflow at `.github/workflows/ci.yml` with two jobs:
 - **`validate`** runs `densa --all` on every push and PR, plus
   `densa --diff origin/<base>` (staged rules over the PR range) on
   PRs. Enforces the L1 red lines, the universal frontmatter contract,
-  wikilink resolvability, and AGENTS001–012. This is the gate every
+  wikilink resolvability, and AGENTS001–013. This is the gate every
   PR must clear.
 - **`tests`** runs `pytest`, `ruff check .`, and `mypy --strict`
   across Python 3.10/3.11/3.12. Together with `validate` it covers

@@ -22,7 +22,7 @@ contract file stays short.
 | [`operation-scopes.md`](operation-scopes.md) | AGENTS007 per-prefix write-scope table + bypass usage |
 | [`sources-cardinality.md`](sources-cardinality.md) | `sources` cardinality contract by page type |
 | [`schema-versioning.md`](schema-versioning.md) | When/how to bump `schema_version`; `last_validated` semantics; migration runbook |
-| [`rules-registry.md`](rules-registry.md) | AGENTS001–012 stable IDs, severity, bypasses |
+| [`rules-registry.md`](rules-registry.md) | AGENTS001–013 stable IDs, severity, bypasses |
 | [`repository-layout.md`](repository-layout.md) | Full annotated vault tree (broken out of [AGENTS.md §"Layered architecture"](../../AGENTS.md#1-layered-architecture)) |
 | [`red-lines.md`](red-lines.md) | Full failure-mode rationale for each red line |
 

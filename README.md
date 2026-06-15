@@ -29,7 +29,7 @@ sequenceDiagram
     Agent->>You: planned edits (4 pages, ~60 lines diff)
     You->>Agent: approve / edit / reject
     Agent->>Vault: write summary + concept pages + log entry
-    Vault->>Vault: pre-commit hook validates (AGENTS001-012)
+    Vault->>Vault: pre-commit hook validates (AGENTS001-013)
     Vault->>You: green commit; wiki densifies
 ```
 
@@ -97,7 +97,7 @@ Both plugins are **experimental** — they're convenience surfaces on
 the same operation prompts; the vault works identically without
 them.
 
-The 12 enforced rules (`AGENTS001`–`AGENTS012`) are documented at
+The 13 enforced rules (`AGENTS001`–`AGENTS013`) are documented at
 [`docs/reference/rules-registry.md`](docs/reference/rules-registry.md);
 `python3 -m densa rules` prints the live registry. Obsidian plugin
 setup, encryption, disabling the hook, and the domain decision tree
@@ -155,7 +155,7 @@ that idempotently brings your existing wiki pages forward.
 ## What this is
 
 Densa is an **AGENTS.md-native agent skill pack** — a complete L1/L2
-schema, five-operation contract, and stdlib-only machine validator
+schema, six-operation contract, and stdlib-only machine validator
 that any AGENTS.md-aware IDE (Cursor, Claude Code, Codex, Cline) can
 read natively to maintain a personal markdown wiki. It is a
 **full, executable implementation of** Andrej Karpathy's
@@ -172,8 +172,8 @@ Karpathy described **what to build**. Densa gives you the **how**:
   `report` extension for operation artifacts).
 - A **stdlib-only validator** (`python3 -m densa`) that enforces the
   schema on every commit.
-- **Five operation prompts** (`ingest` / `query` / `lint` /
-  `process-inbox` / `promote`) the agent loads on demand.
+- **Six operation prompts** (`ingest` / `query` / `lint` /
+  `process-inbox` / `promote` / `visualize`) the agent loads on demand.
 - **Migration tooling** (`python3 -m densa migrate`) for carrying an
   existing vault forward when upstream ships a breaking schema bump.
 - A shipped **example domain** (`research-papers/`) plus two
@@ -202,12 +202,12 @@ narrative see
 
 ---
 
-## The five operations
+## The six operations
 
-`ingest` / `query` / `lint` / `process-inbox` / `promote` are the only
+`ingest` / `query` / `lint` / `process-inbox` / `promote` / `visualize` are the only
 verbs you ever type. Each has a canonical procedure under
 [`_system/prompts/`](_system/prompts/) the agent loads on demand;
-[`AGENTS.md` §"The five operations"](AGENTS.md#2-the-five-operations)
+[`AGENTS.md` §"The six operations"](AGENTS.md#2-the-six-operations)
 is the long-form contract (what each writes, what it forbids). The
 natural-language → operation mapping lives in
 [`GUIDE.md` §"Mapping natural language to operations"](GUIDE.md#mapping-natural-language-to-operations).
@@ -226,7 +226,7 @@ reassembles fragments at query time, leaving the LLM as a permanent
 hallucination surface above the haystack. Densa compiles your
 sources into structured prose **once, incrementally**, then queries
 the prose. The hallucination surface is a one-time write-time event
-(audited by `AGENTS001`–`AGENTS012`), not a per-query risk.
+(audited by `AGENTS001`–`AGENTS013`), not a per-query risk.
 
 | Tool | Storage | Compounds? | Cites sources? | Local-first? |
 | ---- | ------- | ---------- | -------------- | ------------ |
@@ -261,7 +261,7 @@ look like "knowledge bases" but bind their data to one runtime —
 (query-time, never filed back), and
 [Letta personal memory](https://docs.letta.com/letta-code/memory/)
 (bound to one vendor harness). Densa is the seventh: markdown + git,
-validated by `AGENTS001`–`AGENTS012`, browsable in any reader, survives
+validated by `AGENTS001`–`AGENTS013`, browsable in any reader, survives
 swapping your agent. Full taxonomy + per-layer decision tree:
 [`docs/design/harness-memory-vs-llm-wiki.md`](docs/design/harness-memory-vs-llm-wiki.md).
 
@@ -278,7 +278,7 @@ sediments Densa's differentiation, all empirically unoccupied at n=7:
   into a fork with zero runtime deps (Tolaria AGPL, nashsu GPL, RAGFlow
   /Graphiti/Cognee heavy deps, olw ships SQLite + embeddings).
 - **`.legacy/` schema-migration snapshot** + **public
-  `AGENTS001`–`AGENTS012` rule registry** (`python3 -m densa rules`) —
+  `AGENTS001`–`AGENTS013` rule registry** (`python3 -m densa rules`) —
   neither has an equivalent in the surveyed set.
 
 Closest siblings: [Tolaria](https://github.com/refactoringhq/tolaria)
@@ -334,7 +334,7 @@ Pick one based on what you're trying to do.
 [llm-wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f);
 selective conventions from
 [`kepano/obsidian-skills`](https://github.com/kepano/obsidian-skills).
-The structural invariants — raw / wiki / AGENTS, the five operations,
+The structural invariants — raw / wiki / AGENTS, the six operations,
 the red lines, the frontmatter schema — are domain-agnostic and should
 outlive any particular LLM provider.
 

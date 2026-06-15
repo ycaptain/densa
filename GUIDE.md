@@ -22,7 +22,7 @@ source of truth.
 ## 🃏 Cheat sheet
 
 The only verbs you ever type. Per-op write scopes + forbids live in
-[`AGENTS.md` §"The five operations"](AGENTS.md#2-the-five-operations).
+[`AGENTS.md` §"The six operations"](AGENTS.md#2-the-six-operations).
 
 The **ingest tier ranges** are: light L2 (e.g. one paper) ≈ 3–6 pages;
 medium (one meeting + decisions) ≈ 5–10 pages; heavy (one therapy
@@ -35,7 +35,7 @@ lives in
 plus
 [`docs/reference/sources-cardinality.md`](docs/reference/sources-cardinality.md).
 The **red lines** (what no operation may do) and their machine-enforced
-IDs (AGENTS001–012) live in
+IDs (AGENTS001–013) live in
 [`AGENTS.md` §"Red lines"](AGENTS.md#6-red-lines-non-negotiable)
 + [§"Machine-enforced rule registry"](AGENTS.md#61-machine-enforced-rule-registry).
 Pin those two anchors — every other "is this allowed?" question routes
