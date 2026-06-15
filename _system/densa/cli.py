@@ -180,6 +180,11 @@ def _build_parser() -> argparse.ArgumentParser:
     migrate_cmd.add_parser(sub)
     graph_config_cmd.add_parser(sub)
 
+    sub.add_parser(
+        "mcp",
+        help="run the read-only MCP server over stdio (JSON-RPC 2.0)",
+    )
+
     return parser
 
 
@@ -304,6 +309,15 @@ def _cmd_version(_: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_mcp(_: argparse.Namespace) -> int:
+    # Lazy import keeps the MCP server (and its transport surface) off the
+    # import path for the common lint invocation.
+    from densa.mcp.server import serve  # noqa: PLC0415
+
+    serve(_resolve_repo(), sys.stdin, sys.stdout)
+    return 0
+
+
 _DISPATCH = {
     "lint": _cmd_lint,
     "rules": _cmd_rules,
@@ -314,6 +328,7 @@ _DISPATCH = {
     "upgrade": upgrade_cmd.run,
     "migrate": migrate_cmd.run,
     "graph-config": graph_config_cmd.run,
+    "mcp": _cmd_mcp,
 }
 
 # Tokens that must reach the top-level parser verbatim instead of being

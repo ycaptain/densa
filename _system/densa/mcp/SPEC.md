@@ -6,17 +6,17 @@
 
 ## Design decisions
 
-| Decision             | Choice                                                           | Rationale                                                                     |
-| -------------------- | ---------------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| Tool count           | 8 read-only tools                                                | Middle ground between Tolaria (15) and nashsu (0); no write tools in v1       |
-| Operations           | MCP `prompts`, not tools                                         | LLM still authors; human gate is unchanged                                    |
-| Transport            | stdio JSON-RPC 2.0                                               | Zero-dependency; stdlib `json` + `sys.stdin/stdout` only                      |
-| Pagination           | Cursor-based                                                     | Stateless server; cursor = opaque base64 offset string                        |
-| Error envelope       | JSON-RPC codes for transport; diagnostics array for lint results | Lint violations are expected output, not errors                               |
-| Tool naming          | Flat snake_case (`read_page`, not `pages.read`)                  | Consistent; simpler for type-ahead completion                                 |
-| `read_page` output   | Raw markdown                                                     | Let client render                                                             |
-| `read_page` + `raw/` | Wrap body in `<untrusted>` fence (D+B protocol)                  | Trust vocabulary uniform across in-vault and MCP reads — see `AGENTS.md §4.5` |
-| `search_wiki`        | grep + wikilink follow; no embeddings                            | Zero-dep; reproducible across sessions                                        |
+| Decision             | Choice                                                           | Rationale                                                                                                                               |
+| -------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| Tool count           | 8 read-only tools                                                | Middle ground between Tolaria (15) and nashsu (0); no write tools in v1                                                                 |
+| Operations           | MCP `prompts`, not tools                                         | LLM still authors; human gate is unchanged                                                                                              |
+| Transport            | stdio JSON-RPC 2.0                                               | Zero-dependency; stdlib `json` + `sys.stdin/stdout` only                                                                                |
+| Pagination           | Cursor-based                                                     | Stateless server; cursor = opaque base64 string keyed on the last-returned path (stable under vault edits between calls — no skip/dupe) |
+| Error envelope       | JSON-RPC codes for transport; diagnostics array for lint results | Lint violations are expected output, not errors                                                                                         |
+| Tool naming          | Flat snake_case (`read_page`, not `pages.read`)                  | Consistent; simpler for type-ahead completion                                                                                           |
+| `read_page` output   | Raw markdown                                                     | Let client render                                                                                                                       |
+| `read_page` + `raw/` | Wrap body in `<untrusted>` fence (D+B protocol)                  | Trust vocabulary uniform across in-vault and MCP reads — see `AGENTS.md §4.5`                                                           |
+| `search_wiki`        | grep + wikilink follow; no embeddings                            | Zero-dep; reproducible across sessions                                                                                                  |
 
 ---
 
@@ -274,6 +274,17 @@ per page so the picker can display without an additional `read_page` call.
 Read a single page (wiki page or raw source). When `path` is under `raw/`, the
 body is wrapped in an `<untrusted>` fence with D+B escape-injection defence
 (salt-on-close + pre-escaped close tags) per `AGENTS.md §4.5`.
+
+**Raw classification is by physical location, not request path.** `is_raw` is
+decided from the symlink-resolved target, so a symlink under `wiki/` that points
+into `raw/` is still fenced, and `collect_pages` (which backs `search_wiki` /
+`list_pages`) skips symlinked entries so raw content can never surface there
+unfenced. **Known v1 limitation:** a _hardlink_ from `wiki/` to a `raw/` file is
+not detected (it shares an inode, so `.resolve()` can't see it) — but planting
+one requires write access to `wiki/`, which already lets an actor author a
+poisoned (trusted, unfenced) wiki page directly, so it grants no new capability.
+Closing it would need per-call inode tracking; deferred until there's a threat
+model where `wiki/` write access is not already game-over.
 
 ### Input schema
 
