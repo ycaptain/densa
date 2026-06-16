@@ -35,6 +35,10 @@ coverage.xml
 # schema.
 docs/maintainers/
 
+# Local agent working directory — brainstorm artifacts, scratch specs,
+# session state. Never published.
+.workflow/
+
 # Local virtualenvs
 .venv-test/
 .venv/

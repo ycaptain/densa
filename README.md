@@ -5,7 +5,7 @@
 > of RAG.**
 > Drop new material into `raw/`. An AI agent in your IDE reads it,
 > drafts which `wiki/` pages to touch, waits for your OK, then writes
-> the edits. Every ingest *densifies* your second brain instead of
+> the edits. Every ingest _densifies_ your second brain instead of
 > growing the haystack you re-search every query.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
@@ -38,15 +38,15 @@ That's the loop. Now scale it.
 
 ## Pick your path
 
-| You want to... | Open | Time |
-|---|---|---|
-| **Glance** — see what one ingest produces, no install | [`examples/hello-world/`](examples/hello-world/) (source + expected wiki output + log entry) | 3 min |
-| **Try the slash commands** — sideload the plugin into Cursor without committing to a vault | [`integrations/cursor/densa-plugin/` §Install Option B](integrations/cursor/densa-plugin/#option-b--local-sideload-works-today) (symlink + restart Cursor) | ~5 min |
-| **Set up your own vault** | [Quickstart](#quickstart) below → [`docs/setup.md`](docs/setup.md) | ~30 min to first ingest |
-| **Evaluate the design** | [`docs/design/design-rationale.md`](docs/design/design-rationale.md) | ~1 hr deep read |
+| You want to...                                                                             | Open                                                                                                                                                       | Time                    |
+| ------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
+| **Glance** — see what one ingest produces, no install                                      | [`examples/hello-world/`](examples/hello-world/) (source + expected wiki output + log entry)                                                               | 3 min                   |
+| **Try the slash commands** — sideload the plugin into Cursor without committing to a vault | [`integrations/cursor/densa-plugin/` §Install Option B](integrations/cursor/densa-plugin/#option-b--local-sideload-works-today) (symlink + restart Cursor) | ~5 min                  |
+| **Set up your own vault**                                                                  | [Quickstart](#quickstart) below → [`docs/setup.md`](docs/setup.md)                                                                                         | ~30 min to first ingest |
+| **Evaluate the design**                                                                    | [`docs/design/design-rationale.md`](docs/design/design-rationale.md)                                                                                       | ~1 hr deep read         |
 
 [`GUIDE.md`](GUIDE.md) is the day-to-day FAQ + scenarios; bookmark
-it for *after* your first ingests. [`docs/setup.md`](docs/setup.md)
+it for _after_ your first ingests. [`docs/setup.md`](docs/setup.md)
 covers everything from the Obsidian plugin matrix to git-crypt to
 the domain decision tree. [`docs/faq.md`](docs/faq.md) answers the
 "why" questions (red lines, drift, operation philosophy).
@@ -83,6 +83,7 @@ Python, unresolvable domain). Manual validation any time:
 ```bash
 PYTHONPATH=_system python3 -m densa --all     # validate page content
 PYTHONPATH=_system python3 -m densa stats     # vault health: pages, types, orphans
+PYTHONPATH=_system python3 -m densa tui       # browse findings interactively (POSIX TTY)
 ```
 
 **Optional IDE plugins** (slash commands + auto-triggered skills) live
@@ -107,13 +108,13 @@ all live in [`docs/setup.md`](docs/setup.md).
 ~60 minutes for a meeting transcript whose L2 schema needs new fields.
 The agent does the typing; you do the reviewing.
 
-<sub>*Naming note: the project is **Densa**; `python3 -m densa` is the
+<sub>_Naming note: the project is **Densa**; `python3 -m densa` is the
 stdlib validator that ships with it. The supported install today is
 `git clone` + `git config core.hooksPath _system/hooks` above, or
 `densa init` from an existing Densa install (see Alternative below).
 PyPI publication (so `pipx install densa` works without first cloning)
 is planned but not yet available — see the "Unreleased" entry in
-[`CHANGELOG.md`](CHANGELOG.md).*</sub>
+[`CHANGELOG.md`](CHANGELOG.md)._</sub>
 
 ### Alternative: scaffold without cloning by hand
 
@@ -132,7 +133,7 @@ densa init my-vault
 cd my-vault && python3 -m densa doctor
 ```
 
-Useful when you're standing up multiple vaults; for your *first*
+Useful when you're standing up multiple vaults; for your _first_
 vault the fork-and-clone path above stays compatible with the
 bootstrap prompt's expectations.
 
@@ -228,13 +229,13 @@ sources into structured prose **once, incrementally**, then queries
 the prose. The hallucination surface is a one-time write-time event
 (audited by `AGENTS001`–`AGENTS013`), not a per-query risk.
 
-| Tool | Storage | Compounds? | Cites sources? | Local-first? |
-| ---- | ------- | ---------- | -------------- | ------------ |
-| **Densa** (this repo) | plain markdown + git | yes | enforced by validator | yes |
-| Vector RAG (LlamaIndex / LangChain) | vector DB | no | optional | varies |
-| Enterprise RAG ([RAGFlow](https://github.com/infiniflow/ragflow)) | ES + MySQL + chunk records | no (chunks re-rank per query) | read-time visual citations | yes (self-host) |
-| Notion AI / mem.ai | proprietary DB | partially | sometimes | no |
-| [Obsidian + Smart Connections](https://github.com/brianpetro/obsidian-smart-connections) | markdown + index | retrieve-only | no | yes |
+| Tool                                                                                     | Storage                    | Compounds?                    | Cites sources?             | Local-first?    |
+| ---------------------------------------------------------------------------------------- | -------------------------- | ----------------------------- | -------------------------- | --------------- |
+| **Densa** (this repo)                                                                    | plain markdown + git       | yes                           | enforced by validator      | yes             |
+| Vector RAG (LlamaIndex / LangChain)                                                      | vector DB                  | no                            | optional                   | varies          |
+| Enterprise RAG ([RAGFlow](https://github.com/infiniflow/ragflow))                        | ES + MySQL + chunk records | no (chunks re-rank per query) | read-time visual citations | yes (self-host) |
+| Notion AI / mem.ai                                                                       | proprietary DB             | partially                     | sometimes                  | no              |
+| [Obsidian + Smart Connections](https://github.com/brianpetro/obsidian-smart-connections) | markdown + index           | retrieve-only                 | no                         | yes             |
 
 **The fault line.** RAG-classic (RAGFlow, vector stacks, Notion AI)
 retrieves chunks at query time — fast onboarding, never consolidates,
