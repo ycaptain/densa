@@ -185,6 +185,17 @@ def _build_parser() -> argparse.ArgumentParser:
         help="run the read-only MCP server over stdio (JSON-RPC 2.0)",
     )
 
+    tui = sub.add_parser(
+        "tui",
+        help="browse diagnostics in an interactive viewer (POSIX TTY)",
+    )
+    tui.add_argument(
+        "--diff",
+        metavar="REF",
+        default=None,
+        help="view findings over REF..HEAD instead of the whole repo",
+    )
+
     return parser
 
 
@@ -318,6 +329,30 @@ def _cmd_mcp(_: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_tui(args: argparse.Namespace) -> int:
+    # Lazy import: keeps ``curses`` off the common lint/pre-commit import
+    # path, and lets the import fail cleanly where curses is unavailable
+    # (e.g. Windows without ``windows-curses``).
+    try:
+        from densa.tui.app_curses import run  # noqa: PLC0415
+    except ImportError as exc:
+        # Only a *missing curses* is a platform issue; any other import
+        # error (a typo / renamed symbol inside the tui package) must
+        # surface, not be misreported as "unsupported platform".
+        if exc.name in ("curses", "_curses"):
+            print(
+                "densa tui needs curses (a POSIX terminal); "
+                "it is not available on this platform.",
+                file=sys.stderr,
+            )
+            return 1
+        raise
+
+    repo = _resolve_repo()
+    report = lint_diff(repo, args.diff) if args.diff else lint_all(repo)
+    return run(repo, report)
+
+
 _DISPATCH = {
     "lint": _cmd_lint,
     "rules": _cmd_rules,
@@ -329,6 +364,7 @@ _DISPATCH = {
     "migrate": migrate_cmd.run,
     "graph-config": graph_config_cmd.run,
     "mcp": _cmd_mcp,
+    "tui": _cmd_tui,
 }
 
 # Tokens that must reach the top-level parser verbatim instead of being

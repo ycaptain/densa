@@ -10,6 +10,17 @@ the L1 schema version recorded in [`AGENTS.md`](AGENTS.md) frontmatter
 
 ### Added
 
+- **`densa tui` — interactive diagnostics viewer.** A read-only,
+  stdlib-only (`curses`) terminal UI over `densa --all`: scroll and
+  filter findings by severity or rule, mute the expected
+  gitignored-tree noise band, and read the offending file excerpt with
+  jump-to-line. Built on a pure, framework-agnostic view-model
+  (`densa.tui.model`) and renderer (`densa.tui.view`) — the curses
+  driver is the only impure shell and is lazy-imported behind the `tui`
+  subcommand, so the lint / pre-commit path never pays the `curses`
+  import (mirrors the MCP server). POSIX-only; a missing `curses`
+  exits with a clear message. `--diff REF` scopes the view to
+  `REF..HEAD`.
 - **AGENTS013 `obsidian-link-format`.** Densa's suffix-matching
   resolver accepts bucket-relative wikilinks (`[[concepts/x]]`) that
   Obsidian cannot resolve — they lint clean but render as grey ghost
@@ -65,7 +76,7 @@ the L1 schema version recorded in [`AGENTS.md`](AGENTS.md) frontmatter
 
 - **AGENTS007 no longer classifies commits one-behind under
   `git commit -m`.** The rule read `.git/COMMIT_EDITMSG` assuming it
-  held the in-flight message, but git rewrites that file only *after*
+  held the in-flight message, but git rewrites that file only _after_
   the pre-commit hook passes — so every commit was classified by the
   PREVIOUS commit's prefix, and a correctly prefixed operation commit
   following a maintenance commit always failed on first attempt. The
