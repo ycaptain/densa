@@ -8,6 +8,8 @@ the L1 schema version recorded in [`AGENTS.md`](AGENTS.md) frontmatter
 
 ## [Unreleased]
 
+## [0.6.0] - 2026-06-16 — interactive diagnostics TUI + Obsidian graph readability sweep
+
 ### Added
 
 - **`densa tui` — interactive diagnostics viewer.** A read-only,
